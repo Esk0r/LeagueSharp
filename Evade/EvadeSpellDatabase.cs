@@ -165,27 +165,6 @@ namespace Evade
             #endregion
 
 
-            #region Champion Shields
-
-                #region Janna
-                if (ObjectManager.Player.BaseSkinName == "Janna")
-                {
-                    spell = new ShieldData("Janna E", SpellSlot.E, 100, 1);
-                    spell.CanShieldAllies = true;
-                    Spells.Add(spell);
-                }
-                #endregion
-
-                #region Morgana
-                if (ObjectManager.Player.BaseSkinName == "Morgana")
-                {
-                    spell = new ShieldData("Morgana E", SpellSlot.E, 100, 3);
-                    spell.CanShieldAllies = true;
-                    Spells.Add(spell);
-                }
-                #endregion
-            #endregion
-
             //Flash
             if (ObjectManager.Player.GetSpellSlot("SummonerFlash") != SpellSlot.Unknown)
             {
@@ -197,6 +176,27 @@ namespace Evade
             spell = new EvadeSpellData("Zhonyas", 5);
             Spells.Add(spell);
 
+            #region Champion Shields
+                #region Janna
+                if (ObjectManager.Player.BaseSkinName == "Janna")
+                {
+                    spell = new ShieldData("Janna E", SpellSlot.E, 100, 1);
+                    spell.CanShieldAllies = true;
+                    spell.MaxRange = 800;
+                    Spells.Add(spell);
+                }
+                #endregion
+
+                #region Morgana
+                if (ObjectManager.Player.BaseSkinName == "Morgana")
+                {
+                    spell = new ShieldData("Morgana E", SpellSlot.E, 100, 3);
+                    spell.CanShieldAllies = true;
+                    spell.MaxRange = 750;
+                    Spells.Add(spell);
+                }
+                #endregion
+            #endregion
         }
 
         public static EvadeSpellData GetByName(string Name)

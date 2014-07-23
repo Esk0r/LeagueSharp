@@ -386,10 +386,10 @@ namespace Evade
                 var missilePosAfterT = GetMissilePosition(time);
 
                 //TODO: Check for minion collision etc.. in the future.
-                var projection = ObjectManager.Player.ServerPosition.To2D().ProjectOn(missilePos, missilePosAfterT);
+                var projection = unit.ServerPosition.To2D().ProjectOn(missilePos, missilePosAfterT);
 
                 if (projection.IsOnSegment &&
-                    projection.SegmentPoint.Distance(ObjectManager.Player.ServerPosition) < SpellData.Radius)
+                    projection.SegmentPoint.Distance(unit.ServerPosition) < SpellData.Radius)
                 {
                     return true;
                 }

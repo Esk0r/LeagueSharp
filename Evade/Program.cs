@@ -198,6 +198,39 @@ namespace Evade
             //Avoid sending move/cast packets while dead.
             if (ObjectManager.Player.IsDead) return;
 
+            //Shield allies.
+            foreach (var ally in ObjectManager.Get<Obj_AI_Hero>())
+	        {
+	            if (ally.IsValidTarget(1000, false))
+	            {
+	                var shieldAlly = Config.Menu.Item("shield" + ally.BaseSkinName);
+	                if (shieldAlly != null && shieldAlly.GetValue<bool>())
+	                {
+	                    var allySafeResult = IsSafe(ally.ServerPosition.To2D());
+
+	                    if (!allySafeResult.IsSafe)
+	                    {
+                            var dangerLevel = 0;
+
+                            foreach (var skillshot in allySafeResult.SkillshotList)
+                            {
+                                dangerLevel = Math.Max(dangerLevel, skillshot.GetValue<Slider>("DangerLevel").Value);
+                            }
+                          
+	                        foreach (var evadeSpell in EvadeSpellDatabase.Spells)
+	                        {
+                                if (evadeSpell.IsShield && evadeSpell.CanShieldAllies && ally.Distance(ObjectManager.Player) < evadeSpell.MaxRange && dangerLevel >= evadeSpell.DangerLevel
+                                    && ObjectManager.Player.Spellbook.CanUseSpell(evadeSpell.Slot) == SpellState.Ready && IsAboutToHit(ally, evadeSpell.Delay))
+                                {
+                                    ObjectManager.Player.Spellbook.CastSpell(evadeSpell.Slot, ally);
+                                }
+	                        }
+	                    }
+	                }
+	            }
+	        }
+
+
             //Spell Shielded
             if (IsSpellShielded(ObjectManager.Player))
                 return;

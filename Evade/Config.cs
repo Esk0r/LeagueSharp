@@ -11,7 +11,7 @@ namespace Evade
 {
     internal static class Config
     {
-        public const bool PrintSpellData = true;
+        public const bool PrintSpellData = false;
 
         public const bool TestOnAllies = false;
         public const int SkillShotsExtraRadius = 10;
@@ -53,7 +53,6 @@ namespace Evade
             }
             Menu.AddSubMenu(evadeSpells);
 
-
             //Create the skillshots submenus.
             var skillShots = new Menu("Skillshots", "Skillshots");
 
@@ -92,8 +91,6 @@ namespace Evade
                     shielding.AddItem(new MenuItem("shield" + ally.BaseSkinName, "Shield " + ally.BaseSkinName).SetValue(true));
 
             }
-            shielding.AddItem(new MenuItem("ShieldDangerLevel", "Danger level").SetValue(new Slider(1,
-                                    5, 1)));
             Menu.AddSubMenu(shielding);
 
             var drawings = new Menu("Drawings", "Drawings");
