@@ -4,7 +4,7 @@ using LeagueSharp.Common;
 namespace Evade
 {
 
-    internal enum SpellValidTargets
+    public enum SpellValidTargets
     {
         AllyMinions,
         EnemyMinions,
@@ -49,6 +49,12 @@ namespace Evade
         public int _dangerLevel;
         public SpellSlot Slot;
         public bool IsSummonerSpell;
+        public bool Invert;
+        public string CheckSpellName = "";
+        public bool SelfCast;
+        public bool RequiresPreMove;
+        public bool CanShieldAllies;
+
         public int DangerLevel
         {
             get

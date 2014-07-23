@@ -1455,7 +1455,7 @@ namespace Evade
                 SpellName = "LuxMaliceCannon",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotLine,
-                Delay = 1150,
+                Delay = 1000,
                 Range = 3500,
                 Radius = 190,
                 MissileSpeed = int.MaxValue,
@@ -1751,7 +1751,7 @@ namespace Evade
             #endregion Rengar
             //FIX
             #region Riven
-            Spells.Add(new SpellData
+           /* Spells.Add(new SpellData
             {
                 BaseSkinName = "Riven",
                 SpellName = "rivenizunablade",
@@ -1767,7 +1767,7 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "rivenizunablade",
 
-            });
+            });*/
 
             #endregion Riven
             #region Rumble

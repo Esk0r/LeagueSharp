@@ -17,35 +17,173 @@ namespace Evade
             //Add available evading spells to the database. SORTED BY PRIORITY.
             EvadeSpellData spell;
 
-            //SpellShields
-            if (ObjectManager.Player.BaseSkinName == "Sivir")
-            {
-                spell = new ShieldData("Sivir E", SpellSlot.E, 0, 1, true);
-                Spells.Add(spell);
-            }
+            #region Champion SpellShields
+ 
+                #region Sivir
+                if (ObjectManager.Player.BaseSkinName == "Sivir")
+                {
+                    spell = new ShieldData("Sivir E", SpellSlot.E, 100, 1, true);
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Nocturne
+                if (ObjectManager.Player.BaseSkinName == "Nocturne")
+                {
+                    spell = new ShieldData("Nocturne E", SpellSlot.E, 100, 1, true);
+                    Spells.Add(spell);
+                }
+                #endregion
+
+            #endregion
 
             //Walking.
             spell = new EvadeSpellData("Walking", 1);
             Spells.Add(spell);
 
-            //Dashes.
-
             #region Champion Dashes
 
-            if (ObjectManager.Player.BaseSkinName == "Vayne")
-            { 
-                spell = new DashData("Vayne Q", SpellSlot.Q, 300, true, 250, 900, 2);
-                Spells.Add(spell);
-            }
+                #region Caitlyn
+                if (ObjectManager.Player.BaseSkinName == "Caitlyn")
+                {
+                    spell = new DashData("Caitlyn E", SpellSlot.E, 490, true, 250, 1000, 3);
+                    spell.Invert = true;
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Gragas
+                if (ObjectManager.Player.BaseSkinName == "Gragas")
+                {
+                    spell = new DashData("Gragas E", SpellSlot.E, 600, false, 250, 911, 3);
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Nidalee
+                if (ObjectManager.Player.BaseSkinName == "Nidalee")
+                {
+                    spell = new DashData("Nidalee W", SpellSlot.W, 375, true, 250, 943, 3);
+                    spell.CheckSpellName = "Pounce";
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Riven
+                if (ObjectManager.Player.BaseSkinName == "Riven")
+                {
+                    spell = new DashData("Riven Q", SpellSlot.Q, 222, true, 250, 560, 3);
+                    spell.RequiresPreMove = true;
+                    Spells.Add(spell);
+
+                    spell = new DashData("Riven E", SpellSlot.E, 250, false, 250, 1200, 3);
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Tristana
+                if (ObjectManager.Player.BaseSkinName == "Tristana")
+                {
+                    spell = new DashData("Tristana W", SpellSlot.W, 900, true, 300, 800, 5);
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Tryndamare
+                if (ObjectManager.Player.BaseSkinName == "Tryndamere")
+                {
+                    spell = new DashData("Tryndamere E", SpellSlot.E, 650, true, 250, 900, 3);
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Vayne
+                if (ObjectManager.Player.BaseSkinName == "Vayne")
+                { 
+                    spell = new DashData("Vayne Q", SpellSlot.Q, 300, true, 250, 900, 2);
+                    Spells.Add(spell);
+                }
+                #endregion
 
             #endregion
 
             #region Champion Blinks
-            if (ObjectManager.Player.BaseSkinName == "Ezreal")
-            {
-                spell = new BlinkData("Ezreal E", SpellSlot.E, 450, 250, 3);
-                Spells.Add(spell);
-            }
+
+                #region Ezreal
+                if (ObjectManager.Player.BaseSkinName == "Ezreal")
+                {
+                    spell = new BlinkData("Ezreal E", SpellSlot.E, 450, 250, 3);
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Kassadin
+                if (ObjectManager.Player.BaseSkinName == "Kassadin")
+                {
+                    spell = new BlinkData("Kassadin R", SpellSlot.R, 700, 200, 5);
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Katarina
+                if (ObjectManager.Player.BaseSkinName == "Katarina")
+                {
+                    spell = new BlinkData("Katarina E", SpellSlot.E, 700, 100, 3);
+                    spell.ValidTargets = new [] { SpellValidTargets.AllyChampions, SpellValidTargets.AllyMinions, SpellValidTargets.AllyWards, SpellValidTargets.EnemyChampions, SpellValidTargets.EnemyMinions, SpellValidTargets.EnemyWards, };
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Shaco
+                if (ObjectManager.Player.BaseSkinName == "Shaco")
+                {
+                    spell = new BlinkData("Shaco Q", SpellSlot.Q, 400, 250, 3);
+                    Spells.Add(spell);
+                }
+                #endregion
+
+            #endregion
+
+            #region Champion Invulnerabilities
+
+                #region Elise
+                if (ObjectManager.Player.BaseSkinName == "Elise")
+                {
+                    spell = new InvulnerabilityData("Elise E", SpellSlot.E, 250, 3);
+                    spell.CheckSpellName = "EliseSpiderEInitial";
+                    spell.SelfCast = true;
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Fizz
+                if (ObjectManager.Player.BaseSkinName == "Fizz")
+                {
+                    spell = new InvulnerabilityData("Fizz E", SpellSlot.E, 250, 3);
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region MasterYi
+                if (ObjectManager.Player.BaseSkinName == "MasterYi")
+                {
+                    spell = new InvulnerabilityData("MasterYi Q", SpellSlot.Q, 250, 3);
+                    spell.MaxRange = 600;
+                    spell.ValidTargets = new[] {SpellValidTargets.EnemyChampions, SpellValidTargets.EnemyMinions};
+                    Spells.Add(spell);
+                }
+                #endregion
+
+            #endregion
+
+
+            #region Champion Shields
+
+                #region Janna
+                if (ObjectManager.Player.BaseSkinName == "Janna")
+                {
+                    spell = new ShieldData("Janna E", SpellSlot.E, 100, 1);
+                    spell.CanShieldAllies = true;
+                    Spells.Add(spell);
+                }
+                #endregion
+
+                #region Morgana
+                if (ObjectManager.Player.BaseSkinName == "Morgana")
+                {
+                    spell = new ShieldData("Morgana E", SpellSlot.E, 100, 3);
+                    spell.CanShieldAllies = true;
+                    Spells.Add(spell);
+                }
+                #endregion
             #endregion
 
             //Flash

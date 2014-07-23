@@ -11,7 +11,7 @@ namespace Evade
 {
     internal static class Config
     {
-        public const bool PrintSpellData = false;
+        public const bool PrintSpellData = true;
 
         public const bool TestOnAllies = false;
         public const int SkillShotsExtraRadius = 10;
@@ -84,13 +84,25 @@ namespace Evade
 
             Menu.AddSubMenu(skillShots);
 
-            var Drawings = new Menu("Drawings", "Drawings");
-            Drawings.AddItem(new MenuItem("EnabledColor", "Enabled spell color").SetValue(Color.White));
-            Drawings.AddItem(new MenuItem("DisabledColor", "Disabled spell color").SetValue(Color.Red));
-            Drawings.AddItem(new MenuItem("Border", "Border Width").SetValue(new Slider(1, 5, 1)));
+            var shielding = new Menu("Ally shielding", "Shielding");
 
-            Drawings.AddItem(new MenuItem("EnableDrawings", "Enabled").SetValue(true));
-            Menu.AddSubMenu(Drawings);
+            foreach (var ally in ObjectManager.Get<Obj_AI_Hero>())
+            {
+                if (ally.IsAlly && !ally.IsMe)
+                    shielding.AddItem(new MenuItem("shield" + ally.BaseSkinName, "Shield " + ally.BaseSkinName).SetValue(true));
+
+            }
+            shielding.AddItem(new MenuItem("ShieldDangerLevel", "Danger level").SetValue(new Slider(1,
+                                    5, 1)));
+            Menu.AddSubMenu(shielding);
+
+            var drawings = new Menu("Drawings", "Drawings");
+            drawings.AddItem(new MenuItem("EnabledColor", "Enabled spell color").SetValue(Color.White));
+            drawings.AddItem(new MenuItem("DisabledColor", "Disabled spell color").SetValue(Color.Red));
+            drawings.AddItem(new MenuItem("Border", "Border Width").SetValue(new Slider(1, 5, 1)));
+
+            drawings.AddItem(new MenuItem("EnableDrawings", "Enabled").SetValue(true));
+            Menu.AddSubMenu(drawings);
 
             Menu.AddItem(
                 new MenuItem("Enabled", "Enabled").SetValue(new KeyBind("K".ToCharArray()[0], KeyBindType.Toggle,
@@ -109,7 +121,7 @@ namespace Evade
         static void Unit_OnDash(Obj_AI_Base sender, Dash.DashItem args)
         {
             item = args;
-            Game.PrintChat("Dash speed: " + args.Speed);
+            Game.PrintChat(Environment.TickCount + "Dash speed: " + args.Speed);
             Game.PrintChat("Dash distance: " + args.StartPos.Distance(args.EndPos));
         }
 

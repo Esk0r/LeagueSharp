@@ -334,7 +334,7 @@ namespace Evade
                 }
             }
 
-            //Skillshot without missile.
+            //Skillshot without missile. TODO: Add timeOffset.
 
             if (IsSafe(ObjectManager.Player.ServerPosition.To2D()))
             {
@@ -353,12 +353,18 @@ namespace Evade
             var timeToExplode = SpellData.ExtraDuration + SpellData.Delay +
                                 (int) (1000*Start.Distance(End)/SpellData.MissileSpeed) -
                                 (Environment.TickCount - StartTick);
-            var myPositionWhenExplodes = path.PositionAfter(timeToExplode, (int) ObjectManager.Player.MoveSpeed, delay);
 
+
+            var myPositionWhenExplodes = path.PositionAfter(timeToExplode, (int)ObjectManager.Player.MoveSpeed, delay);
+            
             if (!IsSafe(myPositionWhenExplodes))
+            {
                 return new SafePathResult(false, allIntersections[0]);
+            }
 
-            return new SafePathResult(true, allIntersections[0]);
+            var myPositionWhenExplodesWithOffset = path.PositionAfter(timeToExplode, (int)ObjectManager.Player.MoveSpeed, timeOffset);
+
+            return new SafePathResult(IsSafe(myPositionWhenExplodesWithOffset), allIntersections[0]);
         }
 
         public bool IsSafe(Vector2 point)

@@ -25,5 +25,23 @@ namespace Evade
         {
             Packet.C2S.Move.Encoded(new Packet.C2S.Move.Struct(point.X, point.Y)).Send();
         }
+
+        public static Obj_AI_Base Closest(List<Obj_AI_Base> targetList, Vector2 from)
+        {
+            var dist = float.MaxValue;
+            Obj_AI_Base result = null;
+
+            foreach (var target in targetList)
+            {
+                var distance = Vector2.DistanceSquared(from, target.ServerPosition.To2D());
+                if (distance < dist)
+                {
+                    dist = distance;
+                    result = target;
+                }
+            }
+
+            return result;
+        }
     }
 }

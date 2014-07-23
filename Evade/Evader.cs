@@ -89,5 +89,97 @@ namespace Evade
 
             return (goodCandidates.Count > 0) ? goodCandidates : (onlyGood ? new GamePath() : badCandidates);
         }
+
+
+        /// <summary>
+        /// Returns the safe targets to cast escape spells.
+        /// </summary>
+        public static List<Obj_AI_Base> GetEvadeTargets(SpellValidTargets[] validTargets, int speed, int delay, float range, bool isBlink = false, bool onlyGood = false, bool DontCheckForSafety = false)
+        {
+            var badTargets = new List<Obj_AI_Base>();
+            var goodTargets = new List<Obj_AI_Base>();
+            var allTargets = new List<Obj_AI_Base>();
+            foreach (var targetType in validTargets)
+            {
+                switch (targetType)
+                {
+                        case SpellValidTargets.AllyChampions:
+
+                        foreach (var ally in ObjectManager.Get<Obj_AI_Hero>())
+                            if (ally.IsValidTarget(range, false) && !ally.IsMe && ally.IsAlly)
+                                allTargets.Add(ally);
+                        break;
+
+
+                        case SpellValidTargets.AllyMinions:
+
+                        foreach (var minion in ObjectManager.Get<Obj_AI_Minion>())
+                            if (minion.IsValidTarget(range, false) && minion.Team == ObjectManager.Player.Team)
+                                allTargets.Add(minion);
+
+                        break;
+
+                        case SpellValidTargets.AllyWards:
+
+                        foreach (var gameObject in ObjectManager.Get<Obj_AI_Base>())
+                            if(gameObject.Name.ToLower().Contains("ward") && gameObject.IsValidTarget(range, false) && gameObject.Team == ObjectManager.Player.Team)
+                                allTargets.Add(gameObject);
+                        break;
+
+                    case SpellValidTargets.EnemyChampions:
+                        foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
+                            if (enemy.IsValidTarget(range))
+                                allTargets.Add(enemy);
+                        break;
+
+                    case SpellValidTargets.EnemyMinions:
+
+                        foreach (var minion in ObjectManager.Get<Obj_AI_Minion>())
+                            if (minion.IsValidTarget(range))
+                                allTargets.Add(minion);
+
+                        break;
+
+                    case SpellValidTargets.EnemyWards:
+
+                        foreach (var gameObject in ObjectManager.Get<Obj_AI_Base>())
+                            if (gameObject.Name.ToLower().Contains("ward") && gameObject.IsValidTarget(range))
+                                allTargets.Add(gameObject);
+                        break;
+                        
+                }
+            }
+
+            foreach (var target in allTargets)
+            {
+                if (DontCheckForSafety || Program.IsSafe(target.ServerPosition.To2D()).IsSafe)
+                {
+                    if (isBlink)
+                    {
+                        if (Program.IsSafeToBlink(target.ServerPosition.To2D(), Config.EvadingFirstTimeOffset, delay))
+                            goodTargets.Add(target);
+
+                        if (Program.IsSafeToBlink(target.ServerPosition.To2D(), Config.EvadingSecondTimeOffset,
+                            delay))
+                            badTargets.Add(target);
+                    }
+                    else
+                    {
+                        var pathToTarget = new List<Vector2>();
+                        pathToTarget.Add(ObjectManager.Player.ServerPosition.To2D());
+                        pathToTarget.Add(target.ServerPosition.To2D());
+
+                        if (Program.IsSafePath(pathToTarget, Config.EvadingFirstTimeOffset, speed, delay).IsSafe)
+                            goodTargets.Add(target);
+
+                        if (Program.IsSafePath(pathToTarget, Config.EvadingSecondTimeOffset, speed, delay).IsSafe )
+                            badTargets.Add(target);
+                    }
+                }
+            }
+
+            return (goodTargets.Count > 0) ? goodTargets : (onlyGood ? new List<Obj_AI_Base>() : badTargets);
+        }
+
     }
 }
