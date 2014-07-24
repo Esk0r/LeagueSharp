@@ -109,17 +109,6 @@ namespace Evade
                 new MenuItem("OnlyDangerous", "Dodge only dangerous").SetValue(new KeyBind(32, KeyBindType.Press)));
 
             Menu.AddToMainMenu();
-
-
-            CustomEvents.Unit.OnDash += Unit_OnDash;
-            ObjectManager.Player.IsDashing();
-        }
-
-        static void Unit_OnDash(Obj_AI_Base sender, Dash.DashItem args)
-        {
-            item = args;
-            Game.PrintChat(Environment.TickCount + "Dash speed: " + args.Speed);
-            Game.PrintChat("Dash distance: " + args.StartPos.Distance(args.EndPos));
         }
 
 

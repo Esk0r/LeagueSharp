@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Runtime.Remoting.Messaging;
 using LeagueSharp;
 using LeagueSharp.Common;
@@ -61,8 +62,8 @@ namespace TwistedFate
 
             /*Drawing*/
             var Drawings = new Menu("Drawings", "Drawings");
-            Drawings.AddItem(new MenuItem("Qcircle", "Q Range").SetValue(new Circle(true, Color.FromArgb(255,255,255,255))));
-            Drawings.AddItem(new MenuItem("Rcircle", "R Range").SetValue(new Circle(true, Color.FromArgb(255, 255, 255, 255))));
+            Drawings.AddItem(new MenuItem("Qcircle", "Q Range").SetValue(new Circle(true, Color.FromArgb(100,255,0,255))));
+            Drawings.AddItem(new MenuItem("Rcircle", "R Range").SetValue(new Circle(true, Color.FromArgb(100, 255, 255, 255))));
             Drawings.AddItem(new MenuItem("Rcircle2", "R Range (minimap)").SetValue(new Circle(true, Color.FromArgb(255, 255, 255, 255))));
 
             Config.AddSubMenu(Drawings);
@@ -229,6 +230,7 @@ namespace TwistedFate
 
             SOW.SetAttacks(CardSelector.Status != SelectStatus.Selecting && Environment.TickCount - CardSelector.LastWSent > 300);
             var combo = Config.Item("Combo").GetValue<KeyBind>().Active;
+
             //Select cards.
             if (Config.Item("SelectYellow").GetValue<KeyBind>().Active ||
                 combo)
@@ -263,7 +265,7 @@ namespace TwistedFate
             if (ObjectManager.Player.Spellbook.CanUseSpell(SpellSlot.Q) == SpellState.Ready && (autoQD || autoQI))
                 foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
                 {
-                    if (enemy.IsValidTarget())
+                    if (enemy.IsValidTarget(Q.Range * 2))
                     {
                         var pred = Q.GetPrediction(enemy);
                         if ((pred.HitChance == Prediction.HitChance.VP_Immobile && autoQI) ||
@@ -272,6 +274,7 @@ namespace TwistedFate
                             CastQ(enemy, pred.Position.To2D());
                         }
                     }
+                   
                 }
 
         }

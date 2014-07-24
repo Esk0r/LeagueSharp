@@ -28,6 +28,7 @@ namespace Evade
 
         public static Vector2 AfterEvadePoint = new Vector2();
         public static Vector2 CutPathPoint = new Vector2();
+        public static Vector2 PreviousTickPosition = new Vector2();
 
         public static bool Evading
         {
@@ -44,6 +45,8 @@ namespace Evade
                     }
                 }
             }
+
+            
         }
 
         public static Vector2 EvadePoint
@@ -103,6 +106,11 @@ namespace Evade
 
             //For skillshot drawing.
             Drawing.OnDraw += Drawing_OnDraw;
+
+            //Ondash event.
+            CustomEvents.Unit.OnDash += UnitOnOnDash;
+            ObjectManager.Player.IsDashing();
+
         }
 
         private static void OnDetectSkillshot(Skillshot skillshot)
@@ -186,6 +194,13 @@ namespace Evade
 
         private static void Game_OnOnGameUpdate(EventArgs args)
         {
+
+            //Set evading to false after blinking
+            if (PreviousTickPosition.IsValid() && ObjectManager.Player.ServerPosition.To2D().Distance(PreviousTickPosition) > 200)
+                Evading = false;
+
+            PreviousTickPosition = ObjectManager.Player.ServerPosition.To2D();
+        
             //Remove the detected skillshots that have expired.
             DetectedSkillshots.RemoveAll(skillshot => !skillshot.IsActive());
 
@@ -391,6 +406,17 @@ namespace Evade
                         }
                     }
                 }
+            }
+        }
+
+        private static void UnitOnOnDash(Obj_AI_Base sender, Dash.DashItem args)
+        {
+            if (sender.IsMe)
+            {
+                Utility.DelayAction.Add(args.Duration, delegate
+                {
+                    Evading = false;
+                });
             }
         }
 
