@@ -45,7 +45,7 @@ namespace Marksman
                 {
                     if (Q.IsReady() && useQ)
                     {
-                        var t = TargetSelector.GetTarget(Q.Range, DamageLib.DamageType.Physical);
+                        var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
                         if (t != null)
                         {
                             Q.Cast(t);
@@ -54,7 +54,7 @@ namespace Marksman
 
                     if (W.IsReady() && useW)
                     {
-                        var t = TargetSelector.GetTarget(W.Range, DamageLib.DamageType.Physical);
+                        var t = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
                         if (t != null)
                         {
                             W.Cast(t);
@@ -68,7 +68,7 @@ namespace Marksman
                 var CastR = GetValue<KeyBind>("CastR").Active;
                 if (CastR)
                 {
-                    var t = TargetSelector.GetTarget(R.Range, DamageLib.DamageType.Physical);
+                    var t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
                     if (t != null)
                     {
                         R.Cast(t);

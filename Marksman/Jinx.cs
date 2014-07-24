@@ -43,7 +43,7 @@ namespace Marksman
                 {
                     if (W.IsReady() && useW)
                     {
-                        var t = Orbwalker.GetTarget() ?? TargetSelector.GetTarget(W.Range, DamageLib.DamageType.Physical);
+                        var t = Orbwalker.GetTarget() ?? SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
 
                         if (t != null)
                         {
@@ -58,7 +58,7 @@ namespace Marksman
                 var castR = GetValue<KeyBind>("CastR").Active;
                 if (castR || (Orbwalker.GetTarget() != null && DamageLib.getDmg(Orbwalker.GetTarget(), DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > Orbwalker.GetTarget().Health ))
                 {
-                    var t = TargetSelector.GetTarget(R.Range, DamageLib.DamageType.Physical);
+                    var t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
                     if (t != null)
                     {
                         R.Cast(t);
@@ -75,10 +75,10 @@ namespace Marksman
                     if (enemy.IsValidTarget())
                     {
                         if(AutoEI)
-                            E.CastIfHitchanceEquals(enemy, Prediction.HitChance.VP_Immobile);
+                            E.CastIfHitchanceEquals(enemy, Prediction.HitChance.Immobile);
 
                         if (AutoED)
-                            E.CastIfHitchanceEquals(enemy, Prediction.HitChance.VP_Immobile);
+                            E.CastIfHitchanceEquals(enemy, Prediction.HitChance.Immobile);
 
                     }
                 }
