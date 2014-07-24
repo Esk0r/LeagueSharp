@@ -330,8 +330,8 @@ namespace Ziggs
                 ObjectManager.Player.Mana/ObjectManager.Player.MaxMana*100) return;
 
             var rangedMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q2.Range,
-                MinionTypes.Ranged);
-            var allMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q2.Range, MinionTypes.All);
+                MinionTypes.Ranged, MinionTeam.NotAlly);
+            var allMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q2.Range, MinionTypes.All, MinionTeam.NotAlly);
 
             var useQi = Config.Item("UseQFarm").GetValue<StringList>().SelectedIndex;
             var useEi = Config.Item("UseEFarm").GetValue<StringList>().SelectedIndex;

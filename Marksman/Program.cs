@@ -22,6 +22,8 @@ namespace Marksman
 
         static void Drawing_OnDraw(EventArgs args)
         {
+            return;
+            
             var y = 10;
             foreach (var b in ObjectManager.Player.Buffs)
             {

@@ -53,18 +53,7 @@ namespace Marksman
                 }
             }
 
-            if (R.IsReady())
-            {
-                var castR = GetValue<KeyBind>("CastR").Active;
-                if (castR || (Orbwalker.GetTarget() != null && DamageLib.getDmg(Orbwalker.GetTarget(), DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > Orbwalker.GetTarget().Health ))
-                {
-                    var t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
-                    if (t != null)
-                    {
-                        R.Cast(t);
-                    }
-                }
-            }
+            
 
             var AutoEI = GetValue<bool>("AutoEI");
             var AutoED = GetValue<bool>("AutoED");
@@ -80,6 +69,19 @@ namespace Marksman
                         if (AutoED)
                             E.CastIfHitchanceEquals(enemy, Prediction.HitChance.Immobile);
 
+                    }
+                }
+            }
+
+            if (R.IsReady())
+            {
+                var castR = GetValue<KeyBind>("CastR").Active;
+                if (castR || (Orbwalker.GetTarget() != null && GetValue<bool>("UseRC") && DamageLib.getDmg(Orbwalker.GetTarget(), DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > Orbwalker.GetTarget().Health))
+                {
+                    var t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+                    if (t != null)
+                    {
+                        R.Cast(t);
                     }
                 }
             }
