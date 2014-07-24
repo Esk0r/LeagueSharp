@@ -91,17 +91,17 @@ namespace TwistedFate
             var rCircle = Config.Item("Rcircle").GetValue<Circle>();
             var rCircle2 = Config.Item("Rcircle2").GetValue<Circle>();
 
-            if (qCircle.Enabled)
+            if (qCircle.Active)
             {
                 Utility.DrawCircle(ObjectManager.Player.Position, Q.Range, qCircle.Color);
             }
 
-            if (rCircle.Enabled)
+            if (rCircle.Active)
             {
                 Utility.DrawCircle(ObjectManager.Player.Position, 5500, rCircle.Color);
             }
 
-            if (rCircle2.Enabled)
+            if (rCircle2.Active)
             {
                 Utility.DrawCircle(ObjectManager.Player.Position, 5500, rCircle2.Color, 1, 30, true);
             }

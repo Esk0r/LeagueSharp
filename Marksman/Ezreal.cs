@@ -102,7 +102,7 @@ namespace Marksman
             foreach (var spell in SpellList)
             {
                 var menuItem =GetValue<Circle>("Draw" + spell.Slot);
-                if (menuItem.Enabled)
+                if (menuItem.Active)
                 {
                    Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
                 }

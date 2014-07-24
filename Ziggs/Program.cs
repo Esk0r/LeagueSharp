@@ -135,27 +135,27 @@ namespace Ziggs
         private static void Drawing_OnDraw(EventArgs args)
         {
             var qValue = Config.Item("DrawQRange").GetValue<Circle>();
-            if (qValue.Enabled)
+            if (qValue.Active)
                 Utility.DrawCircle(ObjectManager.Player.Position, Q3.Range,
                     qValue.Color);
 
             var wValue = Config.Item("DrawWRange").GetValue<Circle>();
-            if (wValue.Enabled)
+            if (wValue.Active)
                 Utility.DrawCircle(ObjectManager.Player.Position, W.Range,
                     wValue.Color);
 
             var eValue = Config.Item("DrawERange").GetValue<Circle>();
-            if (eValue.Enabled)
+            if (eValue.Active)
                 Utility.DrawCircle(ObjectManager.Player.Position, E.Range,
                     eValue.Color);
 
             var rValue = Config.Item("DrawRRange").GetValue<Circle>();
-            if (rValue.Enabled)
+            if (rValue.Active)
                 Utility.DrawCircle(ObjectManager.Player.Position, R.Range,
                     rValue.Color);
 
             var rValueM = Config.Item("DrawRRangeM").GetValue<Circle>();
-            if (rValueM.Enabled)
+            if (rValueM.Active)
                 Utility.DrawCircle(ObjectManager.Player.Position, R.Range,
                     rValueM.Color, 2, 30, true);
         }
