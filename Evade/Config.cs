@@ -32,8 +32,6 @@ namespace Evade
 
         public static Menu Menu;
 
-        public static Dash.DashItem item;
-
         public static void CreateMenu()
         {
             Menu = new Menu("Evade", "Evade", true);

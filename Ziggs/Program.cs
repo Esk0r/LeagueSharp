@@ -129,6 +129,7 @@ namespace Ziggs
             Drawing.OnDraw += Drawing_OnDraw;
 
             Interrupter.OnPosibleToInterrupt += Interrupter_OnPosibleToInterrupt;
+
         }
 
         private static void Drawing_OnDraw(EventArgs args)
@@ -171,7 +172,7 @@ namespace Ziggs
                  (ObjectManager.Player.Mana/ObjectManager.Player.MaxMana*100) >
                  Config.Item("ManaSliderHarass").GetValue<Slider>().Value))
             {
-                var target = TargetSelector.GetTarget(1200f, DamageLib.DamageType.Magical);
+                var target = SimpleTs.GetTarget(1200f, SimpleTs.DamageType.Magical);
                 if (target != null)
                 {
                     if (((Config.Item("ComboActive").GetValue<KeyBind>().Active &&
@@ -241,7 +242,7 @@ namespace Ziggs
                 return;
             }
 
-            if (prediction.HitChance >= Prediction.HitChance.VP_HighHitchance)
+            if (prediction.HitChance >= Prediction.HitChance.HighHitchance)
             {
                 if (ObjectManager.Player.ServerPosition.Distance(prediction.CastPosition) <= Q1.Range + Q1.Width)
                 {

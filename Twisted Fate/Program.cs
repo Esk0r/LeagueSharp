@@ -152,7 +152,7 @@ namespace TwistedFate
                 if (enemy.IsValidTarget() && enemy.NetworkId != unit.NetworkId)
                 {
                     var pos = Q.GetPrediction(enemy);
-                    if (pos.HitChance >= Prediction.HitChance.VP_LowHitchance)
+                    if (pos.HitChance >= Prediction.HitChance.LowHitchance)
                     {
                         points.Add(pos.Position.To2D());
                         hitBoxes.Add((int) enemy.BoundingRadius);
@@ -268,8 +268,8 @@ namespace TwistedFate
                     if (enemy.IsValidTarget(Q.Range * 2))
                     {
                         var pred = Q.GetPrediction(enemy);
-                        if ((pred.HitChance == Prediction.HitChance.VP_Immobile && autoQI) ||
-                            (pred.HitChance == Prediction.HitChance.VP_Dashing  && autoQD))
+                        if ((pred.HitChance == Prediction.HitChance.Immobile && autoQI) ||
+                            (pred.HitChance == Prediction.HitChance.Dashing  && autoQD))
                         {
                             CastQ(enemy, pred.Position.To2D());
                         }
