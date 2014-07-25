@@ -205,7 +205,7 @@ namespace TwistedFate
         private static float ComboDamage(Obj_AI_Hero hero)
         {   
             var dmg = 0d;
-            dmg += DamageLib.getDmg(hero, DamageLib.SpellType.Q);
+            dmg += DamageLib.getDmg(hero, DamageLib.SpellType.Q) * 2;
             dmg += DamageLib.getDmg(hero, DamageLib.SpellType.W, DamageLib.StageType.ThirdDamage);
             dmg += DamageLib.getDmg(hero, DamageLib.SpellType.E, DamageLib.StageType.ThirdDamage);
 
@@ -251,11 +251,12 @@ namespace TwistedFate
             if (CardSelector.Status == SelectStatus.Selected && combo)
             {
                 var target = SOW.GetTarget();
-                if (target.IsValidTarget() && target is Obj_AI_Hero && Items.HasItem("ItemBlackfireTorch") && ComboDamage((Obj_AI_Hero) target) >= target.Health)
+                if (target.IsValidTarget() && target is Obj_AI_Hero && Items.HasItem("DeathfireGrasp") && ComboDamage((Obj_AI_Hero)target) >= target.Health)
                 {
-                    Items.UseItem("ItemBlackfireTorch", (Obj_AI_Hero) target);
+                    Items.UseItem("DeathfireGrasp", (Obj_AI_Hero) target);
                 }
             }
+
 
             //Auto Q
             var autoQI = Config.Item("AutoQI").GetValue<bool>();
@@ -274,9 +275,7 @@ namespace TwistedFate
                             CastQ(enemy, pred.Position.To2D());
                         }
                     }
-                   
                 }
-
         }
     }
 }

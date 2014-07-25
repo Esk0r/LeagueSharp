@@ -530,7 +530,6 @@ namespace Ziggs
                 if (useE && E.IsReady())
                     E.Cast(mob);
             }
-
         }
     }
 }

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-using Leaguesharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
 using GamePath = System.Collections.Generic.List<SharpDX.Vector2>;
@@ -109,7 +108,6 @@ namespace Evade
 
             //Ondash event.
             CustomEvents.Unit.OnDash += UnitOnOnDash;
-            ObjectManager.Player.IsDashing();
 
         }
 
