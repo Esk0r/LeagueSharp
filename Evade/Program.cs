@@ -129,6 +129,9 @@ namespace Evade
             if (skillshot.Unit.Team == ObjectManager.Player.Team && !Config.TestOnAllies)
                 return;
 
+            //Check if the skillshot is too far away.
+            if (skillshot.Start.Distance(ObjectManager.Player.ServerPosition.To2D()) > skillshot.SpellData.Range * 1.5)
+                return;
 
             //Add the skillshot to the detected skillshot list.
             if (!alreadyAdded)
