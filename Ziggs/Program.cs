@@ -1,6 +1,4 @@
-﻿using LeagueSharp.Common;
-
-#region
+﻿#region
 
 using System;
 using System.Collections.Generic;
