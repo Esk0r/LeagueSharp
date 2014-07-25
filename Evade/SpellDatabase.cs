@@ -80,7 +80,7 @@ namespace Evade
                 SpellName = "AhriSeduce",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
-                Delay = 0,
+                Delay = 250,
                 Range = 1000,
                 Radius = 60,
                 MissileSpeed = 1500,
@@ -2432,7 +2432,7 @@ namespace Evade
                 FixedRange = true,
                 AddHitbox = true,
                 DangerValue = 2,
-                IsDangerous = false,
+                IsDangerous = true,
                 MissileSpellName = "XerathMageSpear",
                 CanBeRemoved = true,
 
