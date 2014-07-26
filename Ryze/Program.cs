@@ -1,15 +1,17 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LeagueSharp;
 using LeagueSharp.Common;
-using Color = System.Drawing.Color;
+
+#endregion
 
 namespace Ryze
 {
-    class Program
+    internal class Program
     {
         public const string ChampionName = "Ryze";
 
@@ -27,12 +29,12 @@ namespace Ryze
         //Menu
         public static Menu Config;
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
         }
 
-        static void Game_OnGameLoad(EventArgs args)
+        private static void Game_OnGameLoad(EventArgs args)
         {
             if (ObjectManager.Player.BaseSkinName != ChampionName) return;
 
@@ -55,33 +57,58 @@ namespace Ryze
             Orbwalker = new Orbwalking.Orbwalker(Config.SubMenu("Orbwalking"));
 
             Config.AddSubMenu(new Menu("Combo", "Combo"));
-            Config.SubMenu("Combo").AddItem(new MenuItem("ComboActive", "Combo!").SetValue(new KeyBind(32, KeyBindType.Press)));
+            Config.SubMenu("Combo")
+                .AddItem(new MenuItem("ComboActive", "Combo!").SetValue(new KeyBind(32, KeyBindType.Press)));
 
             Config.AddSubMenu(new Menu("Harass", "Harass"));
             Config.SubMenu("Harass").AddItem(new MenuItem("UseQHarass", "Use Q").SetValue(true));
-            Config.SubMenu("Harass").AddItem(new MenuItem("HarassActive", "Harass!").SetValue(new KeyBind("C".ToCharArray()[0], KeyBindType.Press)));
+            Config.SubMenu("Harass")
+                .AddItem(
+                    new MenuItem("HarassActive", "Harass!").SetValue(new KeyBind("C".ToCharArray()[0], KeyBindType.Press)));
 
             Config.AddSubMenu(new Menu("Farm", "Farm"));
-            Config.SubMenu("Farm").AddItem(new MenuItem("UseQFarm", "Use Q").SetValue(new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 2)));
-            Config.SubMenu("Farm").AddItem(new MenuItem("UseWFarm", "Use W").SetValue(new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 3)));
-            Config.SubMenu("Farm").AddItem(new MenuItem("UseEFarm", "Use E").SetValue(new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 1)));
-            Config.SubMenu("Farm").AddItem(new MenuItem("FreezeActive", "Freeze!").SetValue(new KeyBind("C".ToCharArray()[0], KeyBindType.Press)));
-            Config.SubMenu("Farm").AddItem(new MenuItem("LaneClearActive", "LaneClear!").SetValue(new KeyBind("V".ToCharArray()[0], KeyBindType.Press)));
+            Config.SubMenu("Farm")
+                .AddItem(
+                    new MenuItem("UseQFarm", "Use Q").SetValue(
+                        new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 2)));
+            Config.SubMenu("Farm")
+                .AddItem(
+                    new MenuItem("UseWFarm", "Use W").SetValue(
+                        new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 3)));
+            Config.SubMenu("Farm")
+                .AddItem(
+                    new MenuItem("UseEFarm", "Use E").SetValue(
+                        new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 1)));
+            Config.SubMenu("Farm")
+                .AddItem(
+                    new MenuItem("FreezeActive", "Freeze!").SetValue(new KeyBind("C".ToCharArray()[0], KeyBindType.Press)));
+            Config.SubMenu("Farm")
+                .AddItem(
+                    new MenuItem("LaneClearActive", "LaneClear!").SetValue(new KeyBind("V".ToCharArray()[0],
+                        KeyBindType.Press)));
 
             Config.AddSubMenu(new Menu("JungleFarm", "JungleFarm"));
             Config.SubMenu("JungleFarm").AddItem(new MenuItem("UseQJFarm", "Use Q").SetValue(true));
             Config.SubMenu("JungleFarm").AddItem(new MenuItem("UseWJFarm", "Use W").SetValue(true));
             Config.SubMenu("JungleFarm").AddItem(new MenuItem("UseEJFarm", "Use E").SetValue(true));
-            Config.SubMenu("JungleFarm").AddItem(new MenuItem("JungleFarmActive", "JungleFarm!").SetValue(new KeyBind("V".ToCharArray()[0], KeyBindType.Press)));
+            Config.SubMenu("JungleFarm")
+                .AddItem(
+                    new MenuItem("JungleFarmActive", "JungleFarm!").SetValue(new KeyBind("V".ToCharArray()[0],
+                        KeyBindType.Press)));
 
 
             Config.AddSubMenu(new Menu("Misc", "Misc"));
 
 
             Config.AddSubMenu(new Menu("Drawings", "Drawings"));
-            Config.SubMenu("Drawings").AddItem(new MenuItem("QRange", "Q range").SetValue(new Circle(true, Color.FromArgb(255, 255, 255, 255))));
-            Config.SubMenu("Drawings").AddItem(new MenuItem("WRange", "W range").SetValue(new Circle(false, Color.FromArgb(255, 255, 255, 255))));
-            Config.SubMenu("Drawings").AddItem(new MenuItem("ERange", "E range").SetValue(new Circle(false, Color.FromArgb(255, 255, 255, 255))));
+            Config.SubMenu("Drawings")
+                .AddItem(new MenuItem("QRange", "Q range").SetValue(new Circle(true, Color.FromArgb(255, 255, 255, 255))));
+            Config.SubMenu("Drawings")
+                .AddItem(
+                    new MenuItem("WRange", "W range").SetValue(new Circle(false, Color.FromArgb(255, 255, 255, 255))));
+            Config.SubMenu("Drawings")
+                .AddItem(
+                    new MenuItem("ERange", "E range").SetValue(new Circle(false, Color.FromArgb(255, 255, 255, 255))));
 
             Config.AddToMainMenu();
 
@@ -93,23 +120,24 @@ namespace Ryze
         }
 
 
-
-        static void Combo()
+        private static void Combo()
         {
             var target = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Magical);
             var qCd = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.Q).CooldownExpires - Game.Time;
-            Orbwalker.SetAttacks(!(Q.IsReady() || W.IsReady() || E.IsReady() || ObjectManager.Player.Distance(target) >= 600));
+            Orbwalker.SetAttacks(
+                !(Q.IsReady() || W.IsReady() || E.IsReady() || ObjectManager.Player.Distance(target) >= 600));
 
             if (target != null)
             {
                 if (ObjectManager.Player.Distance(target) <= 600)
                 {
-                    if (ObjectManager.Player.Distance(target) >= 575 && W.IsReady() && target.Path.Count() > 0 && target.Path[0].Distance(ObjectManager.Player.ServerPosition) > ObjectManager.Player.Distance(target) )
+                    if (ObjectManager.Player.Distance(target) >= 575 && W.IsReady() && target.Path.Count() > 0 &&
+                        target.Path[0].Distance(ObjectManager.Player.ServerPosition) >
+                        ObjectManager.Player.Distance(target))
                     {
                         W.CastOnUnit(target);
                     }
-                    else
-                    if (Q.IsReady())
+                    else if (Q.IsReady())
                     {
                         Q.CastOnUnit(target);
                     }
@@ -128,14 +156,14 @@ namespace Ryze
                         }
                     }
                 }
-                else if(DamageLib.getDmg(target, DamageLib.SpellType.Q) > target.Health)
+                else if (DamageLib.getDmg(target, DamageLib.SpellType.Q) > target.Health)
                 {
                     Q.CastOnUnit(target);
                 }
             }
         }
 
-        static void Harass()
+        private static void Harass()
         {
             var target = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Magical);
 
@@ -145,7 +173,7 @@ namespace Ryze
             }
         }
 
-        static void Farm(bool laneClear)
+        private static void Farm(bool laneClear)
         {
             if (!Orbwalking.CanMove(40)) return;
             var allMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range);
@@ -156,51 +184,52 @@ namespace Ryze
             var useW = (laneClear && (useWi == 1 || useWi == 2)) || (!laneClear && (useWi == 0 || useWi == 2));
             var useE = (laneClear && (useEi == 1 || useEi == 2)) || (!laneClear && (useEi == 0 || useEi == 2));
 
-                if (useQ && Q.IsReady())
+            if (useQ && Q.IsReady())
+            {
+                foreach (var minion in allMinions)
                 {
-                    foreach (var minion in allMinions)
+                    if (minion.IsValidTarget() &&
+                        HealthPrediction.GetHealthPrediction(minion,
+                            (int)(ObjectManager.Player.Distance(minion) * 1000 / 1400)) <
+                        0.75 * DamageLib.getDmg(minion, DamageLib.SpellType.Q))
                     {
-                        if (minion.IsValidTarget() &&
-                            HealthPrediction.GetHealthPrediction(minion,
-                                (int)(ObjectManager.Player.Distance(minion) * 1000 / 1400)) <
-                            0.75 * DamageLib.getDmg(minion, DamageLib.SpellType.Q))
-                        {
-                            Q.CastOnUnit(minion);
-                            return;
-                            
-                        }
-                            
+                        Q.CastOnUnit(minion);
+                        return;
                     }
                 }
-                else if (useW && W.IsReady())
+            }
+            else if (useW && W.IsReady())
+            {
+                foreach (var minion in allMinions)
                 {
-                    foreach (var minion in allMinions)
+                    if (minion.IsValidTarget(W.Range) &&
+                        minion.Health < 0.75 * DamageLib.getDmg(minion, DamageLib.SpellType.W))
                     {
-                        if (minion.IsValidTarget(W.Range) && minion.Health < 0.75*DamageLib.getDmg(minion, DamageLib.SpellType.W))
-                        {
-                             W.CastOnUnit(minion);
-                                                        return;
-                        }
-                           
+                        W.CastOnUnit(minion);
+                        return;
                     }
                 }
-                else if (useE && E.IsReady())
+            }
+            else if (useE && E.IsReady())
+            {
+                foreach (var minion in allMinions)
                 {
-                    foreach (var minion in allMinions)
+                    if (minion.IsValidTarget(E.Range) &&
+                        HealthPrediction.GetHealthPrediction(minion,
+                            (int)(ObjectManager.Player.Distance(minion) * 1000 / 1000)) <
+                        0.75 * DamageLib.getDmg(minion, DamageLib.SpellType.E))
                     {
-                        if (minion.IsValidTarget(E.Range) && HealthPrediction.GetHealthPrediction(minion, (int)(ObjectManager.Player.Distance(minion) * 1000 / 1000)) < 0.75 * DamageLib.getDmg(minion, DamageLib.SpellType.E))
-                                                {
-                             E.CastOnUnit(minion);
-                                                        return;
-                        }
+                        E.CastOnUnit(minion);
+                        return;
                     }
                 }
+            }
 
             if (laneClear)
             {
                 foreach (var minion in allMinions)
                 {
-                    if(useQ)
+                    if (useQ)
                         Q.CastOnUnit(minion);
 
                     if (useW)
@@ -212,9 +241,10 @@ namespace Ryze
             }
         }
 
-        static void JungleFarm()
+        private static void JungleFarm()
         {
-            var mobs = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth);
+            var mobs = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range, MinionTypes.All,
+                MinionTeam.Neutral, MinionOrderTypes.MaxHealth);
             if (mobs.Count > 0)
             {
                 var mob = mobs[0];
@@ -225,7 +255,7 @@ namespace Ryze
         }
 
 
-        static void Game_OnGameUpdate(EventArgs args)
+        private static void Game_OnGameUpdate(EventArgs args)
         {
             Orbwalker.SetAttacks(true);
             if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
@@ -246,9 +276,8 @@ namespace Ryze
             }
         }
 
-        static void Drawing_OnDraw(EventArgs args)
+        private static void Drawing_OnDraw(EventArgs args)
         {
-
             //Draw the ranges of the spells.
             foreach (var spell in SpellList)
             {
@@ -258,7 +287,6 @@ namespace Ryze
                     Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
                 }
             }
-
         }
     }
 }
