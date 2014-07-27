@@ -73,7 +73,7 @@ namespace Evade
         public SpellData SpellData;
         public Vector2 Start;
         public int StartTick;
-        public Obj_AI_Base Unit;
+        public Obj_AI_Base Unit { get; set; }
 
         private bool _cachedValue;
         private int _cachedValueTick = 0;

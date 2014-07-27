@@ -108,7 +108,5 @@ namespace Evade
 
             Menu.AddToMainMenu();
         }
-
-
     }
 }

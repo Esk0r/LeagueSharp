@@ -20,14 +20,14 @@ namespace Marksman
             Drawing.OnDraw += Drawing_OnDraw;
         }
 
-        static void Drawing_OnDraw(EventArgs args)
+        private static void Drawing_OnDraw(EventArgs args)
         {
             return;
-            
+
             var y = 10;
             foreach (var b in ObjectManager.Player.Buffs)
             {
-                var t = b.DisplayName + " - " + b.IsActive + " - " + (b.EndTime > Game.Time ) + " - " + b.IsPositive;
+                var t = b.DisplayName + " - " + b.IsActive + " - " + (b.EndTime > Game.Time) + " - " + b.IsPositive;
                 Drawing.DrawText(0, y, System.Drawing.Color.Wheat, t);
                 y = y + 16;
             }
@@ -37,13 +37,17 @@ namespace Marksman
         {
             Config = new Menu("Marksman", "Marksman", true);
 
-            cClass = new Champion();  
+            cClass = new Champion();
             if (ObjectManager.Player.BaseSkinName == "Ezreal")
                 cClass = new Ezreal();
 
             if (ObjectManager.Player.BaseSkinName == "Jinx")
                 cClass = new Jinx();
 
+            if (ObjectManager.Player.BaseSkinName == "Sivir")
+                cClass = new Sivir();
+
+            cClass.Id = ObjectManager.Player.BaseSkinName;
             cClass.Config = Config;
 
             var orbwalking = Config.AddSubMenu(new Menu("Orbwalking", "Orbwalking"));
@@ -69,9 +73,14 @@ namespace Marksman
             Config.AddToMainMenu();
 
             Game.OnGameUpdate += Game_OnGameUpdate;
+            Game.OnGameProcessPacket += Game_OnGameProcessPacket;
         }
 
-
+        static void Game_OnGameProcessPacket(GamePacketEventArgs args)
+        {
+            var p = new GamePacket(args.PacketData);
+            p.SaveToFile();
+        }
 
         private static void Game_OnGameUpdate(EventArgs args)
         {
@@ -95,8 +104,8 @@ namespace Marksman
                     {
                         var itemId = hasCutGlass ? 3144 : 3153;
                         var damage = DamageLib.getDmg(target, DamageLib.SpellType.BOTRK);
-                        if(hasCutGlass || ObjectManager.Player.Health + damage < ObjectManager.Player.MaxHealth)
-                        Items.UseItem(itemId, target);
+                        if (hasCutGlass || ObjectManager.Player.Health + damage < ObjectManager.Player.MaxHealth)
+                            Items.UseItem(itemId, target);
                     }
                 }
             }

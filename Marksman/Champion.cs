@@ -26,6 +26,7 @@ namespace Marksman
         public virtual void HarassMenu(Menu config)
         {
         }
+
         public virtual void MiscMenu(Menu config)
         {
         }
@@ -37,6 +38,5 @@ namespace Marksman
         public virtual void MainMenu(Menu config)
         {
         }
-
     }
 }

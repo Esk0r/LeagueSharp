@@ -1,19 +1,19 @@
 ﻿#region
 
 using System;
+using System.Drawing;
 using LeagueSharp;
 using LeagueSharp.Common;
-using SharpDX;
-using Color = System.Drawing.Color;
+
 #endregion
 
 namespace Marksman
 {
     internal class Jinx : Champion
     {
-        public Spell W;
         public Spell E;
         public Spell R;
+        public Spell W;
 
         public Jinx()
         {
@@ -53,7 +53,6 @@ namespace Marksman
                 }
             }
 
-            
 
             var AutoEI = GetValue<bool>("AutoEI");
             var AutoED = GetValue<bool>("AutoED");
@@ -63,12 +62,11 @@ namespace Marksman
                 {
                     if (enemy.IsValidTarget(E.Range))
                     {
-                        if(AutoEI)
+                        if (AutoEI)
                             E.CastIfHitchanceEquals(enemy, Prediction.HitChance.Immobile);
 
                         if (AutoED)
                             E.CastIfHitchanceEquals(enemy, Prediction.HitChance.Immobile);
-
                     }
                 }
             }
@@ -76,21 +74,22 @@ namespace Marksman
             if (R.IsReady())
             {
                 var castR = GetValue<KeyBind>("CastR").Active;
-                if (castR || ((Orbwalker.GetTarget() is Obj_AI_Hero) && GetValue<bool>("UseRC") && DamageLib.getDmg(Orbwalker.GetTarget(), DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > Orbwalker.GetTarget().Health))
-                {
-                    var t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
-                    if (t != null)
+                var target = SimpleTs.GetTarget(1500, SimpleTs.DamageType.Physical);
+                if (target != null)
+                    if (castR ||
+                        (GetValue<bool>("UseRC") &&
+                         DamageLib.getDmg(target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) >
+                         target.Health))
                     {
-                        R.Cast(t);
+                        R.Cast(target);
                     }
-                }
             }
         }
 
 
-        void Drawing_OnDraw(EventArgs args)
+        private void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] SpellList = new[] { W };
+            Spell[] SpellList = { W };
             foreach (var spell in SpellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -109,19 +108,22 @@ namespace Marksman
 
         public override void HarassMenu(Menu config)
         {
-            config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
+            config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(false));
         }
 
         public override void MiscMenu(Menu config)
         {
-            config.AddItem(new MenuItem("CastR" + Id, "Cast R (2000 Range)").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
+            config.AddItem(
+                new MenuItem("CastR" + Id, "Cast R (2000 Range)").SetValue(new KeyBind("T".ToCharArray()[0],
+                    KeyBindType.Press)));
             config.AddItem(new MenuItem("AutoEI" + Id, "Auto-E on immobile").SetValue(true));
             config.AddItem(new MenuItem("AutoED" + Id, "Auto-E on dashing").SetValue(true));
         }
 
         public override void DrawingMenu(Menu config)
         {
-            config.AddItem(new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(false, Color.FromArgb(100, 255, 255, 255))));
+            config.AddItem(
+                new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(false, Color.FromArgb(100, 255, 255, 255))));
         }
     }
 }

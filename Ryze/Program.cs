@@ -24,7 +24,6 @@ namespace Ryze
         public static Spell Q;
         public static Spell W;
         public static Spell E;
-        public static Spell R;
 
         //Menu
         public static Menu Config;
@@ -96,10 +95,6 @@ namespace Ryze
                     new MenuItem("JungleFarmActive", "JungleFarm!").SetValue(new KeyBind("V".ToCharArray()[0],
                         KeyBindType.Press)));
 
-
-            Config.AddSubMenu(new Menu("Misc", "Misc"));
-
-
             Config.AddSubMenu(new Menu("Drawings", "Drawings"));
             Config.SubMenu("Drawings")
                 .AddItem(new MenuItem("QRange", "Q range").SetValue(new Circle(true, Color.FromArgb(255, 255, 255, 255))));
@@ -113,12 +108,43 @@ namespace Ryze
             Config.AddToMainMenu();
 
             //Add the events we are going to use:
-
-            Game.OnGameUpdate += Game_OnGameUpdate;
-
             Drawing.OnDraw += Drawing_OnDraw;
+            Game.OnGameUpdate += Game_OnGameUpdate;
         }
 
+        private static void Drawing_OnDraw(EventArgs args)
+        {
+            //Draw the ranges of the spells.
+            foreach (var spell in SpellList)
+            {
+                var menuItem = Config.Item(spell.Slot + "Range").GetValue<Circle>();
+                if (menuItem.Active)
+                {
+                    Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
+                }
+            }
+        }
+
+        private static void Game_OnGameUpdate(EventArgs args)
+        {
+            Orbwalker.SetAttacks(true);
+            if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
+            {
+                Combo();
+            }
+            else
+            {
+                if (Config.Item("HarassActive").GetValue<KeyBind>().Active)
+                    Harass();
+
+                var lc = Config.Item("LaneClearActive").GetValue<KeyBind>().Active;
+                if (lc || Config.Item("FreezeActive").GetValue<KeyBind>().Active)
+                    Farm(lc);
+
+                if (Config.Item("JungleFarmActive").GetValue<KeyBind>().Active)
+                    JungleFarm();
+            }
+        }
 
         private static void Combo()
         {
@@ -243,7 +269,8 @@ namespace Ryze
 
         private static void JungleFarm()
         {
-            var mobs = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range, MinionTypes.All,
+            var mobs = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range,
+                MinionTypes.All,
                 MinionTeam.Neutral, MinionOrderTypes.MaxHealth);
             if (mobs.Count > 0)
             {
@@ -251,41 +278,6 @@ namespace Ryze
                 Q.CastOnUnit(mob);
                 W.CastOnUnit(mob);
                 E.CastOnUnit(mob);
-            }
-        }
-
-
-        private static void Game_OnGameUpdate(EventArgs args)
-        {
-            Orbwalker.SetAttacks(true);
-            if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
-            {
-                Combo();
-            }
-            else
-            {
-                if (Config.Item("HarassActive").GetValue<KeyBind>().Active)
-                    Harass();
-
-                var lc = Config.Item("LaneClearActive").GetValue<KeyBind>().Active;
-                if (lc || Config.Item("FreezeActive").GetValue<KeyBind>().Active)
-                    Farm(lc);
-
-                if (Config.Item("JungleFarmActive").GetValue<KeyBind>().Active)
-                    JungleFarm();
-            }
-        }
-
-        private static void Drawing_OnDraw(EventArgs args)
-        {
-            //Draw the ranges of the spells.
-            foreach (var spell in SpellList)
-            {
-                var menuItem = Config.Item(spell.Slot + "Range").GetValue<Circle>();
-                if (menuItem.Active)
-                {
-                    Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
-                }
             }
         }
     }

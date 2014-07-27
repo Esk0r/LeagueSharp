@@ -851,7 +851,7 @@ namespace Evade
                 Type = SkillShotType.SkillshotMissileLine,
                 Delay = 0,
                 Range = 1200,
-                Radius = 0,
+                Radius = 50,
                 MissileSpeed = 1600,
                 FixedRange = true,
                 AddHitbox = true,

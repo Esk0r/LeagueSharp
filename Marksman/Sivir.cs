@@ -9,25 +9,21 @@ using LeagueSharp.Common;
 
 namespace Marksman
 {
-    internal class Ezreal : Champion
+    internal class Sivir : Champion
     {
         public Spell Q;
         public Spell R;
         public Spell W;
 
 
-        public Ezreal()
+        public Sivir()
         {
-            Utils.PrintMessage("Ezreal loaded.");
+            Utils.PrintMessage("Sivir loaded.");
 
-            Q = new Spell(SpellSlot.Q, 1200);
-            Q.SetSkillshot(0.25f, 60f, 2000f, true, Prediction.SkillshotType.SkillshotLine);
+            Q = new Spell(SpellSlot.Q, 1175);
+            Q.SetSkillshot(0.25f, 90f, 1350f, false, Prediction.SkillshotType.SkillshotLine);
 
             W = new Spell(SpellSlot.W, 1050);
-            W.SetSkillshot(0.25f, 80f, 1600f, false, Prediction.SkillshotType.SkillshotLine);
-
-            R = new Spell(SpellSlot.R, 2500);
-            R.SetSkillshot(1f, 160f, 2000f, false, Prediction.SkillshotType.SkillshotLine);
 
             Orbwalking.AfterAttack += Orbwalking_AfterAttack;
             Game.OnGameUpdate += Game_OnGameUpdate;
@@ -39,7 +35,6 @@ namespace Marksman
             if (ComboActive || HarassActive)
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-                var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
 
                 if (Orbwalking.CanMove(100))
                 {
@@ -48,30 +43,8 @@ namespace Marksman
                         var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
                         if (t != null)
                         {
-                            Q.Cast(t);
+                            Q.Cast(t, false, true);
                         }
-                    }
-
-                    if (W.IsReady() && useW)
-                    {
-                        var t = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
-                        if (t != null)
-                        {
-                            W.Cast(t);
-                        }
-                    }
-                }
-            }
-
-            if (R.IsReady())
-            {
-                var CastR = GetValue<KeyBind>("CastR").Active;
-                if (CastR)
-                {
-                    var t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
-                    if (t != null)
-                    {
-                        R.Cast(t);
                     }
                 }
             }
@@ -84,21 +57,21 @@ namespace Marksman
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
                 var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
 
-                if (Q.IsReady() && useQ)
+                if (W.IsReady() && useW)
+                {
+                    ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W);
+                }
+                else if (Q.IsReady() && useQ)
                 {
                     Q.Cast(target);
-                }
-                else if (W.IsReady() && useW)
-                {
-                    W.Cast(target);
                 }
             }
         }
 
         private void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] SpellList = { Q, W };
-            foreach (var spell in SpellList)
+            Spell[] spellList = { Q };
+            foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
                 if (menuItem.Active)
@@ -116,23 +89,14 @@ namespace Marksman
 
         public override void HarassMenu(Menu config)
         {
-            config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
-            config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
-        }
-
-        public override void MiscMenu(Menu config)
-        {
-            config.AddItem(
-                new MenuItem("CastR" + Id, "Cast R (2000 Range)").SetValue(new KeyBind("T".ToCharArray()[0],
-                    KeyBindType.Press)));
+            config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(false));
+            config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(false));
         }
 
         public override void DrawingMenu(Menu config)
         {
             config.AddItem(
                 new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
-            config.AddItem(
-                new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(false, Color.FromArgb(100, 255, 255, 255))));
         }
     }
 }

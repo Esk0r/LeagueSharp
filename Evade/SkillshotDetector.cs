@@ -179,7 +179,7 @@ namespace Evade
                 packet.Position = packet.Size() - 83;
                
                 var unit = ObjectManager.GetUnitByNetworkId<Obj_AI_Hero>(packet.ReadInteger());
-                if (!unit.IsValid || unit.Team == ObjectManager.Player.Team && !Config.TestOnAllies) return;
+                if ((!unit.IsValid || unit.Team == ObjectManager.Player.Team) && !Config.TestOnAllies) return;
                
                 var spellData = SpellDatabase.GetBySpeed(unit.BaseSkinName, (int) missileSpeed, id);
 
