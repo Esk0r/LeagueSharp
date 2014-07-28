@@ -1,0 +1,12 @@
+C:\Users\Stephen\Downloads\LeagueSharp-master(3)\LeagueSharp-master\Evade\bin\Debug\Evade.exe.config
+C:\Users\Stephen\Downloads\LeagueSharp-master(3)\LeagueSharp-master\Evade\bin\Debug\Evade.exe
+C:\Users\Stephen\Downloads\LeagueSharp-master(3)\LeagueSharp-master\Evade\bin\Debug\Evade.pdb
+C:\Users\Stephen\Downloads\LeagueSharp-master(3)\LeagueSharp-master\Evade\bin\Debug\clipper_library.dll
+C:\Users\Stephen\Downloads\LeagueSharp-master(3)\LeagueSharp-master\Evade\bin\Debug\LeagueSharp.Common.dll
+C:\Users\Stephen\Downloads\LeagueSharp-master(3)\LeagueSharp-master\Evade\bin\Debug\LeagueSharp.dll
+C:\Users\Stephen\Downloads\LeagueSharp-master(3)\LeagueSharp-master\Evade\bin\Debug\SharpDX.dll
+C:\Users\Stephen\Downloads\LeagueSharp-master(3)\LeagueSharp-master\Evade\bin\Debug\SharpDX.Direct3D9.dll
+C:\Users\Stephen\Downloads\LeagueSharp-master(3)\LeagueSharp-master\Evade\bin\Debug\LeagueSharp.xml
+C:\Users\Stephen\Downloads\LeagueSharp-master(3)\LeagueSharp-master\Evade\obj\Debug\Evade.exe
+C:\Users\Stephen\Downloads\LeagueSharp-master(3)\LeagueSharp-master\Evade\obj\Debug\Evade.pdb
+C:\Users\Stephen\Downloads\LeagueSharp-master(3)\LeagueSharp-master\Evade\obj\Debug\Evade.csprojResolveAssemblyReference.cache
