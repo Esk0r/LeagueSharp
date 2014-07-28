@@ -15,7 +15,7 @@ namespace Evade
 {
     internal class Program
     {
-        public static List<Skillshot> DetectedSkillshots = new List<Skillshot>();
+        public static SpellList<Skillshot> DetectedSkillshots = new SpellList<Skillshot>();
 
         private static bool _evading;
 
@@ -28,6 +28,7 @@ namespace Evade
         public static Vector2 AfterEvadePoint = new Vector2();
         public static Vector2 CutPathPoint = new Vector2();
         public static Vector2 PreviousTickPosition = new Vector2();
+        private static bool _recalculate;
 
         public static bool Evading
         {
@@ -35,7 +36,7 @@ namespace Evade
             set
             {
                 _evading = value;
-                if (value == false)
+                if (value == false && !_recalculate)
                 {
                     if (AfterEvadePoint.IsValid())
                     {
@@ -43,6 +44,7 @@ namespace Evade
                         AfterEvadePoint = new Vector2();
                     }
                 }
+                _recalculate = false;
             }
 
             
@@ -61,10 +63,15 @@ namespace Evade
 
         private static void Main(string[] args)
         {
+
+
+            
             if (Game.Mode == GameMode.Running)
                 Game_OnGameStart(new EventArgs());
 
+            
             Game.OnGameStart += Game_OnGameStart;
+            
         }
 
         private static bool IsSpellShielded(Obj_AI_Hero unit)
@@ -93,13 +100,10 @@ namespace Evade
 
         private static void Game_OnGameStart(EventArgs args)
         {
-            //Create the menu to allow the user to change the config.
-            Config.CreateMenu();
-
             //Add the game events.
             Game.OnGameUpdate += Game_OnOnGameUpdate;
             Game.OnGameSendPacket += Game_OnGameSendPacket;
-
+            
             //Set up the OnDetectSkillshot Event.
             SkillshotDetector.OnDetectSkillshot += OnDetectSkillshot;
 
@@ -109,6 +113,16 @@ namespace Evade
             //Ondash event.
             CustomEvents.Unit.OnDash += UnitOnOnDash;
 
+            DetectedSkillshots.OnAdd += DetectedSkillshots_OnAdd;
+
+            //Create the menu to allow the user to change the config.
+            Config.CreateMenu();
+        }
+
+        static void DetectedSkillshots_OnAdd(object sender, EventArgs e)
+        {
+            _recalculate = true;
+            Evading = false;
         }
 
         private static void OnDetectSkillshot(Skillshot skillshot)
@@ -124,13 +138,12 @@ namespace Evade
                 }
             }
 
-
             //Check if the skillshot is from an ally.
             if (skillshot.Unit.Team == ObjectManager.Player.Team && !Config.TestOnAllies)
                 return;
 
             //Check if the skillshot is too far away.
-            if (skillshot.Start.Distance(ObjectManager.Player.ServerPosition.To2D()) > skillshot.SpellData.Range * 1.5)
+            if (skillshot.Start.Distance(ObjectManager.Player.ServerPosition.To2D()) > (skillshot.SpellData.Range + skillshot.SpellData.Radius + 1000) * 1.5)
                 return;
 
             //Add the skillshot to the detected skillshot list.
@@ -188,7 +201,6 @@ namespace Evade
                 //Dont allow fow detection.
                 if (skillshot.SpellData.DisableFowDetection && skillshot.DetectionType == DetectionType.RecvPacket)
                     return;
-
                 DetectedSkillshots.Add(skillshot);
             }
         }
@@ -297,7 +309,7 @@ namespace Evade
                 {
                     //Search for an evade point:
                     //Game.PrintChat("Need to evade!");
-                    TryToEvade(safeResult.SkillshotList, /*EvadeToPoint*/Game.CursorPos.To2D());
+                    TryToEvade(safeResult.SkillshotList, EvadeToPoint);
                     if (Evading)
                         AfterEvadePoint = currentPath[currentPath.Count - 1];
                 }
@@ -802,17 +814,6 @@ namespace Evade
                 }
 
                 Drawing.DrawCircle(EvadePoint.To3D(), 300, Color.White);
-            }
-            return;
-            foreach (var o in ObjectManager.Get<GameObject>())
-            {
-                Drawing.DrawCircle(o.Position, 100, Color.Wheat);
-                if (Game.CursorPos.Distance(o.Position) < 100)
-                {
-                    var rpos = Drawing.WorldToScreen(o.Position);
-                    Drawing.DrawText(rpos[0], rpos[1], Color.White, o.Name);
-                    Console.WriteLine(o.Name);
-                }
             }
         }
 

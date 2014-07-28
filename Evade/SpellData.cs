@@ -28,6 +28,7 @@ namespace Evade
         public string ToggleParticleName = "";
         public string FromObject = "";
 
+        public bool DontAddExtraDuration;
         public bool Centered;
         public bool Invert;
         public int MultipleNumber = -1;
@@ -38,6 +39,7 @@ namespace Evade
         public bool DisableFowDetection = false;
         public bool IsDangerous = false;
 
+        public int RingRadius;
         public SpellData()
         {
             
@@ -75,11 +77,13 @@ namespace Evade
             set { _radius = value; }
         }
 
+       
+
         public int Range
         {
             get
             {
-                return _range + ((Type == SkillShotType.SkillshotLine || Type == SkillShotType.SkillshotMissileLine) ? Config.SkillShotsExtraRadius: 0);
+                return _range + ((Type == SkillShotType.SkillshotLine || Type == SkillShotType.SkillshotMissileLine) ? Config.SkillShotsExtraRange : 0);
             }
             set
             {

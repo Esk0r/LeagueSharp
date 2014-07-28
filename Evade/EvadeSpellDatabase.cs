@@ -105,7 +105,7 @@ namespace Evade
                 #region Ezreal
                 if (ObjectManager.Player.BaseSkinName == "Ezreal")
                 {
-                    spell = new BlinkData("Ezreal E", SpellSlot.E, 450, 250, 3);
+                    spell = new BlinkData("Ezreal E", SpellSlot.E, 450, 350, 3);
                     Spells.Add(spell);
                 }
                 #endregion

@@ -20,7 +20,7 @@ namespace Evade
     /// </summary>
     public static class Geometry
     {
-        private const int CircleLineSegmentN = 30;
+        private const int CircleLineSegmentN = 22;
 
         public static Vector3 SwitchYZ(this Vector3 v)
         {
@@ -92,33 +92,6 @@ namespace Evade
             return solution;
         }
 
-        public class Circle
-        {
-            public Vector2 Center;
-            public float Radius;
-
-            public Circle(Vector2 center, float radius)
-            {
-                Center = center;
-                Radius = radius;
-            }
-
-            public Polygon ToPolygon(int offset = 0)
-            {
-                var result = new Polygon();
-                var outRadius = (offset + Radius)/(float) Math.Cos(2*Math.PI/CircleLineSegmentN);
-
-                for (var i = 1; i <= CircleLineSegmentN; i++)
-                {
-                    var angle = i*2*Math.PI/CircleLineSegmentN;
-                    var point = new Vector2(Center.X + outRadius*(float) Math.Cos(angle),
-                        Center.Y + outRadius*(float) Math.Sin(angle));
-                    result.Add(point);
-                }
-
-                return result;
-            }
-        }
 
         public class Polygon
         {
@@ -156,6 +129,35 @@ namespace Evade
                     var to = Drawing.WorldToScreen(Points[nextIndex].To3D());
                     Drawing.DrawLine(from[0], from[1], to[0], to[1], width, color);
                 }
+            }
+        }
+
+
+        public class Circle
+        {
+            public Vector2 Center;
+            public float Radius;
+
+            public Circle(Vector2 center, float radius)
+            {
+                Center = center;
+                Radius = radius;
+            }
+
+            public Polygon ToPolygon(int offset = 0)
+            {
+                var result = new Polygon();
+                var outRadius = (offset + Radius)/(float) Math.Cos(2*Math.PI/CircleLineSegmentN);
+
+                for (var i = 1; i <= CircleLineSegmentN; i++)
+                {
+                    var angle = i*2*Math.PI/CircleLineSegmentN;
+                    var point = new Vector2(Center.X + outRadius*(float) Math.Cos(angle),
+                        Center.Y + outRadius*(float) Math.Sin(angle));
+                    result.Add(point);
+                }
+
+                return result;
             }
         }
 
@@ -217,6 +219,47 @@ namespace Evade
                     var cDirection = Side1.Rotated(i * Angle / CircleLineSegmentN).Normalized();
                     result.Add(new Vector2(Center.X + outRadius*cDirection.X, Center.Y + outRadius*cDirection.Y));
                 }
+
+                return result;
+            }
+        }
+
+
+        public class Ring
+        {
+            public Vector2 Center;
+            public float Radius;
+            public float RingRadius; //actually radius width.
+            public Ring(Vector2 center, float radius, float ringRadius)
+            {
+                Center = center;
+                Radius = radius;
+                RingRadius = ringRadius;
+            }
+
+            public Polygon ToPolygon(int offset = 0)
+            {
+                var result = new Polygon();
+
+                var outRadius = (offset + Radius + RingRadius) / (float)Math.Cos(2 * Math.PI / CircleLineSegmentN);
+                var innerRadius = Radius - RingRadius - offset;
+
+                for (var i = 0; i <= CircleLineSegmentN; i++)
+                {
+                    var angle = i * 2 * Math.PI / CircleLineSegmentN;
+                    var point = new Vector2(Center.X - outRadius * (float)Math.Cos(angle),
+                        Center.Y - outRadius * (float)Math.Sin(angle));
+                    result.Add(point);
+                }
+
+                for (var i = 0; i <= CircleLineSegmentN; i++)
+                {
+                    var angle = i * 2 * Math.PI / CircleLineSegmentN;
+                    var point = new Vector2(Center.X + innerRadius * (float)Math.Cos(angle),
+                        Center.Y - innerRadius * (float)Math.Sin(angle));
+                    result.Add(point);
+                }
+
 
                 return result;
             }

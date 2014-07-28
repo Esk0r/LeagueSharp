@@ -19,6 +19,7 @@ namespace Evade
         SkillshotLine,
         SkillshotMissileLine,
         SkillshotCone,
+        SkillshotRing,
     }
 
     public enum DetectionType
@@ -70,6 +71,8 @@ namespace Evade
         public Geometry.Polygon Polygon;
         public Geometry.Rectangle Rectangle;
         public Geometry.Sector Sector;
+        public Geometry.Ring Ring;
+
         public SpellData SpellData;
         public Vector2 Start;
         public int StartTick;
@@ -104,6 +107,9 @@ namespace Evade
                     break;
                 case SkillShotType.SkillshotCone:
                     Sector = new Geometry.Sector(start, end - start, spellData.Radius * (float) Math.PI / 180, spellData.Range);
+                    break;
+                case SkillShotType.SkillshotRing:
+                    Ring = new Geometry.Ring(end, spellData.Radius, spellData.RingRadius);
                     break;
             }
 
@@ -187,6 +193,10 @@ namespace Evade
                 case SkillShotType.SkillshotCone:
                     Polygon = Sector.ToPolygon();
                     EvadePolygon = Sector.ToPolygon(Config.ExtraEvadeDistance);
+                    break;
+                case SkillShotType.SkillshotRing:
+                    Polygon = Ring.ToPolygon();
+                    EvadePolygon = Ring.ToPolygon(Config.ExtraEvadeDistance);
                     break;
             }
         }
@@ -350,7 +360,7 @@ namespace Evade
                     return new SafePathResult(false, new FoundIntersection());
             }
 
-            var timeToExplode = SpellData.ExtraDuration + SpellData.Delay +
+            var timeToExplode = (SpellData.DontAddExtraDuration ? 0 : SpellData.ExtraDuration) + SpellData.Delay +
                                 (int) (1000*Start.Distance(End)/SpellData.MissileSpeed) -
                                 (Environment.TickCount - StartTick);
 

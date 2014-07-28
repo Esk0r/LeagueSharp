@@ -98,6 +98,8 @@ namespace Evade
         /// </summary>
         private static void ObjAiHeroOnOnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
+
+            
             if (Config.PrintSpellData)
             {
                 Game.PrintChat(Environment.TickCount + " ProcessSpellCast: " + args.SData.Name);
@@ -142,7 +144,7 @@ namespace Evade
                 endPos = endPos + Math.Min(spellData.ExtraRange, spellData.Range - endPos.Distance(startPos)) * Direction;
             }
 
-
+            
             //Trigger the skillshot detection callbacks.
             TriggerOnDetectSkillshot(DetectionType.ProcessSpell, spellData, Environment.TickCount - Game.Ping / 2, startPos, endPos,
                 sender);
@@ -151,12 +153,11 @@ namespace Evade
         /// <summary>
         /// Detects the spells that have missile and are casted from fow.
         /// </summary>
-        private static void GameOnOnGameProcessPacket(GamePacketEventArgs args)
+        public static void GameOnOnGameProcessPacket(GamePacketEventArgs args)
         {
             //Gets received when a projectile is created.
             if (args.PacketData[0] == 0x3B)
             {
-                
                 var packet = new GamePacket(args.PacketData);
                 
                 packet.Position = 1;

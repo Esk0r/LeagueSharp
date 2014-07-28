@@ -1,5 +1,6 @@
 #region
 
+using System;
 using System.Collections.Generic;
 using LeagueSharp;
 using LeagueSharp.Common;
@@ -48,12 +49,12 @@ namespace Evade
                     var direction = (sideEnd - sideStart).Normalized();
                     var originalCandidate = myPosition.ProjectOn(sideStart, sideEnd).SegmentPoint;
                     if(Vector2.DistanceSquared(originalCandidate, myPosition) < 1000 * 1000)
-                    { 
+                    {
                         for (var j = -Config.DiagonalEvadePointsCount; j <= Config.DiagonalEvadePointsCount; j++)
                         {
                             var candidate = originalCandidate + j*Config.DiagonalEvadePointsStep*direction;
                             var pathToPoint = ObjectManager.Player.GetPath(candidate.To3D()).To2DList();
-
+                           
                             if (!isBlink)
                             {
                                 if (Program.IsSafePath(pathToPoint, Config.EvadingFirstTimeOffset, speed, delay).IsSafe)
@@ -85,7 +86,6 @@ namespace Evade
                     }
                 }
             }
-
 
             return (goodCandidates.Count > 0) ? goodCandidates : (onlyGood ? new GamePath() : badCandidates);
         }

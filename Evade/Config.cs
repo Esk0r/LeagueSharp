@@ -15,6 +15,7 @@ namespace Evade
 
         public const bool TestOnAllies = false;
         public const int SkillShotsExtraRadius = 10;
+        public const int SkillShotsExtraRange = 20;
         public const int GridSize = 10;
         public const int ExtraEvadeDistance = 15;
         public const int DiagonalEvadePointsCount = 7;
@@ -34,8 +35,9 @@ namespace Evade
 
         public static void CreateMenu()
         {
+            
             Menu = new Menu("Evade", "Evade", true);
-
+            
             //Create the evade spells submenus.
             var evadeSpells = new Menu("Evade spells", "evadeSpells");
             foreach (var spell in EvadeSpellDatabase.Spells)

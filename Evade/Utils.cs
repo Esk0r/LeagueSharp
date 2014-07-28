@@ -1,5 +1,6 @@
 #region
 
+using System;
 using System.Collections.Generic;
 using LeagueSharp;
 using LeagueSharp.Common;
@@ -42,6 +43,19 @@ namespace Evade
             }
 
             return result;
+        }
+    }
+
+    internal class SpellList<T> : List<T>
+    {
+        public event EventHandler OnAdd;
+
+        new public void Add(T item)
+        {
+            if (OnAdd != null)
+                OnAdd(this, null);
+
+            base.Add(item);
         }
     }
 }

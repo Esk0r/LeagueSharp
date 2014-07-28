@@ -2259,8 +2259,29 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "VeigarDarkMatter",
 
+            });
+
+            Spells.Add(new SpellData
+            {
+                BaseSkinName = "Veigar",
+                SpellName = "VeigarEventHorizon",
+                Slot = SpellSlot.E,
+                Type = SkillShotType.SkillshotRing,
+                Delay = 250,
+                Range = 600,
+                Radius = 80,
+                
+                MissileSpeed = int.MaxValue,
+                FixedRange = false,
+                AddHitbox = false,
+                DangerValue = 3,
+                IsDangerous = true,
+                DontAddExtraDuration = true,
+
+                RingRadius = 350,
+                ExtraDuration = 3000,
+                DonCross = true,
             });
 
             #endregion Veigar
@@ -2382,6 +2403,7 @@ namespace Evade
             });
 
             #endregion Viktor
+            //FIX 2 delay
             #region Xerath
             Spells.Add(new SpellData
             {
