@@ -73,13 +73,6 @@ namespace Marksman
             Config.AddToMainMenu();
 
             Game.OnGameUpdate += Game_OnGameUpdate;
-            Game.OnGameProcessPacket += Game_OnGameProcessPacket;
-        }
-
-        static void Game_OnGameProcessPacket(GamePacketEventArgs args)
-        {
-            var p = new GamePacket(args.PacketData);
-            p.SaveToFile();
         }
 
         private static void Game_OnGameUpdate(EventArgs args)
@@ -95,7 +88,7 @@ namespace Marksman
 
             if (botrk)
             {
-                if (target != null && target.ServerPosition.Distance(ObjectManager.Player.ServerPosition) < 450)
+                if (target != null && target.Type == ObjectManager.Player.Type && target.ServerPosition.Distance(ObjectManager.Player.ServerPosition) < 450)
                 {
                     var hasCutGlass = Items.HasItem(3144);
                     var hasBOTRK = Items.HasItem(3153);
