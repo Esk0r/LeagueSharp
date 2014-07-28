@@ -191,7 +191,7 @@ namespace Evade
                 {
                     spell = new ShieldData("Lulu E", SpellSlot.E, 100, 1);
                     spell.CanShieldAllies = true;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 #endregion
@@ -200,7 +200,7 @@ namespace Evade
                 {
                     spell = new ShieldData("Karma E", SpellSlot.E, 100, 1);
                     spell.CanShieldAllies = true;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 #endregion
@@ -209,7 +209,7 @@ namespace Evade
                 {
                     spell = new ShieldData("LeeSin W", SpellSlot.W, 100, 1);
                     spell.CanShieldAllies = true;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 #endregion
@@ -218,7 +218,7 @@ namespace Evade
                 {
                     spell = new ShieldData("Orianna E", SpellSlot.E, 100, 1);
                     spell.CanShieldAllies = true;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 #endregion
@@ -227,7 +227,7 @@ namespace Evade
                 {
                     spell = new ShieldData("Karma E", SpellSlot.E, 100, 1);
                     spell.CanShieldAllies = true;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 #endregion
@@ -236,13 +236,13 @@ namespace Evade
                 {
                     spell = new ShieldData("Shen W", SpellSlot.W, 100, 1);
                     spell.CanShieldAllies = false;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 {
                     spell = new ShieldData("Shen R", SpellSlot.R, 100, 1);
                     spell.CanShieldAllies = true;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 #endregion
@@ -251,7 +251,7 @@ namespace Evade
                 {
                     spell = new ShieldData("Rumble W", SpellSlot.W, 100, 1);
                     spell.CanShieldAllies = false;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 #endregion
@@ -260,7 +260,7 @@ namespace Evade
                 {
                     spell = new ShieldData("Nautilus W", SpellSlot.W, 100, 1);
                     spell.CanShieldAllies = false;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 #endregion
@@ -269,7 +269,7 @@ namespace Evade
                 {
                     spell = new ShieldData("Sion W", SpellSlot.W, 100, 1);
                     spell.CanShieldAllies = false;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 #endregion
@@ -278,7 +278,7 @@ namespace Evade
                 {
                     spell = new ShieldData("JarvanIV W", SpellSlot.W, 100, 1);
                     spell.CanShieldAllies = false;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 #endregion
@@ -287,7 +287,7 @@ namespace Evade
                 {
                     spell = new ShieldData("Skarner W", SpellSlot.W, 100, 1);
                     spell.CanShieldAllies = false;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 #endregion
@@ -296,7 +296,7 @@ namespace Evade
                 {
                     spell = new ShieldData("Urgot W", SpellSlot.W, 100, 1);
                     spell.CanShieldAllies = false;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 #endregion
@@ -305,7 +305,7 @@ namespace Evade
                 {
                     spell = new ShieldData("Diana W", SpellSlot.W, 100, 1);
                     spell.CanShieldAllies = false;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 #endregion
@@ -314,7 +314,7 @@ namespace Evade
                 {
                     spell = new ShieldData("Udyr W", SpellSlot.W, 100, 1);
                     spell.CanShieldAllies = false;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 #endregion
@@ -323,7 +323,7 @@ namespace Evade
                 {
                     spell = new ShieldData("Kayle R", SpellSlot.R, 100, 1);
                     spell.CanShieldAllies = true;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 #endregion
@@ -343,7 +343,7 @@ namespace Evade
                 {
                     spell = new ShieldData("Zilean R", SpellSlot.R, 100, 5);
                     spell.CanShieldAllies = true;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 #endregion
@@ -352,7 +352,7 @@ namespace Evade
                 {
                     spell = new ShieldData("Tryndamere W", SpellSlot.R, 100, 5);
                     spell.CanShieldAllies = false;
-                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).SData.CastRange[0];
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).SData.CastRangeDisplayOverride[0];
                     Spells.Add(spell);
                 }
                 #endregion
