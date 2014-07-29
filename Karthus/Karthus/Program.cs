@@ -39,10 +39,10 @@ namespace Karthus
             if (ObjectManager.Player.BaseSkinName != ChampionName) return;
 
             //Create the spells
-            Q = new Spell(SpellSlot.Q, ObjectManager.Player.Spellbook.GetSpell(SpellSlot.Q).SData.CastRangeDisplayOverride[0]);
-            W = new Spell(SpellSlot.W, ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0]);
-            E = new Spell(SpellSlot.E, ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).SData.CastRangeDisplayOverride[0]);
-            R = new Spell(SpellSlot.R, ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).SData.CastRangeDisplayOverride[0]);
+            Q = new Spell(SpellSlot.Q, 875);
+            W = new Spell(SpellSlot.W, 1000);
+            E = new Spell(SpellSlot.E, 500);
+            R = new Spell(SpellSlot.R, 25000);
 
             SpellList.Add(Q);
             SpellList.Add(W);
@@ -66,6 +66,7 @@ namespace Karthus
 
             Config.AddSubMenu(new Menu("Harass", "Harass"));
             Config.SubMenu("Harass").AddItem(new MenuItem("UseQHarass", "Use Q").SetValue(true));
+            Config.SubMenu("Harass").AddItem(new MenuItem("UseWHarass", "Use W").SetValue(true));
             Config.SubMenu("Harass").AddItem(new MenuItem("UseEHarass", "Use E").SetValue(true));
             Config.SubMenu("Harass").AddItem(new MenuItem("HarassActive", "Harass!").SetValue(new KeyBind("C".ToCharArray()[0], KeyBindType.Press)));
 
@@ -81,6 +82,7 @@ namespace Karthus
             Config.SubMenu("Drawings").AddItem(new MenuItem("QRange", "Q range").SetValue(new Circle(true, Color.FromArgb(255, 255, 255, 255))));
             Config.SubMenu("Drawings").AddItem(new MenuItem("WRange", "W range").SetValue(new Circle(false, Color.FromArgb(255, 255, 255, 255))));
             Config.SubMenu("Drawings").AddItem(new MenuItem("ERange", "E range").SetValue(new Circle(false, Color.FromArgb(255, 255, 255, 255))));
+            Config.SubMenu("Drawings").AddItem(new MenuItem("RRange", "R range").SetValue(new Circle(false, Color.FromArgb(255, 255, 255, 255))));
 
             Config.AddToMainMenu();
 
@@ -92,7 +94,9 @@ namespace Karthus
         private static void Game_OnGameUpdate(System.EventArgs args)
         {
             Orbwalker.SetAttacks(true);
-            if (Config.Item("AutoUlt").GetValue<bool>())
+            //  DEBUG Game.PrintChat(string.Format("E Toggle State:{0}", ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).ToggleState));
+
+            if (Config.Item("AutoUlt").GetValue<bool>() && R.IsReady())
             {
                 AutoULt();
             }
@@ -113,26 +117,82 @@ namespace Karthus
 
         private static void AutoULt()
         {
-            var target = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Magical);
-            if (DamageLib.getDmg(target, DamageLib.SpellType.R) > target.Health)
+            //  Game.PrintChat(string.Format("Auto Ult has been called"));  //For debug purposes
+            var target = SimpleTs.GetTarget(25000, SimpleTs.DamageType.Magical);
+            if (DamageLib.getDmg(target, DamageLib.SpellType.R) > (target.Health*1.05))
             {
+                Game.PrintChat(string.Format("Auto Ult is attempting to cast"));  //For debug purposes
                 ObjectManager.Player.Spellbook.CastSpell(SpellSlot.R);
             }
         }
 
         private static void Combo()
         {
-            // throw new System.NotImplementedException();
+            var target = SimpleTs.GetTarget(1000, SimpleTs.DamageType.Magical);
+            if (target != null)
+            {
+                var QPrediction = Q.GetPrediction(target);
+                var WPrediction = W.GetPrediction(target);
+                var EPrediction = E.GetPrediction(target);
+
+                if (Q.IsReady() && Config.Item("UseQCombo").GetValue<bool>())
+                    if (QPrediction.HitChance >= Prediction.HitChance.HighHitchance)
+                        if (ObjectManager.Player.ServerPosition.Distance(QPrediction.Position) < Q.Range)
+                            Q.Cast(QPrediction.Position, false);
+                
+                if (W.IsReady() && Config.Item("UseWCombo").GetValue<bool>())
+                    if (WPrediction.HitChance >= Prediction.HitChance.HighHitchance)
+                        if (ObjectManager.Player.ServerPosition.Distance(WPrediction.Position) < W.Range)
+                            W.Cast(WPrediction.Position, false);
+                
+                if (E.IsReady() && (EPrediction.TargetsHit >= 1) && Config.Item("UseECombo").GetValue<bool>() && (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).ToggleState == 1))
+                    ObjectManager.Player.Spellbook.CastSpell(SpellSlot.E);
+                
+                if (E.IsReady() && (EPrediction.TargetsHit <= 0) && Config.Item("UseECombo").GetValue<bool>() && (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).ToggleState == 2))
+                    ObjectManager.Player.Spellbook.CastSpell(SpellSlot.E);
+            }
+
         }
 
         private static void Farm()
         {
-            // throw new System.NotImplementedException();
+            var Minions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range, MinionTypes.All, MinionTeam.Enemy,MinionOrderTypes.Health);
+            var QLocation = Q.GetCircularFarmLocation(Minions);
+            var ELocation = E.GetCircularFarmLocation(Minions);
+            if ((QLocation.MinionsHit >= 1) && Q.IsReady() && Config.Item("UseQFarm").GetValue<bool>())
+                Q.Cast(QLocation.Position.To3D(), false);
+            if ((ELocation.MinionsHit >= 2) && E.IsReady() && Config.Item("UseEFarm").GetValue<bool>() && (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).ToggleState == 1))
+                E.Cast(ObjectManager.Player.ServerPosition, false);
+            if ((ELocation.MinionsHit <= 1) && E.IsReady() && Config.Item("UseEFarm").GetValue<bool>() && (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).ToggleState == 2))
+                E.Cast(ObjectManager.Player.ServerPosition, false);
         }
 
         private static void Harass()
         {
-            // throw new System.NotImplementedException();
+            var target = SimpleTs.GetTarget(1000, SimpleTs.DamageType.Magical);
+            if (target != null)
+            {
+                var QPrediction = Q.GetPrediction(target);
+                var WPrediction = W.GetPrediction(target);
+                var EPrediction = E.GetPrediction(target);
+
+                if (Q.IsReady() && Config.Item("UseQHarass").GetValue<bool>())
+                    if (QPrediction.HitChance >= Prediction.HitChance.HighHitchance)
+                        if (ObjectManager.Player.ServerPosition.Distance(QPrediction.Position) < Q.Range)
+                            Q.Cast(QPrediction.Position, false);
+
+                if (W.IsReady() && Config.Item("UseWHarass").GetValue<bool>())
+                    if (WPrediction.HitChance >= Prediction.HitChance.HighHitchance)
+                        if (ObjectManager.Player.ServerPosition.Distance(WPrediction.Position) < W.Range)
+                            W.Cast(WPrediction.Position, false);
+
+                if (E.IsReady() && (EPrediction.TargetsHit >= 1) && Config.Item("UseEHarass").GetValue<bool>() && (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).ToggleState == 1))
+                    ObjectManager.Player.Spellbook.CastSpell(SpellSlot.E);
+
+                if (E.IsReady() && (EPrediction.TargetsHit <= 0) && Config.Item("UseEHarass").GetValue<bool>() && (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).ToggleState == 2))
+                    ObjectManager.Player.Spellbook.CastSpell(SpellSlot.E);
+            }
+            
         }
         
         private static void Drawing_OnDraw(System.EventArgs args)
