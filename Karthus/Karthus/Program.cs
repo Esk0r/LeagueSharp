@@ -75,6 +75,10 @@ namespace Karthus
             Config.SubMenu("Farm").AddItem(new MenuItem("UseEFarm", "Use E").SetValue(true));
             Config.SubMenu("Farm").AddItem(new MenuItem("LaneClearActive", "LaneClear!").SetValue(new KeyBind("V".ToCharArray()[0], KeyBindType.Press)));
 
+            Config.AddSubMenu(new Menu("Last Hit Q", "LastHitQ"));
+            Config.SubMenu("LastHitQ").AddItem(new MenuItem("LastHitQ", "Use Q to Last Hit").SetValue(true));
+            Config.SubMenu("LastHitQ").AddItem(new MenuItem("LastHitActive", "Last Hit!").SetValue(new KeyBind("X".ToCharArray()[0], KeyBindType.Press)));
+            
             Config.AddSubMenu(new Menu("Auto Ult", "AutoUlt"));
             Config.SubMenu("AutoUlt").AddItem(new MenuItem("AutoUlt", "Auto Ult for Kills").SetValue(true));
 
@@ -107,12 +111,24 @@ namespace Karthus
             }
             else
             {
+                if (Config.Item("LastHitActive").GetValue<KeyBind>().Active)
+                    LastHit();
+                
                 if (Config.Item("HarassActive").GetValue<KeyBind>().Active)
                     Harass();
 
                 if (Config.Item("LaneClearActive").GetValue<KeyBind>().Active)
                     Farm();
             }
+        }
+
+        private static void LastHit()
+        {
+            var Minions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range);
+            if (Q.IsReady() && Config.Item("LastHitQ").GetValue<bool>())
+            foreach (var minion in Minions)
+                if (minion.IsValidTarget(Q.Range) && HealthPrediction.GetHealthPrediction(minion, (int)Q.Delay) < (DamageLib.getDmg(minion, DamageLib.SpellType.Q)*0.9))
+                    Q.CastOnUnit(minion, false);
         }
 
         private static void AutoULt()
