@@ -17,7 +17,7 @@ namespace Evade
         static SkillshotDetector()
         {
             //Detect when the skillshots are created.
-            Game.OnGameProcessPacket += GameOnOnGameProcessPacket; 
+            Game.OnGameProcessPacket += GameOnOnGameProcessPacket;
             Obj_AI_Base.OnProcessSpellCast += ObjAiHeroOnOnProcessSpellCast;
 
             //Detect when projectiles collide.
@@ -82,8 +82,12 @@ namespace Evade
         private static void ObjSpellMissileOnOnDelete(GameObject sender, EventArgs args)
         {
             if (!(sender is Obj_SpellMissile)) return;
+
             var missile = (Obj_SpellMissile)sender;
-            var unit = (Obj_AI_Base) missile.SpellCaster;
+
+            if(!(missile.SpellCaster is Obj_AI_Hero)) return;
+
+            var unit = (Obj_AI_Hero) missile.SpellCaster;
             if (!unit.IsValid || (unit.Team == ObjectManager.Player.Team && !Config.TestOnAllies)) return;
                 
             var spellName = missile.SData.Name;
