@@ -8,3 +8,9 @@ C:\LeagueSharp\Projects\Zilean\Zilean\bin\Debug\SharpDX.dll
 C:\LeagueSharp\Projects\Zilean\Zilean\bin\Debug\LeagueSharp.xml
 C:\LeagueSharp\Projects\Zilean\Zilean\obj\Debug\Zilean.exe
 C:\LeagueSharp\Projects\Zilean\Zilean\obj\Debug\Zilean.pdb
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Zilean\Zilean\bin\Debug\Zilean.exe.config
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Zilean\Zilean\obj\Debug\Zilean.exe
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Zilean\Zilean\obj\Debug\Zilean.pdb
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Zilean\Zilean\bin\Debug\Zilean.exe
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Zilean\Zilean\bin\Debug\Zilean.pdb
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Zilean\Zilean\bin\Debug\LeagueSharp.xml

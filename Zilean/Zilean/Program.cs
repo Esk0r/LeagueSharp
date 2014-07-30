@@ -53,7 +53,7 @@ namespace Zilean
             Config.SubMenu("SaveLives").AddItem(new MenuItem("RSave", "Save People?").SetValue(true));
             foreach (Obj_AI_Hero Champ in ObjectManager.Get<Obj_AI_Hero>())
                 if (Champ.IsAlly)
-                    Config.SubMenu("SaveLives").AddItem(new MenuItem(Champ.BaseSkinName,string.Format("Save {0}", Champ.BaseSkinName)).SetValue(true));
+                    Config.SubMenu("SaveLives").AddItem(new MenuItem("Save" + Champ.BaseSkinName,string.Format("Save {0}", Champ.BaseSkinName)).SetValue(true));
             
             Config.SubMenu("SaveLives").AddItem(new MenuItem("WRefresh", "Use W to Refresh Ult").SetValue(true));
             Config.SubMenu("SaveLives").AddItem(new MenuItem("HPPercent", "HP Percent to Trigger").SetValue(new Slider(15, 100, 0)));
@@ -72,7 +72,7 @@ namespace Zilean
 
             Config.AddSubMenu(new Menu("Lane Clear", "Laneclear"));
             Config.SubMenu("Laneclear").AddItem(new MenuItem("UseQFarm", "Use Q").SetValue(true));
-            Config.SubMenu("Laneclear").AddItem(new MenuItem("UseEFarm", "Use E").SetValue(true));
+            //Config.SubMenu("Laneclear").AddItem(new MenuItem("UseEFarm", "Use E").SetValue(true));
             Config.SubMenu("Laneclear").AddItem(new MenuItem("LaneClearActive", "LaneClear!").SetValue(new KeyBind("V".ToCharArray()[0], KeyBindType.Press)));
 
             //Config.AddSubMenu(new Menu("Last Hit Q", "LastHitQ"));
@@ -97,14 +97,16 @@ namespace Zilean
             if (ObjectManager.Player.HasBuff("Recall"))
                 return;
             // Refresh R with W
-            if (Config.Item("RSave").GetValue<bool>() && !R.IsReady() && W.IsReady() && Config.Item("WRefresh").GetValue<bool>())
-                ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W);
+            //if (Config.Item("RSave").GetValue<bool>() && !R.IsReady() && W.IsReady() && Config.Item("WRefresh").GetValue<bool>())
+              //  ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W);
             // Save folks with R
-            if (Config.Item("RSave").GetValue<bool>() && R.IsReady())
-                SaveLives();
+            //if (Config.Item("RSave").GetValue<bool>())
+                //Game.PrintChat(string.Format("Calling Save Lives"));
+            SaveLives();
             // Combo
             if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
             {
+                //Game.PrintChat(string.Format("Spacebar held down calling COMBO"));
                 Combo();
             }
             //  Laneclear
@@ -126,9 +128,11 @@ namespace Zilean
 
         private static void Combo()
         {
+            Game.PrintChat(string.Format("COMBO Called"));
             //Such and easy combo, if someone is in range, nuke em.. lol.  Willing to take suggestions to make it better if its needed.
             var target = SimpleTs.GetTarget(900, SimpleTs.DamageType.Magical);
-            if (target != null)
+            if (target.IsValid)
+                //Game.PrintChat(string.Format("Found a valid target: {0}", target.BaseSkinName));
             {
                 if (Config.Item("UseQCombo").GetValue<bool>() && Q.IsReady() && (ObjectManager.Player.ServerPosition.Distance(target.Position) < Q.Range))
                     Q.CastOnUnit(target, false);
@@ -143,9 +147,14 @@ namespace Zilean
 
         private static void SaveLives()
         {
+            if (Config.Item("RSave").GetValue<bool>() && !R.IsReady() && W.IsReady() && Config.Item("WRefresh").GetValue<bool>())
+                ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W);
             //Could use some better logic here.. but for now this "works"...  Maybe use Evade instead?  
+            //Game.PrintChat(string.Format("Called Save Lives"));
+            if (Config.Item("RSave").GetValue<bool>())
             foreach (Obj_AI_Hero Champ in ObjectManager.Get<Obj_AI_Hero>())
-                if (Config.Item(Champ.BaseSkinName).GetValue<bool>())
+                if (Champ.IsAlly)
+                if (Config.Item("Save" + Champ.BaseSkinName).GetValue<bool>() && R.IsReady())
                     if (Champ.Health < (Champ.MaxHealth * (Config.Item("HPPercent").GetValue<Slider>().Value * 0.01)))
                         if ((!Champ.IsDead) && (!Champ.IsInvulnerable))
                             R.CastOnUnit(Champ, false);
