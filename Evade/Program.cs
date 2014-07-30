@@ -117,6 +117,17 @@ namespace Evade
 
             //Create the menu to allow the user to change the config.
             Config.CreateMenu();
+
+            if (Config.PrintSpellData)
+            {
+                Console.WriteLine(ObjectManager.Player.BaseSkinName);
+                foreach (var spell in ObjectManager.Player.Spellbook.Spells)
+                {
+                    Console.WriteLine(spell.SData.Name + " w:" + spell.SData.LineWidth + " s:" + spell.SData.MissileSpeed + " r: "+spell.SData.CastRange[0]);
+                }
+                
+            }
+                
         }
 
         static void DetectedSkillshots_OnAdd(object sender, EventArgs e)
@@ -815,6 +826,7 @@ namespace Evade
 
                 Drawing.DrawCircle(EvadePoint.To3D(), 300, Color.White);
             }
+
         }
 
         public struct IsSafeResult

@@ -31,7 +31,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
-                MissileSpellName = "AatroxQ",
+                MissileSpellName = "",
 
             });
 
@@ -51,7 +51,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "AhriOrbReturn",
+                MissileSpellName = "AhriOrbMissile",
                 MissileFollowsUnit = true,
 
             });
@@ -70,7 +70,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "AhriOrbofDeception",
+                MissileSpellName = "AhriOrbReturn",
 
             });
 
@@ -88,7 +88,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
-                MissileSpellName = "AhriSeduce",
+                MissileSpellName = "AhriSeduceMissile",
                 CanBeRemoved = true,
 
             });
@@ -109,7 +109,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
-                MissileSpellName = "BandageToss",
+                MissileSpellName = "SadMummyBandageToss",
                 CanBeRemoved = true,
 
             });
@@ -128,7 +128,7 @@ namespace Evade
                 AddHitbox = false,
                 DangerValue = 5,
                 IsDangerous = true,
-                MissileSpellName = "CurseoftheSadMummy",
+                MissileSpellName = "",
 
             });
 
@@ -148,7 +148,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
-                MissileSpellName = "FlashFrost",
+                MissileSpellName = "FlashFrostSpell",
                 CanBeRemoved = true,
 
             });
@@ -169,7 +169,7 @@ namespace Evade
                 AddHitbox = false,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "Incinerate",
+                MissileSpellName = "",
 
             });
 
@@ -187,7 +187,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 5,
                 IsDangerous = true,
-                MissileSpellName = "InfernalGuardian",
+                MissileSpellName = "",
 
             });
 
@@ -228,7 +228,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 4,
                 IsDangerous = true,
-                MissileSpellName = "RocketGrab",
+                MissileSpellName = "RocketGrabMissile",
                 CanBeRemoved = true,
 
             });
@@ -247,7 +247,7 @@ namespace Evade
                 AddHitbox = false,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "StaticField",
+                MissileSpellName = "",
 
             });
 
@@ -267,7 +267,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
-                MissileSpellName = "BrandBlaze",
+                MissileSpellName = "BrandBlazeMissile",
                 CanBeRemoved = true,
 
             });
@@ -286,7 +286,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "BrandFissure",
+                MissileSpellName = "",
 
             });
 
@@ -306,7 +306,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
-                MissileSpellName = "BraumQ",
+                MissileSpellName = "BraumQMissile",
                 CanBeRemoved = true,
 
             });
@@ -325,7 +325,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 4,
                 IsDangerous = true,
-                MissileSpellName = "BraumRWrapper",
+                MissileSpellName = "braumrmissile",
 
             });
 
@@ -363,7 +363,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 1,
                 IsDangerous = false,
-                MissileSpellName = "CaitlynEntrapment",
+                MissileSpellName = "CaitlynEntrapmentMissile",
                 CanBeRemoved = true,
 
             });
@@ -434,7 +434,7 @@ namespace Evade
                 SpellName = "PhosphorusBomb",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotCircle,
-                Delay = 500,
+                Delay = 400,
                 Range = 825,
                 Radius = 250,
                 MissileSpeed = 1125,
@@ -442,7 +442,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "PhosphorusBomb",
+                MissileSpellName = "PhosphorusBombMissile",
 
             });
 
@@ -460,7 +460,26 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "MissileBarrage",
+                MissileSpellName = "MissileBarrageMissile",//MissileBarrageMissile2
+                CanBeRemoved = true,
+
+            });
+
+            Spells.Add(new SpellData
+            {
+                BaseSkinName = "Corki",
+                SpellName = "MissileBarrage2",
+                Slot = SpellSlot.R,
+                Type = SkillShotType.SkillshotMissileLine,
+                Delay = 200,
+                Range = 1300,
+                Radius = 40,
+                MissileSpeed = 2000,
+                FixedRange = true,
+                AddHitbox = true,
+                DangerValue = 2,
+                IsDangerous = false,
+                MissileSpellName = "MissileBarrageMissile2",
                 CanBeRemoved = true,
 
             });
@@ -501,7 +520,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = false,
-                MissileSpellName = "InfectedCleaverMissileCast",
+                MissileSpellName = "InfectedCleaverMissile",
                 CanBeRemoved = true,
 
             });
@@ -522,7 +541,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
-                MissileSpellName = "DravenDoubleShot",
+                MissileSpellName = "DravenDoubleShotMissile",
                 CanBeRemoved = true,
 
             });
@@ -541,7 +560,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 5,
                 IsDangerous = true,
-                MissileSpellName = "DravenRCast",
+                MissileSpellName = "DravenR",
 
             });
 
@@ -555,7 +574,7 @@ namespace Evade
                 Type = SkillShotType.SkillshotMissileLine,
                 Delay = 250,
                 Range = 1100,
-                Radius = 70,
+                Radius = 55,
                 MissileSpeed = 1450,
                 FixedRange = true,
                 AddHitbox = true,
@@ -602,7 +621,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "EzrealMysticShot",
+                MissileSpellName = "EzrealMysticShotMissile", //TODO: Check pulsefire ezreal. EzrealMysticShotPulseMissile?
                 CanBeRemoved = true,
                 Id = 229,
 
@@ -622,7 +641,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "EzrealEssenceFlux",
+                MissileSpellName = "EzrealEssenceFluxMissile",
 
             });
 
@@ -661,7 +680,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 5,
                 IsDangerous = true,
-                MissileSpellName = "FizzMarinerDoom",
+                MissileSpellName = "FizzMarinerDoomMissile",
                 CanBeRemoved = true,
 
             });
@@ -700,7 +719,7 @@ namespace Evade
                 AddHitbox = false,
                 DangerValue = 5,
                 IsDangerous = true,
-                MissileSpellName = "GalioIdolOfDurand",
+                MissileSpellName = "",
 
             });
 
@@ -720,7 +739,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "GragasQ",
+                MissileSpellName = "GragasQMissile",
                 ExtraDuration = 4500,
                 ToggleParticleName = "Gragas_",
                 DonCross = true,
@@ -761,7 +780,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 5,
                 IsDangerous = true,
-                MissileSpellName = "GragasR",
+                MissileSpellName = "GragasRBoom",
 
             });
 
@@ -781,7 +800,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "GravesClusterShot",
+                MissileSpellName = "GravesClusterShotAttack",
 
             });
 
@@ -799,7 +818,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 5,
                 IsDangerous = true,
-                MissileSpellName = "GravesChargeShot",
+                MissileSpellName = "GravesChargeShotShot",
 
             });
 
@@ -814,12 +833,12 @@ namespace Evade
                 Delay = 250,
                 Range = 1325,
                 Radius = 1,
-                MissileSpeed = 750,
+                MissileSpeed = 1400,
                 FixedRange = false,
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "Heimerdingerw",
+                MissileSpellName = "HeimerdingerWAttack2",
 
             });
 
@@ -837,7 +856,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "HeimerdingerE",
+                MissileSpellName = "heimerdingerespell",
 
             });
 
@@ -877,7 +896,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "JannaQ",
+                MissileSpellName = "HowlingGaleSpell",
 
             });
 
@@ -935,7 +954,8 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "jayceshockblast",
+                MissileSpellName = "JayceShockBlastMis",
+                CanBeRemoved = true,
 
             });
 
@@ -953,13 +973,14 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "JayceQAccel",
+                MissileSpellName = "JayceShockBlastWallMis",
                 CanBeRemoved = true,
 
             });
 
             #endregion Jayce
             #region Jinx
+            //TODO: Detect the animation from fow instead of the missile.
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Jinx",
@@ -974,7 +995,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
-                MissileSpellName = "JinxW",
+                MissileSpellName = "JinxWMissile",
                 CanBeRemoved = true,
 
             });
@@ -993,7 +1014,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 5,
                 IsDangerous = true,
-                MissileSpellName = "JinxRWrapper",
+                MissileSpellName = "JinxR",
                 CanBeRemoved = true,
 
             });
@@ -1014,7 +1035,26 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "KarmaQ",
+                MissileSpellName = "KarmaQMissile",
+                CanBeRemoved = true,
+
+            });
+            //TODO: add the circle at the end.
+            Spells.Add(new SpellData
+            {
+                BaseSkinName = "Karma",
+                SpellName = "KarmaQMantra",
+                Slot = SpellSlot.Q,
+                Type = SkillShotType.SkillshotMissileLine,
+                Delay = 250,
+                Range = 950,
+                Radius = 60,
+                MissileSpeed = 1700,
+                FixedRange = true,
+                AddHitbox = true,
+                DangerValue = 2,
+                IsDangerous = false,
+                MissileSpellName = "KarmaQMissileMantra",
                 CanBeRemoved = true,
 
             });
@@ -1132,7 +1172,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "khazixwlong",
+                MissileSpellName = "khazixwlongmissile",
                 CanBeRemoved = true,
 
             });
@@ -1151,7 +1191,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "KhazixW",
+                MissileSpellName = "KhazixWMissile",
                 CanBeRemoved = true,
 
             });
@@ -1190,7 +1230,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "KogMawQ",
+                MissileSpellName = "KogMawQMis",
                 CanBeRemoved = true,
 
             });
@@ -1209,7 +1249,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "KogMawVoidOoze",
+                MissileSpellName = "KogMawVoidOozeMissile",
 
             });
 
@@ -1344,7 +1384,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
-                MissileSpellName = "LeonaZenithBlade",
+                MissileSpellName = "LeonaZenithBladeMissile",
 
             });
 
@@ -1403,7 +1443,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "LuluQ",
+                MissileSpellName = "LuluQMissile",//LuluQMissileTwo
 
             });
 
@@ -1423,7 +1463,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
-                MissileSpellName = "LuxLightBinding",
+                MissileSpellName = "LuxLightBindingMis",
                 CanBeRemoved = true,
 
             });
@@ -1545,7 +1585,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
-                MissileSpellName = "NamiQ",
+                MissileSpellName = "namiqmissile",
 
             });
 
@@ -1563,7 +1603,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "NamiR",
+                MissileSpellName = "NamiRMissile",
 
             });
 
@@ -1583,7 +1623,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
-                MissileSpellName = "NautilusAnchorDrag",
+                MissileSpellName = "NautilusAnchorDragMissile",
                 CanBeRemoved = true,
 
             });
@@ -1619,13 +1659,14 @@ namespace Evade
                 Type = SkillShotType.SkillshotMissileLine,
                 Delay = 250,
                 Range = 1000,
+                ExtraRange = 150,
                 Radius = 90,
                 MissileSpeed = 1600,
                 FixedRange = false,
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "OlafAxeThrowCast",
+                MissileSpellName = "olafaxethrow",
                 CanBeRemoved = true,
 
             });
@@ -1646,7 +1687,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "OriannaQs",
+                MissileSpellName = "orianaizuna",
 
             });
 
@@ -1672,7 +1713,7 @@ namespace Evade
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Orianna",
-                SpellName = "OriannaEM",
+                SpellName = "OriannasE",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
                 Delay = 0,
@@ -1683,7 +1724,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "OriannaEM",
+                MissileSpellName = "orianaredact",
 
             });
 
@@ -1722,7 +1763,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "QuinnQ",
+                MissileSpellName = "QuinnQMissile",
                 CanBeRemoved = true,
 
             });
@@ -1743,7 +1784,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
-                MissileSpellName = "RengarE",
+                MissileSpellName = "RengarEFinal",
                 CanBeRemoved = true,
 
             });
@@ -1791,6 +1832,45 @@ namespace Evade
             });
 
             #endregion Rumble
+            #region Sejuani
+            Spells.Add(new SpellData
+            {
+                BaseSkinName = "Sejuani",
+                SpellName = "SejuaniArcticAssault",
+                Slot = SpellSlot.Q,
+                Type = SkillShotType.SkillshotMissileLine,
+                Delay = 0,
+                Range = 900,
+                Radius = 70,
+                MissileSpeed = 1600,
+                FixedRange = false,
+                AddHitbox = true,
+                DangerValue = 3,
+                IsDangerous = true,
+                MissileSpellName = "",
+                ExtraRange = 200,
+
+            });
+
+            Spells.Add(new SpellData
+            {
+                BaseSkinName = "Sejuani",
+                SpellName = "SejuaniGlacialPrisonStart",
+                Slot = SpellSlot.R,
+                Type = SkillShotType.SkillshotMissileLine,
+                Delay = 250,
+                Range = 1100,
+                Radius = 110,
+                MissileSpeed = 1600,
+                FixedRange = true,
+                AddHitbox = true,
+                DangerValue = 3,
+                IsDangerous = true,
+                MissileSpellName = "sejuaniglacialprison",
+                CanBeRemoved = true,
+
+            });
+            #endregion Shen
             #region Shen
             Spells.Add(new SpellData
             {
@@ -1817,7 +1897,7 @@ namespace Evade
             {
                 BaseSkinName = "Shyvana",
                 SpellName = "ShyvanaFireball",
-                Slot = SpellSlot.Q,
+                Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
                 Delay = 250,
                 Range = 950,
@@ -1827,7 +1907,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "ShyvanaFireball",
+                MissileSpellName = "ShyvanaFireballMissile",
 
             });
 
@@ -1866,7 +1946,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "SivirQReturn",
+                MissileSpellName = "SivirQReturnMissile",
                 DisableFowDetection = true,
                 MissileFollowsUnit = true,
 
@@ -1886,7 +1966,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "SivirQ",
+                MissileSpellName = "SivirQMissile",
 
             });
 
@@ -1906,7 +1986,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "SkarnerFracture",
+                MissileSpellName = "SkarnerFractureMissile",
 
             });
 
@@ -2042,7 +2122,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
-                MissileSpellName = "ThreshQ",
+                MissileSpellName = "ThreshQMissile",
                 CanBeRemoved = true,
 
             });
@@ -2061,7 +2141,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
-                MissileSpellName = "ThreshEFlay",
+                MissileSpellName = "ThreshEMissile1",
 
             });
 
@@ -2121,7 +2201,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "WildCards",
+                MissileSpellName = "SealFateMissile",
                 MultipleNumber = 3,
                 MultipleAngle = 28 * (float)Math.PI / 180,
 
@@ -2143,7 +2223,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "TwitchVenomCask",
+                MissileSpellName = "TwitchVenomCaskMissile",
 
             });
 
@@ -2152,26 +2232,8 @@ namespace Evade
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Urgot",
-                SpellName = "UrgotPlasmaGrenade",
-                Slot = SpellSlot.Q,
-                Type = SkillShotType.SkillshotCircle,
-                Delay = 250,
-                Range = 1100,
-                Radius = 210,
-                MissileSpeed = 1500,
-                FixedRange = false,
-                AddHitbox = true,
-                DangerValue = 2,
-                IsDangerous = false,
-                MissileSpellName = "UrgotPlasmaGrenade",
-
-            });
-
-            Spells.Add(new SpellData
-            {
-                BaseSkinName = "Urgot",
                 SpellName = "UrgotHeatseekingLineMissile",
-                Slot = SpellSlot.E,
+                Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
                 Delay = 125,
                 Range = 1000,
@@ -2186,6 +2248,23 @@ namespace Evade
 
             });
 
+            Spells.Add(new SpellData
+            {
+                BaseSkinName = "Urgot",
+                SpellName = "UrgotPlasmaGrenade",
+                Slot = SpellSlot.E,
+                Type = SkillShotType.SkillshotCircle,
+                Delay = 250,
+                Range = 1100,
+                Radius = 210,
+                MissileSpeed = 1500,
+                FixedRange = false,
+                AddHitbox = true,
+                DangerValue = 2,
+                IsDangerous = false,
+                MissileSpellName = "UrgotPlasmaGrenadeBoom",
+
+            });
             #endregion Urgot
             #region Varus
             Spells.Add(new SpellData
@@ -2202,7 +2281,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "VarusQMissilee",
+                MissileSpellName = "VarusQMissile",
 
             });
 
@@ -2238,7 +2317,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
-                MissileSpellName = "VarusR",
+                MissileSpellName = "VarusRMissile",
                 CanBeRemoved = true,
 
             });
@@ -2301,7 +2380,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "VelkozQ",
+                MissileSpellName = "VelkozQMissile",
                 CanBeRemoved = true,
 
             });
@@ -2320,7 +2399,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "VelkozQSplit",
+                MissileSpellName = "VelkozQMissileSplit",
                 CanBeRemoved = true,
 
             });
@@ -2339,7 +2418,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "VelkozW",
+                MissileSpellName = "VelkozWMissile",
 
             });
 
@@ -2357,7 +2436,7 @@ namespace Evade
                 AddHitbox = false,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "VelkozE",
+                MissileSpellName = "VelkozEMissile",
 
             });
 
@@ -2378,7 +2457,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
-                MissileSpellName = "Viq",
+                MissileSpellName = "ViQMissile",
 
             });
 
@@ -2387,8 +2466,8 @@ namespace Evade
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Viktor",
-                SpellName = "ViktorDeathRayF",
-                Slot = SpellSlot.Q,
+                SpellName = "Laser",
+                Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
                 Delay = 250,
                 Range = 1500,
@@ -2398,7 +2477,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "ViktorDeathRayF",
+                MissileSpellName = "ViktorDeathRayFixMissile",
 
             });
 
@@ -2429,7 +2508,7 @@ namespace Evade
                 SpellName = "XerathArcaneBarrage2",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotCircle,
-                Delay = 900,
+                Delay = 700,
                 Range = 1000,
                 Radius = 200,
                 MissileSpeed = int.MaxValue,
@@ -2455,7 +2534,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = true,
-                MissileSpellName = "XerathMageSpear",
+                MissileSpellName = "XerathMageSpearMissile",
                 CanBeRemoved = true,
 
             });
@@ -2571,10 +2650,27 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "ZedShuriken",
+                MissileSpellName = "zedshurikenmisone",
 
             });
 
+            Spells.Add(new SpellData
+            {
+                BaseSkinName = "Zed",
+                SpellName = "ZedShurikenClone",
+                Slot = SpellSlot.Q,
+                Type = SkillShotType.SkillshotMissileLine,
+                Delay = 250,
+                Range = 925,
+                Radius = 50,
+                MissileSpeed = 1700,
+                FixedRange = true,
+                AddHitbox = true,
+                DangerValue = 2,
+                IsDangerous = false,
+                MissileSpellName = "zedshurikenmistwo",
+
+            });
             #endregion Zed
             //FiX
             #region Ziggs
@@ -2758,10 +2854,21 @@ namespace Evade
 
         public static SpellData GetByName(string spellName)
         {
-            spellName = spellName.ToLower();
             foreach (var spellData in Spells)
             {
-                if (spellData.SpellName.ToLower() == spellName)
+                if (spellData.SpellName.ToLower() == spellName.ToLower())
+                    return spellData;
+            }
+
+            return null;
+        }
+
+        public static SpellData GetByMissileName(string missileSpellName)
+        {
+
+            foreach (var spellData in Spells)
+            {
+                if (spellData.MissileSpellName.ToLower() == missileSpellName.ToLower())
                     return spellData;
             }
 

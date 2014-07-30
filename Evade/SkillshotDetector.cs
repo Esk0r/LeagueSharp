@@ -17,26 +17,19 @@ namespace Evade
         static SkillshotDetector()
         {
             //Detect when the skillshots are created.
-            Game.OnGameProcessPacket += GameOnOnGameProcessPacket;
+            Game.OnGameProcessPacket += GameOnOnGameProcessPacket; 
             Obj_AI_Base.OnProcessSpellCast += ObjAiHeroOnOnProcessSpellCast;
 
             //Detect when projectiles collide.
             Obj_SpellMissile.OnDelete += ObjSpellMissileOnOnDelete;
-            Obj_SpellMissile.OnCreate += ObjSpellMissileOnOnCreate;
-            GameObject.OnCreate += GameObject_OnCreate;
+            //Obj_SpellMissile.OnCreate += ObjSpellMissileOnOnCreate; TODO: uncomment when missile.StartPosition works
+            //GameObject.OnCreate += GameObject_OnCreate; TODO: Detect lux R and other large skillshots.
             GameObject.OnDelete += GameObject_OnDelete;
         }
 
         static void GameObject_OnCreate(GameObject sender, EventArgs args)
         {
-            /*Game.PrintChat(Environment.TickCount+" " +  sender.Name);
-            if (sender.Name == "LuxMaliceCannon_beam.troy")
-            {
-                Game.PrintChat(sender.Orientation.ToString());
-                Game.PrintChat((sender.Position - sender.Orientation * 3500).ToString());
-                
 
-            }*/
         }
 
 
@@ -54,14 +47,47 @@ namespace Evade
 
         private static void ObjSpellMissileOnOnCreate(GameObject sender, EventArgs args)
         {
-            if (sender is Obj_SpellMissile)
-            {
+            if (!(sender is Obj_SpellMissile)) return;//not sure if needed
+       
                 var missile = (Obj_SpellMissile) sender;
+
                 if (Config.PrintSpellData)
                 {
                     Game.PrintChat("Projectile Created: " + missile.SData.Name);
+                    Console.WriteLine(missile.SData.Name);
                 }
-            }
+
+                var unit = (Obj_AI_Base) missile.SpellCaster;
+                if (!unit.IsValid || (unit.Team == ObjectManager.Player.Team && !Config.TestOnAllies)) return;
+                
+                var spellData = SpellDatabase.GetByMissileName(missile.SData.Name);
+                if (spellData == null) return;
+                
+                var missilePosition = missile.Position.To2D();
+                var unitPosition = missile.StartPosition.To2D();
+                var endPos = missile.EndPosition.To2D();
+
+                var castTime = Environment.TickCount - Game.Ping / 2 - spellData.Delay -
+                               (int)(1000 * missilePosition.Distance(unitPosition) / spellData.MissileSpeed);
+
+                //Trigger the skillshot detection callbacks.
+                TriggerOnDetectSkillshot(DetectionType.RecvPacket, spellData, castTime, unitPosition, endPos,
+                    unit);
+            
+        }
+
+        /// <summary>
+        /// Delete the missiles that collide.
+        /// </summary>
+        private static void ObjSpellMissileOnOnDelete(GameObject sender, EventArgs args)
+        {
+            if (!(sender is Obj_SpellMissile)) return;
+            var missile = (Obj_SpellMissile)sender;
+            var unit = (Obj_AI_Base) missile.SpellCaster;
+            if (!unit.IsValid || (unit.Team == ObjectManager.Player.Team && !Config.TestOnAllies)) return;
+                
+            var spellName = missile.SData.Name;
+            Program.DetectedSkillshots.RemoveAll(skillshot => skillshot.SpellData.MissileSpellName == spellName && skillshot.End.Distance(missile.EndPosition) < 50 && skillshot.SpellData.CanBeRemoved);
         }
 
         /// <summary>
@@ -80,26 +106,12 @@ namespace Evade
         }
 
         /// <summary>
-        /// Delete the missiles that collide.
-        /// </summary>
-        private static void ObjSpellMissileOnOnDelete(GameObject sender, EventArgs args)
-        {
-            if (sender is Obj_SpellMissile)
-            {
-                var missile = (Obj_SpellMissile) sender;
-                var spellName = missile.SData.Name;
-                Game.PrintChat("Removed projectile" + spellName);
-                Program.DetectedSkillshots.RemoveAll(skillshot => skillshot.SpellData.MissileSpellName == spellName && skillshot.SpellData.CanBeRemoved);
-            }
-        }
-
-        /// <summary>
         ///     Gets triggered when a unit casts a spell and the unit is visible.
         /// </summary>
         private static void ObjAiHeroOnOnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
 
-            
+           
             if (Config.PrintSpellData)
             {
                 Game.PrintChat(Environment.TickCount + " ProcessSpellCast: " + args.SData.Name);
