@@ -2,6 +2,7 @@
 
 using System;
 using System.Drawing;
+using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 
@@ -28,10 +29,20 @@ namespace Marksman
             R = new Spell(SpellSlot.R, 2500);
             R.SetSkillshot(0.6f, 140f, 1700f, false, Prediction.SkillshotType.SkillshotLine);
 
-            Game.OnGameUpdate += Game_OnGameUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
+            Game.OnGameUpdate += Game_OnGameUpdate;
         }
 
+        private void Drawing_OnDraw(EventArgs args)
+        {
+            Spell[] spellList = { W };
+            foreach (var spell in spellList)
+            {
+                var menuItem = GetValue<Circle>("Draw" + spell.Slot);
+                if (menuItem.Active)
+                    Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
+            }
+        }
 
         private void Game_OnGameUpdate(EventArgs args)
         {
@@ -39,35 +50,27 @@ namespace Marksman
             {
                 var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
 
-                if (Orbwalking.CanMove(100))
+                if (Orbwalking.CanMove(100) && useW && W.IsReady())
                 {
-                    if (W.IsReady() && useW)
-                    {
-                        var t = Orbwalker.GetTarget() ?? SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
+                    var t = Orbwalker.GetTarget() ?? SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
 
-                        if (t != null)
-                        {
-                            W.Cast(t);
-                        }
-                    }
+                    if (t != null)
+                        W.Cast(t);
                 }
             }
 
 
-            var AutoEI = GetValue<bool>("AutoEI");
-            var AutoED = GetValue<bool>("AutoED");
-            if (AutoED || AutoEI)
+            var autoEi = GetValue<bool>("AutoEI");
+            var autoEd = GetValue<bool>("AutoED");
+            if (autoEd || autoEi)
             {
-                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
+                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsValidTarget(E.Range)))
                 {
-                    if (enemy.IsValidTarget(E.Range))
-                    {
-                        if (AutoEI)
-                            E.CastIfHitchanceEquals(enemy, Prediction.HitChance.Immobile);
+                    if (autoEi)
+                        E.CastIfHitchanceEquals(enemy, Prediction.HitChance.Immobile);
 
-                        if (AutoED)
-                            E.CastIfHitchanceEquals(enemy, Prediction.HitChance.Immobile);
-                    }
+                    if (autoEd)
+                        E.CastIfHitchanceEquals(enemy, Prediction.HitChance.Immobile);
                 }
             }
 
@@ -80,23 +83,7 @@ namespace Marksman
                         (GetValue<bool>("UseRC") &&
                          DamageLib.getDmg(target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) >
                          target.Health))
-                    {
                         R.Cast(target);
-                    }
-            }
-        }
-
-
-        private void Drawing_OnDraw(EventArgs args)
-        {
-            Spell[] SpellList = { W };
-            foreach (var spell in SpellList)
-            {
-                var menuItem = GetValue<Circle>("Draw" + spell.Slot);
-                if (menuItem.Active)
-                {
-                    Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
-                }
             }
         }
 

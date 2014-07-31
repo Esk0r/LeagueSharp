@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 
@@ -11,12 +12,11 @@ namespace Marksman
     internal class Program
     {
         public static Menu Config;
-        public static Champion cClass;
+        public static Champion CClass;
 
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
-
             Drawing.OnDraw += Drawing_OnDraw;
         }
 
@@ -25,9 +25,12 @@ namespace Marksman
             return;
 
             var y = 10;
-            foreach (var b in ObjectManager.Player.Buffs)
+            foreach (
+                var t in
+                    ObjectManager.Player.Buffs.Select(
+                        b => b.DisplayName + " - " + b.IsActive + " - " + (b.EndTime > Game.Time) + " - " + b.IsPositive)
+                )
             {
-                var t = b.DisplayName + " - " + b.IsActive + " - " + (b.EndTime > Game.Time) + " - " + b.IsPositive;
                 Drawing.DrawText(0, y, System.Drawing.Color.Wheat, t);
                 y = y + 16;
             }
@@ -37,38 +40,41 @@ namespace Marksman
         {
             Config = new Menu("Marksman", "Marksman", true);
 
-            cClass = new Champion();
+            CClass = new Champion();
             if (ObjectManager.Player.BaseSkinName == "Ezreal")
-                cClass = new Ezreal();
+                CClass = new Ezreal();
 
             if (ObjectManager.Player.BaseSkinName == "Jinx")
-                cClass = new Jinx();
+                CClass = new Jinx();
 
             if (ObjectManager.Player.BaseSkinName == "Sivir")
-                cClass = new Sivir();
+                CClass = new Sivir();
 
-            cClass.Id = ObjectManager.Player.BaseSkinName;
-            cClass.Config = Config;
+            if (ObjectManager.Player.BaseSkinName == "Tristana")
+                CClass = new Tristana();
+
+            CClass.Id = ObjectManager.Player.BaseSkinName;
+            CClass.Config = Config;
 
             var orbwalking = Config.AddSubMenu(new Menu("Orbwalking", "Orbwalking"));
-            cClass.Orbwalker = new Orbwalking.Orbwalker(orbwalking);
+            CClass.Orbwalker = new Orbwalking.Orbwalker(orbwalking);
 
             var items = Config.AddSubMenu(new Menu("Items", "Items"));
             items.AddItem(new MenuItem("BOTRK", "BOTRK").SetValue(true));
 
             var combo = Config.AddSubMenu(new Menu("Combo", "Combo"));
-            cClass.ComboMenu(combo);
+            CClass.ComboMenu(combo);
 
             var harass = Config.AddSubMenu(new Menu("Harass", "Harass"));
-            cClass.HarassMenu(harass);
+            CClass.HarassMenu(harass);
 
             var misc = Config.AddSubMenu(new Menu("Misc", "Misc"));
-            cClass.MiscMenu(misc);
+            CClass.MiscMenu(misc);
 
             var drawing = Config.AddSubMenu(new Menu("Drawings", "Drawings"));
-            cClass.DrawingMenu(drawing);
+            CClass.DrawingMenu(drawing);
 
-            cClass.MainMenu(Config);
+            CClass.MainMenu(Config);
 
             Config.AddToMainMenu();
 
@@ -78,22 +84,22 @@ namespace Marksman
         private static void Game_OnGameUpdate(EventArgs args)
         {
             //Update the combo and harass values.
-            cClass.ComboActive = cClass.Config.Item("Orbwalk").GetValue<KeyBind>().Active;
-            cClass.HarassActive = cClass.Config.Item("Farm").GetValue<KeyBind>().Active;
+            CClass.ComboActive = CClass.Config.Item("Orbwalk").GetValue<KeyBind>().Active;
+            CClass.HarassActive = CClass.Config.Item("Farm").GetValue<KeyBind>().Active;
 
             //Items
             var botrk = Config.Item("BOTRK").GetValue<bool>();
-
-            var target = cClass.Orbwalker.GetTarget();
+            var target = CClass.Orbwalker.GetTarget();
 
             if (botrk)
             {
-                if (target != null && target.Type == ObjectManager.Player.Type && target.ServerPosition.Distance(ObjectManager.Player.ServerPosition) < 450)
+                if (target != null && target.Type == ObjectManager.Player.Type &&
+                    target.ServerPosition.Distance(ObjectManager.Player.ServerPosition) < 450)
                 {
                     var hasCutGlass = Items.HasItem(3144);
-                    var hasBOTRK = Items.HasItem(3153);
+                    var hasBotrk = Items.HasItem(3153);
 
-                    if (hasBOTRK || hasCutGlass)
+                    if (hasBotrk || hasCutGlass)
                     {
                         var itemId = hasCutGlass ? 3144 : 3153;
                         var damage = DamageLib.getDmg(target, DamageLib.SpellType.BOTRK);

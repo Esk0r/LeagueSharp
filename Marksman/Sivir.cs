@@ -12,7 +12,6 @@ namespace Marksman
     internal class Sivir : Champion
     {
         public Spell Q;
-        public Spell R;
         public Spell W;
 
 
@@ -75,9 +74,7 @@ namespace Marksman
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
                 if (menuItem.Active)
-                {
                     Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
-                }
             }
         }
 

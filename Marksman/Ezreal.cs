@@ -30,51 +30,8 @@ namespace Marksman
             R.SetSkillshot(1f, 160f, 2000f, false, Prediction.SkillshotType.SkillshotLine);
 
             Orbwalking.AfterAttack += Orbwalking_AfterAttack;
-            Game.OnGameUpdate += Game_OnGameUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
-        }
-
-        private void Game_OnGameUpdate(EventArgs args)
-        {
-            if (ComboActive || HarassActive)
-            {
-                var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-                var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
-
-                if (Orbwalking.CanMove(100))
-                {
-                    if (Q.IsReady() && useQ)
-                    {
-                        var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
-                        if (t != null)
-                        {
-                            Q.Cast(t);
-                        }
-                    }
-
-                    if (W.IsReady() && useW)
-                    {
-                        var t = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
-                        if (t != null)
-                        {
-                            W.Cast(t);
-                        }
-                    }
-                }
-            }
-
-            if (R.IsReady())
-            {
-                var CastR = GetValue<KeyBind>("CastR").Active;
-                if (CastR)
-                {
-                    var t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
-                    if (t != null)
-                    {
-                        R.Cast(t);
-                    }
-                }
-            }
+            Game.OnGameUpdate += Game_OnGameUpdate;
         }
 
         private void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
@@ -97,15 +54,45 @@ namespace Marksman
 
         private void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] SpellList = { Q, W };
-            foreach (var spell in SpellList)
+            Spell[] spellList = { Q, W };
+            foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
                 if (menuItem.Active)
-                {
                     Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
+            }
+        }
+
+        private void Game_OnGameUpdate(EventArgs args)
+        {
+            Obj_AI_Hero t;
+            if (ComboActive || HarassActive)
+            {
+                var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
+                var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
+
+                if (Orbwalking.CanMove(100))
+                {
+                    if (Q.IsReady() && useQ)
+                    {
+                        t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                        if (t != null)
+                            Q.Cast(t);
+                    }
+
+                    if (W.IsReady() && useW)
+                    {
+                        t = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
+                        if (t != null)
+                            W.Cast(t);
+                    }
                 }
             }
+
+            if (!R.IsReady() || !GetValue<KeyBind>("CastR").Active) return;
+            t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+            if (t != null)
+                R.Cast(t);
         }
 
         public override void ComboMenu(Menu config)
