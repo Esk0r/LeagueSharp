@@ -890,7 +890,7 @@ namespace Evade
                 Type = SkillShotType.SkillshotMissileLine,
                 Delay = 250,
                 Range = 1300,
-                Radius = 200,
+                Radius = 150,
                 MissileSpeed = 900,
                 FixedRange = true,
                 AddHitbox = true,
@@ -1946,8 +1946,8 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "SivirQReturnMissile",
-                DisableFowDetection = true,
+                MissileSpellName = "SivirQMissileReturn",
+                DisableFowDetection = false,
                 MissileFollowsUnit = true,
 
             });
