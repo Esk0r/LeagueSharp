@@ -15,7 +15,8 @@ local.properties
 .classpath
 .settings/
 .loadpath
-
+*.gitatt*
+*.sln
 # External tool builders
 .externalToolBuilders/
 
