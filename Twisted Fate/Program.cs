@@ -35,6 +35,10 @@ namespace TwistedFate
             //Make the menu
             Config = new Menu("Twisted Fate", "TwistedFate", true);
 
+            var TargetSelectorMenu = new Menu("Target Selector", "Target Selector");
+            SimpleTs.AddToMenu(TargetSelectorMenu);
+            Config.AddSubMenu(TargetSelectorMenu);
+
             var SowMenu = new Menu("Orbwalking", "Orbwalking");
             SOW = new Orbwalking.Orbwalker(SowMenu);
             Config.AddSubMenu(SowMenu);
