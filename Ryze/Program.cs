@@ -28,6 +28,8 @@ namespace Ryze
         //Menu
         public static Menu Config;
 
+        private static Obj_AI_Hero Player;
+
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -35,7 +37,8 @@ namespace Ryze
 
         private static void Game_OnGameLoad(EventArgs args)
         {
-            if (ObjectManager.Player.BaseSkinName != ChampionName) return;
+            Player = ObjectManager.Player;
+            if (Player.BaseSkinName != ChampionName) return;
 
             //Create the spells
             Q = new Spell(SpellSlot.Q, 625);
@@ -48,6 +51,10 @@ namespace Ryze
 
             //Create the menu
             Config = new Menu(ChampionName, ChampionName, true);
+
+            var targetSelectorMenu = new Menu("Target Selector", "Target Selector");
+            SimpleTs.AddToMenu(targetSelectorMenu);
+            Config.AddSubMenu(targetSelectorMenu);
 
             //Orbwalker submenu
             Config.AddSubMenu(new Menu("Orbwalking", "Orbwalking"));
@@ -120,7 +127,7 @@ namespace Ryze
                 var menuItem = Config.Item(spell.Slot + "Range").GetValue<Circle>();
                 if (menuItem.Active)
                 {
-                    Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
+                    Utility.DrawCircle(Player.Position, spell.Range, menuItem.Color);
                 }
             }
         }
@@ -149,17 +156,17 @@ namespace Ryze
         private static void Combo()
         {
             var target = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Magical);
-            var qCd = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.Q).CooldownExpires - Game.Time;
+            var qCd = Player.Spellbook.GetSpell(SpellSlot.Q).CooldownExpires - Game.Time;
             Orbwalker.SetAttacks(
-                !(Q.IsReady() || W.IsReady() || E.IsReady() || ObjectManager.Player.Distance(target) >= 600));
+                !(Q.IsReady() || W.IsReady() || E.IsReady() || Player.Distance(target) >= 600));
 
             if (target != null)
             {
-                if (ObjectManager.Player.Distance(target) <= 600)
+                if (Player.Distance(target) <= 600)
                 {
-                    if (ObjectManager.Player.Distance(target) >= 575 && W.IsReady() && target.Path.Count() > 0 &&
-                        target.Path[0].Distance(ObjectManager.Player.ServerPosition) >
-                        ObjectManager.Player.Distance(target))
+                    if (Player.Distance(target) >= 575 && W.IsReady() && target.Path.Count() > 0 &&
+                        target.Path[0].Distance(Player.ServerPosition) >
+                        Player.Distance(target))
                     {
                         W.CastOnUnit(target);
                     }
@@ -202,7 +209,7 @@ namespace Ryze
         private static void Farm(bool laneClear)
         {
             if (!Orbwalking.CanMove(40)) return;
-            var allMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range);
+            var allMinions = MinionManager.GetMinions(Player.ServerPosition, Q.Range);
             var useQi = Config.Item("UseQFarm").GetValue<StringList>().SelectedIndex;
             var useWi = Config.Item("UseWFarm").GetValue<StringList>().SelectedIndex;
             var useEi = Config.Item("UseEFarm").GetValue<StringList>().SelectedIndex;
@@ -216,7 +223,7 @@ namespace Ryze
                 {
                     if (minion.IsValidTarget() &&
                         HealthPrediction.GetHealthPrediction(minion,
-                            (int)(ObjectManager.Player.Distance(minion) * 1000 / 1400)) <
+                            (int)(Player.Distance(minion) * 1000 / 1400)) <
                         0.75 * DamageLib.getDmg(minion, DamageLib.SpellType.Q))
                     {
                         Q.CastOnUnit(minion);
@@ -242,7 +249,7 @@ namespace Ryze
                 {
                     if (minion.IsValidTarget(E.Range) &&
                         HealthPrediction.GetHealthPrediction(minion,
-                            (int)(ObjectManager.Player.Distance(minion) * 1000 / 1000)) <
+                            (int)(Player.Distance(minion) * 1000 / 1000)) <
                         0.75 * DamageLib.getDmg(minion, DamageLib.SpellType.E))
                     {
                         E.CastOnUnit(minion);
@@ -269,7 +276,7 @@ namespace Ryze
 
         private static void JungleFarm()
         {
-            var mobs = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range,
+            var mobs = MinionManager.GetMinions(Player.ServerPosition, Q.Range,
                 MinionTypes.All,
                 MinionTeam.Neutral, MinionOrderTypes.MaxHealth);
             if (mobs.Count > 0)

@@ -1407,7 +1407,6 @@ namespace Evade
             });
 
             #endregion Leona+
-            //fix
             #region Lucian
             Spells.Add(new SpellData
             {
@@ -2031,7 +2030,6 @@ namespace Evade
             });
 
             #endregion Swain
-            //FIX
             #region Syndra
             Spells.Add(new SpellData
             {
@@ -2057,10 +2055,10 @@ namespace Evade
                 SpellName = "syndrawcast",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotCircle,
-                Delay = 900,
+                Delay = 250,
                 Range = 950,
                 Radius = 210,
-                MissileSpeed = int.MaxValue,
+                MissileSpeed = 1450,
                 FixedRange = false,
                 AddHitbox = true,
                 DangerValue = 2,
@@ -2075,7 +2073,7 @@ namespace Evade
                 SpellName = "syndrae5",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
-                Delay = 500,
+                Delay = 300,
                 Range = 950,
                 Radius = 90,
                 MissileSpeed = 1601,
@@ -2084,7 +2082,7 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "syndrae5",
-
+                DisableFowDetection = true,
             });
 
             Spells.Add(new SpellData
@@ -2093,7 +2091,7 @@ namespace Evade
                 SpellName = "SyndraE",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
-                Delay = 500,
+                Delay = 300,
                 Range = 950,
                 Radius = 90,
                 MissileSpeed = 1601,
@@ -2101,12 +2099,12 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
+                DisableFowDetection = true,
                 MissileSpellName = "SyndraE",
 
             });
 
             #endregion Syndra
-            //FIX
             #region Thresh
             Spells.Add(new SpellData
             {
@@ -2141,6 +2139,7 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 3,
                 IsDangerous = true,
+                Centered = true,
                 MissileSpellName = "ThreshEMissile1",
 
             });
@@ -2441,7 +2440,6 @@ namespace Evade
             });
 
             #endregion Velkoz
-            //CHECK
             #region Vi
             Spells.Add(new SpellData
             {
@@ -2482,7 +2480,6 @@ namespace Evade
             });
 
             #endregion Viktor
-            //FIX 2 delay
             #region Xerath
             Spells.Add(new SpellData
             {

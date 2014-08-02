@@ -13,6 +13,7 @@ using GamePath = System.Collections.Generic.List<SharpDX.Vector2>;
 
 namespace Evade
 {
+    
     internal class Program
     {
         public static SpellList<Skillshot> DetectedSkillshots = new SpellList<Skillshot>();
@@ -63,15 +64,10 @@ namespace Evade
 
         private static void Main(string[] args)
         {
-
-
-            
             if (Game.Mode == GameMode.Running)
                 Game_OnGameStart(new EventArgs());
 
-            
             Game.OnGameStart += Game_OnGameStart;
-            
         }
 
         private static bool IsSpellShielded(Obj_AI_Hero unit)
@@ -125,7 +121,6 @@ namespace Evade
                 {
                     Console.WriteLine(spell.SData.Name + " w:" + spell.SData.LineWidth + " s:" + spell.SData.MissileSpeed + " r: "+spell.SData.CastRange[0]);
                 }
-                
             }
                 
         }
@@ -205,6 +200,31 @@ namespace Evade
                             skillshot.StartTick, start, end, skillshot.Unit);
                         DetectedSkillshots.Add(skillshotToAdd);
                         return;
+                    }
+
+                    if (skillshot.SpellData.SpellName == "SyndraE" || skillshot.SpellData.SpellName == "syndrae5")
+                    {
+                        var angle = 60;
+                        var edge1 = (skillshot.End - skillshot.Unit.ServerPosition.To2D()).Rotated(-angle/2 * (float)Math.PI / 180);
+                        var edge2 = edge1.Rotated(angle * (float)Math.PI / 180);
+
+                        foreach (var minion in ObjectManager.Get<Obj_AI_Minion>())
+                        {
+                            var v = minion.ServerPosition.To2D() - skillshot.Unit.ServerPosition.To2D();
+                            if (minion.Name == "Seed" && edge1.CrossProduct(v) > 0 && v.CrossProduct(edge2) > 0 && minion.Distance(skillshot.Unit) < 800 && (minion.Team != ObjectManager.Player.Team || Config.TestOnAllies))
+                            {
+                                var start = minion.ServerPosition.To2D();
+                                var end = skillshot.Unit.ServerPosition.To2D()
+                                    .Extend(minion.ServerPosition.To2D(),
+                                        skillshot.Unit.Distance(minion) > 200 ? 1300 : 1000);
+
+                                var skillshotToAdd = new Skillshot(skillshot.DetectionType, skillshot.SpellData,
+                                    skillshot.StartTick, start, end, skillshot.Unit);
+                                DetectedSkillshots.Add(skillshotToAdd);
+                            }
+                        }
+                        return;
+                        
                     }
                 }
 
@@ -596,9 +616,8 @@ namespace Evade
                                 {
                                     for (var i = 0; i < points.Count; i++)
                                     {
-                                        points[i] = ObjectManager.Player.ServerPosition.To2D() +
-                                                    evadeSpell.MaxRange*
-                                                    (points[i] - ObjectManager.Player.ServerPosition.To2D()).Normalized();
+                                        points[i] = ObjectManager.Player.ServerPosition.To2D()
+                                            .Extend(points[i], evadeSpell.MaxRange);
                                     }
                                 }
 

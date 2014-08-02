@@ -56,6 +56,10 @@ namespace Marksman
             CClass.Id = ObjectManager.Player.BaseSkinName;
             CClass.Config = Config;
 
+            var targetSelectorMenu = new Menu("Target Selector", "Target Selector");
+            SimpleTs.AddToMenu(targetSelectorMenu);
+            Config.AddSubMenu(targetSelectorMenu);
+
             var orbwalking = Config.AddSubMenu(new Menu("Orbwalking", "Orbwalking"));
             CClass.Orbwalker = new Orbwalking.Orbwalker(orbwalking);
 

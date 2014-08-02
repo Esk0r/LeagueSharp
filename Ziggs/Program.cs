@@ -34,6 +34,12 @@ namespace Ziggs
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
+            Obj_AI_Hero.OnPropertyChange += Obj_AI_Hero_OnPropertyChange;
+        }
+
+        static void Obj_AI_Hero_OnPropertyChange(GameObject sender, GameObjectPropertyChangeEventArgs args)
+        {
+            Game.PrintChat(args.Property);
         }
 
         private static void Game_OnGameLoad(EventArgs args)
@@ -64,6 +70,10 @@ namespace Ziggs
             SpellList.Add(R);
 
             Config = new Menu(ChampionName, ChampionName, true);
+
+            var targetSelectorMenu = new Menu("Target Selector", "Target Selector");
+            SimpleTs.AddToMenu(targetSelectorMenu);
+            Config.AddSubMenu(targetSelectorMenu);
 
             Config.AddSubMenu(new Menu("Orbwalking", "Orbwalking"));
             Orbwalker = new Orbwalking.Orbwalker(Config.SubMenu("Orbwalking"));
@@ -201,10 +211,8 @@ namespace Ziggs
                         if(prediction.HitChance >= Prediction.HitChance.HighHitchance)
                             if (ObjectManager.Player.ServerPosition.Distance(prediction.Position) < W.Range  && ObjectManager.Player.ServerPosition.Distance(prediction.Position) > W.Range - 250 && prediction.Position.Distance(ObjectManager.Player.ServerPosition) > target.Distance(ObjectManager.Player))
                             {
-                                var cp = ObjectManager.Player.ServerPosition +
-                                         W.Range *
-                                         (prediction.Position.To2D() - ObjectManager.Player.ServerPosition.To2D())
-                                             .Normalized().To3D();
+                                var cp = ObjectManager.Player.ServerPosition.To2D()
+                                    .Extend(prediction.Position.To2D(), W.Range).To3D();
                                     W.Cast(cp);
                                     UseSecondWT = Environment.TickCount;
                             }
@@ -295,8 +303,8 @@ namespace Ziggs
             var castToMouse = Config.Item("WToMouse").GetValue<KeyBind>().Active && !Keyboard.IsKeyDown(Key.LeftCtrl);
             if (castToMouse || Environment.TickCount - LastWToMouseT < 400)
             {
-                var pos = ObjectManager.Player.ServerPosition.To2D() - 150 * (Game.CursorPos.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized();
-                W.Cast(pos.To3D(), true);
+                var pos = ObjectManager.Player.ServerPosition.To2D().Extend(Game.CursorPos.To2D(), 150).To3D();
+                W.Cast(pos, true);
                 if (castToMouse)
                     LastWToMouseT = Environment.TickCount;
             }
@@ -369,10 +377,9 @@ namespace Ziggs
                 else if (ObjectManager.Player.ServerPosition.Distance(prediction.CastPosition) <=
                          ((Q1.Range + Q2.Range)/2))
                 {
-                    var p = ObjectManager.Player.ServerPosition.To2D() +
-                        (Q1.Range - 100) *
-                        (prediction.CastPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized
-                            ();
+                    var p = ObjectManager.Player.ServerPosition.To2D()
+                        .Extend(prediction.CastPosition.To2D(), Q1.Range - 100);
+                      
                     if (!CheckQCollision(target, prediction.Position, p.To3D()))
                         Q1.Cast(p.To3D());
                 }
