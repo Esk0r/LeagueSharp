@@ -36,7 +36,6 @@ namespace Syndra
         private static int WEComboT;
         private static int FarmscsT;
 
-
         private static Obj_AI_Hero Player;
 
         private static void Main(string[] args)
@@ -183,11 +182,11 @@ namespace Syndra
         private static void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
         {
             if (!Config.Item("InterruptSpells").GetValue<bool>()) return;
-
+          
             if (Player.Distance(unit) < E.Range && E.IsReady())
             {
-                Q.Cast(unit);
-                E.Cast(unit);
+                Q.Cast(unit.ServerPosition);
+                E.Cast(unit.ServerPosition);
             }
             else if (Player.Distance(unit) < EQ.Range && E.IsReady() && Q.IsReady())
             {
@@ -197,8 +196,7 @@ namespace Syndra
 
         private static void Combo()
         {
-            Orbwalker.SetAttacks(
-                !(Q.IsReady() || W.IsReady()));
+            Orbwalker.SetAttacks(!(Q.IsReady() || W.IsReady()));
             UseSpells(Config.Item("UseQCombo").GetValue<bool>(), Config.Item("UseWCombo").GetValue<bool>(),
                 Config.Item("UseECombo").GetValue<bool>(), Config.Item("UseRCombo").GetValue<bool>(),
                 Config.Item("UseQECombo").GetValue<bool>());
