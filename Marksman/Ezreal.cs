@@ -29,11 +29,9 @@ namespace Marksman
             R = new Spell(SpellSlot.R, 2500);
             R.SetSkillshot(1f, 160f, 2000f, false, Prediction.SkillshotType.SkillshotLine);
 
-            Orbwalking.AfterAttack += Orbwalking_AfterAttack;
-            Game.OnGameUpdate += Game_OnGameUpdate;
         }
 
-        private void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
         {
             if ((ComboActive || HarassActive) && unit.IsMe && (target is Obj_AI_Hero))
             {
@@ -62,7 +60,7 @@ namespace Marksman
             }
         }
 
-        private void Game_OnGameUpdate(EventArgs args)
+        public override void Game_OnGameUpdate(EventArgs args)
         {
             Obj_AI_Hero t;
             if (ComboActive || HarassActive)

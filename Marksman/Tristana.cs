@@ -23,12 +23,9 @@ namespace Marksman
             Q = new Spell(SpellSlot.Q, 703);
             E = new Spell(SpellSlot.E, 703);
             R = new Spell(SpellSlot.R, 703);
-           
-            Orbwalking.AfterAttack += Orbwalking_AfterAttack;
-            Game.OnGameUpdate += Game_OnGameUpdate;
         }
 
-        private void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
         {
             if ((ComboActive || HarassActive) && unit.IsMe && (target is Obj_AI_Hero))
             {
@@ -54,7 +51,7 @@ namespace Marksman
             }
         }
 
-        private void Game_OnGameUpdate(EventArgs args)
+        public override void Game_OnGameUpdate(EventArgs args)
         {
             //Update E and R range depending on level; 550 + 9 Ã— ( Tristana's level - 1)
             E.Range = 550 + 9 * (ObjectManager.Player.Level - 1);

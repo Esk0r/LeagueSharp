@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using LeagueSharp;
 using LeagueSharp.Common;
 
 #endregion
@@ -43,5 +44,15 @@ namespace Marksman
         public virtual void Drawing_OnDraw(EventArgs args)
         {
         }
+
+        public virtual void Game_OnGameUpdate(EventArgs args)
+        {
+        }
+
+        public virtual void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        {
+            
+        }
+
     }
 }

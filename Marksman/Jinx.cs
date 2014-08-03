@@ -29,7 +29,6 @@ namespace Marksman
             R = new Spell(SpellSlot.R, 2500);
             R.SetSkillshot(0.6f, 140f, 1700f, false, Prediction.SkillshotType.SkillshotLine);
 
-            Game.OnGameUpdate += Game_OnGameUpdate;
         }
 
         public override void Drawing_OnDraw(EventArgs args)
@@ -43,7 +42,7 @@ namespace Marksman
             }
         }
 
-        private void Game_OnGameUpdate(EventArgs args)
+        public override void Game_OnGameUpdate(EventArgs args)
         {
             if (ComboActive || HarassActive)
             {

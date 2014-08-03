@@ -67,6 +67,12 @@ namespace Marksman
 
             Drawing.OnDraw += Drawing_OnDraw;
             Game.OnGameUpdate += Game_OnGameUpdate;
+            Orbwalking.AfterAttack += Orbwalking_AfterAttack;
+        }
+
+        static void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        {
+            CClass.Orbwalking_AfterAttack(unit, target);
         }
 
 
@@ -92,6 +98,7 @@ namespace Marksman
             //Update the combo and harass values.
             CClass.ComboActive = CClass.Config.Item("Orbwalk").GetValue<KeyBind>().Active;
             CClass.HarassActive = CClass.Config.Item("Farm").GetValue<KeyBind>().Active;
+            CClass.Game_OnGameUpdate(args);
 
             //Items
             var botrk = Config.Item("BOTRK").GetValue<bool>();

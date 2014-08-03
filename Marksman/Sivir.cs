@@ -24,11 +24,10 @@ namespace Marksman
 
             W = new Spell(SpellSlot.W, 1050);
 
-            Orbwalking.AfterAttack += Orbwalking_AfterAttack;
-            Game.OnGameUpdate += Game_OnGameUpdate;
+
         }
 
-        private void Game_OnGameUpdate(EventArgs args)
+        public override void Game_OnGameUpdate(EventArgs args)
         {
             if (ComboActive || HarassActive)
             {
@@ -48,7 +47,7 @@ namespace Marksman
             }
         }
 
-        private void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
         {
             if ((ComboActive || HarassActive) && unit.IsMe && (target is Obj_AI_Hero))
             {
