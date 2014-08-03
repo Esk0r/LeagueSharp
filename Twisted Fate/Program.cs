@@ -78,6 +78,7 @@ namespace TwistedFate
 
             Game.OnGameUpdate += Game_OnGameUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
+            Drawing.OnEndScene += DrawingOnOnEndScene;
             Obj_AI_Hero.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
         }
 
@@ -89,12 +90,20 @@ namespace TwistedFate
             }
         }
 
+        private static void DrawingOnOnEndScene(EventArgs args)
+        {
+            var rCircle2 = Config.Item("Rcircle2").GetValue<Circle>();
+            if (rCircle2.Active)
+            {
+                Utility.DrawCircle(ObjectManager.Player.Position, 5500, rCircle2.Color, 1, 23, true);
+            }
+        }
+
         static void Drawing_OnDraw(EventArgs args)
         {
             var qCircle = Config.Item("Qcircle").GetValue<Circle>();
             var rCircle = Config.Item("Rcircle").GetValue<Circle>();
-            var rCircle2 = Config.Item("Rcircle2").GetValue<Circle>();
-
+            
             if (qCircle.Active)
             {
                 Utility.DrawCircle(ObjectManager.Player.Position, Q.Range, qCircle.Color);
@@ -103,11 +112,6 @@ namespace TwistedFate
             if (rCircle.Active)
             {
                 Utility.DrawCircle(ObjectManager.Player.Position, 5500, rCircle.Color);
-            }
-
-            if (rCircle2.Active)
-            {
-                Utility.DrawCircle(ObjectManager.Player.Position, 5500, rCircle2.Color, 1, 30, true);
             }
         }
 
