@@ -29,11 +29,10 @@ namespace Marksman
             R = new Spell(SpellSlot.R, 2500);
             R.SetSkillshot(0.6f, 140f, 1700f, false, Prediction.SkillshotType.SkillshotLine);
 
-            Drawing.OnDraw += Drawing_OnDraw;
             Game.OnGameUpdate += Game_OnGameUpdate;
         }
 
-        private void Drawing_OnDraw(EventArgs args)
+        public override void Drawing_OnDraw(EventArgs args)
         {
             Spell[] spellList = { W };
             foreach (var spell in spellList)

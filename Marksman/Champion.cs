@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using LeagueSharp.Common;
 
 #endregion
@@ -36,6 +37,10 @@ namespace Marksman
         }
 
         public virtual void MainMenu(Menu config)
+        {
+        }
+
+        public virtual void Drawing_OnDraw(EventArgs args)
         {
         }
     }

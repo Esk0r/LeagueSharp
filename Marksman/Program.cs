@@ -17,23 +17,6 @@ namespace Marksman
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
-            Drawing.OnDraw += Drawing_OnDraw;
-        }
-
-        private static void Drawing_OnDraw(EventArgs args)
-        {
-            return;
-
-            var y = 10;
-            foreach (
-                var t in
-                    ObjectManager.Player.Buffs.Select(
-                        b => b.DisplayName + " - " + b.IsActive + " - " + (b.EndTime > Game.Time) + " - " + b.IsPositive)
-                )
-            {
-                Drawing.DrawText(0, y, System.Drawing.Color.Wheat, t);
-                y = y + 16;
-            }
         }
 
         private static void Game_OnGameLoad(EventArgs args)
@@ -49,10 +32,10 @@ namespace Marksman
 
             if (ObjectManager.Player.BaseSkinName == "Sivir")
                 CClass = new Sivir();
-
+            
             if (ObjectManager.Player.BaseSkinName == "Tristana")
                 CClass = new Tristana();
-
+            
             CClass.Id = ObjectManager.Player.BaseSkinName;
             CClass.Config = Config;
 
@@ -82,7 +65,26 @@ namespace Marksman
 
             Config.AddToMainMenu();
 
+            Drawing.OnDraw += Drawing_OnDraw;
             Game.OnGameUpdate += Game_OnGameUpdate;
+        }
+
+
+        private static void Drawing_OnDraw(EventArgs args)
+        {
+            CClass.Drawing_OnDraw(args);
+            return;
+
+            var y = 10;
+            foreach (
+                var t in
+                    ObjectManager.Player.Buffs.Select(
+                        b => b.DisplayName + " - " + b.IsActive + " - " + (b.EndTime > Game.Time) + " - " + b.IsPositive)
+                )
+            {
+                Drawing.DrawText(0, y, System.Drawing.Color.Wheat, t);
+                y = y + 16;
+            }
         }
 
         private static void Game_OnGameUpdate(EventArgs args)

@@ -19,13 +19,12 @@ namespace Marksman
         public Tristana()
         {
             Utils.PrintMessage("Tristana loaded.");
-
+            
             Q = new Spell(SpellSlot.Q, 703);
             E = new Spell(SpellSlot.E, 703);
             R = new Spell(SpellSlot.R, 703);
-
+           
             Orbwalking.AfterAttack += Orbwalking_AfterAttack;
-            Drawing.OnDraw += Drawing_OnDraw;
             Game.OnGameUpdate += Game_OnGameUpdate;
         }
 
@@ -44,9 +43,9 @@ namespace Marksman
             }
         }
 
-        private void Drawing_OnDraw(EventArgs args)
+        public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { E, R };
+            Spell[] spellList = { E};
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -100,7 +99,8 @@ namespace Marksman
         public override void DrawingMenu(Menu config)
         {
             config.AddItem(
-                new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
+                new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
+
         }
 
         public override void MiscMenu(Menu config)

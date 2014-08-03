@@ -26,7 +26,6 @@ namespace Marksman
 
             Orbwalking.AfterAttack += Orbwalking_AfterAttack;
             Game.OnGameUpdate += Game_OnGameUpdate;
-            Drawing.OnDraw += Drawing_OnDraw;
         }
 
         private void Game_OnGameUpdate(EventArgs args)
@@ -67,7 +66,7 @@ namespace Marksman
             }
         }
 
-        private void Drawing_OnDraw(EventArgs args)
+        public override void Drawing_OnDraw(EventArgs args)
         {
             Spell[] spellList = { Q };
             foreach (var spell in spellList)

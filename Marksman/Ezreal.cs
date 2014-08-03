@@ -30,7 +30,6 @@ namespace Marksman
             R.SetSkillshot(1f, 160f, 2000f, false, Prediction.SkillshotType.SkillshotLine);
 
             Orbwalking.AfterAttack += Orbwalking_AfterAttack;
-            Drawing.OnDraw += Drawing_OnDraw;
             Game.OnGameUpdate += Game_OnGameUpdate;
         }
 
@@ -52,7 +51,7 @@ namespace Marksman
             }
         }
 
-        private void Drawing_OnDraw(EventArgs args)
+        public override void Drawing_OnDraw(EventArgs args)
         {
             Spell[] spellList = { Q, W };
             foreach (var spell in spellList)
