@@ -257,6 +257,9 @@ namespace Evade
             //Avoid sending move/cast packets while dead.
             if (ObjectManager.Player.IsDead) return;
 
+            //Avoid sending move/cast packets while channeling important spells.
+            if(ObjectManager.Player.IsChannelingImportantSpell()) return;
+
             //Shield allies.
             foreach (var ally in ObjectManager.Get<Obj_AI_Hero>())
 	        {
