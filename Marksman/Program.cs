@@ -12,7 +12,7 @@ namespace Marksman
     internal class Program
     {
         public static Menu Config;
-        public static Champion CClass;
+        public static Champion CClass = null;
 
         private static void Main(string[] args)
         {
@@ -52,6 +52,13 @@ namespace Marksman
 
             if (ObjectManager.Player.BaseSkinName == "Tristana")
                 CClass = new Tristana();
+
+            if (ObjectManager.Player.BaseSkinName == "Graves")
+                CClass = new Graves();
+
+            if (CClass == null) {
+                Utils.PrintMessage("Champion not supported.");
+            }
 
             CClass.Id = ObjectManager.Player.BaseSkinName;
             CClass.Config = Config;
