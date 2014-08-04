@@ -77,10 +77,14 @@ namespace Marksman {
                 var castR = GetValue<KeyBind>("CastR").Active;
                 var target = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
                 // Prioritizes the target, if the target is not killable with ult, check others.
-                var ultTarget = GetUltTarget(target, castR);
+                var ultTarget = GetUltTarget(target);
                 // If the target is not null ult on them.
                 if (ultTarget != null) {
-                    R.Cast(ultTarget);
+                    if (castR || GetValue<bool>("UseRC")) {
+                        R.Cast(ultTarget);
+                    }
+                    float[] playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
+                    Drawing.DrawText(playerPos[0] - 60, playerPos[1] + 35, System.Drawing.Color.White, "Hit R To kill " + ultTarget.Name + "!");
                 }
             }
         }
@@ -89,39 +93,25 @@ namespace Marksman {
          * Gets the target to ult. Prioritizes using SimpleTS, if that target can't die, check the rest of the team.
          * If no one can die by ult it returns null.
          */
-        public Obj_AI_Hero GetUltTarget(Obj_AI_Hero target, bool castR) {
+        public Obj_AI_Hero GetUltTarget(Obj_AI_Hero target) {
             if (DamageLib.getDmg(target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > target.Health) {
-                if (castR || GetValue<bool>("UseRC")) {
-                    if (GetValue<bool>("UseROR") && GetValue<bool>("UseRC")) {
-                        if (Vector3.Distance(ObjectManager.Player.Position, target.Position) >= aaRange) {
-                            return target;
-                        }
-                    } else {
+                if (GetValue<bool>("UseROR") && GetValue<bool>("UseRC")) {
+                    if (Vector3.Distance(ObjectManager.Player.Position, target.Position) >= aaRange) {
                         return target;
                     }
                 } else {
-                    return null;
-                }
-                if (DamageLib.getDmg(target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > target.Health) {
-                    float[] playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
-                    Drawing.DrawText(playerPos[0] - 50, playerPos[1] + 35, System.Drawing.Color.White, "Hit R To kill " + target.Name + "!");
+                    return target;
                 }
             } else {
                 foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsValidTarget(R.Range))) {
-                    if (castR || GetValue<bool>("UseRC") && (DamageLib.getDmg(enemy, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > enemy.Health)) {
-                        if (GetValue<bool>("UseROR") && GetValue<bool>("UseRC")) {
+                    if ((DamageLib.getDmg(enemy, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > enemy.Health)) {
+                        if (GetValue<bool>("UseROR")) {
                             if (Vector3.Distance(ObjectManager.Player.Position, enemy.Position) >= aaRange) {
                                 return enemy;
                             }
                         } else {
                             return enemy;
                         }
-                    } else {
-                        return null;
-                    }
-                    if (DamageLib.getDmg(enemy, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > enemy.Health) {
-                        float[] playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
-                        Drawing.DrawText(playerPos[0] - 50, playerPos[1] + 35, System.Drawing.Color.White, "Hit R To kill " + enemy.Name + "!");
                     }
                 }
             }
@@ -129,6 +119,7 @@ namespace Marksman {
             return null;
         }
 
+        // Menu stuff.
         public override void ComboMenu(Menu config) {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(true));
