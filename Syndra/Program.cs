@@ -327,9 +327,16 @@ namespace Syndra
                     ? useR
                     : false;
 
-            //DFG
+            //DFG (and ult if ready)
             if (rTarget != null && useR && GetComboDamage(rTarget) > rTarget.Health && DFG.IsReady())
+            {
                 DFG.Cast(rTarget);
+                if(R.IsReady())
+                {       
+                    R.Cast(rTarget);
+                }
+                
+            }
 
             //R
             if (rTarget != null && useR && R.IsReady() && !Q.IsReady() && !DFG.IsReady())
