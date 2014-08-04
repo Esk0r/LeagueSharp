@@ -68,7 +68,7 @@ namespace Marksman {
                     if (autoWi)
                         W.CastIfHitchanceEquals(enemy, Prediction.HitChance.Immobile);
 
-                    if (autoWi)
+                    if (autoWd)
                         W.CastIfHitchanceEquals(enemy, Prediction.HitChance.Immobile);
                 }
             }
