@@ -77,38 +77,56 @@ namespace Marksman {
                 var castR = GetValue<KeyBind>("CastR").Active;
                 var target = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
                 // Prioritizes the target, if the target is not killable with ult, check others.
-                if (DamageLib.getDmg(target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > target.Health) {
-                     if (castR || GetValue<bool>("UseRC") && (DamageLib.getDmg(target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > target.Health)) {
-                        if (GetValue<bool>("UseROR") && GetValue<bool>("UseRC")) {
-                            if (Vector3.Distance(ObjectManager.Player.Position, target.Position) >= aaRange) {
-                                R.Cast(target);
-                            }
-                        } else {
-                            R.Cast(target);
+                var ultTarget = GetUltTarget(target, castR);
+                // If the target is not null ult on them.
+                if (ultTarget != null) {
+                    R.Cast(ultTarget);
+                }
+            }
+        }
+
+        /*
+         * Gets the target to ult. Prioritizes using SimpleTS, if that target can't die, check the rest of the team.
+         * If no one can die by ult it returns null.
+         */
+        public Obj_AI_Hero GetUltTarget(Obj_AI_Hero target, bool castR) {
+            if (DamageLib.getDmg(target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > target.Health) {
+                if (castR || GetValue<bool>("UseRC")) {
+                    if (GetValue<bool>("UseROR") && GetValue<bool>("UseRC")) {
+                        if (Vector3.Distance(ObjectManager.Player.Position, target.Position) >= aaRange) {
+                            return target;
                         }
-                    }
-                    if (DamageLib.getDmg(target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > target.Health) {
-                        float[] playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
-                        Drawing.DrawText(playerPos[0] - 50, playerPos[1] + 35, System.Drawing.Color.White, "Hit R To kill " + target.Name + "!");
+                    } else {
+                        return target;
                     }
                 } else {
-                    foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsValidTarget(R.Range))) {
+                    return null;
+                }
+                if (DamageLib.getDmg(target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > target.Health) {
+                    float[] playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
+                    Drawing.DrawText(playerPos[0] - 50, playerPos[1] + 35, System.Drawing.Color.White, "Hit R To kill " + target.Name + "!");
+                }
+            } else {
+                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsValidTarget(R.Range))) {
                     if (castR || GetValue<bool>("UseRC") && (DamageLib.getDmg(enemy, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > enemy.Health)) {
                         if (GetValue<bool>("UseROR") && GetValue<bool>("UseRC")) {
                             if (Vector3.Distance(ObjectManager.Player.Position, enemy.Position) >= aaRange) {
-                                R.Cast(enemy);
+                                return enemy;
                             }
                         } else {
-                            R.Cast(enemy);
+                            return enemy;
                         }
+                    } else {
+                        return null;
                     }
                     if (DamageLib.getDmg(enemy, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > enemy.Health) {
                         float[] playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
                         Drawing.DrawText(playerPos[0] - 50, playerPos[1] + 35, System.Drawing.Color.White, "Hit R To kill " + enemy.Name + "!");
                     }
                 }
-                }
             }
+            // No one selected.
+            return null;
         }
 
         public override void ComboMenu(Menu config) {
