@@ -23,6 +23,14 @@ namespace Marksman
             Q = new Spell(SpellSlot.Q, 703);
             E = new Spell(SpellSlot.E, 703);
             R = new Spell(SpellSlot.R, 703);
+
+            Interrupter.OnPosibleToInterrupt += Interrupter_OnPosibleToInterrupt;
+        }
+
+        public void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
+        {
+            if (R.IsReady() && unit.IsValidTarget(R.Range))
+                R.CastOnUnit(unit);
         }
 
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
@@ -66,8 +74,6 @@ namespace Marksman
                         E.CastOnUnit(eTarget);
                 }
             }
-            
-
 
             //Killsteal
             if (!ComboActive || !GetValue<bool>("UseRM") || !R.IsReady()) return;
