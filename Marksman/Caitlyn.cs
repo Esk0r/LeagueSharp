@@ -104,7 +104,7 @@ namespace Marksman {
         public override void HarassMenu(Menu config) {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(false));
             config.AddItem(new MenuItem("space", "----- Options -----").SetValue(true));
-            config.AddItem(new MenuItem("UseQORH" + Id, "Use Q out of AA Range").SetValue(true))
+            config.AddItem(new MenuItem("UseQORH" + Id, "Use Q out of AA Range").SetValue(true));
         }
 
         public override void MiscMenu(Menu config) {
