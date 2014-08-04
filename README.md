@@ -28,4 +28,4 @@ Ziggs assembly made by lepqm & Esk0r.
 
 Marksman#
 -----------
-Assembly that supports the following Marksmen: Ezreal, Sivir and Jinx.
+Assembly that supports the following Marksmen: Ezreal, Sivir, Jinx, Tristana and Graves.
