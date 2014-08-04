@@ -186,7 +186,147 @@ namespace Evade
                     Spells.Add(spell);
                 }
                 #endregion
-
+                #region Lulu
+                if (ObjectManager.Player.BaseSkinName == "Lulu")
+                {
+                    spell = new ShieldData("Lulu E", SpellSlot.E, 100, 1);
+                    spell.CanShieldAllies = true;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Karma
+                if (ObjectManager.Player.BaseSkinName == "Karma")
+                {
+                    spell = new ShieldData("Karma E", SpellSlot.E, 100, 1);
+                    spell.CanShieldAllies = true;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region LeeSin
+                if (ObjectManager.Player.BaseSkinName == "LeeSin")
+                {
+                    spell = new ShieldData("LeeSin W", SpellSlot.W, 100, 1);
+                    spell.CanShieldAllies = true;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Orianna
+                if (ObjectManager.Player.BaseSkinName == "Orianna")
+                {
+                    spell = new ShieldData("Orianna E", SpellSlot.E, 100, 1);
+                    spell.CanShieldAllies = true;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Karma
+                if (ObjectManager.Player.BaseSkinName == "Karma")
+                {
+                    spell = new ShieldData("Karma E", SpellSlot.E, 100, 1);
+                    spell.CanShieldAllies = true;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Shen
+                if (ObjectManager.Player.BaseSkinName == "Shen")
+                {
+                    spell = new ShieldData("Shen W", SpellSlot.W, 100, 1);
+                    spell.CanShieldAllies = false;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                {
+                    spell = new ShieldData("Shen R", SpellSlot.R, 100, 1);
+                    spell.CanShieldAllies = true;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Rumble
+                if (ObjectManager.Player.BaseSkinName == "Rumble")
+                {
+                    spell = new ShieldData("Rumble W", SpellSlot.W, 100, 1);
+                    spell.CanShieldAllies = false;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Nautilus
+                if (ObjectManager.Player.BaseSkinName == "Nautilus")
+                {
+                    spell = new ShieldData("Nautilus W", SpellSlot.W, 100, 1);
+                    spell.CanShieldAllies = false;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Sion
+                if (ObjectManager.Player.BaseSkinName == "Sion")
+                {
+                    spell = new ShieldData("Sion W", SpellSlot.W, 100, 1);
+                    spell.CanShieldAllies = false;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region JarvanIV
+                if (ObjectManager.Player.BaseSkinName == "JarvanIV")
+                {
+                    spell = new ShieldData("JarvanIV W", SpellSlot.W, 100, 1);
+                    spell.CanShieldAllies = false;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Skarner
+                if (ObjectManager.Player.BaseSkinName == "Skarner")
+                {
+                    spell = new ShieldData("Skarner W", SpellSlot.W, 100, 1);
+                    spell.CanShieldAllies = false;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Urgot
+                if (ObjectManager.Player.BaseSkinName == "Urgot")
+                {
+                    spell = new ShieldData("Urgot W", SpellSlot.W, 100, 1);
+                    spell.CanShieldAllies = false;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Diana
+                if (ObjectManager.Player.BaseSkinName == "Diana")
+                {
+                    spell = new ShieldData("Diana W", SpellSlot.W, 100, 1);
+                    spell.CanShieldAllies = false;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Udyr
+                if (ObjectManager.Player.BaseSkinName == "Udyr")
+                {
+                    spell = new ShieldData("Udyr W", SpellSlot.W, 100, 1);
+                    spell.CanShieldAllies = false;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Kayle
+                if (ObjectManager.Player.BaseSkinName == "Kayle")
+                {
+                    spell = new ShieldData("Kayle R", SpellSlot.R, 100, 1);
+                    spell.CanShieldAllies = true;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                #endregion
                 #region Morgana
                 if (ObjectManager.Player.BaseSkinName == "Morgana")
                 {
@@ -196,6 +336,28 @@ namespace Evade
                     Spells.Add(spell);
                 }
                 #endregion
+                
+                //  Wasn't sure how to handle these two special cases, but I think they will work as I have them set up.
+                #region Zilean
+                if (ObjectManager.Player.BaseSkinName == "Zilean")
+                {
+                    spell = new ShieldData("Zilean R", SpellSlot.R, 100, 5);
+                    spell.CanShieldAllies = true;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                #endregion
+                #region Tryndamere
+                if (ObjectManager.Player.BaseSkinName == "Tryndamere")
+                {
+                    spell = new ShieldData("Tryndamere W", SpellSlot.R, 100, 5);
+                    spell.CanShieldAllies = false;
+                    spell.MaxRange = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).SData.CastRangeDisplayOverride[0];
+                    Spells.Add(spell);
+                }
+                #endregion
+
+
             #endregion
         }
 

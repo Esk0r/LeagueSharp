@@ -1,0 +1,11 @@
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Ryze\bin\Debug\Ryze.exe.config
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Ryze\obj\Debug\Ryze.csprojResolveAssemblyReference.cache
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Ryze\bin\Debug\Ryze.exe
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Ryze\bin\Debug\Ryze.pdb
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Ryze\bin\Debug\LeagueSharp.Common.dll
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Ryze\bin\Debug\LeagueSharp.dll
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Ryze\bin\Debug\SharpDX.dll
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Ryze\bin\Debug\SharpDX.Direct3D9.dll
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Ryze\bin\Debug\LeagueSharp.xml
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Ryze\obj\Debug\Ryze.exe
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Ryze\obj\Debug\Ryze.pdb

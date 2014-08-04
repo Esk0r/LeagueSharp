@@ -1,0 +1,10 @@
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Marksman\bin\Debug\Marksman.exe.config
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Marksman\bin\Debug\Marksman.exe
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Marksman\bin\Debug\Marksman.pdb
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Marksman\bin\Debug\LeagueSharp.Common.dll
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Marksman\bin\Debug\LeagueSharp.dll
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Marksman\bin\Debug\SharpDX.Direct3D9.dll
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Marksman\bin\Debug\SharpDX.dll
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Marksman\bin\Debug\LeagueSharp.xml
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Marksman\obj\Debug\Marksman.exe
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Marksman\obj\Debug\Marksman.pdb

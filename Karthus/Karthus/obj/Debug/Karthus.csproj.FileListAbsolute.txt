@@ -1,0 +1,17 @@
+C:\LeagueSharp\Projects\Karthus\Karthus\bin\Debug\Karthus.exe.config
+C:\LeagueSharp\Projects\Karthus\Karthus\bin\Debug\Karthus.exe
+C:\LeagueSharp\Projects\Karthus\Karthus\bin\Debug\Karthus.pdb
+C:\LeagueSharp\Projects\Karthus\Karthus\bin\Debug\LeagueSharp.Common.dll
+C:\LeagueSharp\Projects\Karthus\Karthus\bin\Debug\LeagueSharp.dll
+C:\LeagueSharp\Projects\Karthus\Karthus\bin\Debug\SharpDX.Direct3D9.dll
+C:\LeagueSharp\Projects\Karthus\Karthus\bin\Debug\SharpDX.dll
+C:\LeagueSharp\Projects\Karthus\Karthus\bin\Debug\LeagueSharp.xml
+C:\LeagueSharp\Projects\Karthus\Karthus\obj\Debug\Karthus.exe
+C:\LeagueSharp\Projects\Karthus\Karthus\obj\Debug\Karthus.pdb
+C:\LeagueSharp\Projects\Karthus\Karthus\obj\Debug\Karthus.csprojResolveAssemblyReference.cache
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Karthus\Karthus\bin\Debug\Karthus.exe.config
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Karthus\Karthus\obj\Debug\Karthus.exe
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Karthus\Karthus\obj\Debug\Karthus.pdb
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Karthus\Karthus\bin\Debug\Karthus.exe
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Karthus\Karthus\bin\Debug\Karthus.pdb
+C:\Users\Stephen\Documents\GitHub\LeagueSharp\Karthus\Karthus\bin\Debug\LeagueSharp.xml
