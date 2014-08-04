@@ -35,7 +35,10 @@ namespace Marksman
             
             if (ObjectManager.Player.BaseSkinName == "Tristana")
                 CClass = new Tristana();
-            
+
+            if (ObjectManager.Player.BaseSkinName == "Graves")
+                CClass = new Graves();
+
             CClass.Id = ObjectManager.Player.BaseSkinName;
             CClass.Config = Config;
 
