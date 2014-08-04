@@ -268,7 +268,7 @@ namespace Syndra
             if (E.IsReady())
                 damage += DamageLib.getDmg(enemy, DamageLib.SpellType.E);
 
-            var igniteSlot = Player.GetSpellSlot("SummonerIgnite");
+            var igniteSlot = Player.GetSpellSlot("SummonerDot");
             
             if(igniteSlot != SpellSlot.Unknown && Player.SummonerSpellbook.CanUseSpell(igniteSlot) == SpellState.Ready)
                 damage += DamageLib.getDmg(enemy, DamageLib.SpellType.IGNITE);
@@ -327,9 +327,16 @@ namespace Syndra
                     ? useR
                     : false;
 
-            //DFG
+            //DFG (and ult if ready)
             if (rTarget != null && useR && GetComboDamage(rTarget) > rTarget.Health && DFG.IsReady())
+            {
                 DFG.Cast(rTarget);
+                if(R.IsReady())
+                {       
+                    R.Cast(rTarget);
+                }
+                
+            }
 
             //R
             if (rTarget != null && useR && R.IsReady() && !Q.IsReady() && !DFG.IsReady())
