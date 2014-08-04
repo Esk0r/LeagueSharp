@@ -13,6 +13,9 @@ Ryze
 -----------
 A simple ryze script that works like a charm :3. Credits to lepqm for the base :^)
 
+Syndra
+-----------
+Syndra assembly, still working on it but it works decently :p
 
 Twisted Fate
 -----------
