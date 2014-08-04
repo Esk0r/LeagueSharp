@@ -269,7 +269,8 @@ namespace Syndra
                 damage += DamageLib.getDmg(enemy, DamageLib.SpellType.E);
 
             var igniteSlot = Player.GetSpellSlot("SummonerIgnite");
-            if (igniteSlot != SpellSlot.Unknown)
+            var igniteReady = ObjectManager.Player.Spellbook.CanUseSpell(igniteSlot) == SpellState.Ready;
+            if (igniteSlot != SpellSlot.Unknown && igniteReady)
                 damage += DamageLib.getDmg(enemy, DamageLib.SpellType.IGNITE);
 
             if (R.IsReady())
