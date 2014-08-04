@@ -14,6 +14,7 @@ namespace Marksman {
         public Spell Q;
         public Spell W;
         public Spell R;
+        public int aaRange = 650;
 
         public Caitlyn() {
             Utils.PrintMessage("Caitlyn loaded.");
@@ -49,7 +50,7 @@ namespace Marksman {
 
                     if (t != null) {
                         if (useQOR) {
-                            if (Vector3.Distance(ObjectManager.Player.Position, t.Position) > 640) {
+                            if (Vector3.Distance(ObjectManager.Player.Position, t.Position) >= aaRange) {
                                 Q.Cast(t);
                             }
                         } else {
@@ -75,10 +76,11 @@ namespace Marksman {
             if (R.IsReady()) {
                 var castR = GetValue<KeyBind>("CastR").Active;
                 var target = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
-                if (target != null) {
-                    if (castR || GetValue<bool>("UseRC") && (DamageLib.getDmg(target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > target.Health)) {
+                // Prioritizes the target, if the target is not killable with ult, check others.
+                if (DamageLib.getDmg(target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > target.Health) {
+                     if (castR || GetValue<bool>("UseRC") && (DamageLib.getDmg(target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > target.Health)) {
                         if (GetValue<bool>("UseROR") && GetValue<bool>("UseRC")) {
-                            if (Vector3.Distance(ObjectManager.Player.Position, target.Position) > 650) {
+                            if (Vector3.Distance(ObjectManager.Player.Position, target.Position) >= aaRange) {
                                 R.Cast(target);
                             }
                         } else {
@@ -87,8 +89,24 @@ namespace Marksman {
                     }
                     if (DamageLib.getDmg(target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > target.Health) {
                         float[] playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
-                        Drawing.DrawText(playerPos[0] - 50, playerPos[1] + 35, System.Drawing.Color.White, "Hit R To kill!");
+                        Drawing.DrawText(playerPos[0] - 50, playerPos[1] + 35, System.Drawing.Color.White, "Hit R To kill " + target.Name + "!");
                     }
+                } else {
+                    foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsValidTarget(R.Range))) {
+                    if (castR || GetValue<bool>("UseRC") && (DamageLib.getDmg(enemy, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > enemy.Health)) {
+                        if (GetValue<bool>("UseROR") && GetValue<bool>("UseRC")) {
+                            if (Vector3.Distance(ObjectManager.Player.Position, enemy.Position) >= aaRange) {
+                                R.Cast(enemy);
+                            }
+                        } else {
+                            R.Cast(enemy);
+                        }
+                    }
+                    if (DamageLib.getDmg(enemy, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > enemy.Health) {
+                        float[] playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
+                        Drawing.DrawText(playerPos[0] - 50, playerPos[1] + 35, System.Drawing.Color.White, "Hit R To kill " + enemy.Name + "!");
+                    }
+                }
                 }
             }
         }
