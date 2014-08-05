@@ -20,7 +20,7 @@ namespace Evade
             Obj_AI_Base.OnProcessSpellCast += ObjAiHeroOnOnProcessSpellCast;
 
             //Detect when projectiles collide.
-            GameObject.OnDelete += ObjSpellMissileOnOnDelete;
+            Obj_SpellMissile.OnDelete += ObjSpellMissileOnOnDelete;
             Obj_SpellMissile.OnCreate += ObjSpellMissileOnOnCreate;
             //GameObject.OnCreate += GameObject_OnCreate; TODO: Detect lux R and other large skillshots.
             GameObject.OnDelete += GameObject_OnDelete;
@@ -47,7 +47,7 @@ namespace Evade
 
         private static void ObjSpellMissileOnOnCreate(GameObject sender, EventArgs args)
         {
-            if (!(sender is Obj_SpellMissile)) return; //not sure if needed
+            if (!sender.IsValid || !(sender is Obj_SpellMissile)) return; //not sure if needed
 
             var missile = (Obj_SpellMissile)sender;
 
@@ -57,12 +57,12 @@ namespace Evade
                 Console.WriteLine(missile.SData.Name);
             }
 
-            var unit = (Obj_AI_Base)missile.SpellCaster;
+            var unit = missile.SpellCaster;
             if (!unit.IsValid || (unit.Team == ObjectManager.Player.Team && !Config.TestOnAllies)) return;
 
             var spellData = SpellDatabase.GetByMissileName(missile.SData.Name);
             if (spellData == null) return;
-
+            
             var missilePosition = missile.Position.To2D();
             var unitPosition = missile.StartPosition.To2D();
             var endPos = missile.EndPosition.To2D();
@@ -73,6 +73,8 @@ namespace Evade
             //Trigger the skillshot detection callbacks.
             TriggerOnDetectSkillshot(DetectionType.RecvPacket, spellData, castTime, unitPosition, endPos,
                 unit);
+
+            
         }
 
         /// <summary>
@@ -121,7 +123,7 @@ namespace Evade
                 Game.PrintChat(Environment.TickCount + " ProcessSpellCast: " + args.SData.Name);
             }
 
-            if (sender.Team == ObjectManager.Player.Team && !Config.TestOnAllies) return;
+            if (!sender.IsValid || sender.Team == ObjectManager.Player.Team && !Config.TestOnAllies) return;
             //Get the skillshot data.
             var spellData = SpellDatabase.GetByName(args.SData.Name);
 
