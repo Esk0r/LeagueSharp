@@ -2,10 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
+using SharpDX;
+using Color = System.Drawing.Color;
 
 #endregion
 
@@ -44,6 +45,14 @@ namespace Xerath
                        (ObjectManager.Player.LastCastedSpellName() == "XerathLocusOfPower2" &&
                         Environment.TickCount - ObjectManager.Player.LastCastedSpellT() < 500);
             }
+        }
+
+        public static class RCharge
+        {
+            public static int CastT;
+            public static int Index;
+            public static Vector3 Position;
+            public static bool TapKeyPressed;
         }
 
         private static void Main(string[] args)
@@ -99,6 +108,16 @@ namespace Xerath
                 .AddItem(
                     new MenuItem("ComboActive", "Combo!").SetValue(
                         new KeyBind(Config.Item("Orbwalk").GetValue<KeyBind>().Key, KeyBindType.Press)));
+
+            //Misc
+            Config.AddSubMenu(new Menu("R", "R"));
+            Config.SubMenu("R").AddItem(new MenuItem("rMode", "Mode").SetValue(new StringList(new[] { "Normal", "Custom delays", "OnTap"})));
+            Config.SubMenu("R").AddItem(new MenuItem("rModeKey", "OnTap key").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
+            Config.SubMenu("R").AddSubMenu(new Menu("Custom delays", "Custom delays"));
+            for (int i = 1; i <= 3; i++)
+                Config.SubMenu("R").SubMenu("Custom delays").AddItem(new MenuItem("Delay"+i, "Delay"+i).SetValue(new Slider(0, 1500, 0)));
+
+            
 
             //Harass menu:
             Config.AddSubMenu(new Menu("Harass", "Harass"));
@@ -170,8 +189,37 @@ namespace Xerath
             Drawing.OnDraw += Drawing_OnDraw;
             Drawing.OnEndScene += Drawing_OnEndScene;
             Interrupter.OnPosibleToInterrupt += Interrupter_OnPosibleToInterrupt;
-
+            Obj_AI_Hero.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
+            Game.OnWndProc += Game_OnWndProc;
             Game.PrintChat(ChampionName + " Loaded!");
+        }
+
+        static void Game_OnWndProc(WndEventArgs args)
+        {
+            if (args.Msg == (uint)WindowsMessages.WM_KEYUP)
+                RCharge.TapKeyPressed = true;
+
+        }
+
+        static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (sender.IsMe)
+            {
+                if (args.SData.Name == "XerathLocusOfPower2")
+                {
+                    RCharge.CastT = 0;
+                    RCharge.Index = 0;
+                    RCharge.Position = new Vector3();
+                    RCharge.TapKeyPressed = false;
+                }
+                else if (args.SData.Name == "xerathlocuspulse")
+                {
+                    RCharge.CastT = Environment.TickCount;
+                    RCharge.Index++;
+                    RCharge.Position = args.End;
+                    RCharge.TapKeyPressed = false;
+                }
+            }
         }
 
         private static void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
@@ -229,10 +277,35 @@ namespace Xerath
 
         private static void WhileCastingR()
         {
+            if(!Config.Item("UseRCombo").GetValue<bool>()) return;
+            var rMode = Config.Item("rMode").GetValue<StringList>().SelectedIndex;
+
             var rTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Magical);
             if (rTarget != null)
             {
-                R.Cast(rTarget, true);
+                //Wait at least 0.6f if the target is going to die or if the target is to far away
+                if(rTarget.Health - R.GetDamage(rTarget) < 0 || (RCharge.Index != 0 && rTarget.Distance(RCharge.Position) > 1500))
+                    if (Environment.TickCount - RCharge.CastT <= 600) return;
+
+                switch (rMode)
+                {
+                    case 0://Normal
+                        R.Cast(rTarget, true);
+                        break;
+
+                    case 1://Selected delays.
+                        var delay = Config.Item("Delay" + (RCharge.Index + 1)).GetValue<Slider>().Value;
+                        if (Environment.TickCount - RCharge.CastT > delay)
+                            R.Cast(rTarget, true);
+                        break;
+
+                    case 2://On tap
+                        if (RCharge.TapKeyPressed)
+                            R.Cast(rTarget, true);
+                        break;
+                }
+
+                
             }
         }
 
@@ -302,7 +375,7 @@ namespace Xerath
         private static void Game_OnGameUpdate(EventArgs args)
         {
             if (Player.IsDead) return;
-            Orbwalker.SetAttacks(true);
+            Orbwalker.SetAttacks(!Q.IsCharging);
             Orbwalker.SetMovement(true);
 
             //Update the R range
@@ -350,7 +423,7 @@ namespace Xerath
             foreach (var spell in SpellList)
             {
                 var menuItem = Config.Item(spell.Slot + "Range").GetValue<Circle>();
-                if (menuItem.Active)
+                if (menuItem.Active && (spell.Slot != SpellSlot.Q || R.Level > 0))
                     Utility.DrawCircle(Player.Position, spell.Range, menuItem.Color);
             }
         }
