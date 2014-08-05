@@ -35,13 +35,13 @@ namespace Marksman {
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target) {
             if ((ComboActive || HarassActive) && unit.IsMe && (target is Obj_AI_Hero)) {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-                var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
+                var useR = GetValue<bool>("UseR" + (ComboActive ? "C" : "H"));
 
                 if (useQ && Q.IsReady())
                     Q.Cast(target);
 
-                if (useE && E.IsReady())
-                    E.Cast(target);
+                if (useR && R.IsReady())
+                    R.Cast(target);
             }
         }
 
@@ -100,7 +100,7 @@ namespace Marksman {
 
                     if (useW) {
                         if (W.IsReady() && Vector3.Distance(ObjectManager.Player.Position, target.Position) < (aaRange + wAddRange) && target.IsValidTarget()) {
-                            W.Cast(target);
+                            ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W);
                         }
                     }
 
@@ -133,7 +133,7 @@ namespace Marksman {
 
         public override void DrawingMenu(Menu config) {
             config.AddItem(
-                new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(true, System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true, System.Drawing.Color.FromArgb(100, 255, 0, 255))));
 
         }
 

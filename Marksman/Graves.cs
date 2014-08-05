@@ -18,9 +18,9 @@ namespace Marksman
         public Graves()
         {
             Utils.PrintMessage("Graves loaded.");
-
+             
             Q = new Spell(SpellSlot.Q, 1000); // Q likes to shoot a bit too far away, so moving the range inward.
-            Q.SetSkillshot(Q.Delay, Q.Width, Q,Speed, false, Prediction.SkillshotType.SkillshotCone);
+            Q.SetSkillshot(Q.Delay, Q.Width, Q.Speed, false, Prediction.SkillshotType.SkillshotCone);
 
             W = new Spell(SpellSlot.W, 1100);
             W.SetSkillshot(W.Delay, W.Width, W.Speed, false, Prediction.SkillshotType.SkillshotCircle);
