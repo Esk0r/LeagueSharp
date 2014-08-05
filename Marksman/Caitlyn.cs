@@ -81,7 +81,13 @@ namespace Marksman {
                 // If the target is not null ult on them.
                 if (ultTarget != null) {
                     if (castR || GetValue<bool>("UseRC")) {
-                        R.Cast(ultTarget);
+                        if (GetValue<bool>("UseROR") && GetValue<bool>("UseRC")) {
+                            if (Vector3.Distance(ObjectManager.Player.Position, target.Position) >= aaRange) {
+                                R.Cast(ultTarget);
+                            }
+                        } else {
+                            R.Cast(ultTarget);
+                        }
                     }
                     float[] playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
                     Drawing.DrawText(playerPos[0] - 60, playerPos[1] + 35, System.Drawing.Color.White, "Hit R To kill " + ultTarget.Name + "!");
@@ -95,23 +101,11 @@ namespace Marksman {
          */
         public Obj_AI_Hero GetUltTarget(Obj_AI_Hero target) {
             if (DamageLib.getDmg(target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > target.Health) {
-                if (GetValue<bool>("UseROR") && GetValue<bool>("UseRC")) {
-                    if (Vector3.Distance(ObjectManager.Player.Position, target.Position) >= aaRange) {
-                        return target;
-                    }
-                } else {
-                    return target;
-                }
+                return target;
             } else {
                 foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsValidTarget(R.Range))) {
                     if ((DamageLib.getDmg(enemy, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > enemy.Health)) {
-                        if (GetValue<bool>("UseROR")) {
-                            if (Vector3.Distance(ObjectManager.Player.Position, enemy.Position) >= aaRange) {
-                                return enemy;
-                            }
-                        } else {
-                            return enemy;
-                        }
+                        return enemy;
                     }
                 }
             }
