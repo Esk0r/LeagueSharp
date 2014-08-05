@@ -306,14 +306,14 @@ namespace Syndra
                     //WObject
                     var gObjectPos = GetGrabableObjectPos(wTarget == null);
 
-                    if (gObjectPos.To2D().IsValid() && Environment.TickCount - W.LastCastAttemptT > Game.Ping + 400)
+                    if (gObjectPos.To2D().IsValid() && Environment.TickCount - W.LastCastAttemptT > Game.Ping + 100)
                     {
                         W.Cast(gObjectPos);
                         W.LastCastAttemptT = Environment.TickCount;
                     }
                 }
                 else if (wTarget != null && Player.Spellbook.GetSpell(SpellSlot.W).ToggleState != 1 && W.IsReady() &&
-                         Environment.TickCount - W.LastCastAttemptT > Game.Ping + 150)
+                         Environment.TickCount - W.LastCastAttemptT > Game.Ping + 100)
                 {
                     if (OrbManager.WObject(false) != null)
                     {
