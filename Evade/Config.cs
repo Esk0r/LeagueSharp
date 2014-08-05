@@ -1,10 +1,9 @@
 ﻿#region
 
-using System;
+using System.Drawing;
 using LeagueSharp;
 using LeagueSharp.Common;
-using SharpDX;
-using Color = System.Drawing.Color;
+
 #endregion
 
 namespace Evade
@@ -35,17 +34,17 @@ namespace Evade
 
         public static void CreateMenu()
         {
-            
             Menu = new Menu("Evade", "Evade", true);
-            
+
             //Create the evade spells submenus.
             var evadeSpells = new Menu("Evade spells", "evadeSpells");
             foreach (var spell in EvadeSpellDatabase.Spells)
             {
                 var subMenu = new Menu(spell.Name, spell.Name);
 
-                subMenu.AddItem(new MenuItem("DangerLevel" + spell.Name, "Danger level").SetValue(new Slider(spell.DangerLevel,
-                                    5, 1)));
+                subMenu.AddItem(
+                    new MenuItem("DangerLevel" + spell.Name, "Danger level").SetValue(new Slider(spell.DangerLevel,
+                        5, 1)));
 
                 subMenu.AddItem(new MenuItem("Enabled" + spell.Name, "Enabled").SetValue(true));
 
@@ -67,10 +66,13 @@ namespace Evade
                             var subMenu = new Menu(spell.MenuItemName, spell.MenuItemName);
 
                             subMenu.AddItem(
-                                new MenuItem("DangerLevel" + spell.MenuItemName, "Danger level").SetValue(new Slider(spell.DangerValue,
-                                    5, 1)));
+                                new MenuItem("DangerLevel" + spell.MenuItemName, "Danger level").SetValue(
+                                    new Slider(spell.DangerValue,
+                                        5, 1)));
 
-                            subMenu.AddItem(new MenuItem("IsDangerous" + spell.MenuItemName, "Is Dangerous").SetValue(spell.IsDangerous));
+                            subMenu.AddItem(
+                                new MenuItem("IsDangerous" + spell.MenuItemName, "Is Dangerous").SetValue(
+                                    spell.IsDangerous));
 
                             subMenu.AddItem(new MenuItem("Draw" + spell.MenuItemName, "Draw").SetValue(true));
                             subMenu.AddItem(new MenuItem("Enabled" + spell.MenuItemName, "Enabled").SetValue(true));
@@ -88,8 +90,8 @@ namespace Evade
             foreach (var ally in ObjectManager.Get<Obj_AI_Hero>())
             {
                 if (ally.IsAlly && !ally.IsMe)
-                    shielding.AddItem(new MenuItem("shield" + ally.BaseSkinName, "Shield " + ally.BaseSkinName).SetValue(true));
-
+                    shielding.AddItem(
+                        new MenuItem("shield" + ally.BaseSkinName, "Shield " + ally.BaseSkinName).SetValue(true));
             }
             Menu.AddSubMenu(shielding);
 

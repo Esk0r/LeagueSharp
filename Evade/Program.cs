@@ -13,7 +13,6 @@ using GamePath = System.Collections.Generic.List<SharpDX.Vector2>;
 
 namespace Evade
 {
-    
     internal class Program
     {
         public static SpellList<Skillshot> DetectedSkillshots = new SpellList<Skillshot>();
@@ -47,8 +46,6 @@ namespace Evade
                 }
                 _recalculate = false;
             }
-
-            
         }
 
         public static Vector2 EvadePoint
@@ -99,7 +96,7 @@ namespace Evade
             //Add the game events.
             Game.OnGameUpdate += Game_OnOnGameUpdate;
             Game.OnGameSendPacket += Game_OnGameSendPacket;
-            
+
             //Set up the OnDetectSkillshot Event.
             SkillshotDetector.OnDetectSkillshot += OnDetectSkillshot;
 
@@ -119,13 +116,13 @@ namespace Evade
                 Console.WriteLine(ObjectManager.Player.BaseSkinName);
                 foreach (var spell in ObjectManager.Player.Spellbook.Spells)
                 {
-                    Console.WriteLine(spell.SData.Name + " w:" + spell.SData.LineWidth + " s:" + spell.SData.MissileSpeed + " r: "+spell.SData.CastRange[0]);
+                    Console.WriteLine(spell.SData.Name + " w:" + spell.SData.LineWidth + " s:" +
+                                      spell.SData.MissileSpeed + " r: " + spell.SData.CastRange[0]);
                 }
             }
-                
         }
 
-        static void DetectedSkillshots_OnAdd(object sender, EventArgs e)
+        private static void DetectedSkillshots_OnAdd(object sender, EventArgs e)
         {
             _recalculate = true;
             Evading = false;
@@ -149,7 +146,8 @@ namespace Evade
                 return;
 
             //Check if the skillshot is too far away.
-            if (skillshot.Start.Distance(ObjectManager.Player.ServerPosition.To2D()) > (skillshot.SpellData.Range + skillshot.SpellData.Radius + 1000) * 1.5)
+            if (skillshot.Start.Distance(ObjectManager.Player.ServerPosition.To2D()) >
+                (skillshot.SpellData.Range + skillshot.SpellData.Radius + 1000) * 1.5)
                 return;
 
             //Add the skillshot to the detected skillshot list.
@@ -162,13 +160,13 @@ namespace Evade
                     {
                         var originalDirection = skillshot.Direction;
 
-                        for (var i = -(skillshot.SpellData.MultipleNumber - 1)/2;
-                            i <= (skillshot.SpellData.MultipleNumber - 1)/2;
+                        for (var i = -(skillshot.SpellData.MultipleNumber - 1) / 2;
+                            i <= (skillshot.SpellData.MultipleNumber - 1) / 2;
                             i++)
                         {
                             var end = skillshot.Start +
-                                      skillshot.SpellData.Range*
-                                      originalDirection.Rotated(skillshot.SpellData.MultipleAngle*i);
+                                      skillshot.SpellData.Range *
+                                      originalDirection.Rotated(skillshot.SpellData.MultipleAngle * i);
                             var skillshotToAdd = new Skillshot(skillshot.DetectionType, skillshot.SpellData,
                                 skillshot.StartTick, skillshot.Start, end, skillshot.Unit);
 
@@ -179,13 +177,13 @@ namespace Evade
 
                     if (skillshot.SpellData.SpellName == "UFSlash")
                     {
-                        skillshot.SpellData.MissileSpeed = 1500 + (int) skillshot.Unit.MoveSpeed;
+                        skillshot.SpellData.MissileSpeed = 1500 + (int)skillshot.Unit.MoveSpeed;
                     }
 
                     if (skillshot.SpellData.Invert)
                     {
                         var newDirection = -(skillshot.End - skillshot.Start).Normalized();
-                        var end = skillshot.Start + newDirection*skillshot.Start.Distance(skillshot.End);
+                        var end = skillshot.Start + newDirection * skillshot.Start.Distance(skillshot.End);
                         var skillshotToAdd = new Skillshot(skillshot.DetectionType, skillshot.SpellData,
                             skillshot.StartTick, skillshot.Start, end, skillshot.Unit);
                         DetectedSkillshots.Add(skillshotToAdd);
@@ -194,8 +192,8 @@ namespace Evade
 
                     if (skillshot.SpellData.Centered)
                     {
-                        var start = skillshot.Start - skillshot.Direction*skillshot.SpellData.Range;
-                        var end = skillshot.Start + skillshot.Direction*skillshot.SpellData.Range;
+                        var start = skillshot.Start - skillshot.Direction * skillshot.SpellData.Range;
+                        var end = skillshot.Start + skillshot.Direction * skillshot.SpellData.Range;
                         var skillshotToAdd = new Skillshot(skillshot.DetectionType, skillshot.SpellData,
                             skillshot.StartTick, start, end, skillshot.Unit);
                         DetectedSkillshots.Add(skillshotToAdd);
@@ -205,13 +203,17 @@ namespace Evade
                     if (skillshot.SpellData.SpellName == "SyndraE" || skillshot.SpellData.SpellName == "syndrae5")
                     {
                         var angle = 60;
-                        var edge1 = (skillshot.End - skillshot.Unit.ServerPosition.To2D()).Rotated(-angle/2 * (float)Math.PI / 180);
+                        var edge1 =
+                            (skillshot.End - skillshot.Unit.ServerPosition.To2D()).Rotated(-angle / 2 * (float)Math.PI /
+                                                                                           180);
                         var edge2 = edge1.Rotated(angle * (float)Math.PI / 180);
 
                         foreach (var minion in ObjectManager.Get<Obj_AI_Minion>())
                         {
                             var v = minion.ServerPosition.To2D() - skillshot.Unit.ServerPosition.To2D();
-                            if (minion.Name == "Seed" && edge1.CrossProduct(v) > 0 && v.CrossProduct(edge2) > 0 && minion.Distance(skillshot.Unit) < 800 && (minion.Team != ObjectManager.Player.Team || Config.TestOnAllies))
+                            if (minion.Name == "Seed" && edge1.CrossProduct(v) > 0 && v.CrossProduct(edge2) > 0 &&
+                                minion.Distance(skillshot.Unit) < 800 &&
+                                (minion.Team != ObjectManager.Player.Team || Config.TestOnAllies))
                             {
                                 var start = minion.ServerPosition.To2D();
                                 var end = skillshot.Unit.ServerPosition.To2D()
@@ -224,7 +226,6 @@ namespace Evade
                             }
                         }
                         return;
-                        
                     }
                 }
 
@@ -238,13 +239,13 @@ namespace Evade
 
         private static void Game_OnOnGameUpdate(EventArgs args)
         {
-
             //Set evading to false after blinking
-            if (PreviousTickPosition.IsValid() && ObjectManager.Player.ServerPosition.To2D().Distance(PreviousTickPosition) > 200)
+            if (PreviousTickPosition.IsValid() &&
+                ObjectManager.Player.ServerPosition.To2D().Distance(PreviousTickPosition) > 200)
                 Evading = false;
 
             PreviousTickPosition = ObjectManager.Player.ServerPosition.To2D();
-        
+
             //Remove the detected skillshots that have expired.
             DetectedSkillshots.RemoveAll(skillshot => !skillshot.IsActive());
 
@@ -258,39 +259,44 @@ namespace Evade
             if (ObjectManager.Player.IsDead) return;
 
             //Avoid sending move/cast packets while channeling important spells.
-            if(ObjectManager.Player.IsChannelingImportantSpell()) return;
+            if (ObjectManager.Player.IsChannelingImportantSpell()) return;
+
+            //TODO: Avoid evading while stunned or immobile.
 
             //Shield allies.
             foreach (var ally in ObjectManager.Get<Obj_AI_Hero>())
-	        {
-	            if (ally.IsValidTarget(1000, false))
-	            {
-	                var shieldAlly = Config.Menu.Item("shield" + ally.BaseSkinName);
-	                if (shieldAlly != null && shieldAlly.GetValue<bool>())
-	                {
-	                    var allySafeResult = IsSafe(ally.ServerPosition.To2D());
+            {
+                if (ally.IsValidTarget(1000, false))
+                {
+                    var shieldAlly = Config.Menu.Item("shield" + ally.BaseSkinName);
+                    if (shieldAlly != null && shieldAlly.GetValue<bool>())
+                    {
+                        var allySafeResult = IsSafe(ally.ServerPosition.To2D());
 
-	                    if (!allySafeResult.IsSafe)
-	                    {
+                        if (!allySafeResult.IsSafe)
+                        {
                             var dangerLevel = 0;
 
                             foreach (var skillshot in allySafeResult.SkillshotList)
                             {
                                 dangerLevel = Math.Max(dangerLevel, skillshot.GetValue<Slider>("DangerLevel").Value);
                             }
-                          
-	                        foreach (var evadeSpell in EvadeSpellDatabase.Spells)
-	                        {
-                                if (evadeSpell.IsShield && evadeSpell.CanShieldAllies && ally.Distance(ObjectManager.Player) < evadeSpell.MaxRange && dangerLevel >= evadeSpell.DangerLevel
-                                    && ObjectManager.Player.Spellbook.CanUseSpell(evadeSpell.Slot) == SpellState.Ready && IsAboutToHit(ally, evadeSpell.Delay))
+
+                            foreach (var evadeSpell in EvadeSpellDatabase.Spells)
+                            {
+                                if (evadeSpell.IsShield && evadeSpell.CanShieldAllies &&
+                                    ally.Distance(ObjectManager.Player) < evadeSpell.MaxRange &&
+                                    dangerLevel >= evadeSpell.DangerLevel
+                                    && ObjectManager.Player.Spellbook.CanUseSpell(evadeSpell.Slot) == SpellState.Ready &&
+                                    IsAboutToHit(ally, evadeSpell.Delay))
                                 {
                                     ObjectManager.Player.Spellbook.CastSpell(evadeSpell.Slot, ally);
                                 }
-	                        }
-	                    }
-	                }
-	            }
-	        }
+                            }
+                        }
+                    }
+                }
+            }
 
 
             //Spell Shielded
@@ -460,10 +466,7 @@ namespace Evade
         {
             if (sender.IsMe)
             {
-                Utility.DelayAction.Add(args.Duration, delegate
-                {
-                    Evading = false;
-                });
+                Utility.DelayAction.Add(args.Duration, delegate { Evading = false; });
             }
         }
 
@@ -600,7 +603,7 @@ namespace Evade
                         if (evadeSpell.IsDash)
                         {
                             //Targetted dashes
-                            if (evadeSpell.IsTargetted)//Lesinga W.
+                            if (evadeSpell.IsTargetted) //Lesinga W.
                             {
                                 //Todo.
                             }
@@ -635,10 +638,12 @@ namespace Evade
                                         {
                                             ObjectManager.Player.SendMovePacket(EvadePoint);
                                             var theSpell = evadeSpell;
-                                            Utility.DelayAction.Add(Game.Ping/2 + 100, delegate
-                                            {
-                                                ObjectManager.Player.Spellbook.CastSpell(theSpell.Slot, EvadePoint.To3D());
-                                            });
+                                            Utility.DelayAction.Add(Game.Ping / 2 + 100,
+                                                delegate
+                                                {
+                                                    ObjectManager.Player.Spellbook.CastSpell(theSpell.Slot,
+                                                        EvadePoint.To3D());
+                                                });
                                         }
                                         else
                                         {
@@ -705,12 +710,12 @@ namespace Evade
                                 //Dont blink just to the edge:
                                 for (var i = 0; i < points.Count; i++)
                                 {
-                                    var k = (int) (evadeSpell.MaxRange -
-                                                   ObjectManager.Player.ServerPosition.To2D().Distance(points[i]));
+                                    var k = (int)(evadeSpell.MaxRange -
+                                                  ObjectManager.Player.ServerPosition.To2D().Distance(points[i]));
 
                                     k = k - new Random(Environment.TickCount).Next(k);
                                     var extended = points[i] +
-                                                   k*
+                                                   k *
                                                    (points[i] - ObjectManager.Player.ServerPosition.To2D()).Normalized();
                                     if (IsSafe(extended).IsSafe)
                                     {
@@ -748,7 +753,8 @@ namespace Evade
                         {
                             if (evadeSpell.IsTargetted)
                             {
-                                var targets = Evader.GetEvadeTargets(evadeSpell.ValidTargets, int.MaxValue, 0, evadeSpell.MaxRange, true, false, true);
+                                var targets = Evader.GetEvadeTargets(evadeSpell.ValidTargets, int.MaxValue, 0,
+                                    evadeSpell.MaxRange, true, false, true);
 
                                 if (targets.Count > 0)
                                 {
@@ -764,7 +770,6 @@ namespace Evade
                                     NoSolutionFound = true;
                                     return;
                                 }
-
                             }
                             else
                             {
@@ -776,11 +781,12 @@ namespace Evade
                                     }
                                     else
                                     {
-                                        ObjectManager.Player.Spellbook.CastSpell(evadeSpell.Slot, ObjectManager.Player.ServerPosition);
+                                        ObjectManager.Player.Spellbook.CastSpell(evadeSpell.Slot,
+                                            ObjectManager.Player.ServerPosition);
                                     }
                                 }
                             }
-                            
+
 
                             //Let the user move freely inside the skillshot.
                             NoSolutionFound = true;
@@ -848,7 +854,6 @@ namespace Evade
 
                 Drawing.DrawCircle(EvadePoint.To3D(), 300, Color.White);
             }
-
         }
 
         public struct IsSafeResult

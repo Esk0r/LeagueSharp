@@ -53,7 +53,7 @@ namespace Evade
             Distance = distance;
             ComingFrom = comingFrom;
             Valid = (point.X != 0) && (point.Y != 0);
-            Point = point + Config.GridSize*(ComingFrom - point).Normalized();
+            Point = point + Config.GridSize * (ComingFrom - point).Normalized();
             Time = time;
         }
     }
@@ -66,20 +66,19 @@ namespace Evade
         public Vector2 Direction;
 
         public Vector2 End;
-        public Geometry.Polygon EvadePolygon { get; set; }
         public Vector2 MissilePosition;
         public Geometry.Polygon Polygon;
         public Geometry.Rectangle Rectangle;
-        public Geometry.Sector Sector;
         public Geometry.Ring Ring;
+        public Geometry.Sector Sector;
 
         public SpellData SpellData;
         public Vector2 Start;
         public int StartTick;
-        public Obj_AI_Base Unit { get; set; }
 
         private bool _cachedValue;
-        private int _cachedValueTick = 0;
+        private int _cachedValueTick;
+
         public Skillshot(DetectionType detectionType, SpellData spellData, int startT, Vector2 start, Vector2 end,
             Obj_AI_Base unit)
         {
@@ -106,7 +105,8 @@ namespace Evade
                     Rectangle = new Geometry.Rectangle(Start, End, spellData.Radius);
                     break;
                 case SkillShotType.SkillshotCone:
-                    Sector = new Geometry.Sector(start, end - start, spellData.Radius * (float) Math.PI / 180, spellData.Range);
+                    Sector = new Geometry.Sector(start, end - start, spellData.Radius * (float)Math.PI / 180,
+                        spellData.Range);
                     break;
                 case SkillShotType.SkillshotRing:
                     Ring = new Geometry.Ring(end, spellData.Radius, spellData.RingRadius);
@@ -115,6 +115,9 @@ namespace Evade
 
             UpdatePolygon(); //Create the polygon.
         }
+
+        public Geometry.Polygon EvadePolygon { get; set; }
+        public Obj_AI_Base Unit { get; set; }
 
         /// <summary>
         /// Returns the value from this skillshot menu.
@@ -131,7 +134,7 @@ namespace Evade
         {
             return Environment.TickCount <=
                    StartTick + SpellData.Delay + SpellData.ExtraDuration +
-                   1000*(Start.Distance(End)/SpellData.MissileSpeed);
+                   1000 * (Start.Distance(End) / SpellData.MissileSpeed);
         }
 
         public bool Evade()
@@ -207,8 +210,8 @@ namespace Evade
         public Vector2 GetMissilePosition(int time)
         {
             var t = Math.Max(0, Environment.TickCount + time - StartTick - SpellData.Delay);
-            t = (int) Math.Max(0, Math.Min(End.Distance(Start), t*SpellData.MissileSpeed/1000));
-            return Start + Direction*t;
+            t = (int)Math.Max(0, Math.Min(End.Distance(Start), t * SpellData.MissileSpeed / 1000));
+            return Start + Direction * t;
         }
 
 
@@ -217,7 +220,7 @@ namespace Evade
         /// </summary>
         public bool IsSafeToBlink(Vector2 point, int timeOffset, int delay = 0)
         {
-            timeOffset = timeOffset/2;
+            timeOffset = timeOffset / 2;
             //Skillshots with missile
             if (SpellData.Type == SkillShotType.SkillshotMissileLine)
             {
@@ -226,20 +229,20 @@ namespace Evade
 
                 var missilePositionAfterBlink = GetMissilePosition(delay + timeOffset);
                 var myPositionProjection = ObjectManager.Player.ServerPosition.To2D().ProjectOn(Start, End);
-                
+
                 if (missilePositionAfterBlink.Distance(End) < myPositionProjection.SegmentPoint.Distance(End))
                     return false;
-                
+
                 return true;
             }
 
-           
-            //skillshots without missile
-               var timeToExplode = SpellData.ExtraDuration + SpellData.Delay +
-                                    (int)(1000 * Start.Distance(End) / SpellData.MissileSpeed) -
-                                    (Environment.TickCount - StartTick);
 
-                return timeToExplode < timeOffset + delay;
+            //skillshots without missile
+            var timeToExplode = SpellData.ExtraDuration + SpellData.Delay +
+                                (int)(1000 * Start.Distance(End) / SpellData.MissileSpeed) -
+                                (Environment.TickCount - StartTick);
+
+            return timeToExplode < timeOffset + delay;
         }
 
         /// <summary>
@@ -251,7 +254,7 @@ namespace Evade
             var Distance = 0f;
             timeOffset += Game.Ping / 2;
 
-            speed = (speed == -1) ? (int) ObjectManager.Player.MoveSpeed : speed;
+            speed = (speed == -1) ? (int)ObjectManager.Player.MoveSpeed : speed;
 
             if (unit == null)
                 unit = ObjectManager.Player;
@@ -273,7 +276,8 @@ namespace Evade
                     if (intersection.Intersects)
                     {
                         segmentIntersections.Add(new FoundIntersection(Distance + intersection.Point.Distance(from),
-                            (int) ((Distance + intersection.Point.Distance(from))*1000/speed), intersection.Point, from));
+                            (int)((Distance + intersection.Point.Distance(from)) * 1000 / speed), intersection.Point,
+                            from));
                     }
                 }
 
@@ -328,7 +332,7 @@ namespace Evade
 
                     return new SafePathResult(true, allIntersections[0]);
                 }
-                    //Inside the skillshot.
+                //Inside the skillshot.
                 if (allIntersections.Count == 0)
                     return new SafePathResult(false, new FoundIntersection());
 
@@ -361,18 +365,19 @@ namespace Evade
             }
 
             var timeToExplode = (SpellData.DontAddExtraDuration ? 0 : SpellData.ExtraDuration) + SpellData.Delay +
-                                (int) (1000*Start.Distance(End)/SpellData.MissileSpeed) -
+                                (int)(1000 * Start.Distance(End) / SpellData.MissileSpeed) -
                                 (Environment.TickCount - StartTick);
 
 
             var myPositionWhenExplodes = path.PositionAfter(timeToExplode, (int)ObjectManager.Player.MoveSpeed, delay);
-            
+
             if (!IsSafe(myPositionWhenExplodes))
             {
                 return new SafePathResult(false, allIntersections[0]);
             }
 
-            var myPositionWhenExplodesWithOffset = path.PositionAfter(timeToExplode, (int)ObjectManager.Player.MoveSpeed, timeOffset);
+            var myPositionWhenExplodesWithOffset = path.PositionAfter(timeToExplode, (int)ObjectManager.Player.MoveSpeed,
+                timeOffset);
 
             return new SafePathResult(IsSafe(myPositionWhenExplodesWithOffset), allIntersections[0]);
         }
@@ -404,13 +409,13 @@ namespace Evade
                     return true;
                 }
 
-                    return false;
+                return false;
             }
 
             if (!IsSafe(unit.ServerPosition.To2D()))
             {
                 var timeToExplode = SpellData.ExtraDuration + SpellData.Delay +
-                                    (int) (1000 * Start.Distance(End)/SpellData.MissileSpeed) -
+                                    (int)(1000 * Start.Distance(End) / SpellData.MissileSpeed) -
                                     (Environment.TickCount - StartTick);
                 if (timeToExplode <= time)
                 {

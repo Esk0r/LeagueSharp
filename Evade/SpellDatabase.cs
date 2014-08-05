@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using LeagueSharp;
 
 #endregion
@@ -16,7 +15,9 @@ namespace Evade
         static SpellDatabase()
         {
             //Add spells to the database 
+
             #region Aatrox
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Aatrox",
@@ -32,11 +33,12 @@ namespace Evade
                 DangerValue = 3,
                 IsDangerous = true,
                 MissileSpellName = "",
-
             });
 
             #endregion Aatrox
+
             #region Ahri
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Ahri",
@@ -53,7 +55,6 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "AhriOrbMissile",
                 MissileFollowsUnit = true,
-
             });
 
             Spells.Add(new SpellData
@@ -71,7 +72,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "AhriOrbReturn",
-
             });
 
             Spells.Add(new SpellData
@@ -90,11 +90,12 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "AhriSeduceMissile",
                 CanBeRemoved = true,
-
             });
 
             #endregion Ahri
+
             #region Amumu
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Amumu",
@@ -111,7 +112,6 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "SadMummyBandageToss",
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -129,11 +129,12 @@ namespace Evade
                 DangerValue = 5,
                 IsDangerous = true,
                 MissileSpellName = "",
-
             });
 
             #endregion Amumu
+
             #region Anivia
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Anivia",
@@ -150,11 +151,12 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "FlashFrostSpell",
                 CanBeRemoved = true,
-
             });
 
             #endregion Anivia
+
             #region Annie
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Annie",
@@ -170,7 +172,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "",
-
             });
 
             Spells.Add(new SpellData
@@ -188,11 +189,12 @@ namespace Evade
                 DangerValue = 5,
                 IsDangerous = true,
                 MissileSpellName = "",
-
             });
 
             #endregion Annie
+
             #region Ashe
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Ashe",
@@ -209,11 +211,12 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "EnchantedCrystalArrow",
                 CanBeRemoved = true,
-
             });
 
             #endregion Ashe
+
             #region Blitzcrank
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Blitzcrank",
@@ -230,7 +233,6 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "RocketGrabMissile",
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -248,11 +250,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "",
-
             });
 
             #endregion Blitzcrank
+
             #region Brand
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Brand",
@@ -269,7 +272,6 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "BrandBlazeMissile",
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -287,11 +289,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "",
-
             });
 
             #endregion Brand
+
             #region Braum
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Braum",
@@ -308,7 +311,6 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "BraumQMissile",
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -326,11 +328,12 @@ namespace Evade
                 DangerValue = 4,
                 IsDangerous = true,
                 MissileSpellName = "braumrmissile",
-
             });
 
             #endregion Braum
+
             #region Caitlyn
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Caitlyn",
@@ -346,7 +349,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "CaitlynPiltoverPeacemaker",
-
             });
 
             Spells.Add(new SpellData
@@ -365,11 +367,12 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "CaitlynEntrapmentMissile",
                 CanBeRemoved = true,
-
             });
 
             #endregion Caitlyn
+
             #region Cassiopeia
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Cassiopeia",
@@ -385,7 +388,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "CassiopeiaNoxiousBlast",
-
             });
 
             Spells.Add(new SpellData
@@ -403,11 +405,12 @@ namespace Evade
                 DangerValue = 5,
                 IsDangerous = true,
                 MissileSpellName = "CassiopeiaPetrifyingGaze",
-
             });
 
             #endregion Cassiopeia
+
             #region Chogath
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Chogath",
@@ -423,11 +426,12 @@ namespace Evade
                 DangerValue = 3,
                 IsDangerous = false,
                 MissileSpellName = "Rupture",
-
             });
 
             #endregion Chogath
+
             #region Corki
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Corki",
@@ -443,7 +447,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "PhosphorusBombMissile",
-
             });
 
             Spells.Add(new SpellData
@@ -460,9 +463,8 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "MissileBarrageMissile",//MissileBarrageMissile2
+                MissileSpellName = "MissileBarrageMissile", //MissileBarrageMissile2
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -481,11 +483,12 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "MissileBarrageMissile2",
                 CanBeRemoved = true,
-
             });
 
             #endregion Corki
+
             #region Darius
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Darius",
@@ -501,11 +504,12 @@ namespace Evade
                 DangerValue = 3,
                 IsDangerous = true,
                 MissileSpellName = "DariusAxeGrabCone",
-
             });
 
             #endregion Darius
+
             #region DrMundo
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "DrMundo",
@@ -522,11 +526,12 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "InfectedCleaverMissile",
                 CanBeRemoved = true,
-
             });
 
             #endregion DrMundo
+
             #region Draven
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Draven",
@@ -543,7 +548,6 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "DravenDoubleShotMissile",
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -561,11 +565,12 @@ namespace Evade
                 DangerValue = 5,
                 IsDangerous = true,
                 MissileSpellName = "DravenR",
-
             });
 
             #endregion Draven
+
             #region Elise
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Elise",
@@ -582,11 +587,12 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "EliseHumanE",
                 CanBeRemoved = true,
-
             });
 
             #endregion Elise
+
             #region Evelynn
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Evelynn",
@@ -602,11 +608,12 @@ namespace Evade
                 DangerValue = 5,
                 IsDangerous = true,
                 MissileSpellName = "EvelynnR",
-
             });
 
             #endregion Evelynn
+
             #region Ezreal
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Ezreal",
@@ -621,10 +628,10 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "EzrealMysticShotMissile", //TODO: Check pulsefire ezreal. EzrealMysticShotPulseMissile?
+                MissileSpellName = "EzrealMysticShotMissile",
+                //TODO: Check pulsefire ezreal. EzrealMysticShotPulseMissile?
                 CanBeRemoved = true,
                 Id = 229,
-
             });
 
             Spells.Add(new SpellData
@@ -642,7 +649,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "EzrealEssenceFluxMissile",
-
             });
 
             Spells.Add(new SpellData
@@ -661,11 +667,12 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "EzrealTrueshotBarrage",
                 Id = 245,
-
             });
 
             #endregion Ezreal
+
             #region Fizz
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Fizz",
@@ -682,11 +689,12 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "FizzMarinerDoomMissile",
                 CanBeRemoved = true,
-
             });
 
             #endregion Fizz
+
             #region Galio
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Galio",
@@ -702,7 +710,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "GalioResoluteSmite",
-
             });
 
             Spells.Add(new SpellData
@@ -720,11 +727,12 @@ namespace Evade
                 DangerValue = 5,
                 IsDangerous = true,
                 MissileSpellName = "",
-
             });
 
             #endregion Galio
+
             #region Gragas
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Gragas",
@@ -743,7 +751,6 @@ namespace Evade
                 ExtraDuration = 4500,
                 ToggleParticleName = "Gragas_",
                 DonCross = true,
-
             });
 
             Spells.Add(new SpellData
@@ -763,7 +770,6 @@ namespace Evade
                 MissileSpellName = "GragasE",
                 CanBeRemoved = true,
                 ExtraRange = 300,
-
             });
 
             Spells.Add(new SpellData
@@ -781,11 +787,12 @@ namespace Evade
                 DangerValue = 5,
                 IsDangerous = true,
                 MissileSpellName = "GragasRBoom",
-
             });
 
             #endregion Gragas
+
             #region Graves
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Graves",
@@ -801,7 +808,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "GravesClusterShotAttack",
-
             });
 
             Spells.Add(new SpellData
@@ -819,11 +825,12 @@ namespace Evade
                 DangerValue = 5,
                 IsDangerous = true,
                 MissileSpellName = "GravesChargeShotShot",
-
             });
 
             #endregion Graves
+
             #region Heimerdinger
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Heimerdinger",
@@ -839,7 +846,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "HeimerdingerWAttack2",
-
             });
 
             Spells.Add(new SpellData
@@ -857,11 +863,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "heimerdingerespell",
-
             });
 
             #endregion Heimerdinger
+
             #region Irelia
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Irelia",
@@ -877,11 +884,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "IreliaTranscendentBlades",
-
             });
 
             #endregion Irelia
+
             #region Janna
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Janna",
@@ -897,11 +905,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "HowlingGaleSpell",
-
             });
 
             #endregion Janna
+
             #region JarvanIV
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "JarvanIV",
@@ -917,7 +926,6 @@ namespace Evade
                 DangerValue = 3,
                 IsDangerous = true,
                 MissileSpellName = "JarvanIVDragonStrike",
-
             });
 
             Spells.Add(new SpellData
@@ -935,11 +943,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "JarvanIVDemacianStandard",
-
             });
 
             #endregion JarvanIV
+
             #region Jayce
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Jayce",
@@ -956,7 +965,6 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "JayceShockBlastMis",
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -975,11 +983,12 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "JayceShockBlastWallMis",
                 CanBeRemoved = true,
-
             });
 
             #endregion Jayce
+
             #region Jinx
+
             //TODO: Detect the animation from fow instead of the missile.
             Spells.Add(new SpellData
             {
@@ -997,7 +1006,6 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "JinxWMissile",
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -1016,11 +1024,12 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "JinxR",
                 CanBeRemoved = true,
-
             });
 
             #endregion Jinx
+
             #region Karma
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Karma",
@@ -1037,7 +1046,6 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "KarmaQMissile",
                 CanBeRemoved = true,
-
             });
             //TODO: add the circle at the end.
             Spells.Add(new SpellData
@@ -1056,11 +1064,12 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "KarmaQMissileMantra",
                 CanBeRemoved = true,
-
             });
 
             #endregion Karma
+
             #region Karthus
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Karthus",
@@ -1076,7 +1085,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "KarthusLayWasteA2",
-
             });
 
             Spells.Add(new SpellData
@@ -1094,7 +1102,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "KarthusLayWasteA1",
-
             });
 
             Spells.Add(new SpellData
@@ -1112,11 +1119,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "KarthusLayWasteA3",
-
             });
 
             #endregion Karthus
+
             #region Kassadin
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Kassadin",
@@ -1132,11 +1140,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "RiftWalk",
-
             });
 
             #endregion Kassadin
+
             #region Kennen
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Kennen",
@@ -1153,11 +1162,12 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "KennenShurikenHurlMissile1",
                 CanBeRemoved = true,
-
             });
 
             #endregion Kennen
+
             #region Khazix
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Khazix",
@@ -1174,7 +1184,6 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "khazixwlongmissile",
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -1193,7 +1202,6 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "KhazixWMissile",
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -1211,11 +1219,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "KhazixE",
-
             });
 
             #endregion Khazix
+
             #region KogMaw
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "KogMaw",
@@ -1232,7 +1241,6 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "KogMawQMis",
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -1250,7 +1258,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "KogMawVoidOozeMissile",
-
             });
 
             Spells.Add(new SpellData
@@ -1268,11 +1275,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "KogMawLivingArtillery",
-
             });
 
             #endregion KogMaw
+
             #region Leblanc
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Leblanc",
@@ -1288,7 +1296,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "LeblancSlide",
-
             });
 
             Spells.Add(new SpellData
@@ -1306,7 +1313,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "LeblancSlideM",
-
             });
 
             Spells.Add(new SpellData
@@ -1325,7 +1331,6 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "LeblancSoulShackle",
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -1344,11 +1349,12 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "LeblancSoulShackleM",
                 CanBeRemoved = true,
-
             });
 
             #endregion Leblanc
+
             #region LeeSin
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "LeeSin",
@@ -1365,11 +1371,12 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "BlindMonkQOne",
                 CanBeRemoved = true,
-
             });
 
             #endregion LeeSin
+
             #region Leona
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Leona",
@@ -1385,7 +1392,6 @@ namespace Evade
                 DangerValue = 3,
                 IsDangerous = true,
                 MissileSpellName = "LeonaZenithBladeMissile",
-
             });
 
             Spells.Add(new SpellData
@@ -1403,11 +1409,12 @@ namespace Evade
                 DangerValue = 5,
                 IsDangerous = true,
                 MissileSpellName = "LeonaSolarFlare",
-
             });
 
             #endregion Leona+
+
             #region Lucian
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Lucian",
@@ -1423,11 +1430,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "LucianQ",
-
             });
 
             #endregion Lucian
+
             #region Lulu
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Lulu",
@@ -1442,12 +1450,13 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "LuluQMissile",//LuluQMissileTwo
-
+                MissileSpellName = "LuluQMissile", //LuluQMissileTwo
             });
 
             #endregion Lulu
+
             #region Lux
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Lux",
@@ -1464,7 +1473,6 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "LuxLightBindingMis",
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -1485,7 +1493,6 @@ namespace Evade
                 ExtraDuration = 5500,
                 ToggleParticleName = "LuxLightstrike_tar",
                 DonCross = true,
-
             });
 
             Spells.Add(new SpellData
@@ -1503,11 +1510,12 @@ namespace Evade
                 DangerValue = 5,
                 IsDangerous = true,
                 MissileSpellName = "LuxMaliceCannon",
-
             });
 
             #endregion Lux
+
             #region Malphite
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Malphite",
@@ -1523,12 +1531,14 @@ namespace Evade
                 DangerValue = 5,
                 IsDangerous = true,
                 MissileSpellName = "UFSlash",
-
             });
 
             #endregion Malphite
+
             //FIX
+
             #region Malzahar
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Malzahar",
@@ -1544,11 +1554,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "AlZaharCalloftheVoid",
-
             });
 
             #endregion Malzahar
+
             #region Morgana
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Morgana",
@@ -1565,11 +1576,12 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "DarkBindingMissile",
                 CanBeRemoved = true,
-
             });
 
             #endregion Morgana
+
             #region Nami
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Nami",
@@ -1585,7 +1597,6 @@ namespace Evade
                 DangerValue = 3,
                 IsDangerous = true,
                 MissileSpellName = "namiqmissile",
-
             });
 
             Spells.Add(new SpellData
@@ -1603,11 +1614,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "NamiRMissile",
-
             });
 
             #endregion Nami
+
             #region Nautilus
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Nautilus",
@@ -1624,11 +1636,12 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "NautilusAnchorDragMissile",
                 CanBeRemoved = true,
-
             });
 
             #endregion Nautilus
+
             #region Nidalee
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Nidalee",
@@ -1645,11 +1658,12 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "JavelinToss",
                 CanBeRemoved = true,
-
             });
 
             #endregion Nidalee
+
             #region Olaf
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Olaf",
@@ -1667,11 +1681,12 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "olafaxethrow",
                 CanBeRemoved = true,
-
             });
 
             #endregion Olaf
+
             #region Orianna
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Orianna",
@@ -1687,7 +1702,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "orianaizuna",
-
             });
 
             Spells.Add(new SpellData
@@ -1706,7 +1720,6 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "OrianaDissonanceCommand",
                 FromObject = "yomu_ring_",
-
             });
 
             Spells.Add(new SpellData
@@ -1724,7 +1737,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "orianaredact",
-
             });
 
             Spells.Add(new SpellData
@@ -1743,11 +1755,12 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "OrianaDetonateCommand",
                 FromObject = "yomu_ring_",
-
             });
 
             #endregion Orianna
+
             #region Quinn
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Quinn",
@@ -1764,11 +1777,12 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "QuinnQMissile",
                 CanBeRemoved = true,
-
             });
 
             #endregion Quinn
+
             #region Rengar
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Rengar",
@@ -1785,13 +1799,15 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "RengarEFinal",
                 CanBeRemoved = true,
-
             });
 
             #endregion Rengar
+
             //FIX
+
             #region Riven
-           /* Spells.Add(new SpellData
+
+            /* Spells.Add(new SpellData
             {
                 BaseSkinName = "Riven",
                 SpellName = "rivenizunablade",
@@ -1810,7 +1826,9 @@ namespace Evade
             });*/
 
             #endregion Riven
+
             #region Rumble
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Rumble",
@@ -1827,11 +1845,12 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "RumbleGrenade",
                 CanBeRemoved = true,
-
             });
 
             #endregion Rumble
+
             #region Sejuani
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Sejuani",
@@ -1848,7 +1867,6 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "",
                 ExtraRange = 200,
-
             });
 
             Spells.Add(new SpellData
@@ -1867,10 +1885,12 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "sejuaniglacialprison",
                 CanBeRemoved = true,
-
             });
+
             #endregion Shen
+
             #region Shen
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Shen",
@@ -1887,11 +1907,12 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "ShenShadowDash",
                 ExtraRange = 200,
-
             });
 
             #endregion Shen
+
             #region Shyvana
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Shyvana",
@@ -1907,7 +1928,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "ShyvanaFireballMissile",
-
             });
 
             Spells.Add(new SpellData
@@ -1926,11 +1946,12 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "ShyvanaTransformCast",
                 ExtraRange = 200,
-
             });
 
             #endregion Shyvana
+
             #region Sivir
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Sivir",
@@ -1948,7 +1969,6 @@ namespace Evade
                 MissileSpellName = "SivirQMissileReturn",
                 DisableFowDetection = false,
                 MissileFollowsUnit = true,
-
             });
 
             Spells.Add(new SpellData
@@ -1966,11 +1986,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "SivirQMissile",
-
             });
 
             #endregion Sivir
+
             #region Skarner
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Skarner",
@@ -1986,11 +2007,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "SkarnerFractureMissile",
-
             });
 
             #endregion Skarner
+
             #region Sona
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Sona",
@@ -2006,11 +2028,12 @@ namespace Evade
                 DangerValue = 5,
                 IsDangerous = true,
                 MissileSpellName = "SonaCrescendo",
-
             });
 
             #endregion Sona
+
             #region Swain
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Swain",
@@ -2026,11 +2049,12 @@ namespace Evade
                 DangerValue = 3,
                 IsDangerous = true,
                 MissileSpellName = "SwainShadowGrasp",
-
             });
 
             #endregion Swain
+
             #region Syndra
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Syndra",
@@ -2046,7 +2070,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "SyndraQ",
-
             });
 
             Spells.Add(new SpellData
@@ -2064,7 +2087,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "syndrawcast",
-
             });
 
             Spells.Add(new SpellData
@@ -2101,11 +2123,12 @@ namespace Evade
                 IsDangerous = false,
                 DisableFowDetection = true,
                 MissileSpellName = "SyndraE",
-
             });
 
             #endregion Syndra
+
             #region Thresh
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Thresh",
@@ -2122,7 +2145,6 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "ThreshQMissile",
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -2141,11 +2163,12 @@ namespace Evade
                 IsDangerous = true,
                 Centered = true,
                 MissileSpellName = "ThreshEMissile1",
-
             });
 
             #endregion Thresh
+
             #region Tristana
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Tristana",
@@ -2161,11 +2184,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "RocketJump",
-
             });
 
             #endregion Tristana
+
             #region Tryndamere
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Tryndamere",
@@ -2181,11 +2205,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "slashCast",
-
             });
 
             #endregion Tryndamere
+
             #region TwistedFate
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "TwistedFate",
@@ -2203,11 +2228,12 @@ namespace Evade
                 MissileSpellName = "SealFateMissile",
                 MultipleNumber = 3,
                 MultipleAngle = 28 * (float)Math.PI / 180,
-
             });
 
             #endregion TwistedFate
+
             #region Twitch
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Twitch",
@@ -2223,11 +2249,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "TwitchVenomCaskMissile",
-
             });
 
             #endregion Twitch
+
             #region Urgot
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Urgot",
@@ -2244,7 +2271,6 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "UrgotHeatseekingLineMissile",
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -2262,10 +2288,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "UrgotPlasmaGrenadeBoom",
-
             });
+
             #endregion Urgot
+
             #region Varus
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Varus",
@@ -2281,7 +2309,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "VarusQMissile",
-
             });
 
             Spells.Add(new SpellData
@@ -2299,7 +2326,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "VarusE",
-
             });
 
             Spells.Add(new SpellData
@@ -2318,11 +2344,12 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "VarusRMissile",
                 CanBeRemoved = true,
-
             });
 
             #endregion Varus
+
             #region Veigar
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Veigar",
@@ -2337,7 +2364,6 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-
             });
 
             Spells.Add(new SpellData
@@ -2349,22 +2375,23 @@ namespace Evade
                 Delay = 250,
                 Range = 600,
                 Radius = 80,
-                
                 MissileSpeed = int.MaxValue,
                 FixedRange = false,
                 AddHitbox = false,
                 DangerValue = 3,
                 IsDangerous = true,
                 DontAddExtraDuration = true,
-
                 RingRadius = 350,
                 ExtraDuration = 3000,
                 DonCross = true,
             });
 
             #endregion Veigar
+
             //FIX
+
             #region Velkoz
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Velkoz",
@@ -2381,7 +2408,6 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "VelkozQMissile",
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -2400,7 +2426,6 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "VelkozQMissileSplit",
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -2418,7 +2443,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "VelkozWMissile",
-
             });
 
             Spells.Add(new SpellData
@@ -2436,11 +2460,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "VelkozEMissile",
-
             });
 
             #endregion Velkoz
+
             #region Vi
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Vi",
@@ -2456,11 +2481,12 @@ namespace Evade
                 DangerValue = 3,
                 IsDangerous = true,
                 MissileSpellName = "ViQMissile",
-
             });
 
             #endregion Vi
+
             #region Viktor
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Viktor",
@@ -2476,11 +2502,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "ViktorDeathRayFixMissile",
-
             });
 
             #endregion Viktor
+
             #region Xerath
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Xerath",
@@ -2496,7 +2523,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "xeratharcanopulse2",
-
             });
 
             Spells.Add(new SpellData
@@ -2514,7 +2540,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "XerathArcaneBarrage2",
-
             });
 
             Spells.Add(new SpellData
@@ -2533,7 +2558,6 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "XerathMageSpearMissile",
                 CanBeRemoved = true,
-
             });
 
             Spells.Add(new SpellData
@@ -2551,11 +2575,12 @@ namespace Evade
                 DangerValue = 3,
                 IsDangerous = true,
                 MissileSpellName = "xerathrmissilewrapper",
-
             });
 
             #endregion Xerath
+
             #region Yasuo
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Yasuo",
@@ -2572,7 +2597,6 @@ namespace Evade
                 IsDangerous = true,
                 MissileSpellName = "yasuoq2",
                 Invert = true,
-
             });
 
             Spells.Add(new SpellData
@@ -2590,7 +2614,6 @@ namespace Evade
                 DangerValue = 3,
                 IsDangerous = true,
                 MissileSpellName = "yasuoq3w",
-
             });
 
             Spells.Add(new SpellData
@@ -2612,7 +2635,9 @@ namespace Evade
             });
 
             #endregion Yasuo
+
             #region Zac
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Zac",
@@ -2628,11 +2653,12 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "ZacQ",
-
             });
 
             #endregion Zac
+
             #region Zed
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Zed",
@@ -2648,7 +2674,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "zedshurikenmisone",
-
             });
 
             Spells.Add(new SpellData
@@ -2666,11 +2691,14 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "zedshurikenmistwo",
-
             });
+
             #endregion Zed
+
             //FiX
+
             #region Ziggs
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Ziggs",
@@ -2688,7 +2716,6 @@ namespace Evade
                 MissileSpellName = "ZiggsQ2",
                 CanBeRemoved = true,
                 DisableFowDetection = true,
-
             });
 
             Spells.Add(new SpellData
@@ -2708,7 +2735,6 @@ namespace Evade
                 MissileSpellName = "ZiggsQ3",
                 CanBeRemoved = true,
                 DisableFowDetection = true,
-
             });
 
             Spells.Add(new SpellData
@@ -2728,7 +2754,6 @@ namespace Evade
                 MissileSpellName = "ZiggsQ",
                 CanBeRemoved = true,
                 DisableFowDetection = true,
-
             });
 
             Spells.Add(new SpellData
@@ -2747,7 +2772,6 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "ZiggsW",
                 DisableFowDetection = true,
-
             });
 
             Spells.Add(new SpellData
@@ -2766,7 +2790,6 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "ZiggsE",
                 DisableFowDetection = true,
-
             });
 
             Spells.Add(new SpellData
@@ -2785,11 +2808,12 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "ZiggsR",
                 DisableFowDetection = true,
-
             });
 
             #endregion Ziggs
+
             #region Zyra
+
             Spells.Add(new SpellData
             {
                 BaseSkinName = "Zyra",
@@ -2805,7 +2829,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "ZyraQFissure",
-
             });
 
             Spells.Add(new SpellData
@@ -2823,7 +2846,6 @@ namespace Evade
                 DangerValue = 3,
                 IsDangerous = true,
                 MissileSpellName = "ZyraGraspingRoots",
-
             });
 
             Spells.Add(new SpellData
@@ -2841,12 +2863,11 @@ namespace Evade
                 DangerValue = 3,
                 IsDangerous = true,
                 MissileSpellName = "zyrapassivedeathmanager",
-
             });
 
             #endregion Zyra
 
-            Game.PrintChat("Added " + Spells.Count + " spells.");//138
+            Game.PrintChat("Added " + Spells.Count + " spells."); //138
         }
 
         public static SpellData GetByName(string spellName)
@@ -2862,7 +2883,6 @@ namespace Evade
 
         public static SpellData GetByMissileName(string missileSpellName)
         {
-
             foreach (var spellData in Spells)
             {
                 if (spellData.MissileSpellName.ToLower() == missileSpellName.ToLower())

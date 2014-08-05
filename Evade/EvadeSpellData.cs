@@ -1,17 +1,20 @@
-﻿using LeagueSharp;
+﻿#region
+
+using LeagueSharp;
 using LeagueSharp.Common;
+
+#endregion
 
 namespace Evade
 {
-
     public enum SpellValidTargets
     {
         AllyMinions,
         EnemyMinions,
-        
+
         AllyWards,
         EnemyWards,
-        
+
         AllyChampions,
         EnemyChampions,
     }
@@ -21,39 +24,44 @@ namespace Evade
     /// </summary>
     internal class EvadeSpellData
     {
-        public string Name;
-
+        public bool CanShieldAllies;
+        public string CheckSpellName = "";
         public int Delay;
         public bool FixedRange;
-
-        public bool IsTargetted
-        {
-            get
-            {
-                return ValidTargets != null;
-            }
-        }
-
-        public SpellValidTargets[] ValidTargets;
+        public bool Invert;
 
         public bool IsBlink;
         public bool IsDash;
-        public bool IsShield;
         public bool IsInvulnerability;
+        public bool IsShield;
         public bool IsSpellShield;
+        public bool IsSummonerSpell;
 
         public float MaxRange;
+        public string Name;
+        public bool RequiresPreMove;
+        public bool SelfCast;
+        public SpellSlot Slot;
 
         public int Speed;
+        public SpellValidTargets[] ValidTargets;
 
         public int _dangerLevel;
-        public SpellSlot Slot;
-        public bool IsSummonerSpell;
-        public bool Invert;
-        public string CheckSpellName = "";
-        public bool SelfCast;
-        public bool RequiresPreMove;
-        public bool CanShieldAllies;
+
+        public EvadeSpellData()
+        {
+        }
+
+        public EvadeSpellData(string name, int dangerLevel)
+        {
+            Name = name;
+            _dangerLevel = dangerLevel;
+        }
+
+        public bool IsTargetted
+        {
+            get { return ValidTargets != null; }
+        }
 
         public int DangerLevel
         {
@@ -78,22 +86,11 @@ namespace Evade
                 return true;
             }
         }
-
-        public EvadeSpellData()
-        {
-            
-        }
-
-        public EvadeSpellData(string name, int dangerLevel)
-        {
-            Name = name;
-            _dangerLevel = dangerLevel;
-        }
     }
 
     internal class DashData : EvadeSpellData
     {
-        public DashData(string name, SpellSlot slot , float range, bool fixedRange, int delay, int speed, int dangerLevel)
+        public DashData(string name, SpellSlot slot, float range, bool fixedRange, int delay, int speed, int dangerLevel)
         {
             Name = name;
             MaxRange = range;
@@ -108,7 +105,8 @@ namespace Evade
 
     internal class BlinkData : EvadeSpellData
     {
-        public BlinkData(string name, SpellSlot slot, float range, int delay, int dangerLevel, bool isSummonerSpell = false)
+        public BlinkData(string name, SpellSlot slot, float range, int delay, int dangerLevel,
+            bool isSummonerSpell = false)
         {
             Name = name;
             MaxRange = range;

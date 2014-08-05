@@ -1,6 +1,5 @@
 ﻿#region
 
-using System.Net.Configuration;
 using LeagueSharp;
 
 #endregion
@@ -12,37 +11,34 @@ namespace Evade
         public bool AddHitbox;
         public string BaseSkinName;
         public bool CanBeRemoved = false;
+        public bool Centered;
+        public int DangerValue;
         public int Delay;
+        public bool DisableFowDetection = false;
         public bool DonCross = false;
+        public bool DontAddExtraDuration;
         public int ExtraDuration;
+        public int ExtraRange = -1;
         public bool FixedRange;
+        public string FromObject = "";
         public int Id = -1;
+        public bool Invert;
+        public bool IsDangerous = false;
+        public bool MissileFollowsUnit;
         public int MissileSpeed;
         public string MissileSpellName;
-        private int _range;
+        public float MultipleAngle;
+        public int MultipleNumber = -1;
+        public int RingRadius;
         public SpellSlot Slot;
         public string SpellName;
+        public string ToggleParticleName = "";
         public SkillShotType Type;
         private int _radius;
-        public int DangerValue;
-        public string ToggleParticleName = "";
-        public string FromObject = "";
+        private int _range;
 
-        public bool DontAddExtraDuration;
-        public bool Centered;
-        public bool Invert;
-        public int MultipleNumber = -1;
-        public float MultipleAngle;
-        public int ExtraRange = -1;
-        public bool MissileFollowsUnit;
-
-        public bool DisableFowDetection = false;
-        public bool IsDangerous = false;
-
-        public int RingRadius;
         public SpellData()
         {
-            
         }
 
         public SpellData(string baseSkinName, string spellName, SpellSlot slot, SkillShotType type, int delay, int range,
@@ -77,20 +73,17 @@ namespace Evade
             set { _radius = value; }
         }
 
-       
 
         public int Range
         {
             get
             {
-                return _range + ((Type == SkillShotType.SkillshotLine || Type == SkillShotType.SkillshotMissileLine) ? Config.SkillShotsExtraRange : 0);
+                return _range +
+                       ((Type == SkillShotType.SkillshotLine || Type == SkillShotType.SkillshotMissileLine)
+                           ? Config.SkillShotsExtraRange
+                           : 0);
             }
-            set
-            {
-                _range = value;
-            }
+            set { _range = value; }
         }
-
-
     }
 }

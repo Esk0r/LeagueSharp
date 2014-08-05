@@ -1,6 +1,5 @@
 #region
 
-using System;
 using System.Collections.Generic;
 using LeagueSharp;
 using LeagueSharp.Common;
@@ -20,7 +19,7 @@ namespace Evade
         /// </summary>
         public static GamePath GetEvadePoints(int speed = -1, int delay = 0, bool isBlink = false, bool onlyGood = false)
         {
-            speed = speed == -1 ? (int) ObjectManager.Player.MoveSpeed : speed;
+            speed = speed == -1 ? (int)ObjectManager.Player.MoveSpeed : speed;
 
             var goodCandidates = new GamePath();
             var badCandidates = new GamePath();
@@ -48,13 +47,13 @@ namespace Evade
                     var sideEnd = poly.Points[(i == poly.Points.Count - 1) ? 0 : i + 1];
                     var direction = (sideEnd - sideStart).Normalized();
                     var originalCandidate = myPosition.ProjectOn(sideStart, sideEnd).SegmentPoint;
-                    if(Vector2.DistanceSquared(originalCandidate, myPosition) < 1000 * 1000)
+                    if (Vector2.DistanceSquared(originalCandidate, myPosition) < 1000 * 1000)
                     {
                         for (var j = -Config.DiagonalEvadePointsCount; j <= Config.DiagonalEvadePointsCount; j++)
                         {
-                            var candidate = originalCandidate + j*Config.DiagonalEvadePointsStep*direction;
+                            var candidate = originalCandidate + j * Config.DiagonalEvadePointsStep * direction;
                             var pathToPoint = ObjectManager.Player.GetPath(candidate.To3D()).To2DList();
-                           
+
                             if (!isBlink)
                             {
                                 if (Program.IsSafePath(pathToPoint, Config.EvadingFirstTimeOffset, speed, delay).IsSafe)
@@ -62,26 +61,29 @@ namespace Evade
                                     goodCandidates.Add(candidate);
                                 }
 
-                                if (Program.IsSafePath(pathToPoint, Config.EvadingSecondTimeOffset, speed, delay).IsSafe && j == 0)
+                                if (
+                                    Program.IsSafePath(pathToPoint, Config.EvadingSecondTimeOffset, speed, delay).IsSafe &&
+                                    j == 0)
                                 {
                                     badCandidates.Add(candidate);
                                 }
                             }
                             else
                             {
-                                if (Program.IsSafeToBlink(pathToPoint[pathToPoint.Count - 1], Config.EvadingFirstTimeOffset,
+                                if (Program.IsSafeToBlink(pathToPoint[pathToPoint.Count - 1],
+                                    Config.EvadingFirstTimeOffset,
                                     delay))
                                 {
                                     goodCandidates.Add(candidate);
                                 }
 
-                                if (Program.IsSafeToBlink(pathToPoint[pathToPoint.Count - 1], Config.EvadingSecondTimeOffset,
+                                if (Program.IsSafeToBlink(pathToPoint[pathToPoint.Count - 1],
+                                    Config.EvadingSecondTimeOffset,
                                     delay))
                                 {
                                     badCandidates.Add(candidate);
                                 }
                             }
-
                         }
                     }
                 }
@@ -94,7 +96,8 @@ namespace Evade
         /// <summary>
         /// Returns the safe targets to cast escape spells.
         /// </summary>
-        public static List<Obj_AI_Base> GetEvadeTargets(SpellValidTargets[] validTargets, int speed, int delay, float range, bool isBlink = false, bool onlyGood = false, bool DontCheckForSafety = false)
+        public static List<Obj_AI_Base> GetEvadeTargets(SpellValidTargets[] validTargets, int speed, int delay,
+            float range, bool isBlink = false, bool onlyGood = false, bool DontCheckForSafety = false)
         {
             var badTargets = new List<Obj_AI_Base>();
             var goodTargets = new List<Obj_AI_Base>();
@@ -103,7 +106,7 @@ namespace Evade
             {
                 switch (targetType)
                 {
-                        case SpellValidTargets.AllyChampions:
+                    case SpellValidTargets.AllyChampions:
 
                         foreach (var ally in ObjectManager.Get<Obj_AI_Hero>())
                             if (ally.IsValidTarget(range, false) && !ally.IsMe && ally.IsAlly)
@@ -111,7 +114,7 @@ namespace Evade
                         break;
 
 
-                        case SpellValidTargets.AllyMinions:
+                    case SpellValidTargets.AllyMinions:
 
                         foreach (var minion in ObjectManager.Get<Obj_AI_Minion>())
                             if (minion.IsValidTarget(range, false) && minion.Team == ObjectManager.Player.Team)
@@ -119,10 +122,11 @@ namespace Evade
 
                         break;
 
-                        case SpellValidTargets.AllyWards:
+                    case SpellValidTargets.AllyWards:
 
                         foreach (var gameObject in ObjectManager.Get<Obj_AI_Base>())
-                            if(gameObject.Name.ToLower().Contains("ward") && gameObject.IsValidTarget(range, false) && gameObject.Team == ObjectManager.Player.Team)
+                            if (gameObject.Name.ToLower().Contains("ward") && gameObject.IsValidTarget(range, false) &&
+                                gameObject.Team == ObjectManager.Player.Team)
                                 allTargets.Add(gameObject);
                         break;
 
@@ -146,7 +150,6 @@ namespace Evade
                             if (gameObject.Name.ToLower().Contains("ward") && gameObject.IsValidTarget(range))
                                 allTargets.Add(gameObject);
                         break;
-                        
                 }
             }
 
@@ -172,7 +175,7 @@ namespace Evade
                         if (Program.IsSafePath(pathToTarget, Config.EvadingFirstTimeOffset, speed, delay).IsSafe)
                             goodTargets.Add(target);
 
-                        if (Program.IsSafePath(pathToTarget, Config.EvadingSecondTimeOffset, speed, delay).IsSafe )
+                        if (Program.IsSafePath(pathToTarget, Config.EvadingSecondTimeOffset, speed, delay).IsSafe)
                             badTargets.Add(target);
                     }
                 }
@@ -180,6 +183,5 @@ namespace Evade
 
             return (goodTargets.Count > 0) ? goodTargets : (onlyGood ? new List<Obj_AI_Base>() : badTargets);
         }
-
     }
 }

@@ -50,7 +50,7 @@ namespace Evade
     {
         public event EventHandler OnAdd;
 
-        new public void Add(T item)
+        public new void Add(T item)
         {
             if (OnAdd != null)
                 OnAdd(this, null);
