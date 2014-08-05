@@ -13,6 +13,7 @@ namespace Marksman {
         public Spell W;
         public Spell Q;
         public Spell R;
+        public int ultStack = 0;
         public int aaRange = 500;
         public int wAddRange = 125;
         public int rRange = 1300;
@@ -21,15 +22,15 @@ namespace Marksman {
             Utils.PrintMessage("Kog'Maw loaded.");
 
             Q = new Spell(SpellSlot.Q, 1000);
-            Q.SetSkillshot(Q.Delay, Q.Width, Q.Speed, Q.Collision, Prediction.SkillshotType.SkillshotLine);
+            Q.SetSkillshot(Q.Delay, Q.Width, Q.Speed, true, Prediction.SkillshotType.SkillshotLine);
 
             W = new Spell(SpellSlot.W, 703);
 
             E = new Spell(SpellSlot.E, 1280);
-            E.SetSkillshot(E.Delay, E.Width, E.Speed, E.Collision, Prediction.SkillshotType.SkillshotLine);
+            E.SetSkillshot(E.Delay, E.Width, E.Speed, false, Prediction.SkillshotType.SkillshotLine);
 
             R = new Spell(SpellSlot.R, 1200);
-            R.SetSkillshot(R.Delay, R.Width, R.Speed, R.Collision, Prediction.SkillshotType.SkillshotCircle);
+            R.SetSkillshot(R.Delay, R.Width, R.Speed, false, Prediction.SkillshotType.SkillshotCircle);
         }
 
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target) {
@@ -46,7 +47,7 @@ namespace Marksman {
         }
 
         public override void Drawing_OnDraw(EventArgs args) {
-            Spell[] spellList = { E };
+            Spell[] spellList = { Q };
             foreach (var spell in spellList) {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
                 if (menuItem.Active)
@@ -55,7 +56,7 @@ namespace Marksman {
         }
 
         public override void Game_OnGameUpdate(EventArgs args) {
-            // Update R range on kogmaw as the skill is leveled.
+            // Update R and W range on kogmaw as the skill is leveled.
             switch(R.Level) {
                 case 1:
                     R.Range = 1200;
@@ -71,40 +72,72 @@ namespace Marksman {
                     break;
             }
 
-            if (ComboActive || HarassActive) {
-                var useQ = GetValue<bool>("UseQC");
-                var useE = GetValue<bool>("UseEC");
-                var useR = GetValue<bool>("UseRC");
-                var useW = GetValue<bool>("UseWC");
+            switch (W.Level) {
+                case 1:
+                    wAddRange = 130;
+                    break;
+                case 2:
+                    wAddRange = 150;
+                    break;
+                case 3:
+                    wAddRange = 170;
+                    break;
+                case 4:
+                    wAddRange = 190;
+                    break;
+                case 5:
+                    wAddRange = 210;
+                    break;
+            }
 
-                if (Orbwalking.CanMove(100)) {
-                    var target = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
-                    
-                    if (useQ) {
-                        if (Q.IsReady() && target.IsValidTarget()) {
-                            Q.Cast(target);
-                        }
-                    }
+            foreach (var buff in ObjectManager.Player.Buffs) {
 
-                    if (useE) {
-                        if (E.IsReady() && target.IsValidTarget()) {
-                            E.Cast(target);
-                        }
-                    }
-
-                    if (useR) {
-                        if (R.IsReady() && target.IsValidTarget()) {
-                            R.Cast(target);
-                        }
-                    }
-
-                    if (useW) {
-                        if (W.IsReady() && Vector3.Distance(ObjectManager.Player.Position, target.Position) < (aaRange + wAddRange) && target.IsValidTarget()) {
-                            ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W);
-                        }
-                    }
-
+                if (buff.Name == "kogmawlivingartillerycost") {
+                    ultStack = buff.Count;
+                } else {
+                    ultStack = 0;
                 }
+            
+            }
+
+            if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100)) return;
+
+            var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
+            var useR = GetValue<bool>("UseR" + (ComboActive ? "C" : "H"));
+            var rLim = GetValue<Slider>("Rlim" + (ComboActive ? "C" : "H"));
+            var useE = GetValue<bool>("UseEC") && ComboActive;
+            var useW = GetValue<bool>("UseWC") && ComboActive;
+
+            if (Orbwalking.CanMove(50)) {
+
+                if (useE) {
+                    var target = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                    if (E.IsReady() && target.IsValidTarget()) {
+                        E.Cast(target);
+                    }
+                }
+   
+                if (useQ) {
+                    var target = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                    if (Q.IsReady() && target.IsValidTarget()) {
+                        Q.Cast(target);
+                    }
+                }
+
+                if (useR) {
+                    var target = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+                    if (R.IsReady() && target.IsValidTarget() && ultStack < rLim.Value) {
+                        R.Cast(target);
+                    }
+                }
+
+                if (useW) {
+                    var target = SimpleTs.GetTarget(aaRange + wAddRange, SimpleTs.DamageType.Physical);
+                    if (W.IsReady() && Vector3.Distance(ObjectManager.Player.Position, target.Position) < (aaRange + wAddRange) && target.IsValidTarget()) {
+                        ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W);
+                    }
+                }
+
             }
 
             //Killsteal
@@ -119,16 +152,21 @@ namespace Marksman {
                 R.Cast(hero);
         }
 
+
         public override void ComboMenu(Menu config) {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
             config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(true));
+            config.AddItem(new MenuItem("spacer", "------- Options -------"));
+            config.AddItem(new MenuItem("RlimC" + Id, "R Limiter").SetValue(new Slider(1, 5, 1)));
         }
 
         public override void HarassMenu(Menu config) {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(false));
             config.AddItem(new MenuItem("UseRH" + Id, "Use R").SetValue(true));
+            config.AddItem(new MenuItem("spacer", "------- Options -------"));
+            config.AddItem(new MenuItem("RlimH" + Id, "R Limiter").SetValue(new Slider(1, 5, 1)));
         }
 
         public override void DrawingMenu(Menu config) {
@@ -138,7 +176,7 @@ namespace Marksman {
         }
 
         public override void MiscMenu(Menu config) {
-            config.AddItem(new MenuItem("UseRM" + Id, "Use R").SetValue(true));
+            config.AddItem(new MenuItem("UseRM" + Id, "Use R to Killsteal").SetValue(true));
         }
     }
 }
