@@ -234,7 +234,8 @@ namespace Xerath
 
         private static void Combo()
         {
-            Orbwalker.SetAttacks(IsPassiveUp || (!Q.IsReady() && !W.IsReady() && !E.IsReady() && !R.IsReady()));
+            if(!Q.IsCharging)
+                Orbwalker.SetAttacks(IsPassiveUp || (!Q.IsReady() && !W.IsReady() && !E.IsReady() && !R.IsReady()));
             UseSpells(Config.Item("UseQCombo").GetValue<bool>(), Config.Item("UseWCombo").GetValue<bool>(),
                 Config.Item("UseECombo").GetValue<bool>());
         }
