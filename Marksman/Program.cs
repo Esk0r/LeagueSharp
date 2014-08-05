@@ -39,6 +39,12 @@ namespace Marksman
             if (ObjectManager.Player.BaseSkinName == "Graves")
                 CClass = new Graves();
 
+            if (ObjectManager.Player.BaseSkinName == "Caitlyn")
+                CClass = new Caitlyn();
+
+            if (ObjectManager.Player.BaseSkinName == "KogMaw")
+                CClass = new Kogmaw();
+
             CClass.Id = ObjectManager.Player.BaseSkinName;
             CClass.Config = Config;
 
@@ -101,6 +107,7 @@ namespace Marksman
             //Update the combo and harass values.
             CClass.ComboActive = CClass.Config.Item("Orbwalk").GetValue<KeyBind>().Active;
             CClass.HarassActive = CClass.Config.Item("Farm").GetValue<KeyBind>().Active;
+
             CClass.Game_OnGameUpdate(args);
 
             //Items
