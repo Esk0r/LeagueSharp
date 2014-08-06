@@ -424,7 +424,7 @@ namespace Xerath
             foreach (var spell in SpellList)
             {
                 var menuItem = Config.Item(spell.Slot + "Range").GetValue<Circle>();
-                if (menuItem.Active && (spell.Slot != SpellSlot.Q || R.Level > 0))
+                if (menuItem.Active && (spell.Slot != SpellSlot.R || R.Level > 0))
                     Utility.DrawCircle(Player.Position, spell.Range, menuItem.Color);
             }
         }
