@@ -22,38 +22,17 @@ namespace Marksman {
             Utils.PrintMessage("Kog'Maw loaded.");
 
             Q = new Spell(SpellSlot.Q, 1000);
-            Q.SetSkillshot(Q.Delay, Q.Width, Q.Speed, true, Prediction.SkillshotType.SkillshotLine);
+            Q.SetSkillshot(0.5f, 0f, 1200, true, Prediction.SkillshotType.SkillshotLine);
 
             W = new Spell(SpellSlot.W, 703);
 
             E = new Spell(SpellSlot.E, 1280);
-            E.SetSkillshot(E.Delay, E.Width, E.Speed, false, Prediction.SkillshotType.SkillshotLine);
+            E.SetSkillshot(0.5f, 120f, 1200f, false, Prediction.SkillshotType.SkillshotLine);
 
             R = new Spell(SpellSlot.R, 1200);
-            R.SetSkillshot(R.Delay, R.Width, R.Speed, false, Prediction.SkillshotType.SkillshotCircle);
+            R.SetSkillshot(0.6f, 225f, 2000f, false, Prediction.SkillshotType.SkillshotCircle);
 
             CustomEvents.Unit.OnLevelUpSpell += Unit_OnLevelUpSpell;
-        }
-
-        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target) {
-            if ((ComboActive || HarassActive) && unit.IsMe && (target is Obj_AI_Hero)) {
-                var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-                var useR = GetValue<bool>("UseR" + (ComboActive ? "C" : "H"));
-                var rLim = GetValue<Slider>("Rlim" + (ComboActive ? "C" : "H"));
-
-                if (useQ && Q.IsReady()) {
-                    Q.Cast(target);
-                }
-
-                if (useR && R.IsReady()) {
-                    UpdateUltStacks();
-                    // Cast R if rLim is not met :D
-                    if (ultStack < rLim.Value) {
-                        Console.WriteLine("Casting Harrass R");
-                        R.Cast(target);
-                    }
-                }
-            }
         }
 
         public override void Drawing_OnDraw(EventArgs args) {
@@ -91,8 +70,7 @@ namespace Marksman {
                     UpdateUltStacks();
 
                     if (ultStack < rLim.Value) {
-                        Console.WriteLine("Casting Combo R");
-                        R.Cast(target);
+                        R.CastIfHitchanceEquals(target, Prediction.HitChance.LowHitchance);
                     }
                 }
 
