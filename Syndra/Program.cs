@@ -34,7 +34,6 @@ namespace Syndra
         public static Menu Config;
         private static int QEComboT;
         private static int WEComboT;
-        private static int FarmscsT;
 
         private static Obj_AI_Hero Player;
 
@@ -199,13 +198,13 @@ namespace Syndra
             Orbwalker.SetAttacks(!(Q.IsReady() || W.IsReady()));
             UseSpells(Config.Item("UseQCombo").GetValue<bool>(), Config.Item("UseWCombo").GetValue<bool>(),
                 Config.Item("UseECombo").GetValue<bool>(), Config.Item("UseRCombo").GetValue<bool>(),
-                Config.Item("UseQECombo").GetValue<bool>());
+                Config.Item("UseQECombo").GetValue<bool>(), false);
         }
 
         private static void Harass()
         {
             UseSpells(Config.Item("UseQHarass").GetValue<bool>(), Config.Item("UseWHarass").GetValue<bool>(),
-                Config.Item("UseEHarass").GetValue<bool>(), false, Config.Item("UseQEHarass").GetValue<bool>());
+                Config.Item("UseEHarass").GetValue<bool>(), false, Config.Item("UseQEHarass").GetValue<bool>(), true);
         }
 
         private static void UseE(Obj_AI_Base enemy)
@@ -280,9 +279,9 @@ namespace Syndra
             return (float)damage * (DFG.IsReady() ? 1.2f : 1);
         }
 
-        private static void UseSpells(bool useQ, bool useW, bool useE, bool useR, bool useQE)
+        private static void UseSpells(bool useQ, bool useW, bool useE, bool useR, bool useQE, bool isHarass)
         {
-            var qTarget = SimpleTs.GetTarget(Q.Range + Q.Width, SimpleTs.DamageType.Magical);
+            var qTarget = SimpleTs.GetTarget(Q.Range + (isHarass ? 0 : Q.Width), SimpleTs.DamageType.Magical);
             var wTarget = SimpleTs.GetTarget(W.Range + W.Width, SimpleTs.DamageType.Magical);
             var rTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Magical);
             var qeTarget = SimpleTs.GetTarget(EQ.Range, SimpleTs.DamageType.Magical);
@@ -386,7 +385,6 @@ namespace Syndra
         private static void Farm(bool laneClear)
         {
             if (!Orbwalking.CanMove(40)) return;
-            if (Environment.TickCount - FarmscsT < 500) return;
 
             var rangedMinionsQ = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range + Q.Width + 30,
                 MinionTypes.Ranged);
@@ -409,16 +407,14 @@ namespace Syndra
                 {
                     var fl1 = Q.GetCircularFarmLocation(rangedMinionsQ, Q.Width);
                     var fl2 = Q.GetCircularFarmLocation(allMinionsQ, Q.Width);
-                    if (Player.Spellbook.GetSpell(SpellSlot.W).ToggleState == 1)
+
                         if (fl1.MinionsHit >= 3)
                         {
-                            FarmscsT = Environment.TickCount;
                             Q.Cast(fl1.Position);
                         }
 
-                        else if (fl2.MinionsHit >= 3 || allMinionsQ.Count == 1)
+                        else if (fl2.MinionsHit >= 2 || allMinionsQ.Count == 1)
                         {
-                            FarmscsT = Environment.TickCount;
                             Q.Cast(fl2.Position);
                         }
                 }
@@ -428,9 +424,8 @@ namespace Syndra
                             minion.Health < 0.75 * DamageLib.getDmg(minion, DamageLib.SpellType.Q))
                             Q.Cast(minion);
 
-            if (useW && W.IsReady())
+            if (useW && W.IsReady() && allMinionsW.Count > 3)
             {
-                if (Environment.TickCount - FarmscsT < 1000) return;
                 if (laneClear)
                 {
                     if (Player.Spellbook.GetSpell(SpellSlot.W).ToggleState == 1)
@@ -438,27 +433,23 @@ namespace Syndra
                         //WObject
                         var gObjectPos = GetGrabableObjectPos(false);
 
-                        if (gObjectPos.To2D().IsValid() && Environment.TickCount - W.LastCastAttemptT > Game.Ping + 400)
+                        if (gObjectPos.To2D().IsValid() && Environment.TickCount - W.LastCastAttemptT > Game.Ping + 150)
                         {
                             W.Cast(gObjectPos);
-                            FarmscsT = Environment.TickCount;
                         }
                     }
-                    else if (Player.Spellbook.GetSpell(SpellSlot.W).ToggleState != 1 &&
-                             Environment.TickCount - W.LastCastAttemptT > Game.Ping + 150)
+                    else if (Player.Spellbook.GetSpell(SpellSlot.W).ToggleState != 1)
                     {
                         var fl1 = Q.GetCircularFarmLocation(rangedMinionsW, W.Width);
                         var fl2 = Q.GetCircularFarmLocation(allMinionsW, W.Width);
 
-                        if (fl1.MinionsHit >= 3)
+                        if (fl1.MinionsHit >= 3 && W.InRange(fl1.Position.To3D()))
                         {
-                            FarmscsT = Environment.TickCount;
                             W.Cast(fl1.Position);
                         }
 
-                        else if (fl2.MinionsHit >= 1)
+                        else if (fl2.MinionsHit >= 1 && W.InRange(fl2.Position.To3D()) && fl1.MinionsHit <= 2)
                         {
-                            FarmscsT = Environment.TickCount;
                             W.Cast(fl2.Position);
                         }
                     }
@@ -468,8 +459,6 @@ namespace Syndra
 
         private static void JungleFarm()
         {
-            if (Environment.TickCount - FarmscsT < 500) return;
-
             var useQ = Config.Item("UseQJFarm").GetValue<bool>();
             var useW = Config.Item("UseWJFarm").GetValue<bool>();
             var useE = Config.Item("UseEJFarm").GetValue<bool>();
@@ -483,20 +472,17 @@ namespace Syndra
 
                 if (Q.IsReady() && useQ)
                 {
-                    FarmscsT = Environment.TickCount;
                     Q.Cast(mob);
                 }
 
 
                 if (W.IsReady() && useW && GetGrabableObjectPos(true).To2D().IsValid())
                 {
-                    FarmscsT = Environment.TickCount;
                     W.Cast(GetGrabableObjectPos(true));
                 }
 
                 if (useE && E.IsReady())
                 {
-                    FarmscsT = Environment.TickCount;
                     E.Cast(mob);
                 }
             }
