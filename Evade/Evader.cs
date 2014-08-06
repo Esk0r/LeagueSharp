@@ -49,7 +49,7 @@ namespace Evade
                     var originalCandidate = myPosition.ProjectOn(sideStart, sideEnd).SegmentPoint;
                     var dd = Vector2.DistanceSquared(originalCandidate, myPosition);
 
-                    var s = (dd < 1000 * 1000 && dd > 50) ? 0 : Config.DiagonalEvadePointsCount;
+                    var s = (dd < 1000 * 1000 && dd > 90 * 90) ? 0 : Config.DiagonalEvadePointsCount;
 
                     for (var j = -s; j <= s; j++)
                     {
