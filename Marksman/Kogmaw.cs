@@ -70,7 +70,7 @@ namespace Marksman {
                     UpdateUltStacks();
 
                     if (ultStack < rLim.Value) {
-                        R.CastIfHitchanceEquals(target, Prediction.HitChance.LowHitchance);
+                        R.Cast(target);
                     }
                 }
 
@@ -88,7 +88,7 @@ namespace Marksman {
                         .Where(
                             hero =>
                                 hero.IsValidTarget(R.Range) &&
-                                hero.Health - R.GetDamage(hero, DamageLib.SpellType.R) + 20 > 0))
+                                hero.Health - R.GetDamage(hero) + 20 > 0))
                 R.Cast(hero);
         }
 
