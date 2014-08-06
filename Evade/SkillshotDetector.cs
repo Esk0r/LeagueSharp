@@ -24,11 +24,22 @@ namespace Evade
             Obj_SpellMissile.OnCreate += ObjSpellMissileOnOnCreate;
             //GameObject.OnCreate += GameObject_OnCreate; TODO: Detect lux R and other large skillshots.
             GameObject.OnDelete += GameObject_OnDelete;
+
+            //Game.OnWndProc += Game_OnWndProc;
+        }
+
+        static void Game_OnWndProc(WndEventArgs args)
+        {
+            if (args.Msg == (uint)WindowsMessages.WM_KEYUP)
+            {
+                TriggerOnDetectSkillshot(DetectionType.ProcessSpell, SpellDatabase.GetByName("OrianaDetonateCommand"), Environment.TickCount, ObjectManager.Player.ServerPosition.To2D(), Game.CursorPos.To2D(),
+                 ObjectManager.Player);
+            }
         }
 
         private static void GameObject_OnCreate(GameObject sender, EventArgs args)
         {
-           
+            
         }
 
 

@@ -6,7 +6,6 @@ using LeagueSharp.Common;
 using SharpDX;
 using Path = System.Collections.Generic.List<ClipperLib.IntPoint>;
 using Paths = System.Collections.Generic.List<System.Collections.Generic.List<ClipperLib.IntPoint>>;
-using GamePath = System.Collections.Generic.List<SharpDX.Vector2>;
 
 #endregion
 
@@ -17,12 +16,13 @@ namespace Evade
         /// <summary>
         /// Returns the posible evade points.
         /// </summary>
-        public static GamePath GetEvadePoints(int speed = -1, int delay = 0, bool isBlink = false, bool onlyGood = false)
+        public static List<Vector2> GetEvadePoints(int speed = -1, int delay = 0, bool isBlink = false,
+            bool onlyGood = false)
         {
             speed = speed == -1 ? (int)ObjectManager.Player.MoveSpeed : speed;
 
-            var goodCandidates = new GamePath();
-            var badCandidates = new GamePath();
+            var goodCandidates = new List<Vector2>();
+            var badCandidates = new List<Vector2>();
 
             var polygonList = new List<Geometry.Polygon>();
 
@@ -47,49 +47,50 @@ namespace Evade
                     var sideEnd = poly.Points[(i == poly.Points.Count - 1) ? 0 : i + 1];
                     var direction = (sideEnd - sideStart).Normalized();
                     var originalCandidate = myPosition.ProjectOn(sideStart, sideEnd).SegmentPoint;
-                    if (Vector2.DistanceSquared(originalCandidate, myPosition) < 1000 * 1000)
+                    var dd = Vector2.DistanceSquared(originalCandidate, myPosition);
+
+                    var s = (dd < 1000 * 1000 && dd > 50) ? 0 : Config.DiagonalEvadePointsCount;
+
+                    for (var j = -s; j <= s; j++)
                     {
-                        for (var j = -Config.DiagonalEvadePointsCount; j <= Config.DiagonalEvadePointsCount; j++)
+                        var candidate = originalCandidate + j * Config.DiagonalEvadePointsStep * direction;
+                        var pathToPoint = ObjectManager.Player.GetPath(candidate.To3D()).To2DList();
+
+                        if (!isBlink)
                         {
-                            var candidate = originalCandidate + j * Config.DiagonalEvadePointsStep * direction;
-                            var pathToPoint = ObjectManager.Player.GetPath(candidate.To3D()).To2DList();
-
-                            if (!isBlink)
+                            if (Program.IsSafePath(pathToPoint, Config.EvadingFirstTimeOffset, speed, delay).IsSafe)
                             {
-                                if (Program.IsSafePath(pathToPoint, Config.EvadingFirstTimeOffset, speed, delay).IsSafe)
-                                {
-                                    goodCandidates.Add(candidate);
-                                }
-
-                                if (
-                                    Program.IsSafePath(pathToPoint, Config.EvadingSecondTimeOffset, speed, delay).IsSafe &&
-                                    j == 0)
-                                {
-                                    badCandidates.Add(candidate);
-                                }
+                                goodCandidates.Add(candidate);
                             }
-                            else
-                            {
-                                if (Program.IsSafeToBlink(pathToPoint[pathToPoint.Count - 1],
-                                    Config.EvadingFirstTimeOffset,
-                                    delay))
-                                {
-                                    goodCandidates.Add(candidate);
-                                }
 
-                                if (Program.IsSafeToBlink(pathToPoint[pathToPoint.Count - 1],
-                                    Config.EvadingSecondTimeOffset,
-                                    delay))
-                                {
-                                    badCandidates.Add(candidate);
-                                }
+                            if (
+                                Program.IsSafePath(pathToPoint, Config.EvadingSecondTimeOffset, speed, delay).IsSafe &&
+                                j == 0)
+                            {
+                                badCandidates.Add(candidate);
+                            }
+                        }
+                        else
+                        {
+                            if (Program.IsSafeToBlink(pathToPoint[pathToPoint.Count - 1],
+                                Config.EvadingFirstTimeOffset,
+                                delay))
+                            {
+                                goodCandidates.Add(candidate);
+                            }
+
+                            if (Program.IsSafeToBlink(pathToPoint[pathToPoint.Count - 1],
+                                Config.EvadingSecondTimeOffset,
+                                delay))
+                            {
+                                badCandidates.Add(candidate);
                             }
                         }
                     }
                 }
             }
 
-            return (goodCandidates.Count > 0) ? goodCandidates : (onlyGood ? new GamePath() : badCandidates);
+            return (goodCandidates.Count > 0) ? goodCandidates : (onlyGood ? new List<Vector2>() : badCandidates);
         }
 
 
