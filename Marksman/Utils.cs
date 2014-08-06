@@ -12,5 +12,6 @@ namespace Marksman
         {
             Game.PrintChat("<font color='#70DBDB'>Marksman:</font> <font color='#FFFFFF'>" + message + "</font>");
         }
+
     }
 }

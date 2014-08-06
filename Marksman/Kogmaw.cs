@@ -31,18 +31,28 @@ namespace Marksman {
 
             R = new Spell(SpellSlot.R, 1200);
             R.SetSkillshot(R.Delay, R.Width, R.Speed, false, Prediction.SkillshotType.SkillshotCircle);
+
+            CustomEvents.Unit.OnLevelUpSpell += Unit_OnLevelUpSpell;
         }
 
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target) {
             if ((ComboActive || HarassActive) && unit.IsMe && (target is Obj_AI_Hero)) {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
                 var useR = GetValue<bool>("UseR" + (ComboActive ? "C" : "H"));
+                var rLim = GetValue<Slider>("Rlim" + (ComboActive ? "C" : "H"));
 
-                if (useQ && Q.IsReady())
+                if (useQ && Q.IsReady()) {
                     Q.Cast(target);
+                }
 
-                if (useR && R.IsReady())
-                    R.Cast(target);
+                if (useR && R.IsReady()) {
+                    UpdateUltStacks();
+                    // Cast R if rLim is not met :D
+                    if (ultStack < rLim.Value) {
+                        Console.WriteLine("Casting Harrass R");
+                        R.Cast(target);
+                    }
+                }
             }
         }
 
@@ -56,8 +66,68 @@ namespace Marksman {
         }
 
         public override void Game_OnGameUpdate(EventArgs args) {
-            // Update R and W range on kogmaw as the skill is leveled.
-            switch(R.Level) {
+           
+            if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100)) return;
+
+            var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
+            var useR = GetValue<bool>("UseR" + (ComboActive ? "C" : "H"));
+            var rLim = GetValue<Slider>("Rlim" + (ComboActive ? "C" : "H"));
+            var useE = GetValue<bool>("UseEC") && ComboActive;
+            var useW = GetValue<bool>("UseWC") && ComboActive;
+
+            if (Orbwalking.CanMove(50)) {
+
+                var target = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+
+                if (useE && E.IsReady() && target.IsValidTarget()) {
+                    E.Cast(target);
+                }
+
+                if (useQ && Q.IsReady() && target.IsValidTarget()) {
+                    Q.Cast(target);
+                }
+
+                if (useR && R.IsReady() && target.IsVisible && target.IsEnemy) {
+                    UpdateUltStacks();
+
+                    if (ultStack < rLim.Value) {
+                        Console.WriteLine("Casting Combo R");
+                        R.Cast(target);
+                    }
+                }
+
+                if (useW && (W.IsReady() && Vector3.Distance(ObjectManager.Player.Position, target.Position) < (aaRange + wAddRange) && target.IsValidTarget())) {
+                    ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W);
+                }
+
+            }
+
+            //Killsteal
+            if (!ComboActive || !GetValue<bool>("UseRM") || !R.IsReady()) return;
+            foreach (
+                var hero in
+                    ObjectManager.Get<Obj_AI_Hero>()
+                        .Where(
+                            hero =>
+                                hero.IsValidTarget(R.Range) &&
+                                hero.Health - R.GetDamage(hero, DamageLib.SpellType.R) + 20 > 0))
+                R.Cast(hero);
+        }
+
+        void UpdateUltStacks() {
+            foreach (var buff in ObjectManager.Player.Buffs) {
+
+                if (buff.Name == "kogmawlivingartillerycost") {
+                    ultStack = buff.Count;
+                } else {
+                    ultStack = 0;
+                }
+
+            }
+        }
+
+        void Unit_OnLevelUpSpell(Obj_AI_Base sender, CustomEvents.Unit.OnLevelUpSpellEventArgs args) {
+            switch (R.Level) {
                 case 1:
                     R.Range = 1200;
                     break;
@@ -89,69 +159,7 @@ namespace Marksman {
                     wAddRange = 210;
                     break;
             }
-
-            foreach (var buff in ObjectManager.Player.Buffs) {
-
-                if (buff.Name == "kogmawlivingartillerycost") {
-                    ultStack = buff.Count;
-                } else {
-                    ultStack = 0;
-                }
-            
-            }
-
-            if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100)) return;
-
-            var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-            var useR = GetValue<bool>("UseR" + (ComboActive ? "C" : "H"));
-            var rLim = GetValue<Slider>("Rlim" + (ComboActive ? "C" : "H"));
-            var useE = GetValue<bool>("UseEC") && ComboActive;
-            var useW = GetValue<bool>("UseWC") && ComboActive;
-
-            if (Orbwalking.CanMove(50)) {
-
-                if (useE) {
-                    var target = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
-                    if (E.IsReady() && target.IsValidTarget()) {
-                        E.Cast(target);
-                    }
-                }
-   
-                if (useQ) {
-                    var target = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
-                    if (Q.IsReady() && target.IsValidTarget()) {
-                        Q.Cast(target);
-                    }
-                }
-
-                if (useR) {
-                    var target = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
-                    if (R.IsReady() && target.IsValidTarget() && ultStack < rLim.Value) {
-                        R.Cast(target);
-                    }
-                }
-
-                if (useW) {
-                    var target = SimpleTs.GetTarget(aaRange + wAddRange, SimpleTs.DamageType.Physical);
-                    if (W.IsReady() && Vector3.Distance(ObjectManager.Player.Position, target.Position) < (aaRange + wAddRange) && target.IsValidTarget()) {
-                        ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W);
-                    }
-                }
-
-            }
-
-            //Killsteal
-            if (!ComboActive || !GetValue<bool>("UseRM") || !R.IsReady()) return;
-            foreach (
-                var hero in
-                    ObjectManager.Get<Obj_AI_Hero>()
-                        .Where(
-                            hero =>
-                                hero.IsValidTarget(R.Range) &&
-                                DamageLib.getDmg(hero, DamageLib.SpellType.R) - 20 > hero.Health))
-                R.Cast(hero);
         }
-
 
         public override void ComboMenu(Menu config) {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
