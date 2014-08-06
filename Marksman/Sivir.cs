@@ -23,8 +23,6 @@ namespace Marksman
             Q.SetSkillshot(0.25f, 90f, 1350f, false, Prediction.SkillshotType.SkillshotLine);
 
             W = new Spell(SpellSlot.W, 1050);
-
-
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
