@@ -1,0 +1,174 @@
+#region
+
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using SharpDX;
+using LeagueSharp;
+using LeagueSharp.Common;
+
+#endregion
+
+namespace Marksman
+{
+    class Kogmaw : Champion
+    {
+        public Spell E;
+        public Spell W;
+        public Spell Q;
+        public Spell R;
+
+        public Kogmaw()
+        {
+            Utils.PrintMessage("Kog'Maw loaded.");
+
+            Q = new Spell(SpellSlot.Q, 1000);
+            Q.SetSkillshot(0.25f, 70f, 1650f, true, Prediction.SkillshotType.SkillshotLine);
+
+            W = new Spell(SpellSlot.W, 500);
+
+            E = new Spell(SpellSlot.E, 1280);
+            E.SetSkillshot(0.25f, 120f, 1400f, false, Prediction.SkillshotType.SkillshotLine);
+
+            R = new Spell(SpellSlot.R, 1200);
+            R.SetSkillshot(1.1f, 150f, float.MaxValue, false, Prediction.SkillshotType.SkillshotCircle);
+        }
+
+        public override void Game_OnGameUpdate(EventArgs args)
+        {
+            R.Range = 900 + 300 * R.Level;
+            W.Range = 610 + 20 * W.Level;
+         
+            if (ComboActive || HarassActive)
+            {
+                bool useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
+                bool useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
+                bool useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
+                bool useR = GetValue<bool>("UseR" + (ComboActive ? "C" : "H"));
+                Slider rLim = GetValue<Slider>("Rlim" + (ComboActive ? "C" : "H"));
+
+                if (Orbwalking.CanMove(100))
+                {
+                    if (useQ)
+                    {
+                        Obj_AI_Hero target = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+
+                        if (Q.IsReady() && target.IsValidTarget())
+                        {
+                            Q.Cast(target);
+                        }
+                    }
+
+                    if (useW)
+                    {
+                        Obj_AI_Hero target = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
+
+                        if (W.IsReady() && target.IsValidTarget() && Vector3.Distance(ObjectManager.Player.Position, target.Position) < W.Range)
+                        {
+                            ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W);
+                        }
+                    }
+
+                    if (useE)
+                    {
+                        Obj_AI_Hero target = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+
+                        if (E.IsReady() && target.IsValidTarget())
+                        {         
+                            E.Cast(target);
+                        }
+                    }
+
+                    if (useR)
+                    {
+                        Obj_AI_Hero target = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+                        int UltStacks = CountUltStacks();
+
+                        if (R.IsReady() && target.IsValidTarget() && UltStacks < rLim.Value)
+                        {
+                            R.Cast(target, false, true);
+                        }
+                    }
+                }
+            }
+            
+            KillSteal();
+        }
+
+        public int CountUltStacks()
+        {
+            int UltStacks = 0;
+
+            foreach (BuffInstance buff in ObjectManager.Player.Buffs)
+            {
+                if (buff.Name.Equals("kogmawlivingartillerycost"))
+                    UltStacks = buff.Count;
+            }
+
+            return UltStacks;
+        }
+
+        public void KillSteal()
+        {
+            foreach (var hero in ObjectManager.Get<Obj_AI_Hero>())
+            {
+                if (GetValue<bool>("UseQKS") && Q.IsReady() && hero.IsValidTarget(Q.Range) && DamageLib.getDmg(hero, DamageLib.SpellType.Q) > hero.Health)
+                    Q.Cast(hero);
+                else if (GetValue<bool>("UseEKS") && E.IsReady() && hero.IsValidTarget(E.Range) && DamageLib.getDmg(hero, DamageLib.SpellType.E) > hero.Health)
+                    E.Cast(hero);
+                else  if (GetValue<bool>("UseRKS") && R.IsReady() && hero.IsValidTarget(R.Range) && DamageLib.getDmg(hero, DamageLib.SpellType.R) > hero.Health)
+                    R.Cast(hero);
+            }
+        }
+
+        public override void Drawing_OnDraw(EventArgs args)
+        {
+            Spell[] spellList = { Q, E, R };
+            foreach (var spell in spellList)
+            {
+                var menuItem = GetValue<Circle>("Draw" + spell.Slot);
+                if (menuItem.Active)
+                    Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
+            }
+        }
+
+        public override void ComboMenu(Menu config)
+        {
+            config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
+            config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
+            config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
+            config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(true));
+            config.AddItem(new MenuItem("spacer", "------- Options -------"));
+            config.AddItem(new MenuItem("RlimC" + Id, "R Limiter").SetValue(new Slider(1, 6, 1)));
+        }
+
+        public override void HarassMenu(Menu config)
+        {
+            config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
+            config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
+            config.AddItem(new MenuItem("UseEH" + Id, "Use E").SetValue(true));
+            config.AddItem(new MenuItem("UseRH" + Id, "Use R").SetValue(true));
+            config.AddItem(new MenuItem("spacer", "------- Options -------"));
+            config.AddItem(new MenuItem("RlimH" + Id, "R Limiter").SetValue(new Slider(1, 6, 1)));
+        }
+
+        public override void DrawingMenu(Menu config)
+        {
+            config.AddItem(
+                new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true, System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+            config.AddItem(
+                new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(true, System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+            config.AddItem(
+                new MenuItem("DrawR" + Id, "R range").SetValue(new Circle(true, System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+
+        }
+
+        public override void MiscMenu(Menu config)
+        {
+            config.AddItem(new MenuItem("UseQKS" + Id, "Use Q to Killsteal").SetValue(true));
+            config.AddItem(new MenuItem("UseEKS" + Id, "Use E to Killsteal").SetValue(true));
+            config.AddItem(new MenuItem("UseRKS" + Id, "Use R to Killsteal").SetValue(true));
+        }
+    }
+}
