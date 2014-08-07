@@ -21,6 +21,10 @@ Twisted Fate
 -----------
 Simple Twisted Fate assembly with a few options, will be improved in the future.
 
+Xerath
+-----------
+Xerath assembly.
+
 Ziggs
 -----------
 Ziggs assembly made by lepqm & Esk0r.
