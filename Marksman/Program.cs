@@ -35,7 +35,7 @@ namespace Marksman
 
             if (ObjectManager.Player.BaseSkinName == "Sivir")
                 CClass = new Sivir();
-            
+
             if (ObjectManager.Player.BaseSkinName == "Tristana")
                 CClass = new Tristana();
 
@@ -54,6 +54,7 @@ namespace Marksman
 
             var items = Config.AddSubMenu(new Menu("Items", "Items"));
             items.AddItem(new MenuItem("BOTRK", "BOTRK").SetValue(true));
+            items.AddItem(new MenuItem("GHOSTBLADE", "Ghostblade").SetValue(true));
 
             var combo = Config.AddSubMenu(new Menu("Combo", "Combo"));
             CClass.ComboMenu(combo);
@@ -76,7 +77,7 @@ namespace Marksman
             Orbwalking.AfterAttack += Orbwalking_AfterAttack;
         }
 
-        static void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        private static void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
         {
             CClass.Orbwalking_AfterAttack(unit, target);
         }
@@ -107,7 +108,12 @@ namespace Marksman
             CClass.Game_OnGameUpdate(args);
 
             //Items
+            if (CClass.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo &&
+                CClass.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Mixed)
+                return;
+
             var botrk = Config.Item("BOTRK").GetValue<bool>();
+            var ghostblade = Config.Item("GHOSTBLADE").GetValue<bool>();
             var target = CClass.Orbwalker.GetTarget();
 
             if (botrk)
@@ -127,6 +133,10 @@ namespace Marksman
                     }
                 }
             }
+
+            if (ghostblade && target != null && target.Type == ObjectManager.Player.Type &&
+                Orbwalking.InAutoAttackRange(target))
+                Items.UseItem(3142);
         }
     }
 }
