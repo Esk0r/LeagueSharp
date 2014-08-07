@@ -11,7 +11,6 @@ namespace Evade
     internal static class Config
     {
         public const bool PrintSpellData = false;
-
         public const bool TestOnAllies = false;
         public const int SkillShotsExtraRadius = 10;
         public const int SkillShotsExtraRange = 20;
@@ -61,7 +60,7 @@ namespace Evade
                 {
                     foreach (var spell in SpellDatabase.Spells)
                     {
-                        if (spell.BaseSkinName == hero.BaseSkinName)
+                        if (spell.ChampionName == hero.ChampionName)
                         {
                             var subMenu = new Menu(spell.MenuItemName, spell.MenuItemName);
 
@@ -91,7 +90,7 @@ namespace Evade
             {
                 if (ally.IsAlly && !ally.IsMe)
                     shielding.AddItem(
-                        new MenuItem("shield" + ally.BaseSkinName, "Shield " + ally.BaseSkinName).SetValue(true));
+                        new MenuItem("shield" + ally.ChampionName, "Shield " + ally.ChampionName).SetValue(true));
             }
             Menu.AddSubMenu(shielding);
 

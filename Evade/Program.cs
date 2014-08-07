@@ -113,7 +113,7 @@ namespace Evade
 
             if (Config.PrintSpellData)
             {
-                Console.WriteLine(ObjectManager.Player.BaseSkinName);
+                Console.WriteLine(ObjectManager.Player.ChampionName);
                 foreach (var spell in ObjectManager.Player.Spellbook.Spells)
                 {
                     Console.WriteLine(spell.SData.Name + " w:" + spell.SData.LineWidth + " s:" +
@@ -268,7 +268,7 @@ namespace Evade
             {
                 if (ally.IsValidTarget(1000, false))
                 {
-                    var shieldAlly = Config.Menu.Item("shield" + ally.BaseSkinName);
+                    var shieldAlly = Config.Menu.Item("shield" + ally.ChampionName);
                     if (shieldAlly != null && shieldAlly.GetValue<bool>())
                     {
                         var allySafeResult = IsSafe(ally.ServerPosition.To2D());

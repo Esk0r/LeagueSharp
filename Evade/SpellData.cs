@@ -9,7 +9,7 @@ namespace Evade
     public class SpellData
     {
         public bool AddHitbox;
-        public string BaseSkinName;
+        public string ChampionName;
         public bool CanBeRemoved = false;
         public bool Centered;
         public int DangerValue;
@@ -41,10 +41,10 @@ namespace Evade
         {
         }
 
-        public SpellData(string baseSkinName, string spellName, SpellSlot slot, SkillShotType type, int delay, int range,
+        public SpellData(string ChampionName, string spellName, SpellSlot slot, SkillShotType type, int delay, int range,
             int radius, int missileSpeed, bool addHitbox, bool fixedRange, int defaultDangerValue)
         {
-            BaseSkinName = baseSkinName;
+            ChampionName = ChampionName;
             SpellName = spellName;
             Slot = slot;
             Type = type;
@@ -59,7 +59,7 @@ namespace Evade
 
         public string MenuItemName
         {
-            get { return BaseSkinName + " - " + SpellName; }
+            get { return ChampionName + " - " + SpellName; }
         }
 
         public int Radius

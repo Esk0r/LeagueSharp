@@ -20,7 +20,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Aatrox",
+                ChampionName = "Aatrox",
                 SpellName = "AatroxQ",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotCircle,
@@ -41,7 +41,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Ahri",
+                ChampionName = "Ahri",
                 SpellName = "AhriOrbReturn",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -59,7 +59,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Ahri",
+                ChampionName = "Ahri",
                 SpellName = "AhriOrbofDeception",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -76,7 +76,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Ahri",
+                ChampionName = "Ahri",
                 SpellName = "AhriSeduce",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -98,7 +98,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Amumu",
+                ChampionName = "Amumu",
                 SpellName = "BandageToss",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -116,7 +116,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Amumu",
+                ChampionName = "Amumu",
                 SpellName = "CurseoftheSadMummy",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotCircle,
@@ -137,7 +137,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Anivia",
+                ChampionName = "Anivia",
                 SpellName = "FlashFrost",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -159,7 +159,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Annie",
+                ChampionName = "Annie",
                 SpellName = "Incinerate",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotCone,
@@ -176,7 +176,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Annie",
+                ChampionName = "Annie",
                 SpellName = "InfernalGuardian",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotCircle,
@@ -197,7 +197,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Ashe",
+                ChampionName = "Ashe",
                 SpellName = "EnchantedCrystalArrow",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -219,7 +219,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Blitzcrank",
+                ChampionName = "Blitzcrank",
                 SpellName = "RocketGrab",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -237,7 +237,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Blitzcrank",
+                ChampionName = "Blitzcrank",
                 SpellName = "StaticField",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotCircle,
@@ -258,7 +258,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Brand",
+                ChampionName = "Brand",
                 SpellName = "BrandBlaze",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -276,7 +276,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Brand",
+                ChampionName = "Brand",
                 SpellName = "BrandFissure",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotCircle,
@@ -297,7 +297,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Braum",
+                ChampionName = "Braum",
                 SpellName = "BraumQ",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -315,7 +315,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Braum",
+                ChampionName = "Braum",
                 SpellName = "BraumRWrapper",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -336,7 +336,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Caitlyn",
+                ChampionName = "Caitlyn",
                 SpellName = "CaitlynPiltoverPeacemaker",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -353,7 +353,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Caitlyn",
+                ChampionName = "Caitlyn",
                 SpellName = "CaitlynEntrapment",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -375,7 +375,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Cassiopeia",
+                ChampionName = "Cassiopeia",
                 SpellName = "CassiopeiaNoxiousBlast",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotCircle,
@@ -392,7 +392,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Cassiopeia",
+                ChampionName = "Cassiopeia",
                 SpellName = "CassiopeiaPetrifyingGaze",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotCone,
@@ -413,7 +413,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Chogath",
+                ChampionName = "Chogath",
                 SpellName = "Rupture",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotCircle,
@@ -434,7 +434,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Corki",
+                ChampionName = "Corki",
                 SpellName = "PhosphorusBomb",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotCircle,
@@ -451,7 +451,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Corki",
+                ChampionName = "Corki",
                 SpellName = "MissileBarrage",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -469,7 +469,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Corki",
+                ChampionName = "Corki",
                 SpellName = "MissileBarrage2",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -491,7 +491,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Darius",
+                ChampionName = "Darius",
                 SpellName = "DariusAxeGrabCone",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotCone,
@@ -512,7 +512,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "DrMundo",
+                ChampionName = "DrMundo",
                 SpellName = "InfectedCleaverMissileCast",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -534,7 +534,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Draven",
+                ChampionName = "Draven",
                 SpellName = "DravenDoubleShot",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -552,7 +552,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Draven",
+                ChampionName = "Draven",
                 SpellName = "DravenRCast",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -573,7 +573,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Elise",
+                ChampionName = "Elise",
                 SpellName = "EliseHumanE",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -595,7 +595,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Evelynn",
+                ChampionName = "Evelynn",
                 SpellName = "EvelynnR",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotCircle,
@@ -616,7 +616,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Ezreal",
+                ChampionName = "Ezreal",
                 SpellName = "EzrealMysticShot",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -636,7 +636,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Ezreal",
+                ChampionName = "Ezreal",
                 SpellName = "EzrealEssenceFlux",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -653,7 +653,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Ezreal",
+                ChampionName = "Ezreal",
                 SpellName = "EzrealTrueshotBarrage",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -675,7 +675,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Fizz",
+                ChampionName = "Fizz",
                 SpellName = "FizzMarinerDoom",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -697,7 +697,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Galio",
+                ChampionName = "Galio",
                 SpellName = "GalioResoluteSmite",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotCircle,
@@ -714,7 +714,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Galio",
+                ChampionName = "Galio",
                 SpellName = "GalioIdolOfDurand",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotCircle,
@@ -735,7 +735,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Gragas",
+                ChampionName = "Gragas",
                 SpellName = "GragasQ",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotCircle,
@@ -755,7 +755,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Gragas",
+                ChampionName = "Gragas",
                 SpellName = "GragasE",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -774,7 +774,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Gragas",
+                ChampionName = "Gragas",
                 SpellName = "GragasR",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotCircle,
@@ -795,7 +795,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Graves",
+                ChampionName = "Graves",
                 SpellName = "GravesClusterShot",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -812,7 +812,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Graves",
+                ChampionName = "Graves",
                 SpellName = "GravesChargeShot",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -833,7 +833,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Heimerdinger",
+                ChampionName = "Heimerdinger",
                 SpellName = "Heimerdingerw",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -850,7 +850,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Heimerdinger",
+                ChampionName = "Heimerdinger",
                 SpellName = "HeimerdingerE",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotCircle,
@@ -871,7 +871,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Irelia",
+                ChampionName = "Irelia",
                 SpellName = "IreliaTranscendentBlades",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -892,7 +892,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Janna",
+                ChampionName = "Janna",
                 SpellName = "JannaQ",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -913,7 +913,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "JarvanIV",
+                ChampionName = "JarvanIV",
                 SpellName = "JarvanIVDragonStrike",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -930,7 +930,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "JarvanIV",
+                ChampionName = "JarvanIV",
                 SpellName = "JarvanIVDemacianStandard",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotCircle,
@@ -951,7 +951,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Jayce",
+                ChampionName = "Jayce",
                 SpellName = "jayceshockblast",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -969,7 +969,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Jayce",
+                ChampionName = "Jayce",
                 SpellName = "JayceQAccel",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -992,7 +992,7 @@ namespace Evade
             //TODO: Detect the animation from fow instead of the missile.
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Jinx",
+                ChampionName = "Jinx",
                 SpellName = "JinxW",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1010,7 +1010,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Jinx",
+                ChampionName = "Jinx",
                 SpellName = "JinxRWrapper",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1032,7 +1032,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Karma",
+                ChampionName = "Karma",
                 SpellName = "KarmaQ",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1050,7 +1050,7 @@ namespace Evade
             //TODO: add the circle at the end.
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Karma",
+                ChampionName = "Karma",
                 SpellName = "KarmaQMantra",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1072,7 +1072,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Karthus",
+                ChampionName = "Karthus",
                 SpellName = "KarthusLayWasteA2",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotCircle,
@@ -1089,7 +1089,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Karthus",
+                ChampionName = "Karthus",
                 SpellName = "KarthusLayWasteA1",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotCircle,
@@ -1106,7 +1106,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Karthus",
+                ChampionName = "Karthus",
                 SpellName = "KarthusLayWasteA3",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotCircle,
@@ -1127,7 +1127,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Kassadin",
+                ChampionName = "Kassadin",
                 SpellName = "RiftWalk",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotCircle,
@@ -1148,7 +1148,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Kennen",
+                ChampionName = "Kennen",
                 SpellName = "KennenShurikenHurlMissile1",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1170,7 +1170,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Khazix",
+                ChampionName = "Khazix",
                 SpellName = "khazixwlong",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1188,7 +1188,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Khazix",
+                ChampionName = "Khazix",
                 SpellName = "KhazixW",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1206,7 +1206,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Khazix",
+                ChampionName = "Khazix",
                 SpellName = "KhazixE",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotCircle,
@@ -1227,7 +1227,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "KogMaw",
+                ChampionName = "KogMaw",
                 SpellName = "KogMawQ",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1245,7 +1245,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "KogMaw",
+                ChampionName = "KogMaw",
                 SpellName = "KogMawVoidOoze",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1262,7 +1262,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "KogMaw",
+                ChampionName = "KogMaw",
                 SpellName = "KogMawLivingArtillery",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotCircle,
@@ -1283,7 +1283,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Leblanc",
+                ChampionName = "Leblanc",
                 SpellName = "LeblancSlide",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotCircle,
@@ -1300,7 +1300,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Leblanc",
+                ChampionName = "Leblanc",
                 SpellName = "LeblancSlideM",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotCircle,
@@ -1317,7 +1317,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Leblanc",
+                ChampionName = "Leblanc",
                 SpellName = "LeblancSoulShackle",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1335,7 +1335,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Leblanc",
+                ChampionName = "Leblanc",
                 SpellName = "LeblancSoulShackleM",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1357,7 +1357,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "LeeSin",
+                ChampionName = "LeeSin",
                 SpellName = "BlindMonkQOne",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1379,7 +1379,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Leona",
+                ChampionName = "Leona",
                 SpellName = "LeonaZenithBlade",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1396,7 +1396,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Leona",
+                ChampionName = "Leona",
                 SpellName = "LeonaSolarFlare",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotCircle,
@@ -1417,7 +1417,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Lucian",
+                ChampionName = "Lucian",
                 SpellName = "LucianQ",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotLine,
@@ -1438,7 +1438,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Lulu",
+                ChampionName = "Lulu",
                 SpellName = "LuluQ",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1459,7 +1459,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Lux",
+                ChampionName = "Lux",
                 SpellName = "LuxLightBinding",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1477,7 +1477,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Lux",
+                ChampionName = "Lux",
                 SpellName = "LuxLightStrikeKugel",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotCircle,
@@ -1497,7 +1497,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Lux",
+                ChampionName = "Lux",
                 SpellName = "LuxMaliceCannon",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotLine,
@@ -1518,7 +1518,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Malphite",
+                ChampionName = "Malphite",
                 SpellName = "UFSlash",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotCircle,
@@ -1541,7 +1541,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Malzahar",
+                ChampionName = "Malzahar",
                 SpellName = "AlZaharCalloftheVoid",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotLine,
@@ -1562,7 +1562,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Morgana",
+                ChampionName = "Morgana",
                 SpellName = "DarkBindingMissile",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1584,7 +1584,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Nami",
+                ChampionName = "Nami",
                 SpellName = "NamiQ",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotCircle,
@@ -1601,7 +1601,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Nami",
+                ChampionName = "Nami",
                 SpellName = "NamiR",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1622,7 +1622,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Nautilus",
+                ChampionName = "Nautilus",
                 SpellName = "NautilusAnchorDrag",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1644,7 +1644,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Nidalee",
+                ChampionName = "Nidalee",
                 SpellName = "JavelinToss",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1666,7 +1666,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Olaf",
+                ChampionName = "Olaf",
                 SpellName = "OlafAxeThrowCast",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1689,7 +1689,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Orianna",
+                ChampionName = "Orianna",
                 SpellName = "OriannaQs",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1706,7 +1706,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Orianna",
+                ChampionName = "Orianna",
                 SpellName = "OrianaDissonanceCommand",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotCircle,
@@ -1724,7 +1724,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Orianna",
+                ChampionName = "Orianna",
                 SpellName = "OriannasE",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1741,7 +1741,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Orianna",
+                ChampionName = "Orianna",
                 SpellName = "OrianaDetonateCommand",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotCircle,
@@ -1763,7 +1763,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Quinn",
+                ChampionName = "Quinn",
                 SpellName = "QuinnQ",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1785,7 +1785,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Rengar",
+                ChampionName = "Rengar",
                 SpellName = "RengarE",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1809,7 +1809,7 @@ namespace Evade
 
             /* Spells.Add(new SpellData
             {
-                BaseSkinName = "Riven",
+                ChampionName = "Riven",
                 SpellName = "rivenizunablade",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotCone,
@@ -1831,7 +1831,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Rumble",
+                ChampionName = "Rumble",
                 SpellName = "RumbleGrenade",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1853,7 +1853,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Sejuani",
+                ChampionName = "Sejuani",
                 SpellName = "SejuaniArcticAssault",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1871,7 +1871,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Sejuani",
+                ChampionName = "Sejuani",
                 SpellName = "SejuaniGlacialPrisonStart",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1893,7 +1893,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Shen",
+                ChampionName = "Shen",
                 SpellName = "ShenShadowDash",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1915,7 +1915,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Shyvana",
+                ChampionName = "Shyvana",
                 SpellName = "ShyvanaFireball",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1932,7 +1932,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Shyvana",
+                ChampionName = "Shyvana",
                 SpellName = "ShyvanaTransformCast",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1954,7 +1954,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Sivir",
+                ChampionName = "Sivir",
                 SpellName = "SivirQReturn",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1973,7 +1973,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Sivir",
+                ChampionName = "Sivir",
                 SpellName = "SivirQ",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -1994,7 +1994,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Skarner",
+                ChampionName = "Skarner",
                 SpellName = "SkarnerFracture",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2015,7 +2015,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Sona",
+                ChampionName = "Sona",
                 SpellName = "SonaCrescendo",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2036,7 +2036,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Swain",
+                ChampionName = "Swain",
                 SpellName = "SwainShadowGrasp",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotCircle,
@@ -2057,7 +2057,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Syndra",
+                ChampionName = "Syndra",
                 SpellName = "SyndraQ",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotCircle,
@@ -2074,7 +2074,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Syndra",
+                ChampionName = "Syndra",
                 SpellName = "syndrawcast",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotCircle,
@@ -2091,7 +2091,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Syndra",
+                ChampionName = "Syndra",
                 SpellName = "syndrae5",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2109,7 +2109,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Syndra",
+                ChampionName = "Syndra",
                 SpellName = "SyndraE",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2131,7 +2131,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Thresh",
+                ChampionName = "Thresh",
                 SpellName = "ThreshQ",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2149,7 +2149,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Thresh",
+                ChampionName = "Thresh",
                 SpellName = "ThreshEFlay",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2171,7 +2171,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Tristana",
+                ChampionName = "Tristana",
                 SpellName = "RocketJump",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotCircle,
@@ -2192,7 +2192,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Tryndamere",
+                ChampionName = "Tryndamere",
                 SpellName = "slashCast",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2213,7 +2213,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "TwistedFate",
+                ChampionName = "TwistedFate",
                 SpellName = "WildCards",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2236,7 +2236,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Twitch",
+                ChampionName = "Twitch",
                 SpellName = "TwitchVenomCask",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotCircle,
@@ -2257,7 +2257,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Urgot",
+                ChampionName = "Urgot",
                 SpellName = "UrgotHeatseekingLineMissile",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2275,7 +2275,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Urgot",
+                ChampionName = "Urgot",
                 SpellName = "UrgotPlasmaGrenade",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotCircle,
@@ -2296,7 +2296,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Varus",
+                ChampionName = "Varus",
                 SpellName = "VarusQMissilee",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2313,7 +2313,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Varus",
+                ChampionName = "Varus",
                 SpellName = "VarusE",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotCircle,
@@ -2330,7 +2330,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Varus",
+                ChampionName = "Varus",
                 SpellName = "VarusR",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2352,7 +2352,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Veigar",
+                ChampionName = "Veigar",
                 SpellName = "VeigarDarkMatter",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotCircle,
@@ -2368,7 +2368,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Veigar",
+                ChampionName = "Veigar",
                 SpellName = "VeigarEventHorizon",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotRing,
@@ -2394,7 +2394,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Velkoz",
+                ChampionName = "Velkoz",
                 SpellName = "VelkozQ",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2412,7 +2412,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Velkoz",
+                ChampionName = "Velkoz",
                 SpellName = "VelkozQSplit",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2430,7 +2430,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Velkoz",
+                ChampionName = "Velkoz",
                 SpellName = "VelkozW",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2447,7 +2447,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Velkoz",
+                ChampionName = "Velkoz",
                 SpellName = "VelkozE",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotCircle,
@@ -2468,7 +2468,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Vi",
+                ChampionName = "Vi",
                 SpellName = "Vi-q",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2489,7 +2489,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Viktor",
+                ChampionName = "Viktor",
                 SpellName = "Laser",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2510,7 +2510,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Xerath",
+                ChampionName = "Xerath",
                 SpellName = "xeratharcanopulse2",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotLine,
@@ -2527,7 +2527,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Xerath",
+                ChampionName = "Xerath",
                 SpellName = "XerathArcaneBarrage2",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotCircle,
@@ -2544,7 +2544,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Xerath",
+                ChampionName = "Xerath",
                 SpellName = "XerathMageSpear",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2562,7 +2562,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Xerath",
+                ChampionName = "Xerath",
                 SpellName = "xerathrmissilewrapper",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotCircle,
@@ -2583,7 +2583,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Yasuo",
+                ChampionName = "Yasuo",
                 SpellName = "yasuoq2",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotLine,
@@ -2601,7 +2601,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Yasuo",
+                ChampionName = "Yasuo",
                 SpellName = "yasuoq3w",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2618,7 +2618,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Yasuo",
+                ChampionName = "Yasuo",
                 SpellName = "yasuoq",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotLine,
@@ -2640,7 +2640,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Zac",
+                ChampionName = "Zac",
                 SpellName = "ZacQ",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotLine,
@@ -2661,7 +2661,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Zed",
+                ChampionName = "Zed",
                 SpellName = "ZedShuriken",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2678,7 +2678,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Zed",
+                ChampionName = "Zed",
                 SpellName = "ZedShurikenClone",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2701,7 +2701,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Ziggs",
+                ChampionName = "Ziggs",
                 SpellName = "ZiggsQ2",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotCircle,
@@ -2720,7 +2720,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Ziggs",
+                ChampionName = "Ziggs",
                 SpellName = "ZiggsQ3",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotCircle,
@@ -2739,7 +2739,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Ziggs",
+                ChampionName = "Ziggs",
                 SpellName = "ZiggsQ",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotCircle,
@@ -2758,7 +2758,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Ziggs",
+                ChampionName = "Ziggs",
                 SpellName = "ZiggsW",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotCircle,
@@ -2776,7 +2776,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Ziggs",
+                ChampionName = "Ziggs",
                 SpellName = "ZiggsE",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotCircle,
@@ -2794,7 +2794,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Ziggs",
+                ChampionName = "Ziggs",
                 SpellName = "ZiggsR",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotCircle,
@@ -2816,7 +2816,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Zyra",
+                ChampionName = "Zyra",
                 SpellName = "ZyraQFissure",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotCircle,
@@ -2833,7 +2833,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Zyra",
+                ChampionName = "Zyra",
                 SpellName = "ZyraGraspingRoots",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2850,7 +2850,7 @@ namespace Evade
 
             Spells.Add(new SpellData
             {
-                BaseSkinName = "Zyra",
+                ChampionName = "Zyra",
                 SpellName = "zyrapassivedeathmanager",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
@@ -2892,11 +2892,11 @@ namespace Evade
             return null;
         }
 
-        public static SpellData GetBySpeed(string baseSkinName, int speed, int id = -1)
+        public static SpellData GetBySpeed(string ChampionName, int speed, int id = -1)
         {
             foreach (var spellData in Spells)
             {
-                if (spellData.BaseSkinName == baseSkinName && spellData.MissileSpeed == speed &&
+                if (spellData.ChampionName == ChampionName && spellData.MissileSpeed == speed &&
                     (spellData.Id == -1 || id == spellData.Id))
                     return spellData;
             }

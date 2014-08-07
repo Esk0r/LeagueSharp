@@ -21,7 +21,7 @@ namespace Evade
 
             #region Sivir
 
-            if (ObjectManager.Player.BaseSkinName == "Sivir")
+            if (ObjectManager.Player.ChampionName == "Sivir")
             {
                 spell = new ShieldData("Sivir E", SpellSlot.E, 100, 1, true);
                 Spells.Add(spell);
@@ -31,7 +31,7 @@ namespace Evade
 
             #region Nocturne
 
-            if (ObjectManager.Player.BaseSkinName == "Nocturne")
+            if (ObjectManager.Player.ChampionName == "Nocturne")
             {
                 spell = new ShieldData("Nocturne E", SpellSlot.E, 100, 1, true);
                 Spells.Add(spell);
@@ -49,7 +49,7 @@ namespace Evade
 
             #region Caitlyn
 
-            if (ObjectManager.Player.BaseSkinName == "Caitlyn")
+            if (ObjectManager.Player.ChampionName == "Caitlyn")
             {
                 spell = new DashData("Caitlyn E", SpellSlot.E, 490, true, 250, 1000, 3);
                 spell.Invert = true;
@@ -60,7 +60,7 @@ namespace Evade
 
             #region Gragas
 
-            if (ObjectManager.Player.BaseSkinName == "Gragas")
+            if (ObjectManager.Player.ChampionName == "Gragas")
             {
                 spell = new DashData("Gragas E", SpellSlot.E, 600, false, 250, 911, 3);
                 Spells.Add(spell);
@@ -70,7 +70,7 @@ namespace Evade
 
             #region Nidalee
 
-            if (ObjectManager.Player.BaseSkinName == "Nidalee")
+            if (ObjectManager.Player.ChampionName == "Nidalee")
             {
                 spell = new DashData("Nidalee W", SpellSlot.W, 375, true, 250, 943, 3);
                 spell.CheckSpellName = "Pounce";
@@ -81,7 +81,7 @@ namespace Evade
 
             #region Riven
 
-            if (ObjectManager.Player.BaseSkinName == "Riven")
+            if (ObjectManager.Player.ChampionName == "Riven")
             {
                 spell = new DashData("Riven Q", SpellSlot.Q, 222, true, 250, 560, 3);
                 spell.RequiresPreMove = true;
@@ -95,7 +95,7 @@ namespace Evade
 
             #region Tristana
 
-            if (ObjectManager.Player.BaseSkinName == "Tristana")
+            if (ObjectManager.Player.ChampionName == "Tristana")
             {
                 spell = new DashData("Tristana W", SpellSlot.W, 900, true, 300, 800, 5);
                 Spells.Add(spell);
@@ -105,7 +105,7 @@ namespace Evade
 
             #region Tryndamare
 
-            if (ObjectManager.Player.BaseSkinName == "Tryndamere")
+            if (ObjectManager.Player.ChampionName == "Tryndamere")
             {
                 spell = new DashData("Tryndamere E", SpellSlot.E, 650, true, 250, 900, 3);
                 Spells.Add(spell);
@@ -115,7 +115,7 @@ namespace Evade
 
             #region Vayne
 
-            if (ObjectManager.Player.BaseSkinName == "Vayne")
+            if (ObjectManager.Player.ChampionName == "Vayne")
             {
                 spell = new DashData("Vayne Q", SpellSlot.Q, 300, true, 250, 900, 2);
                 Spells.Add(spell);
@@ -129,7 +129,7 @@ namespace Evade
 
             #region Ezreal
 
-            if (ObjectManager.Player.BaseSkinName == "Ezreal")
+            if (ObjectManager.Player.ChampionName == "Ezreal")
             {
                 spell = new BlinkData("Ezreal E", SpellSlot.E, 450, 350, 3);
                 Spells.Add(spell);
@@ -139,7 +139,7 @@ namespace Evade
 
             #region Kassadin
 
-            if (ObjectManager.Player.BaseSkinName == "Kassadin")
+            if (ObjectManager.Player.ChampionName == "Kassadin")
             {
                 spell = new BlinkData("Kassadin R", SpellSlot.R, 700, 200, 5);
                 Spells.Add(spell);
@@ -149,7 +149,7 @@ namespace Evade
 
             #region Katarina
 
-            if (ObjectManager.Player.BaseSkinName == "Katarina")
+            if (ObjectManager.Player.ChampionName == "Katarina")
             {
                 spell = new BlinkData("Katarina E", SpellSlot.E, 700, 100, 3);
                 spell.ValidTargets = new[]
@@ -164,7 +164,7 @@ namespace Evade
 
             #region Shaco
 
-            if (ObjectManager.Player.BaseSkinName == "Shaco")
+            if (ObjectManager.Player.ChampionName == "Shaco")
             {
                 spell = new BlinkData("Shaco Q", SpellSlot.Q, 400, 250, 3);
                 Spells.Add(spell);
@@ -178,7 +178,7 @@ namespace Evade
 
             #region Elise
 
-            if (ObjectManager.Player.BaseSkinName == "Elise")
+            if (ObjectManager.Player.ChampionName == "Elise")
             {
                 spell = new InvulnerabilityData("Elise E", SpellSlot.E, 250, 3);
                 spell.CheckSpellName = "EliseSpiderEInitial";
@@ -190,7 +190,7 @@ namespace Evade
 
             #region Fizz
 
-            if (ObjectManager.Player.BaseSkinName == "Fizz")
+            if (ObjectManager.Player.ChampionName == "Fizz")
             {
                 spell = new InvulnerabilityData("Fizz E", SpellSlot.E, 250, 3);
                 Spells.Add(spell);
@@ -200,7 +200,7 @@ namespace Evade
 
             #region MasterYi
 
-            if (ObjectManager.Player.BaseSkinName == "MasterYi")
+            if (ObjectManager.Player.ChampionName == "MasterYi")
             {
                 spell = new InvulnerabilityData("MasterYi Q", SpellSlot.Q, 250, 3);
                 spell.MaxRange = 600;
@@ -227,7 +227,7 @@ namespace Evade
 
             #region Janna
 
-            if (ObjectManager.Player.BaseSkinName == "Janna")
+            if (ObjectManager.Player.ChampionName == "Janna")
             {
                 spell = new ShieldData("Janna E", SpellSlot.E, 100, 1);
                 spell.CanShieldAllies = true;
@@ -239,7 +239,7 @@ namespace Evade
 
             #region Morgana
 
-            if (ObjectManager.Player.BaseSkinName == "Morgana")
+            if (ObjectManager.Player.ChampionName == "Morgana")
             {
                 spell = new ShieldData("Morgana E", SpellSlot.E, 100, 3);
                 spell.CanShieldAllies = true;
