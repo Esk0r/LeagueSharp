@@ -55,6 +55,9 @@ namespace Marksman
             var items = Config.AddSubMenu(new Menu("Items", "Items"));
             items.AddItem(new MenuItem("BOTRK", "BOTRK").SetValue(true));
             items.AddItem(new MenuItem("GHOSTBLADE", "Ghostblade").SetValue(true));
+            items.AddItem(
+                new MenuItem("UseItemsMode", "Use items on").SetValue(
+                    new StringList(new[] { "No", "Mixed mode", "Combo mode", "Both" }, 2)));
 
             var combo = Config.AddSubMenu(new Menu("Combo", "Combo"));
             CClass.ComboMenu(combo);
@@ -107,9 +110,16 @@ namespace Marksman
             CClass.HarassActive = CClass.Config.Item("Farm").GetValue<KeyBind>().Active;
             CClass.Game_OnGameUpdate(args);
 
+
+            var useItemModes = Config.Item("UseItemsMode").GetValue<StringList>().SelectedIndex;
+
             //Items
-            if (CClass.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo &&
-                CClass.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Mixed)
+            if (
+                !((CClass.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo &&
+                   (useItemModes == 2 || useItemModes == 3))
+                  ||
+                  (CClass.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Mixed &&
+                   (useItemModes == 1 || useItemModes == 3))))
                 return;
 
             var botrk = Config.Item("BOTRK").GetValue<bool>();
