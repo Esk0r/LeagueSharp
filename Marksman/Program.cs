@@ -39,6 +39,9 @@ namespace Marksman
             if (ObjectManager.Player.ChampionName == "Sivir")
                 CClass = new Sivir();
 
+            if (ObjectManager.Player.ChampionName == "Teemo")
+                CClass = new Teemo();
+
             if (ObjectManager.Player.ChampionName == "Tristana")
                 CClass = new Tristana();
 
@@ -95,6 +98,7 @@ namespace Marksman
             return;
 
             var y = 10;
+
             foreach (
                 var t in
                     ObjectManager.Player.Buffs.Select(
