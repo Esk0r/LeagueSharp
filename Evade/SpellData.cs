@@ -41,10 +41,10 @@ namespace Evade
         {
         }
 
-        public SpellData(string ChampionName, string spellName, SpellSlot slot, SkillShotType type, int delay, int range,
+        public SpellData(string championName, string spellName, SpellSlot slot, SkillShotType type, int delay, int range,
             int radius, int missileSpeed, bool addHitbox, bool fixedRange, int defaultDangerValue)
         {
-            ChampionName = ChampionName;
+            ChampionName = championName;
             SpellName = spellName;
             Slot = slot;
             Type = type;
