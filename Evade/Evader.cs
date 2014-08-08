@@ -45,45 +45,53 @@ namespace Evade
                 {
                     var sideStart = poly.Points[i];
                     var sideEnd = poly.Points[(i == poly.Points.Count - 1) ? 0 : i + 1];
-                    var direction = (sideEnd - sideStart).Normalized();
+                    
                     var originalCandidate = myPosition.ProjectOn(sideStart, sideEnd).SegmentPoint;
-                    var dd = Vector2.DistanceSquared(originalCandidate, myPosition);
+                    var distanceToEvadePoint = Vector2.DistanceSquared(originalCandidate, myPosition);
+                    
 
-                    var s = (dd < 1000 * 1000 && dd > 90 * 90) ? 0 : Config.DiagonalEvadePointsCount;
-
-                    for (var j = -s; j <= s; j++)
+                    if (distanceToEvadePoint < 600 * 600)
                     {
-                        var candidate = originalCandidate + j * Config.DiagonalEvadePointsStep * direction;
-                        var pathToPoint = ObjectManager.Player.GetPath(candidate.To3D()).To2DList();
+                        var sideDistance = Vector2.DistanceSquared(sideEnd, sideStart);
+                        var direction = (sideEnd - sideStart).Normalized();
 
-                        if (!isBlink)
+                        var s = (distanceToEvadePoint < 200 * 200 && sideDistance > 90 * 90)
+                            ? Config.DiagonalEvadePointsCount
+                            : 0;
+                        for (var j = -s; j <= s; j++)
                         {
-                            if (Program.IsSafePath(pathToPoint, Config.EvadingFirstTimeOffset, speed, delay).IsSafe)
-                            {
-                                goodCandidates.Add(candidate);
-                            }
+                            var candidate = originalCandidate + j * Config.DiagonalEvadePointsStep * direction;
+                            var pathToPoint = ObjectManager.Player.GetPath(candidate.To3D()).To2DList();
 
-                            if (
-                                Program.IsSafePath(pathToPoint, Config.EvadingSecondTimeOffset, speed, delay).IsSafe &&
-                                j == 0)
+                            if (!isBlink)
                             {
-                                badCandidates.Add(candidate);
-                            }
-                        }
-                        else
-                        {
-                            if (Program.IsSafeToBlink(pathToPoint[pathToPoint.Count - 1],
-                                Config.EvadingFirstTimeOffset,
-                                delay))
-                            {
-                                goodCandidates.Add(candidate);
-                            }
+                                if (Program.IsSafePath(pathToPoint, Config.EvadingFirstTimeOffset, speed, delay).IsSafe)
+                                {
+                                    goodCandidates.Add(candidate);
+                                }
 
-                            if (Program.IsSafeToBlink(pathToPoint[pathToPoint.Count - 1],
-                                Config.EvadingSecondTimeOffset,
-                                delay))
+                                if (
+                                    Program.IsSafePath(pathToPoint, Config.EvadingSecondTimeOffset, speed, delay).IsSafe &&
+                                    j == 0)
+                                {
+                                    badCandidates.Add(candidate);
+                                }
+                            }
+                            else
                             {
-                                badCandidates.Add(candidate);
+                                if (Program.IsSafeToBlink(pathToPoint[pathToPoint.Count - 1],
+                                    Config.EvadingFirstTimeOffset,
+                                    delay))
+                                {
+                                    goodCandidates.Add(candidate);
+                                }
+
+                                if (Program.IsSafeToBlink(pathToPoint[pathToPoint.Count - 1],
+                                    Config.EvadingSecondTimeOffset,
+                                    delay))
+                                {
+                                    badCandidates.Add(candidate);
+                                }
                             }
                         }
                     }
