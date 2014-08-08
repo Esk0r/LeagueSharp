@@ -24,22 +24,25 @@ namespace Marksman
             Config = new Menu("Marksman", "Marksman", true);
 
             CClass = new Champion();
-            if (ObjectManager.Player.BaseSkinName == "Ezreal")
+            if (ObjectManager.Player.ChampionName == "Ezreal")
                 CClass = new Ezreal();
 
-            if (ObjectManager.Player.BaseSkinName == "Graves")
+            if (ObjectManager.Player.ChampionName == "Graves")
                 CClass = new Graves();
 
-            if (ObjectManager.Player.BaseSkinName == "Jinx")
+            if (ObjectManager.Player.ChampionName == "Jinx")
                 CClass = new Jinx();
 
-            if (ObjectManager.Player.BaseSkinName == "Sivir")
+            if (ObjectManager.Player.ChampionName == "KogMaw")
+                CClass = new Kogmaw();
+
+            if (ObjectManager.Player.ChampionName == "Sivir")
                 CClass = new Sivir();
 
-            if (ObjectManager.Player.BaseSkinName == "Tristana")
+            if (ObjectManager.Player.ChampionName == "Tristana")
                 CClass = new Tristana();
 
-            if (ObjectManager.Player.BaseSkinName == "Vayne")
+            if (ObjectManager.Player.ChampionName == "Vayne")
                 CClass = new Vayne();
 
             CClass.Id = ObjectManager.Player.BaseSkinName;
