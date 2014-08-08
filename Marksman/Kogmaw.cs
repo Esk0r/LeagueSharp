@@ -80,8 +80,8 @@ namespace Marksman
                 var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
                 if (t != null)
                 {
-                    Q.Cast(t, false, false);
-                    return;
+                    if (Q.Cast(t) == Spell.CastStates.SuccessfullyCasted)
+                        return;
                 }
             }
 
@@ -118,8 +118,8 @@ namespace Marksman
 
             if (useQ && Q.IsReady())
             {
-                Q.Cast(target, false, false);
-                return;
+                if (Q.Cast(target) == Spell.CastStates.SuccessfullyCasted)
+                    return;
             }
 
             if (useE && E.IsReady())
@@ -135,7 +135,7 @@ namespace Marksman
         private static int GetUltimateBuffStacks()
         {
             return (from buff in ObjectManager.Player.Buffs
-                where buff != null && buff.DisplayName.ToLower() == "kogmawlivingartillery"
+                where buff.DisplayName.ToLower() == "kogmawlivingartillery"
                 select buff.Count).FirstOrDefault();
         }
 
