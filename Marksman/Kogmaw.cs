@@ -77,7 +77,7 @@ namespace Marksman
 
             if (useQ && Q.IsReady())
             {
-                var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Magical);
                 if (t != null)
                 {
                     if (Q.Cast(t) == Spell.CastStates.SuccessfullyCasted)
@@ -87,7 +87,7 @@ namespace Marksman
 
             if (useE && E.IsReady())
             {
-                var t = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                var t = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Magical);
                 if (t != null)
                 {
                     E.Cast(t, false, true);
@@ -97,7 +97,7 @@ namespace Marksman
 
             if (useR && R.IsReady() && UltimateBuffStacks < rLim)
             {
-                var t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+                var t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Magical);
                 if (t != null)
                     R.Cast(t, false, true);
             }

@@ -22,7 +22,7 @@ namespace Evade
         private static Vector2 _evadePoint;
 
         public static bool NoSolutionFound = false;
-
+        
         public static Vector2 EvadeToPoint = new Vector2();
 
         public static Vector2 AfterEvadePoint = new Vector2();
@@ -255,6 +255,9 @@ namespace Evade
                 skillshot.Game_OnGameUpdate();
             }
 
+            //Evading disabled
+            if (!Config.Menu.Item("Enabled").GetValue<KeyBind>().Active) return;
+
             //Avoid sending move/cast packets while dead.
             if (ObjectManager.Player.IsDead) return;
 
@@ -374,6 +377,9 @@ namespace Evade
                 CutPathPoint = new Vector2();
                 //Don't block the movement packets if cant find an evade point.
                 if (NoSolutionFound) return;
+
+                //Evading disabled
+                if (!Config.Menu.Item("Enabled").GetValue<KeyBind>().Active) return;
 
                 //Spell Shielded
                 if (IsSpellShielded(ObjectManager.Player))
