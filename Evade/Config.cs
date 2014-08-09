@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using System.Drawing;
 using LeagueSharp;
 using LeagueSharp.Common;
@@ -12,7 +13,7 @@ namespace Evade
     {
         public const bool PrintSpellData = false;
         public const bool TestOnAllies = false;
-        public const int SkillShotsExtraRadius = 15;
+        public const int SkillShotsExtraRadius = 9;
         public const int SkillShotsExtraRange = 20;
         public const int GridSize = 10;
         public const int ExtraEvadeDistance = 15;
@@ -94,6 +95,13 @@ namespace Evade
             }
             Menu.AddSubMenu(shielding);
 
+            var collision = new Menu("Collision BETA :^(", "Collision");
+            collision.AddItem(new MenuItem("MinionCollision", "Minion collision").SetValue(true));
+            collision.AddItem(new MenuItem("HeroCollision", "Hero collision").SetValue(true));
+            collision.AddItem(new MenuItem("YasuoCollision", "Yasuo wall collision").SetValue(true));
+            collision.AddItem(new MenuItem("EnableCollision", "Enabled").SetValue(true));
+            Menu.AddSubMenu(collision);
+
             var drawings = new Menu("Drawings", "Drawings");
             drawings.AddItem(new MenuItem("EnabledColor", "Enabled spell color").SetValue(Color.White));
             drawings.AddItem(new MenuItem("DisabledColor", "Disabled spell color").SetValue(Color.Red));
@@ -110,6 +118,9 @@ namespace Evade
                 new MenuItem("OnlyDangerous", "Dodge only dangerous").SetValue(new KeyBind(32, KeyBindType.Press)));
 
             Menu.AddToMainMenu();
+
         }
+
+
     }
 }

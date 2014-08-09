@@ -11,6 +11,7 @@ namespace Evade
         public bool AddHitbox;
         public string ChampionName;
         public bool CanBeRemoved = false;
+        public CollisionObjectTypes[] CollisionObjects = {};
         public bool Centered;
         public int DangerValue;
         public int Delay;
@@ -27,11 +28,13 @@ namespace Evade
         public bool MissileFollowsUnit;
         public int MissileSpeed;
         public string MissileSpellName;
+        public string[] ExtraMissileNames = { };
         public float MultipleAngle;
         public int MultipleNumber = -1;
         public int RingRadius;
         public SpellSlot Slot;
         public string SpellName;
+        public string[] ExtraSpellNames = {};
         public string ToggleParticleName = "";
         public SkillShotType Type;
         private int _radius;
@@ -73,6 +76,7 @@ namespace Evade
             set { _radius = value; }
         }
 
+        public int RawRadius { get { return _radius; } }
 
         public int Range
         {

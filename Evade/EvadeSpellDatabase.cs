@@ -68,6 +68,17 @@ namespace Evade
 
             #endregion
 
+            #region LeeSin
+
+            if (ObjectManager.Player.ChampionName == "LeeSin")
+            {
+                spell = new DashData("LeeSin W", SpellSlot.W, 700, false, 250, 911, 3);
+                spell.ValidTargets = new[] { SpellValidTargets.AllyChampions, SpellValidTargets.AllyMinions, SpellValidTargets.AllyWards };
+                Spells.Add(spell);
+            }
+
+            #endregion
+
             #region Nidalee
 
             if (ObjectManager.Player.ChampionName == "Nidalee")

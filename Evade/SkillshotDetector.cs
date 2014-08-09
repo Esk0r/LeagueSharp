@@ -12,6 +12,7 @@ namespace Evade
     internal static class SkillshotDetector
     {
         public delegate void OnDetectSkillshotH(Skillshot skillshot);
+        public delegate void OnDeleteMissileH(Skillshot skillshot, Obj_SpellMissile missile);
 
         static SkillshotDetector()
         {
@@ -69,10 +70,8 @@ namespace Evade
 
             var unit = missile.SpellCaster;
             if (!unit.IsValid || (unit.Team == ObjectManager.Player.Team && !Config.TestOnAllies)) return;
-
             var spellData = SpellDatabase.GetByMissileName(missile.SData.Name);
             if (spellData == null) return;
-            
             var missilePosition = missile.Position.To2D();
             var unitPosition = missile.StartPosition.To2D();
             var endPos = missile.EndPosition.To2D();
@@ -102,16 +101,33 @@ namespace Evade
             if (!unit.IsValid || (unit.Team == ObjectManager.Player.Team && !Config.TestOnAllies)) return;
 
             var spellName = missile.SData.Name;
+
+            if (OnDeleteMissile != null)
+                foreach (var skillshot in Program.DetectedSkillshots)
+                    if (skillshot.SpellData.MissileSpellName == spellName &&
+                        skillshot.End.Distance(missile.EndPosition) < 150 && skillshot.SpellData.CanBeRemoved)
+                    {
+                        OnDeleteMissile(skillshot, missile);
+                        break;
+                    }
+ 
+                
+
             Program.DetectedSkillshots.RemoveAll(
                 skillshot =>
                     skillshot.SpellData.MissileSpellName == spellName &&
-                    skillshot.End.Distance(missile.EndPosition) < 50 && skillshot.SpellData.CanBeRemoved);
+                    skillshot.End.Distance(missile.EndPosition) < 150 && skillshot.SpellData.CanBeRemoved);
         }
 
         /// <summary>
         ///     This event is fired after a skillshot is detected.
         /// </summary>
         public static event OnDetectSkillshotH OnDetectSkillshot;
+
+        /// <summary>
+        ///     This event is fired after a skillshot missile collides.
+        /// </summary>
+        public static event OnDeleteMissileH OnDeleteMissile;
 
 
         private static void TriggerOnDetectSkillshot(DetectionType detectionType, SpellData spellData, int startT,

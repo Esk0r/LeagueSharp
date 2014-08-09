@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collision.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="EvadeSpellData.cs" />
     <Compile Include="EvadeSpellDatabase.cs" />

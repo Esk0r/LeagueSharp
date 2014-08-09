@@ -124,11 +124,7 @@ namespace Evade
 
 
                     case SpellValidTargets.AllyMinions:
-
-                        foreach (var minion in ObjectManager.Get<Obj_AI_Minion>())
-                            if (minion.IsValidTarget(range, false) && minion.Team == ObjectManager.Player.Team)
-                                allTargets.Add(minion);
-
+                        allTargets = MinionManager.GetMinions(ObjectManager.Player.Position, range, MinionTypes.All, MinionTeam.Ally);
                         break;
 
                     case SpellValidTargets.AllyWards:
@@ -146,11 +142,7 @@ namespace Evade
                         break;
 
                     case SpellValidTargets.EnemyMinions:
-
-                        foreach (var minion in ObjectManager.Get<Obj_AI_Minion>())
-                            if (minion.IsValidTarget(range))
-                                allTargets.Add(minion);
-
+                        allTargets = MinionManager.GetMinions(ObjectManager.Player.Position, range, MinionTypes.All, MinionTeam.NotAlly);
                         break;
 
                     case SpellValidTargets.EnemyWards:

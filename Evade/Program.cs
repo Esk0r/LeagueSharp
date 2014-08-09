@@ -1,4 +1,23 @@
-﻿#region
+﻿/*TODO List:
+ * -Add lee sin W etc
+ * -Add heal support.
+ * -Add more shields.
+ * -Add more dashes.
+ * -Add the option to not use the evade stuff unless health < X%.
+ * -Detect minion / wall collision in real time.
+ * -Add something to select priorities.
+ * -Add "slim" Drawings.
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * */
+
+
+#region
 
 using System;
 using System.Collections.Generic;
@@ -84,7 +103,7 @@ namespace Evade
                 return true;
 
             //Nocturnes E
-            if (unit.LastCastedSpellName() == "BLAHLBAHB" && (Environment.TickCount - unit.LastCastedSpellT()) < 300)
+            if (unit.LastCastedSpellName() == "NocturneShit" && (Environment.TickCount - unit.LastCastedSpellT()) < 300)
                 return true;
 
 
@@ -99,6 +118,7 @@ namespace Evade
 
             //Set up the OnDetectSkillshot Event.
             SkillshotDetector.OnDetectSkillshot += OnDetectSkillshot;
+            SkillshotDetector.OnDeleteMissile += SkillshotDetectorOnOnDeleteMissile;
 
             //For skillshot drawing.
             Drawing.OnDraw += Drawing_OnDraw;
@@ -110,6 +130,9 @@ namespace Evade
 
             //Create the menu to allow the user to change the config.
             Config.CreateMenu();
+
+            //Initialize the collision.
+            Collision.Init();
 
             if (Config.PrintSpellData)
             {
@@ -126,6 +149,22 @@ namespace Evade
         {
             _recalculate = true;
             Evading = false;
+        }
+
+        private static void SkillshotDetectorOnOnDeleteMissile(Skillshot skillshot, Obj_SpellMissile missile)
+        {
+            if (skillshot.SpellData.SpellName == "VelkozQ")
+            {
+                var spellData = SpellDatabase.GetByName("VelkozQSplit");
+                var direction = skillshot.Direction.Perpendicular();
+                if (DetectedSkillshots.Count(s => s.SpellData.SpellName == "VelkozQSplit") == 0)
+                    for (var i = -1; i <= 1; i = i + 2)
+                    {
+                        var skillshotToAdd = new Skillshot(DetectionType.ProcessSpell, spellData,
+                                    Environment.TickCount, missile.Position.To2D(), missile.Position.To2D() + i * direction * spellData.Range, skillshot.Unit);
+                       DetectedSkillshots.Add(skillshotToAdd);
+                    }
+            }
         }
 
         private static void OnDetectSkillshot(Skillshot skillshot)
@@ -177,7 +216,7 @@ namespace Evade
 
                     if (skillshot.SpellData.SpellName == "UFSlash")
                     {
-                        skillshot.SpellData.MissileSpeed = 1500 + (int)skillshot.Unit.MoveSpeed;
+                        skillshot.SpellData.MissileSpeed = 1600 + (int)skillshot.Unit.MoveSpeed;
                     }
 
                     if (skillshot.SpellData.Invert)
@@ -611,7 +650,28 @@ namespace Evade
                             //Targetted dashes
                             if (evadeSpell.IsTargetted) //Lesinga W.
                             {
-                                //Todo.
+                                var targets = Evader.GetEvadeTargets(evadeSpell.ValidTargets, evadeSpell.Speed,
+                                    evadeSpell.Delay,
+                                    evadeSpell.MaxRange, false, false);
+
+                                if (targets.Count > 0)
+                                {
+                                        var closestTarget = Utils.Closest(targets, to);
+                                        EvadePoint = closestTarget.ServerPosition.To2D();
+                                        Evading = true;
+
+                                        if (evadeSpell.IsSummonerSpell)
+                                        {
+                                            ObjectManager.Player.SummonerSpellbook.CastSpell(evadeSpell.Slot,
+                                                closestTarget);
+                                        }
+                                        else
+                                        {
+                                            ObjectManager.Player.Spellbook.CastSpell(evadeSpell.Slot, closestTarget);
+                                        }
+
+                                    return;
+                                }
                             }
 
                                 //Skillshot type dashes.

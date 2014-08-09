@@ -66,6 +66,21 @@ namespace Evade
         public Vector2 Direction;
 
         public Vector2 End;
+
+        private Vector2 _collisionEnd = new Vector2();
+        private int _lastCollisionCalc = 0;
+        
+        public Vector2 CollisionEnd
+        {
+            get
+            {
+                if (_collisionEnd.IsValid())
+                    return _collisionEnd;
+                return End;
+            }
+        }
+
+        public bool ForceDisabled;
         public Vector2 MissilePosition;
         public Geometry.Polygon Polygon;
         public Geometry.Rectangle Rectangle;
@@ -96,20 +111,20 @@ namespace Evade
             switch (spellData.Type)
             {
                 case SkillShotType.SkillshotCircle:
-                    Circle = new Geometry.Circle(end, spellData.Radius);
+                    Circle = new Geometry.Circle(CollisionEnd, spellData.Radius);
                     break;
                 case SkillShotType.SkillshotLine:
-                    Rectangle = new Geometry.Rectangle(Start, End, spellData.Radius);
+                    Rectangle = new Geometry.Rectangle(Start, CollisionEnd, spellData.Radius);
                     break;
                 case SkillShotType.SkillshotMissileLine:
-                    Rectangle = new Geometry.Rectangle(Start, End, spellData.Radius);
+                    Rectangle = new Geometry.Rectangle(Start, CollisionEnd, spellData.Radius);
                     break;
                 case SkillShotType.SkillshotCone:
-                    Sector = new Geometry.Sector(start, end - start, spellData.Radius * (float)Math.PI / 180,
+                    Sector = new Geometry.Sector(start, CollisionEnd - start, spellData.Radius * (float)Math.PI / 180,
                         spellData.Range);
                     break;
                 case SkillShotType.SkillshotRing:
-                    Ring = new Geometry.Ring(end, spellData.Radius, spellData.RingRadius);
+                    Ring = new Geometry.Ring(CollisionEnd, spellData.Radius, spellData.RingRadius);
                     break;
             }
 
@@ -139,6 +154,8 @@ namespace Evade
 
         public bool Evade()
         {
+
+            if (ForceDisabled) return false;
             if (Environment.TickCount - _cachedValueTick < 100)
                 return _cachedValue;
 
@@ -158,10 +175,17 @@ namespace Evade
 
         public void Game_OnGameUpdate()
         {
+            //Even if it doesnt consume a lot of resources with 20 updatest second works k
+            if (SpellData.CollisionObjects.Count() > 0 && SpellData.CollisionObjects != null && Environment.TickCount - _lastCollisionCalc > 50 && Config.Menu.Item("EnableCollision").GetValue<bool>())
+            {
+                _lastCollisionCalc = Environment.TickCount;
+                _collisionEnd = Collision.GetCollisionPoint(this);
+            }
+
             //Update the missile position each time the game updates.
             if (SpellData.Type == SkillShotType.SkillshotMissileLine)
             {
-                Rectangle = new Geometry.Rectangle(GetMissilePosition(0), End, SpellData.Radius);
+                Rectangle = new Geometry.Rectangle(GetMissilePosition(0), CollisionEnd, SpellData.Radius);
                 UpdatePolygon();
             }
 
@@ -210,7 +234,7 @@ namespace Evade
         public Vector2 GetMissilePosition(int time)
         {
             var t = Math.Max(0, Environment.TickCount + time - StartTick - SpellData.Delay);
-            t = (int)Math.Max(0, Math.Min(End.Distance(Start), t * SpellData.MissileSpeed / 1000));
+            t = (int)Math.Max(0, Math.Min(CollisionEnd.Distance(Start), t * SpellData.MissileSpeed / 1000));
             return Start + Direction * t;
         }
 
