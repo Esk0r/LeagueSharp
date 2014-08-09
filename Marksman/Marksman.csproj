@@ -91,6 +91,7 @@
     <Compile Include="Sivir.cs" />
     <Compile Include="Teemo.cs" />
     <Compile Include="Tristana.cs" />
+    <Compile Include="Twitch.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Vayne.cs" />
   </ItemGroup>

@@ -10,15 +10,17 @@ using LeagueSharp.Common;
 
 namespace Marksman
 {
-    internal class Teemo : Champion //Based on Tristana, modified by ~Ecko
+    internal class Teemo : Champion
     {
         public Spell Q;
+        public Spell R;
 
         public Teemo()
         {
             Utils.PrintMessage("Teemo loaded.");
             
             Q = new Spell(SpellSlot.Q, 580);
+            R = new Spell(SpellSlot.R, 230);
         }
 
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
@@ -56,21 +58,35 @@ namespace Marksman
                 }
             }
 
-            //Killsteal
-            if (!ComboActive || !GetValue<bool>("UseQM") || !Q.IsReady()) return;
-            foreach (
-                var hero in
+
+            if (GetValue<bool>("UseQM") && Q.IsReady())
+            {
+                foreach (
+                    var hero in
+                        ObjectManager.Get<Obj_AI_Hero>()
+                            .Where(
+                                hero =>
+                                    hero.IsValidTarget(Q.Range) &&
+                                    DamageLib.getDmg(hero, DamageLib.SpellType.Q) - 20 > hero.Health))
+                    Q.CastOnUnit(hero);
+            }
+
+            if (GetValue<bool>("UseRC") && R.IsReady() && ComboActive)
+            {
+                foreach (
+                    var hero in
                     ObjectManager.Get<Obj_AI_Hero>()
                         .Where(
                             hero =>
-                                hero.IsValidTarget(Q.Range) &&
-                                DamageLib.getDmg(hero, DamageLib.SpellType.Q) - 20 > hero.Health))
-                Q.CastOnUnit(hero);
+                                hero.IsValidTarget(R.Range)))
+                    R.Cast(hero, false, true);
+            }
         }
 
         public override void ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
+            config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(false));
         }
 
         public override void HarassMenu(Menu config)
@@ -82,12 +98,11 @@ namespace Marksman
         {
             config.AddItem(
                 new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
-
         }
 
         public override void MiscMenu(Menu config)
         {
-            config.AddItem(new MenuItem("UseQM" + Id, "Use Q").SetValue(true));
+            config.AddItem(new MenuItem("UseQM" + Id, "Use Q KS").SetValue(true));
         }
     }
 }

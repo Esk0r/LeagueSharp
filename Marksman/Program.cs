@@ -45,6 +45,9 @@ namespace Marksman
             if (ObjectManager.Player.ChampionName == "Tristana")
                 CClass = new Tristana();
 
+            if (ObjectManager.Player.ChampionName == "Twitch")
+                CClass = new Twitch();
+
             if (ObjectManager.Player.ChampionName == "Vayne")
                 CClass = new Vayne();
 
