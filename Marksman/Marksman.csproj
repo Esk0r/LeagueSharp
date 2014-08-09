@@ -52,16 +52,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LeagueSharp">
-      <HintPath>..\..\..\..\..\Dropbox\Dropbox\lsharp\Assemblies\System\LeagueSharp.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\LeagueSharp\Assemblies\System\LeagueSharp.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.AppDomainManager">
       <HintPath>..\..\..\..\..\Dropbox\Dropbox\lsharp\Assemblies\System\LeagueSharp.AppDomainManager.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Common">
-      <HintPath>..\..\..\..\..\Dropbox\Dropbox\lsharp\Assemblies\System\LeagueSharp.Common.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\LeagueSharp\Assemblies\System\LeagueSharp.Common.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\..\..\Dropbox\Dropbox\lsharp\Assemblies\System\SharpDX.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\LeagueSharp\Assemblies\System\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D9">
       <HintPath>..\..\..\..\..\Dropbox\Dropbox\lsharp\Assemblies\System\SharpDX.Direct3D9.dll</HintPath>
@@ -91,6 +91,7 @@
     <Compile Include="Sivir.cs" />
     <Compile Include="Teemo.cs" />
     <Compile Include="Tristana.cs" />
+    <Compile Include="Twitch.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Vayne.cs" />
   </ItemGroup>

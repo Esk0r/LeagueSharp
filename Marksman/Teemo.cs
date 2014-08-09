@@ -18,7 +18,7 @@ namespace Marksman
         public Teemo()
         {
             Utils.PrintMessage("Teemo loaded.");
-            
+
             Q = new Spell(SpellSlot.Q, 580);
             R = new Spell(SpellSlot.R, 230);
         }
@@ -36,7 +36,7 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { Q};
+            Spell[] spellList = { Q };
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -58,7 +58,7 @@ namespace Marksman
                 }
             }
 
-            //Killsteal with Q
+
             if (GetValue<bool>("UseQM") && Q.IsReady())
             {
                 foreach (
@@ -70,9 +70,8 @@ namespace Marksman
                                     DamageLib.getDmg(hero, DamageLib.SpellType.Q) - 20 > hero.Health))
                     Q.CastOnUnit(hero);
             }
-            
-            //Use R on combo
-            if (GetValue<bool>("UseRM") && R.IsReady() && ComboActive)
+
+            if (GetValue<bool>("UseRC") && R.IsReady() && ComboActive)
             {
                 foreach (
                     var hero in
@@ -87,6 +86,7 @@ namespace Marksman
         public override void ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
+            config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(false));
         }
 
         public override void HarassMenu(Menu config)
@@ -103,7 +103,6 @@ namespace Marksman
         public override void MiscMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQM" + Id, "Use Q KS").SetValue(true));
-            config.AddItem(new MenuItem("UseRM" + Id, "Use R in Combo").SetValue(false));
         }
     }
 }
