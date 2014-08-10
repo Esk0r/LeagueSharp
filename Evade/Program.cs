@@ -304,7 +304,7 @@ namespace Evade
             if (ObjectManager.Player.IsChannelingImportantSpell()) return;
 
             //Avoid evading while stunned or immobile.
-            if (Utility.ImmobileTime(ObjectManager.Player) - Environment.TickCount > Game.Ping / 2 + 70)
+            if (Utils.ImmobileTime(ObjectManager.Player) - Environment.TickCount > Game.Ping / 2 + 70)
             {
                 Evading = false;
                 return;
