@@ -181,7 +181,7 @@ namespace Syndra
         private static void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
         {
             if (!Config.Item("InterruptSpells").GetValue<bool>()) return;
-          
+
             if (Player.Distance(unit) < E.Range && E.IsReady())
             {
                 Q.Cast(unit.ServerPosition);
@@ -256,7 +256,8 @@ namespace Syndra
         {
             var damage = 0d;
 
-            damage += DamageLib.getDmg(enemy, DamageLib.SpellType.Q);
+            if (Q.IsReady())
+                damage += DamageLib.getDmg(enemy, DamageLib.SpellType.Q);
 
             if (DFG.IsReady())
                 damage += DamageLib.getDmg(enemy, DamageLib.SpellType.DFG) / 1.2;
@@ -268,10 +269,10 @@ namespace Syndra
                 damage += DamageLib.getDmg(enemy, DamageLib.SpellType.E);
 
             var igniteSlot = Player.GetSpellSlot("SummonerDot");
-            
-            if(igniteSlot != SpellSlot.Unknown && Player.SummonerSpellbook.CanUseSpell(igniteSlot) == SpellState.Ready)
+
+            if (igniteSlot != SpellSlot.Unknown && Player.SummonerSpellbook.CanUseSpell(igniteSlot) == SpellState.Ready)
                 damage += DamageLib.getDmg(enemy, DamageLib.SpellType.IGNITE);
-                
+
 
             if (R.IsReady())
                 damage += Player.Spellbook.GetSpell(SpellSlot.R).Ammo * DamageLib.getDmg(enemy, DamageLib.SpellType.R);
@@ -330,11 +331,10 @@ namespace Syndra
             if (rTarget != null && useR && GetComboDamage(rTarget) > rTarget.Health && DFG.IsReady())
             {
                 DFG.Cast(rTarget);
-                if(R.IsReady())
-                {       
+                if (R.IsReady())
+                {
                     R.Cast(rTarget);
                 }
-                
             }
 
             //R
@@ -408,15 +408,15 @@ namespace Syndra
                     var fl1 = Q.GetCircularFarmLocation(rangedMinionsQ, Q.Width);
                     var fl2 = Q.GetCircularFarmLocation(allMinionsQ, Q.Width);
 
-                        if (fl1.MinionsHit >= 3)
-                        {
-                            Q.Cast(fl1.Position);
-                        }
+                    if (fl1.MinionsHit >= 3)
+                    {
+                        Q.Cast(fl1.Position);
+                    }
 
-                        else if (fl2.MinionsHit >= 2 || allMinionsQ.Count == 1)
-                        {
-                            Q.Cast(fl2.Position);
-                        }
+                    else if (fl2.MinionsHit >= 2 || allMinionsQ.Count == 1)
+                    {
+                        Q.Cast(fl2.Position);
+                    }
                 }
                 else
                     foreach (var minion in allMinionsQ)
