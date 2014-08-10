@@ -168,7 +168,7 @@ namespace Evade
             }
             else
             {
-                result = skillshot.End;
+                result = new Vector2();
             }
 
             return result;

@@ -100,6 +100,7 @@ namespace Evade
             collision.AddItem(new MenuItem("HeroCollision", "Hero collision").SetValue(true));
             collision.AddItem(new MenuItem("YasuoCollision", "Yasuo wall collision").SetValue(true));
             collision.AddItem(new MenuItem("EnableCollision", "Enabled").SetValue(true));
+            //TODO add mode.
             Menu.AddSubMenu(collision);
 
             var drawings = new Menu("Drawings", "Drawings");
@@ -120,6 +121,8 @@ namespace Evade
             Menu.AddToMainMenu();
 
         }
+
+
 
 
     }

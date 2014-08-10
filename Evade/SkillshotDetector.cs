@@ -110,12 +110,10 @@ namespace Evade
                         break;
                     }
 
-
-            Console.WriteLine(spellName);
             Program.DetectedSkillshots.RemoveAll(
                 skillshot =>
                     skillshot.SpellData.MissileSpellName == spellName &&
-                    skillshot.End.Distance(missile.EndPosition) < 200 && skillshot.SpellData.CanBeRemoved);
+                    (skillshot.End.Distance(missile.EndPosition) < 200 || skillshot.SpellData.Range == 20000) && skillshot.SpellData.CanBeRemoved);
         }
 
         /// <summary>

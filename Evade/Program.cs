@@ -1,21 +1,4 @@
-﻿/*TODO List:
- * -Add lee sin W etc
- * -Add heal support.
- * -Add more shields.
- * -Add more dashes.
- * -Add the option to not use the evade stuff unless health < X%.
- * -Detect minion / wall collision in real time.
- * -Add something to select priorities.
- * -Add "slim" Drawings.
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * */
-
+﻿
 
 #region
 
@@ -303,7 +286,7 @@ namespace Evade
             //Avoid sending move/cast packets while channeling important spells.
             if (ObjectManager.Player.IsChannelingImportantSpell()) return;
 
-            //Avoid evading while stunned or immobile.
+            /*Avoid evading while stunned or immobile.*/
             if (Utils.ImmobileTime(ObjectManager.Player) - Environment.TickCount > Game.Ping / 2 + 70)
             {
                 Evading = false;
@@ -906,7 +889,7 @@ namespace Evade
             foreach (var skillshot in DetectedSkillshots)
             {
                 skillshot.Draw(
-                    skillshot.Evade()
+                    (skillshot.Evade() && Config.Menu.Item("Enabled").GetValue<KeyBind>().Active)
                         ? Config.Menu.Item("EnabledColor").GetValue<Color>()
                         : Config.Menu.Item("DisabledColor").GetValue<Color>(), Border);
             }

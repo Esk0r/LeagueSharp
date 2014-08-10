@@ -11,6 +11,7 @@ namespace Evade
         public bool AddHitbox;
         public string ChampionName;
         public bool CanBeRemoved = false;
+        public bool DontRemove = false;
         public CollisionObjectTypes[] CollisionObjects = {};
         public bool Centered;
         public int DangerValue;
