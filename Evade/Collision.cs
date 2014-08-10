@@ -96,12 +96,12 @@ namespace Evade
 
                             case CollisionObjectTypes.Champions:
                             if (!Config.Menu.Item("HeroCollision").GetValue<bool>()) break;
-                                foreach (var hero in ObjectManager.Get<Obj_AI_Hero>().Where(h => (h.Team == ObjectManager.Player.Team && !h.IsMe || Config.TestOnAllies && h.Team != ObjectManager.Player.Team )))
+                                foreach (var hero in ObjectManager.Get<Obj_AI_Hero>().Where(h => (h.IsValidTarget(float.MaxValue, false) && h.Team == ObjectManager.Player.Team && !h.IsMe || Config.TestOnAllies && h.Team != ObjectManager.Player.Team )))
                                 {
                                     var pred = FastPrediction(from, hero, Math.Max(0, skillshot.SpellData.Delay - (Environment.TickCount - skillshot.StartTick)), skillshot.SpellData.MissileSpeed);
                                     var pos = pred.PredictedPos;
 
-                                    if (pos.Distance(skillshot.GetMissilePosition(0), skillshot.End, true, true) < Math.Pow(skillshot.SpellData.RawRadius, 2))
+                                    if (pos.Distance(skillshot.GetMissilePosition(0), skillshot.End, true, true) < Math.Pow(skillshot.SpellData.RawRadius + 20, 2))
                                     {
                                         collisions.Add(pos);
                                     }
