@@ -275,7 +275,7 @@ namespace Syndra
 
 
             if (R.IsReady())
-                damage += Player.Spellbook.GetSpell(SpellSlot.R).Ammo * DamageLib.getDmg(enemy, DamageLib.SpellType.R);
+                damage += Math.Min(7, Math.Max(3, Player.Spellbook.GetSpell(SpellSlot.R).Ammo - 3)) * DamageLib.getDmg(enemy, DamageLib.SpellType.R);
 
             return (float)damage * (DFG.IsReady() ? 1.2f : 1);
         }
@@ -495,7 +495,6 @@ namespace Syndra
             Orbwalker.SetAttacks(true);
             //Update the R range
             R.Range = R.Level == 3 ? 750 : 675;
-
             if (Config.Item("CastQE").GetValue<KeyBind>().Active && E.IsReady() && Q.IsReady())
                 foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
                     if (enemy.IsValidTarget(EQ.Range) && Game.CursorPos.Distance(enemy.ServerPosition) < 300)
