@@ -64,7 +64,7 @@ namespace Xerath
         {
             Player = ObjectManager.Player;
 
-            if (Player.BaseSkinName != ChampionName) return;
+            if (Player.ChampionName != ChampionName) return;
 
             //Create the spells
             Q = new Spell(SpellSlot.Q, 1550);
@@ -163,6 +163,7 @@ namespace Xerath
             //Misc
             Config.AddSubMenu(new Menu("Misc", "Misc"));
             Config.SubMenu("Misc").AddItem(new MenuItem("InterruptSpells", "Interrupt spells").SetValue(true));
+            Config.SubMenu("Misc").AddItem(new MenuItem("AutoEGC", "AutoE gapclosers").SetValue(true));
 
             //Drawings menu:
             Config.AddSubMenu(new Menu("Drawings", "Drawings"));
@@ -189,16 +190,26 @@ namespace Xerath
             Drawing.OnDraw += Drawing_OnDraw;
             Drawing.OnEndScene += Drawing_OnEndScene;
             Interrupter.OnPosibleToInterrupt += Interrupter_OnPosibleToInterrupt;
+            AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Obj_AI_Hero.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
             Game.OnWndProc += Game_OnWndProc;
             Game.PrintChat(ChampionName + " Loaded!");
+        }
+
+        static void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
+        {
+            if (!Config.Item("AutoEGC").GetValue<bool>()) return;
+
+            if (Player.Distance(gapcloser.Sender) < E.Range)
+            {
+                E.Cast(gapcloser.Sender);
+            }
         }
 
         static void Game_OnWndProc(WndEventArgs args)
         {
             if (args.Msg == (uint)WindowsMessages.WM_KEYUP)
                 RCharge.TapKeyPressed = true;
-
         }
 
         static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
@@ -226,7 +237,7 @@ namespace Xerath
         {
             if (!Config.Item("InterruptSpells").GetValue<bool>()) return;
 
-            if (Player.Distance(unit) < E.Range && E.IsReady())
+            if (Player.Distance(unit) < E.Range)
             {
                 E.Cast(unit);
             }
@@ -322,30 +333,36 @@ namespace Xerath
             var useQ = (laneClear && (useQi == 1 || useQi == 2)) || (!laneClear && (useQi == 0 || useQi == 2));
             var useW = (laneClear && (useWi == 1 || useWi == 2)) || (!laneClear && (useWi == 0 || useWi == 2));
 
+            if (useW && W.IsReady())
+            {
+                var locW = W.GetCircularFarmLocation(rangedMinionsW, W.Width * 0.75f);
+                if (locW.MinionsHit >= 3)
+                {
+                    W.Cast(locW.Position);
+                    return;
+                }
+                else
+                {
+                    var locW2 = W.GetCircularFarmLocation(allMinionsQ, W.Width * 0.75f);
+                    if (locW2.MinionsHit >= 1)
+                    {
+                        W.Cast(locW.Position);
+                        return;
+                    }
+                        
+                }
+            }
 
             if (useQ && Q.IsReady())
             {
                 if (Q.IsCharging)
                 {
                     var locQ = Q.GetLineFarmLocation(allMinionsQ);
-                    if (allMinionsQ.Count == allMinionsQ.Count(m => Player.Distance(m) < Q.Range) && locQ.MinionsHit > 0)
+                    if (allMinionsQ.Count == allMinionsQ.Count(m => Player.Distance(m) < Q.Range) && locQ.MinionsHit > 0 && locQ.Position.IsValid())
                         Q.Cast(locQ.Position);
                 }
                 else if (allMinionsQ.Count > 0)
                     Q.StartCharging();
-            }
-
-            if (useW && W.IsReady())
-            {
-                var locW = W.GetCircularFarmLocation(rangedMinionsW, W.Width * 0.75f);
-                if (locW.MinionsHit >= 3)
-                    W.Cast(locW.Position);
-                else
-                {
-                    var locW2 = W.GetCircularFarmLocation(allMinionsQ, W.Width * 0.75f);
-                    if (locW2.MinionsHit >= 1)
-                        W.Cast(locW.Position);
-                }
             }
         }
 
