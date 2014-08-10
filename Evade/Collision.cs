@@ -80,7 +80,6 @@ namespace Evade
                             case CollisionObjectTypes.Minion:
 
                             if (!Config.Menu.Item("MinionCollision").GetValue<bool>()) break;
-
                                 foreach (var minion in MinionManager.GetMinions(from.To3D(), 1200, MinionTypes.All, skillshot.Unit.Team == ObjectManager.Player.Team ? MinionTeam.NotAlly : MinionTeam.NotAllyForEnemy))
                                 {
                                     var pred = FastPrediction(from, minion, Math.Max(0, skillshot.SpellData.Delay - (Environment.TickCount - skillshot.StartTick)), skillshot.SpellData.MissileSpeed);
@@ -96,12 +95,12 @@ namespace Evade
 
                             case CollisionObjectTypes.Champions:
                             if (!Config.Menu.Item("HeroCollision").GetValue<bool>()) break;
-                                foreach (var hero in ObjectManager.Get<Obj_AI_Hero>().Where(h => (h.IsValidTarget(float.MaxValue, false) && h.Team == ObjectManager.Player.Team && !h.IsMe || Config.TestOnAllies && h.Team != ObjectManager.Player.Team )))
+                                foreach (var hero in ObjectManager.Get<Obj_AI_Hero>().Where(h => (h.IsValidTarget(1200, false) && h.Team == ObjectManager.Player.Team && !h.IsMe || Config.TestOnAllies && h.Team != ObjectManager.Player.Team )))
                                 {
                                     var pred = FastPrediction(from, hero, Math.Max(0, skillshot.SpellData.Delay - (Environment.TickCount - skillshot.StartTick)), skillshot.SpellData.MissileSpeed);
                                     var pos = pred.PredictedPos;
 
-                                    if (pos.Distance(skillshot.GetMissilePosition(0), skillshot.End, true, true) < Math.Pow(skillshot.SpellData.RawRadius + 20, 2))
+                                    if (pos.Distance(skillshot.GetMissilePosition(0), skillshot.End, true, true) < Math.Pow(skillshot.SpellData.RawRadius + 30, 2))
                                     {
                                         collisions.Add(pos);
                                     }
@@ -110,12 +109,18 @@ namespace Evade
 
                             case CollisionObjectTypes.YasuoWall:
                             if (!Config.Menu.Item("YasuoCollision").GetValue<bool>()) break;
+                            if (
+                                !ObjectManager.Get<Obj_AI_Hero>()
+                                    .Any(
+                                        hero =>
+                                            hero.IsValidTarget(float.MaxValue, false) &&
+                                            hero.Team == ObjectManager.Player.Team && hero.ChampionName == "Yasuo"))
+                                break;
                             GameObject wall = null;
                             foreach (var gameObject in ObjectManager.Get<GameObject>())
                             {
                                 if (gameObject.IsValid &&
-                                    System.Text.RegularExpressions.Regex.IsMatch(gameObject.Name, "_w_windwall.\\.troy", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
-                                    )
+                                    System.Text.RegularExpressions.Regex.IsMatch(gameObject.Name, "_w_windwall.\\.troy", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
                                 {
                                     wall = gameObject;
                                 }
@@ -156,7 +161,17 @@ namespace Evade
                     }
             }
 
-            return collisions.Count > 0 ? collisions.OrderBy(c => c.Distance(skillshot.Start)).ToList()[0].ProjectOn(skillshot.End, skillshot.Start).LinePoint : skillshot.End;
+            Vector2 result;
+            if (collisions.Count > 0)
+            {
+                result = collisions.OrderBy(c => c.Distance(skillshot.Start)).ToList()[0].ProjectOn(skillshot.End, skillshot.Start).LinePoint + skillshot.Direction * 30;
+            }
+            else
+            {
+                result = skillshot.End;
+            }
+
+            return result;
         }
     }
 }

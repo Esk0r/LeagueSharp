@@ -1473,8 +1473,8 @@ namespace Evade
                 DangerValue = 3,
                 IsDangerous = true,
                 MissileSpellName = "LuxLightBindingMis",
-                CanBeRemoved = true,
-                CollisionObjects = new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.Minion, CollisionObjectTypes.YasuoWall, },
+                //CanBeRemoved = true,
+                //CollisionObjects = new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.Minion, CollisionObjectTypes.YasuoWall, },
             });
 
             Spells.Add(new SpellData

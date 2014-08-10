@@ -44,6 +44,30 @@ namespace Evade
 
             return result;
         }
+
+        /// <summary>
+        /// Returns when the unit will be able to move again
+        /// </summary>
+        public static int ImmobileTime(Obj_AI_Base unit)
+        {
+            var result = 0f;
+
+            foreach (var buff in unit.Buffs)
+            {
+                if (buff.IsActive && Game.Time <= buff.EndTime &&
+                    (buff.Type == BuffType.Charm ||
+                     buff.Type == BuffType.Knockup ||
+                     buff.Type == BuffType.Stun ||
+                     buff.Type == BuffType.Suppression ||
+                     buff.Type == BuffType.Snare))
+                {
+                    result = Math.Max(result, buff.EndTime);
+                }
+            }
+
+            return (result == 0f) ? -1 : (int)(Environment.TickCount + result - Game.Time);
+        }
+
     }
 
     internal class SpellList<T> : List<T>

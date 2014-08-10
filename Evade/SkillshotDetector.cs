@@ -64,8 +64,7 @@ namespace Evade
 
             if (Config.PrintSpellData)
             {
-                Game.PrintChat("Projectile Created: " + missile.SData.Name);
-                Console.WriteLine(missile.SData.Name);
+                Console.WriteLine("Projectile Created: " + missile.SData.Name);
             }
 
             var unit = missile.SpellCaster;
@@ -110,13 +109,13 @@ namespace Evade
                         OnDeleteMissile(skillshot, missile);
                         break;
                     }
- 
-                
 
+
+            Console.WriteLine(spellName);
             Program.DetectedSkillshots.RemoveAll(
                 skillshot =>
                     skillshot.SpellData.MissileSpellName == spellName &&
-                    skillshot.End.Distance(missile.EndPosition) < 150 && skillshot.SpellData.CanBeRemoved);
+                    skillshot.End.Distance(missile.EndPosition) < 200 && skillshot.SpellData.CanBeRemoved);
         }
 
         /// <summary>

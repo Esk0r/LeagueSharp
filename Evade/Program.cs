@@ -131,7 +131,7 @@ namespace Evade
             //Create the menu to allow the user to change the config.
             Config.CreateMenu();
 
-            //Initialize the collision.
+            //Initialze the collision
             Collision.Init();
 
             if (Config.PrintSpellData)
@@ -303,7 +303,12 @@ namespace Evade
             //Avoid sending move/cast packets while channeling important spells.
             if (ObjectManager.Player.IsChannelingImportantSpell()) return;
 
-            //TODO: Avoid evading while stunned or immobile.
+            //Avoid evading while stunned or immobile.
+            if (Utility.ImmobileTime(ObjectManager.Player) - Environment.TickCount > Game.Ping / 2 + 70)
+            {
+                Evading = false;
+                return;
+            }
 
             //Shield allies.
             foreach (var ally in ObjectManager.Get<Obj_AI_Hero>())
