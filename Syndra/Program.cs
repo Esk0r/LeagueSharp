@@ -28,6 +28,8 @@ namespace Syndra
         public static Spell EQ;
         public static Spell R;
 
+        public static SpellSlot IgniteSlot;
+
         public static Items.Item DFG;
 
         //Menu
@@ -55,7 +57,9 @@ namespace Syndra
             R = new Spell(SpellSlot.R, 675);
             EQ = new Spell(SpellSlot.Q, Q.Range + 500);
 
-            DFG = new Items.Item(3128, 750);
+            IgniteSlot = Player.GetSpellSlot("SummonerDot");
+
+            DFG = Utility.Map.GetMap() == Utility.Map.MapType.TwistedTreeline ? new Items.Item(3188, 750) : new Items.Item(3128, 750);
 
             Q.SetSkillshot(0.6f, 125f, float.MaxValue, false, Prediction.SkillshotType.SkillshotCircle);
             W.SetSkillshot(0.25f, 125f, 1450f, false, Prediction.SkillshotType.SkillshotCircle);
@@ -88,6 +92,7 @@ namespace Syndra
             Config.SubMenu("Combo").AddItem(new MenuItem("UseECombo", "Use E").SetValue(true));
             Config.SubMenu("Combo").AddItem(new MenuItem("UseQECombo", "Use QE").SetValue(true));
             Config.SubMenu("Combo").AddItem(new MenuItem("UseRCombo", "Use R").SetValue(true));
+            Config.SubMenu("Combo").AddItem(new MenuItem("UseIgniteCombo", "Use Ignite").SetValue(true));
             Config.SubMenu("Combo")
                 .AddItem(
                     new MenuItem("ComboActive", "Combo!").SetValue(
@@ -198,13 +203,13 @@ namespace Syndra
             Orbwalker.SetAttacks(!(Q.IsReady() || W.IsReady()));
             UseSpells(Config.Item("UseQCombo").GetValue<bool>(), Config.Item("UseWCombo").GetValue<bool>(),
                 Config.Item("UseECombo").GetValue<bool>(), Config.Item("UseRCombo").GetValue<bool>(),
-                Config.Item("UseQECombo").GetValue<bool>(), false);
+                Config.Item("UseQECombo").GetValue<bool>(), Config.Item("UseIgniteCombo").GetValue<bool>(), false);
         }
 
         private static void Harass()
         {
             UseSpells(Config.Item("UseQHarass").GetValue<bool>(), Config.Item("UseWHarass").GetValue<bool>(),
-                Config.Item("UseEHarass").GetValue<bool>(), false, Config.Item("UseQEHarass").GetValue<bool>(), true);
+                Config.Item("UseEHarass").GetValue<bool>(), false, Config.Item("UseQEHarass").GetValue<bool>(), false, true);
         }
 
         private static void UseE(Obj_AI_Base enemy)
@@ -268,9 +273,7 @@ namespace Syndra
             if (E.IsReady())
                 damage += DamageLib.getDmg(enemy, DamageLib.SpellType.E);
 
-            var igniteSlot = Player.GetSpellSlot("SummonerDot");
-
-            if (igniteSlot != SpellSlot.Unknown && Player.SummonerSpellbook.CanUseSpell(igniteSlot) == SpellState.Ready)
+            if (IgniteSlot != SpellSlot.Unknown && Player.SummonerSpellbook.CanUseSpell(IgniteSlot) == SpellState.Ready)
                 damage += DamageLib.getDmg(enemy, DamageLib.SpellType.IGNITE);
 
 
@@ -280,12 +283,13 @@ namespace Syndra
             return (float)damage * (DFG.IsReady() ? 1.2f : 1);
         }
 
-        private static void UseSpells(bool useQ, bool useW, bool useE, bool useR, bool useQE, bool isHarass)
+        private static void UseSpells(bool useQ, bool useW, bool useE, bool useR, bool useQE, bool useIgnite, bool isHarass)
         {
             var qTarget = SimpleTs.GetTarget(Q.Range + (isHarass ? 0 : Q.Width), SimpleTs.DamageType.Magical);
             var wTarget = SimpleTs.GetTarget(W.Range + W.Width, SimpleTs.DamageType.Magical);
             var rTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Magical);
             var qeTarget = SimpleTs.GetTarget(EQ.Range, SimpleTs.DamageType.Magical);
+            var comboDamage = GetComboDamage(rTarget);
 
             //Q
             if (qTarget != null && useQ)
@@ -323,12 +327,10 @@ namespace Syndra
                 }
             if (rTarget != null)
                 useR = (Config.Item("DontUlt" + rTarget.BaseSkinName) != null &&
-                        Config.Item("DontUlt" + rTarget.BaseSkinName).GetValue<bool>() == false)
-                    ? useR
-                    : false;
+                        Config.Item("DontUlt" + rTarget.BaseSkinName).GetValue<bool>() == false) && useR;
 
             //DFG (and ult if ready)
-            if (rTarget != null && useR && GetComboDamage(rTarget) > rTarget.Health && DFG.IsReady())
+            if (rTarget != null && useR && comboDamage > rTarget.Health && DFG.IsReady())
             {
                 DFG.Cast(rTarget);
                 if (R.IsReady())
@@ -340,10 +342,19 @@ namespace Syndra
             //R
             if (rTarget != null && useR && R.IsReady() && !Q.IsReady() && !DFG.IsReady())
             {
-                if (GetComboDamage(rTarget) >
-                    rTarget.Health)
+                if (comboDamage > rTarget.Health)
                 {
                     R.Cast(rTarget);
+                }
+            }
+
+            //Ignite
+            if (rTarget != null && useIgnite && IgniteSlot != SpellSlot.Unknown &&
+                Player.SummonerSpellbook.CanUseSpell(IgniteSlot) == SpellState.Ready)
+            {
+                if (comboDamage > rTarget.Health)
+                {
+                    Player.SummonerSpellbook.CastSpell(IgniteSlot, rTarget);
                 }
             }
 
