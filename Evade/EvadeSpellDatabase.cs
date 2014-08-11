@@ -74,6 +74,7 @@ namespace Evade
             {
                 spell = new DashData("LeeSin W", SpellSlot.W, 700, false, 250, 911, 3);
                 spell.ValidTargets = new[] { SpellValidTargets.AllyChampions, SpellValidTargets.AllyMinions, SpellValidTargets.AllyWards };
+                spell.CheckSpellName = "LeessingaW1";
                 Spells.Add(spell);
             }
 

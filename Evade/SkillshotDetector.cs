@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
@@ -112,8 +113,8 @@ namespace Evade
 
             Program.DetectedSkillshots.RemoveAll(
                 skillshot =>
-                    skillshot.SpellData.MissileSpellName == spellName &&
-                    (skillshot.End.Distance(missile.EndPosition) < 200 || skillshot.SpellData.Range == 20000) && skillshot.SpellData.CanBeRemoved);
+                    (skillshot.SpellData.MissileSpellName == spellName || skillshot.SpellData.ExtraMissileNames.Contains(spellName)) &&
+                    (skillshot.SpellData.Range == 20000) && skillshot.SpellData.CanBeRemoved);//skillshot.End.Distance(missile.EndPosition) < 400 || 
         }
 
         /// <summary>

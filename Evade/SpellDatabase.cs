@@ -451,7 +451,7 @@ namespace Evade
                 SpellName = "PhosphorusBomb",
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotCircle,
-                Delay = 400,
+                Delay = 300,
                 Range = 825,
                 Radius = 250,
                 MissileSpeed = 1125,
@@ -467,7 +467,6 @@ namespace Evade
             {
                 ChampionName = "Corki",
                 SpellName = "MissileBarrage",
-                ExtraSpellNames = new []{"MissileBarrage2"},
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotMissileLine,
                 Delay = 200,
@@ -478,12 +477,29 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "MissileBarrageMissile", //MissileBarrageMissile2
-                ExtraMissileNames = new string[]{"MissileBarrageMissile2"},
+                MissileSpellName = "MissileBarrageMissile",
                 CanBeRemoved = true,
                 CollisionObjects = new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.Minion, CollisionObjectTypes.YasuoWall, }
             });
 
+            Spells.Add(new SpellData
+            {
+                ChampionName = "Corki",
+                SpellName = "MissileBarrage2",
+                Slot = SpellSlot.R,
+                Type = SkillShotType.SkillshotMissileLine,
+                Delay = 200,
+                Range = 1500,
+                Radius = 40,
+                MissileSpeed = 2000,
+                FixedRange = true,
+                AddHitbox = true,
+                DangerValue = 2,
+                IsDangerous = false,
+                MissileSpellName = "MissileBarrageMissile2",
+                CanBeRemoved = true,
+                CollisionObjects = new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.Minion, CollisionObjectTypes.YasuoWall, }
+            });
 
             #endregion Corki
 
@@ -495,7 +511,7 @@ namespace Evade
                 SpellName = "DariusAxeGrabCone",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotCone,
-                Delay = 600,
+                Delay = 300,
                 Range = 550,
                 Radius = 80,
                 MissileSpeed = int.MaxValue,
@@ -1526,7 +1542,7 @@ namespace Evade
                 SpellName = "UFSlash",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotCircle,
-                Delay = 250,
+                Delay = 0,
                 Range = 1000,
                 Radius = 270,
                 MissileSpeed = 1500,

@@ -1,5 +1,6 @@
 ﻿
 
+
 #region
 
 using System;
@@ -117,15 +118,17 @@ namespace Evade
             //Initialze the collision
             Collision.Init();
 
-            if (Config.PrintSpellData)
+
+            foreach (var hero in ObjectManager.Get<Obj_AI_Hero>())
             {
-                Console.WriteLine(ObjectManager.Player.ChampionName);
-                foreach (var spell in ObjectManager.Player.Spellbook.Spells)
+                foreach (var spell in hero.Spellbook.Spells)
                 {
                     Console.WriteLine(spell.SData.Name + " w:" + spell.SData.LineWidth + " s:" +
                                       spell.SData.MissileSpeed + " r: " + spell.SData.CastRange[0]);
-                }
-            }
+                } 
+            }    
+                
+           
         }
 
         private static void DetectedSkillshots_OnAdd(object sender, EventArgs e)
@@ -199,7 +202,7 @@ namespace Evade
 
                     if (skillshot.SpellData.SpellName == "UFSlash")
                     {
-                        skillshot.SpellData.MissileSpeed = 1600 + (int)skillshot.Unit.MoveSpeed;
+                        skillshot.SpellData.MissileSpeed = 1700 + (int)skillshot.Unit.MoveSpeed;
                     }
 
                     if (skillshot.SpellData.Invert)

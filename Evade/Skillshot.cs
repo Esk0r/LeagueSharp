@@ -265,7 +265,6 @@ namespace Evade
             var timeToExplode = SpellData.ExtraDuration + SpellData.Delay +
                                 (int)(1000 * Start.Distance(End) / SpellData.MissileSpeed) -
                                 (Environment.TickCount - StartTick);
-
             return timeToExplode < timeOffset + delay;
         }
 
@@ -439,7 +438,7 @@ namespace Evade
             if (!IsSafe(unit.ServerPosition.To2D()))
             {
                 var timeToExplode = SpellData.ExtraDuration + SpellData.Delay +
-                                    (int)(1000 * Start.Distance(End) / SpellData.MissileSpeed) -
+                                    (int)((1000 * Start.Distance(End)) / SpellData.MissileSpeed) -
                                     (Environment.TickCount - StartTick);
                 if (timeToExplode <= time)
                 {
