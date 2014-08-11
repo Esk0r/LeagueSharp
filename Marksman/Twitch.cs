@@ -14,6 +14,7 @@ namespace Marksman
     {
         public Spell W;
         public Spell E;
+        public int ExpungeBuffStacks = 0;
 
         public Twitch()
         {
@@ -51,11 +52,25 @@ namespace Marksman
             if (Orbwalking.CanMove(100) && (ComboActive || HarassActive))
             {
                 var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
+                var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
+
                 if (useW)
                 {
                     var wTarget = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
                     if (W.IsReady() && wTarget.IsValidTarget())
                         W.Cast(wTarget, false, true);
+                }
+                if (useE)
+                {
+                    var eTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                    //foreach (var buff in eTarget.Buffs) { Game.PrintChat(buff.DisplayName); }
+                    if (E.IsReady() && eTarget.IsValidTarget() && eTarget.HasBuff("TwitchDeadlyVenom"))
+                    ExpungeBuffStacks = (from buff in eTarget.Buffs
+                                 where buff.DisplayName.ToLower() == "twitchdeadlyvenom"
+                                 select buff.Count).FirstOrDefault();
+                    if (ExpungeBuffStacks > 5)
+                       E.Cast();
+                     
                 }
             }
 
@@ -76,11 +91,13 @@ namespace Marksman
         public override void ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
+            config.AddItem(new MenuItem("UseEC" + Id, "Use E max Stacks").SetValue(false));
         }
 
         public override void HarassMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(false));
+            config.AddItem(new MenuItem("UseEH" + Id, "Use E at max Stacks").SetValue(false));
         }
 
         public override void DrawingMenu(Menu config)
