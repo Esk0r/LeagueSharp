@@ -21,6 +21,7 @@ namespace Marksman
 
             Q = new Spell(SpellSlot.Q, 580);
             R = new Spell(SpellSlot.R, 230);
+            R.SetSkillshot(0.1f, 75f, float.MaxValue, false, Prediction.SkillshotType.SkillshotCircle);
         }
 
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
