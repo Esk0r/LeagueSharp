@@ -63,10 +63,10 @@ namespace Evade
 
             var missile = (Obj_SpellMissile)sender;
 
-            if (Config.PrintSpellData)
-            {
-                Console.WriteLine("Projectile Created: " + missile.SData.Name);
-            }
+            #if DEBUG
+                if(missile.SpellCaster is Obj_AI_Hero)
+                    Console.WriteLine("Projectile Created: " + missile.SData.Name);
+            #endif
 
             var unit = missile.SpellCaster;
             if (!unit.IsValid || (unit.Team == ObjectManager.Player.Team && !Config.TestOnAllies)) return;
@@ -75,6 +75,16 @@ namespace Evade
             var missilePosition = missile.Position.To2D();
             var unitPosition = missile.StartPosition.To2D();
             var endPos = missile.EndPosition.To2D();
+
+            //Calculate the real end Point:
+            var direction = (endPos - unitPosition).Normalized();
+            if (unitPosition.Distance(endPos) > spellData.Range || spellData.FixedRange)
+                endPos = unitPosition + direction * spellData.Range;
+
+            if (spellData.ExtraRange != -1)
+            {
+                endPos = endPos + Math.Min(spellData.ExtraRange, spellData.Range - endPos.Distance(unitPosition)) * direction;
+            }
 
             var castTime = Environment.TickCount - Game.Ping / 2 - spellData.Delay -
                            (int)(1000 * missilePosition.Distance(unitPosition) / spellData.MissileSpeed);
@@ -105,16 +115,20 @@ namespace Evade
             if (OnDeleteMissile != null)
                 foreach (var skillshot in Program.DetectedSkillshots)
                     if (skillshot.SpellData.MissileSpellName == spellName &&
-                        skillshot.End.Distance(missile.EndPosition) < 150 && skillshot.SpellData.CanBeRemoved)
+                        (skillshot.Unit.NetworkId == unit.NetworkId && (missile.EndPosition.To2D() - missile.StartPosition.To2D()).AngleBetween(skillshot.Direction) < 10) && skillshot.SpellData.CanBeRemoved)
                     {
                         OnDeleteMissile(skillshot, missile);
                         break;
                     }
 
+            #if DEBUG
+                Console.WriteLine("Missile deleted: " + missile.SData.Name);
+            #endif
+
             Program.DetectedSkillshots.RemoveAll(
                 skillshot =>
                     (skillshot.SpellData.MissileSpellName == spellName || skillshot.SpellData.ExtraMissileNames.Contains(spellName)) &&
-                    (skillshot.SpellData.Range == 20000) && skillshot.SpellData.CanBeRemoved);//skillshot.End.Distance(missile.EndPosition) < 400 || 
+                    (skillshot.Unit.NetworkId == unit.NetworkId && (missile.EndPosition.To2D() - missile.StartPosition.To2D()).AngleBetween(skillshot.Direction) < 10 ) && skillshot.SpellData.CanBeRemoved);// 
         }
 
         /// <summary>
@@ -142,7 +156,7 @@ namespace Evade
         /// </summary>
         private static void ObjAiHeroOnOnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (Config.PrintSpellData)
+            if (Config.PrintSpellData && sender is Obj_AI_Hero)
             {
                 Game.PrintChat(Environment.TickCount + " ProcessSpellCast: " + args.SData.Name);
             }
@@ -183,8 +197,7 @@ namespace Evade
 
             if (spellData.ExtraRange != -1)
             {
-                endPos = endPos +
-                         Math.Min(spellData.ExtraRange, spellData.Range - endPos.Distance(startPos)) * Direction;
+                endPos = endPos + Math.Min(spellData.ExtraRange, spellData.Range - endPos.Distance(startPos)) * Direction;
             }
 
 

@@ -1,6 +1,5 @@
 ﻿
 
-
 #region
 
 using System;
@@ -13,6 +12,7 @@ using Color = System.Drawing.Color;
 using GamePath = System.Collections.Generic.List<SharpDX.Vector2>;
 
 #endregion
+
 
 namespace Evade
 {
@@ -160,7 +160,7 @@ namespace Evade
 
             foreach (var item in DetectedSkillshots)
             {
-                if (item.SpellData.SpellName == skillshot.SpellData.SpellName && item.End.Distance(skillshot.End) <= 50)
+                if (item.SpellData.SpellName == skillshot.SpellData.SpellName && (item.Unit.NetworkId == skillshot.Unit.NetworkId && (skillshot.Direction).AngleBetween(item.Direction) < 10))
                 {
                     alreadyAdded = true;
                 }
@@ -258,6 +258,10 @@ namespace Evade
                 //Dont allow fow detection.
                 if (skillshot.SpellData.DisableFowDetection && skillshot.DetectionType == DetectionType.RecvPacket)
                     return;
+#if DEBUG
+                Console.WriteLine("Adding new skillshot: " + skillshot.SpellData.SpellName);
+#endif
+
                 DetectedSkillshots.Add(skillshot);
             }
         }
