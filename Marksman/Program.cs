@@ -24,6 +24,9 @@ namespace Marksman
             Config = new Menu("Marksman", "Marksman", true);
 
             CClass = new Champion();
+            if (ObjectManager.Player.ChampionName == "Corki")
+                CClass = new Corki();
+
             if (ObjectManager.Player.ChampionName == "Ezreal")
                 CClass = new Ezreal();
 

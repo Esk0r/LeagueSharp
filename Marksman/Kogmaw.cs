@@ -79,20 +79,16 @@ namespace Marksman
             {
                 var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Magical);
                 if (t != null)
-                {
                     if (Q.Cast(t) == Spell.CastStates.SuccessfullyCasted)
                         return;
-                }
             }
 
             if (useE && E.IsReady())
             {
                 var t = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Magical);
                 if (t != null)
-                {
-                    E.Cast(t, false, true);
-                    return;
-                }
+                    if (E.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted)
+                        return;
             }
 
             if (useR && R.IsReady() && UltimateBuffStacks < rLim)
@@ -117,16 +113,12 @@ namespace Marksman
                 W.CastOnUnit(ObjectManager.Player);
 
             if (useQ && Q.IsReady())
-            {
                 if (Q.Cast(target) == Spell.CastStates.SuccessfullyCasted)
                     return;
-            }
 
             if (useE && E.IsReady())
-            {
-                E.Cast(target, false, true);
-                return;
-            }
+                if (E.Cast(target, false, true) == Spell.CastStates.SuccessfullyCasted)
+                    return;
 
             if (useR && R.IsReady() && UltimateBuffStacks < rLim)
                 R.Cast(target, false, true);
@@ -175,7 +167,7 @@ namespace Marksman
 
         public override void MiscMenu(Menu config)
         {
-            config.AddItem(new MenuItem("UseRM" + Id, "Use R to Killsteal").SetValue(true));
+            config.AddItem(new MenuItem("UseRM" + Id, "Use R To Killsteal").SetValue(true));
         }
     }
 }
