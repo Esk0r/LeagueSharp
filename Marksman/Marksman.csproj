@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Champion.cs" />
+    <Compile Include="Corki.cs" />
     <Compile Include="Ezreal.cs" />
     <Compile Include="Graves.cs" />
     <Compile Include="Jinx.cs" />

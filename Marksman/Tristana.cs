@@ -24,7 +24,14 @@ namespace Marksman
             E = new Spell(SpellSlot.E, 703);
             R = new Spell(SpellSlot.R, 703);
 
+            AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter.OnPosibleToInterrupt += Interrupter_OnPosibleToInterrupt;
+        }
+
+        public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
+        {
+            if (R.IsReady() && gapcloser.Sender.IsValidTarget(R.Range))
+                R.CastOnUnit(gapcloser.Sender);
         }
 
         public void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
