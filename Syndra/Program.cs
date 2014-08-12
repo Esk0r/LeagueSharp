@@ -261,7 +261,7 @@ namespace Syndra
         {
             var damage = 0d;
 
-            if (Q.IsReady())
+            if (Q.IsReady(1000))
                 damage += DamageLib.getDmg(enemy, DamageLib.SpellType.Q);
 
             if (DFG.IsReady())
@@ -285,7 +285,7 @@ namespace Syndra
 
         private static void UseSpells(bool useQ, bool useW, bool useE, bool useR, bool useQE, bool useIgnite, bool isHarass)
         {
-            var qTarget = SimpleTs.GetTarget(Q.Range + (isHarass ? 0 : Q.Width), SimpleTs.DamageType.Magical);
+            var qTarget = SimpleTs.GetTarget(Q.Range + (isHarass ? Q.Width/3 : Q.Width), SimpleTs.DamageType.Magical);
             var wTarget = SimpleTs.GetTarget(W.Range + W.Width, SimpleTs.DamageType.Magical);
             var rTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Magical);
             var qeTarget = SimpleTs.GetTarget(EQ.Range, SimpleTs.DamageType.Magical);
