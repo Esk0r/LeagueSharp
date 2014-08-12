@@ -224,7 +224,7 @@ namespace Ryze
                     if (minion.IsValidTarget() &&
                         HealthPrediction.GetHealthPrediction(minion,
                             (int)(Player.Distance(minion) * 1000 / 1400)) <
-                        0.75 * DamageLib.getDmg(minion, DamageLib.SpellType.Q))
+                         DamageLib.getDmg(minion, DamageLib.SpellType.Q) - 10)
                     {
                         Q.CastOnUnit(minion);
                         return;
@@ -236,7 +236,7 @@ namespace Ryze
                 foreach (var minion in allMinions)
                 {
                     if (minion.IsValidTarget(W.Range) &&
-                        minion.Health < 0.75 * DamageLib.getDmg(minion, DamageLib.SpellType.W))
+                        minion.Health <  DamageLib.getDmg(minion, DamageLib.SpellType.W) - 10)
                     {
                         W.CastOnUnit(minion);
                         return;
@@ -250,7 +250,7 @@ namespace Ryze
                     if (minion.IsValidTarget(E.Range) &&
                         HealthPrediction.GetHealthPrediction(minion,
                             (int)(Player.Distance(minion) * 1000 / 1000)) <
-                        0.75 * DamageLib.getDmg(minion, DamageLib.SpellType.E))
+                        DamageLib.getDmg(minion, DamageLib.SpellType.E) - 10)
                     {
                         E.CastOnUnit(minion);
                         return;
