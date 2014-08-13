@@ -9,18 +9,20 @@ namespace Evade
     public class SpellData
     {
         public bool AddHitbox;
-        public string ChampionName;
         public bool CanBeRemoved = false;
-        public bool DontRemove = false;
-        public CollisionObjectTypes[] CollisionObjects = {};
         public bool Centered;
+        public string ChampionName;
+        public CollisionObjectTypes[] CollisionObjects = { };
         public int DangerValue;
         public int Delay;
         public bool DisableFowDetection = false;
-        public bool DonCross = false;
         public bool DontAddExtraDuration;
+        public bool DontCross = false;
+        public bool DontRemove = false;
         public int ExtraDuration;
+        public string[] ExtraMissileNames = { };
         public int ExtraRange = -1;
+        public string[] ExtraSpellNames = { };
         public bool FixedRange;
         public string FromObject = "";
         public int Id = -1;
@@ -29,13 +31,11 @@ namespace Evade
         public bool MissileFollowsUnit;
         public int MissileSpeed;
         public string MissileSpellName;
-        public string[] ExtraMissileNames = { };
         public float MultipleAngle;
         public int MultipleNumber = -1;
         public int RingRadius;
         public SpellSlot Slot;
         public string SpellName;
-        public string[] ExtraSpellNames = {};
         public string ToggleParticleName = "";
         public SkillShotType Type;
         private int _radius;
@@ -77,7 +77,15 @@ namespace Evade
             set { _radius = value; }
         }
 
-        public int RawRadius { get { return _radius; } }
+        public int RawRadius
+        {
+            get { return _radius; }
+        }
+
+        public int RawRange
+        {
+            get { return _range; }
+        }
 
         public int Range
         {

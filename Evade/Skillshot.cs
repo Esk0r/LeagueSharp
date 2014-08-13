@@ -19,6 +19,7 @@ namespace Evade
         SkillshotLine,
         SkillshotMissileLine,
         SkillshotCone,
+        SkillshotMissileCone,
         SkillshotRing,
     }
 
@@ -67,19 +68,6 @@ namespace Evade
 
         public Vector2 End;
 
-        private Vector2 _collisionEnd = new Vector2();
-        private int _lastCollisionCalc = 0;
-        
-        public Vector2 CollisionEnd
-        {
-            get
-            {
-                if (_collisionEnd.IsValid())
-                    return _collisionEnd;
-                return End;
-            }
-        }
-
         public bool ForceDisabled;
         public Vector2 MissilePosition;
         public Geometry.Polygon Polygon;
@@ -93,6 +81,8 @@ namespace Evade
 
         private bool _cachedValue;
         private int _cachedValueTick;
+        private Vector2 _collisionEnd;
+        private int _lastCollisionCalc;
 
         public Skillshot(DetectionType detectionType, SpellData spellData, int startT, Vector2 start, Vector2 end,
             Obj_AI_Base unit)
@@ -131,6 +121,29 @@ namespace Evade
             UpdatePolygon(); //Create the polygon.
         }
 
+        public Vector2 CollisionEnd
+        {
+            get
+            {
+                if (_collisionEnd.IsValid())
+                    return _collisionEnd;
+
+                if (IsGlobal)
+                {
+                    return GlobalGetMissilePosition(0) +
+                           Direction * SpellData.MissileSpeed *
+                           (0.5f + SpellData.Radius * 2 / ObjectManager.Player.MoveSpeed);
+                }
+
+                return End;
+            }
+        }
+
+        public bool IsGlobal
+        {
+            get { return SpellData.RawRange == 20000; }
+        }
+
         public Geometry.Polygon EvadePolygon { get; set; }
         public Obj_AI_Base Unit { get; set; }
 
@@ -154,7 +167,6 @@ namespace Evade
 
         public bool Evade()
         {
-
             if (ForceDisabled) return false;
             if (Environment.TickCount - _cachedValueTick < 100)
                 return _cachedValue;
@@ -176,7 +188,8 @@ namespace Evade
         public void Game_OnGameUpdate()
         {
             //Even if it doesnt consume a lot of resources with 20 updatest second works k
-            if (SpellData.CollisionObjects.Count() > 0 && SpellData.CollisionObjects != null && Environment.TickCount - _lastCollisionCalc > 50 && Config.Menu.Item("EnableCollision").GetValue<bool>())
+            if (SpellData.CollisionObjects.Count() > 0 && SpellData.CollisionObjects != null &&
+                Environment.TickCount - _lastCollisionCalc > 50 && Config.Menu.Item("EnableCollision").GetValue<bool>())
             {
                 _lastCollisionCalc = Environment.TickCount;
                 _collisionEnd = Collision.GetCollisionPoint(this);
@@ -226,6 +239,16 @@ namespace Evade
                     EvadePolygon = Ring.ToPolygon(Config.ExtraEvadeDistance);
                     break;
             }
+        }
+
+        /// <summary>
+        /// Returns the missile position after time time.
+        /// </summary>
+        public Vector2 GlobalGetMissilePosition(int time)
+        {
+            var t = Math.Max(0, Environment.TickCount + time - StartTick - SpellData.Delay);
+            t = (int)Math.Max(0, Math.Min(End.Distance(Start), t * SpellData.MissileSpeed / 1000));
+            return Start + Direction * t;
         }
 
         /// <summary>
@@ -311,7 +334,8 @@ namespace Evade
             }
 
             //Skillshot with missile.
-            if (SpellData.Type == SkillShotType.SkillshotMissileLine)
+            if (SpellData.Type == SkillShotType.SkillshotMissileLine ||
+                SpellData.Type == SkillShotType.SkillshotMissileCone)
             {
                 //Outside the skillshot
                 if (IsSafe(ObjectManager.Player.ServerPosition.To2D()))
@@ -378,7 +402,7 @@ namespace Evade
                 if (allIntersections.Count == 0)
                     return new SafePathResult(true, new FoundIntersection());
 
-                if (SpellData.DonCross)
+                if (SpellData.DontCross)
                     return new SafePathResult(false, allIntersections[0]);
             }
             else

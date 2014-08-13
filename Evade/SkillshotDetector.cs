@@ -12,8 +12,9 @@ namespace Evade
 {
     internal static class SkillshotDetector
     {
-        public delegate void OnDetectSkillshotH(Skillshot skillshot);
         public delegate void OnDeleteMissileH(Skillshot skillshot, Obj_SpellMissile missile);
+
+        public delegate void OnDetectSkillshotH(Skillshot skillshot);
 
         static SkillshotDetector()
         {
@@ -22,26 +23,26 @@ namespace Evade
             Obj_AI_Base.OnProcessSpellCast += ObjAiHeroOnOnProcessSpellCast;
 
             //Detect when projectiles collide.
-            Obj_SpellMissile.OnDelete += ObjSpellMissileOnOnDelete;
-            Obj_SpellMissile.OnCreate += ObjSpellMissileOnOnCreate;
+            GameObject.OnDelete += ObjSpellMissileOnOnDelete;
+            GameObject.OnCreate += ObjSpellMissileOnOnCreate;
             //GameObject.OnCreate += GameObject_OnCreate; TODO: Detect lux R and other large skillshots.
             GameObject.OnDelete += GameObject_OnDelete;
 
-            //Game.OnWndProc += Game_OnWndProc;
+           Game.OnWndProc += Game_OnWndProc;
         }
 
-        static void Game_OnWndProc(WndEventArgs args)
+        private static void Game_OnWndProc(WndEventArgs args)
         {
             if (args.Msg == (uint)WindowsMessages.WM_KEYUP)
             {
-                TriggerOnDetectSkillshot(DetectionType.ProcessSpell, SpellDatabase.GetByName("OrianaDetonateCommand"), Environment.TickCount, ObjectManager.Player.ServerPosition.To2D(), Game.CursorPos.To2D(),
-                 ObjectManager.Player);
+                TriggerOnDetectSkillshot(DetectionType.ProcessSpell, SpellDatabase.GetByName("EvelynnR"),
+                    Environment.TickCount, ObjectManager.Player.ServerPosition.To2D(), Game.CursorPos.To2D(),
+                    ObjectManager.Player);
             }
         }
 
         private static void GameObject_OnCreate(GameObject sender, EventArgs args)
         {
-            
         }
 
         private static void GameObject_OnDelete(GameObject sender, EventArgs args)
@@ -63,10 +64,13 @@ namespace Evade
 
             var missile = (Obj_SpellMissile)sender;
 
-            #if DEBUG
-                if(missile.SpellCaster is Obj_AI_Hero)
-                    Console.WriteLine("Projectile Created: " + missile.SData.Name);
-            #endif
+#if DEBUG
+            if (missile.SpellCaster is Obj_AI_Hero)
+                Console.WriteLine(Environment.TickCount + " Projectile Created: " + missile.SData.Name + " distance: " +
+                                  missile.StartPosition.Distance(missile.EndPosition) + "Radius: " +
+                                  missile.SData.CastRadiusSecondary[0] + " Speed: " + missile.SData.MissileSpeed);
+
+#endif
 
             var unit = missile.SpellCaster;
             if (!unit.IsValid || (unit.Team == ObjectManager.Player.Team && !Config.TestOnAllies)) return;
@@ -83,7 +87,8 @@ namespace Evade
 
             if (spellData.ExtraRange != -1)
             {
-                endPos = endPos + Math.Min(spellData.ExtraRange, spellData.Range - endPos.Distance(unitPosition)) * direction;
+                endPos = endPos +
+                         Math.Min(spellData.ExtraRange, spellData.Range - endPos.Distance(unitPosition)) * direction;
             }
 
             var castTime = Environment.TickCount - Game.Ping / 2 - spellData.Delay -
@@ -92,8 +97,6 @@ namespace Evade
             //Trigger the skillshot detection callbacks.
             TriggerOnDetectSkillshot(DetectionType.RecvPacket, spellData, castTime, unitPosition, endPos,
                 unit);
-
-            
         }
 
         /// <summary>
@@ -115,20 +118,26 @@ namespace Evade
             if (OnDeleteMissile != null)
                 foreach (var skillshot in Program.DetectedSkillshots)
                     if (skillshot.SpellData.MissileSpellName == spellName &&
-                        (skillshot.Unit.NetworkId == unit.NetworkId && (missile.EndPosition.To2D() - missile.StartPosition.To2D()).AngleBetween(skillshot.Direction) < 10) && skillshot.SpellData.CanBeRemoved)
+                        (skillshot.Unit.NetworkId == unit.NetworkId &&
+                         (missile.EndPosition.To2D() - missile.StartPosition.To2D()).AngleBetween(skillshot.Direction) <
+                         10) && skillshot.SpellData.CanBeRemoved)
                     {
                         OnDeleteMissile(skillshot, missile);
                         break;
                     }
 
-            #if DEBUG
-                Console.WriteLine("Missile deleted: " + missile.SData.Name);
-            #endif
+#if DEBUG
+            Console.WriteLine("Missile deleted: " + missile.SData.Name + " D: " +
+                              missile.EndPosition.Distance(missile.Position));
+#endif
 
             Program.DetectedSkillshots.RemoveAll(
                 skillshot =>
-                    (skillshot.SpellData.MissileSpellName == spellName || skillshot.SpellData.ExtraMissileNames.Contains(spellName)) &&
-                    (skillshot.Unit.NetworkId == unit.NetworkId && (missile.EndPosition.To2D() - missile.StartPosition.To2D()).AngleBetween(skillshot.Direction) < 10 ) && skillshot.SpellData.CanBeRemoved);// 
+                    (skillshot.SpellData.MissileSpellName == spellName ||
+                     skillshot.SpellData.ExtraMissileNames.Contains(spellName)) &&
+                    (skillshot.Unit.NetworkId == unit.NetworkId &&
+                     (missile.EndPosition.To2D() - missile.StartPosition.To2D()).AngleBetween(skillshot.Direction) < 10) &&
+                    skillshot.SpellData.CanBeRemoved); // 
         }
 
         /// <summary>
@@ -161,6 +170,10 @@ namespace Evade
                 Game.PrintChat(Environment.TickCount + " ProcessSpellCast: " + args.SData.Name);
             }
 
+            if (args.SData.Name == "dravenrdoublecast")
+                Program.DetectedSkillshots.RemoveAll(
+                    s => s.Unit.NetworkId == sender.NetworkId && s.SpellData.SpellName == "DravenRCast");
+
             if (!sender.IsValid || sender.Team == ObjectManager.Player.Team && !Config.TestOnAllies) return;
             //Get the skillshot data.
             var spellData = SpellDatabase.GetByName(args.SData.Name);
@@ -187,7 +200,8 @@ namespace Evade
 
             var endPos = args.End.To2D();
 
-            if (spellData.SpellName == "LucianQ" && endPos.Distance(ObjectManager.Player.ServerPosition.To2D()) < 50)
+            if (spellData.SpellName == "LucianQ" && args.Target != null &&
+                args.Target.NetworkId == ObjectManager.Player.NetworkId)
                 return;
 
             //Calculate the real end Point:
@@ -197,7 +211,8 @@ namespace Evade
 
             if (spellData.ExtraRange != -1)
             {
-                endPos = endPos + Math.Min(spellData.ExtraRange, spellData.Range - endPos.Distance(startPos)) * Direction;
+                endPos = endPos +
+                         Math.Min(spellData.ExtraRange, spellData.Range - endPos.Distance(startPos)) * Direction;
             }
 
 

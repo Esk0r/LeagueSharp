@@ -62,7 +62,7 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "Gragas")
             {
-                spell = new DashData("Gragas E", SpellSlot.E, 600, false, 250, 911, 3);
+                spell = new DashData("Gragas E", SpellSlot.E, 600, true, 250, 911, 3);
                 Spells.Add(spell);
             }
 
@@ -72,9 +72,10 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "LeeSin")
             {
-                spell = new DashData("LeeSin W", SpellSlot.W, 700, false, 250, 911, 3);
-                spell.ValidTargets = new[] { SpellValidTargets.AllyChampions, SpellValidTargets.AllyMinions, SpellValidTargets.AllyWards };
-                spell.CheckSpellName = "LeessingaW1";
+                spell = new DashData("LeeSin W", SpellSlot.W, 700, false, 250, 2000, 3);
+                spell.ValidTargets = new[]
+                { SpellValidTargets.AllyChampions, SpellValidTargets.AllyMinions, SpellValidTargets.AllyWards };
+                spell.CheckSpellName = "BlindMonkWOne";
                 Spells.Add(spell);
             }
 
@@ -178,7 +179,7 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "Shaco")
             {
-                spell = new BlinkData("Shaco Q", SpellSlot.Q, 400, 250, 3);
+                spell = new BlinkData("Shaco Q", SpellSlot.Q, 400, 350, 3);
                 Spells.Add(spell);
             }
 

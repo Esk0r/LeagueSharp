@@ -1,7 +1,7 @@
 ﻿#region
 
-using System;
 using System.Drawing;
+using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 
@@ -45,6 +45,9 @@ namespace Evade
                 subMenu.AddItem(
                     new MenuItem("DangerLevel" + spell.Name, "Danger level").SetValue(new Slider(spell.DangerLevel,
                         5, 1)));
+
+                if (spell.IsTargetted && spell.ValidTargets.Contains(SpellValidTargets.AllyWards))
+                    subMenu.AddItem(new MenuItem("WardJump" + spell.Name, "WardJump").SetValue(true));
 
                 subMenu.AddItem(new MenuItem("Enabled" + spell.Name, "Enabled").SetValue(true));
 
@@ -95,9 +98,9 @@ namespace Evade
             }
             Menu.AddSubMenu(shielding);
 
-            var collision = new Menu("Collision BETA :^(", "Collision");
-            collision.AddItem(new MenuItem("MinionCollision", "Minion collision").SetValue(true));
-            collision.AddItem(new MenuItem("HeroCollision", "Hero collision").SetValue(true));
+            var collision = new Menu("Collision", "Collision");
+            collision.AddItem(new MenuItem("MinionCollision", "Minion collision").SetValue(false));
+            collision.AddItem(new MenuItem("HeroCollision", "Hero collision").SetValue(false));
             collision.AddItem(new MenuItem("YasuoCollision", "Yasuo wall collision").SetValue(true));
             collision.AddItem(new MenuItem("EnableCollision", "Enabled").SetValue(true));
             //TODO add mode.
@@ -119,11 +122,6 @@ namespace Evade
                 new MenuItem("OnlyDangerous", "Dodge only dangerous").SetValue(new KeyBind(32, KeyBindType.Press)));
 
             Menu.AddToMainMenu();
-
         }
-
-
-
-
     }
 }

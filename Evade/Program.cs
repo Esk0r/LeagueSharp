@@ -1,6 +1,4 @@
-﻿
-
-#region
+﻿#region
 
 using System;
 using System.Collections.Generic;
@@ -13,7 +11,6 @@ using GamePath = System.Collections.Generic.List<SharpDX.Vector2>;
 
 #endregion
 
-
 namespace Evade
 {
     internal class Program
@@ -25,9 +22,9 @@ namespace Evade
         private static Vector2 _evadePoint;
 
         public static bool NoSolutionFound = false;
-        
-        public static Vector2 EvadeToPoint = new Vector2();
 
+        public static Vector2 EvadeToPoint = new Vector2();
+        public static int LastWardJumpAttempt = 0;
         public static Vector2 AfterEvadePoint = new Vector2();
         public static Vector2 CutPathPoint = new Vector2();
         public static Vector2 PreviousTickPosition = new Vector2();
@@ -64,6 +61,7 @@ namespace Evade
 
         private static void Main(string[] args)
         {
+
             if (Game.Mode == GameMode.Running)
                 Game_OnGameStart(new EventArgs());
 
@@ -117,18 +115,18 @@ namespace Evade
 
             //Initialze the collision
             Collision.Init();
-
-
+            
+            Game.PrintChat("<font color=\"#00BFFF\">Evade# -</font> <font color=\"#FFFFFF\">Loaded</font>");
+           
             foreach (var hero in ObjectManager.Get<Obj_AI_Hero>())
             {
                 foreach (var spell in hero.Spellbook.Spells)
                 {
                     Console.WriteLine(spell.SData.Name + " w:" + spell.SData.LineWidth + " s:" +
                                       spell.SData.MissileSpeed + " r: " + spell.SData.CastRange[0]);
-                } 
-            }    
-                
-           
+                }
+            } 
+            Console.WriteLine(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name);
         }
 
         private static void DetectedSkillshots_OnAdd(object sender, EventArgs e)
@@ -147,8 +145,9 @@ namespace Evade
                     for (var i = -1; i <= 1; i = i + 2)
                     {
                         var skillshotToAdd = new Skillshot(DetectionType.ProcessSpell, spellData,
-                                    Environment.TickCount, missile.Position.To2D(), missile.Position.To2D() + i * direction * spellData.Range, skillshot.Unit);
-                       DetectedSkillshots.Add(skillshotToAdd);
+                            Environment.TickCount, missile.Position.To2D(),
+                            missile.Position.To2D() + i * direction * spellData.Range, skillshot.Unit);
+                        DetectedSkillshots.Add(skillshotToAdd);
                     }
             }
         }
@@ -160,7 +159,9 @@ namespace Evade
 
             foreach (var item in DetectedSkillshots)
             {
-                if (item.SpellData.SpellName == skillshot.SpellData.SpellName && (item.Unit.NetworkId == skillshot.Unit.NetworkId && (skillshot.Direction).AngleBetween(item.Direction) < 10))
+                if (item.SpellData.SpellName == skillshot.SpellData.SpellName &&
+                    (item.Unit.NetworkId == skillshot.Unit.NetworkId &&
+                     (skillshot.Direction).AngleBetween(item.Direction) < 5))
                 {
                     alreadyAdded = true;
                 }
@@ -202,7 +203,7 @@ namespace Evade
 
                     if (skillshot.SpellData.SpellName == "UFSlash")
                     {
-                        skillshot.SpellData.MissileSpeed = 1700 + (int)skillshot.Unit.MoveSpeed;
+                        skillshot.SpellData.MissileSpeed = 1600 + (int)skillshot.Unit.MoveSpeed;
                     }
 
                     if (skillshot.SpellData.Invert)
@@ -252,6 +253,80 @@ namespace Evade
                         }
                         return;
                     }
+
+                    if (skillshot.SpellData.SpellName == "AlZaharCalloftheVoid")
+                    {
+                        var start = skillshot.End - skillshot.Direction.Perpendicular() * 400;
+                        var end = skillshot.End + skillshot.Direction.Perpendicular() * 400;
+                        var skillshotToAdd = new Skillshot(skillshot.DetectionType, skillshot.SpellData,
+                            skillshot.StartTick, start, end, skillshot.Unit);
+                        DetectedSkillshots.Add(skillshotToAdd);
+                        return;
+                    }
+
+                    if (skillshot.SpellData.SpellName == "ZiggsQ")
+                    {
+                        var d1 = skillshot.Start.Distance(skillshot.End);
+                        var d2 = d1 * 0.4f;
+                        var d3 = d2 * 0.69f;
+
+
+                        var bounce1SpellData = SpellDatabase.GetByName("ZiggsQBounce1");
+                        var bounce2SpellData = SpellDatabase.GetByName("ZiggsQBounce2");
+
+                        var bounce1Pos = skillshot.End + skillshot.Direction * d2;
+                        var bounce2Pos = bounce1Pos + skillshot.Direction * d3;
+
+                        bounce1SpellData.Delay =
+                            (int)(skillshot.SpellData.Delay + d1 * 1000f / skillshot.SpellData.MissileSpeed + 500);
+                        bounce2SpellData.Delay =
+                            (int)(bounce1SpellData.Delay + d2 * 1000f / bounce1SpellData.MissileSpeed + 500);
+
+                        var bounce1 = new Skillshot(skillshot.DetectionType, bounce1SpellData, skillshot.StartTick,
+                            skillshot.End, bounce1Pos, skillshot.Unit);
+                        var bounce2 = new Skillshot(skillshot.DetectionType, bounce2SpellData, skillshot.StartTick,
+                            bounce1Pos, bounce2Pos, skillshot.Unit);
+
+                        DetectedSkillshots.Add(bounce1);
+                        DetectedSkillshots.Add(bounce2);
+                    }
+
+                    if (skillshot.SpellData.SpellName == "ZiggsR")
+                    {
+                        skillshot.SpellData.Delay = (int)(1500 +
+                                                          1500 * skillshot.End.Distance(skillshot.Start) /
+                                                          skillshot.SpellData.Range);
+                    }
+
+                    if (skillshot.SpellData.SpellName == "JarvanIVDragonStrike")
+                    {
+                        var endPos = new Vector2();
+
+                        foreach (var s in DetectedSkillshots)
+                            if (s.Unit.NetworkId == skillshot.Unit.NetworkId && s.SpellData.Slot == SpellSlot.E)
+                                endPos = s.End;
+
+                        foreach (var m in ObjectManager.Get<Obj_AI_Minion>())
+                            if (m.BaseSkinName == "jarvanivstandard" && m.Team == skillshot.Unit.Team &&
+                                skillshot.IsDanger(m.Position.To2D()))
+
+                                endPos = m.Position.To2D();
+
+                        if (!endPos.IsValid()) return;
+
+                        skillshot.End = endPos + 200 * (endPos - skillshot.Start).Normalized();
+                        skillshot.Direction = (skillshot.End - skillshot.Start).Normalized();
+                    }
+                }
+
+                if (skillshot.SpellData.SpellName == "OriannasQ")
+                {
+                    var endCSpellData = SpellDatabase.GetByName("OriannaQend");
+
+                    var skillshotToAdd = new Skillshot(skillshot.DetectionType, endCSpellData, skillshot.StartTick,
+                        skillshot.Start, skillshot.End, skillshot.Unit);
+
+                    DetectedSkillshots.Add(skillshotToAdd);
                 }
 
 
@@ -506,6 +581,7 @@ namespace Evade
         {
             if (sender.IsMe)
             {
+                Console.WriteLine(args.Speed);
                 Utility.DelayAction.Add(args.Duration, delegate { Evading = false; });
             }
         }
@@ -583,7 +659,7 @@ namespace Evade
         /// </summary>
         public static bool IsAboutToHit(Obj_AI_Base unit, int time)
         {
-            time += 100;
+            time += 150;
             foreach (var skillshot in DetectedSkillshots)
             {
                 if (skillshot.Evade())
@@ -651,24 +727,73 @@ namespace Evade
 
                                 if (targets.Count > 0)
                                 {
-                                        var closestTarget = Utils.Closest(targets, to);
-                                        EvadePoint = closestTarget.ServerPosition.To2D();
-                                        Evading = true;
+                                    var closestTarget = Utils.Closest(targets, to);
+                                    EvadePoint = closestTarget.ServerPosition.To2D();
+                                    Evading = true;
 
-                                        if (evadeSpell.IsSummonerSpell)
-                                        {
-                                            ObjectManager.Player.SummonerSpellbook.CastSpell(evadeSpell.Slot,
-                                                closestTarget);
-                                        }
-                                        else
-                                        {
-                                            ObjectManager.Player.Spellbook.CastSpell(evadeSpell.Slot, closestTarget);
-                                        }
+                                    if (evadeSpell.IsSummonerSpell)
+                                    {
+                                        ObjectManager.Player.SummonerSpellbook.CastSpell(evadeSpell.Slot,
+                                            closestTarget);
+                                    }
+                                    else
+                                    {
+                                        ObjectManager.Player.Spellbook.CastSpell(evadeSpell.Slot, closestTarget);
+                                    }
 
                                     return;
                                 }
-                            }
+                                if (Environment.TickCount - LastWardJumpAttempt < 250)
+                                {
+                                    //Let the user move freely inside the skillshot.
+                                    NoSolutionFound = true;
+                                    return;
+                                }
 
+                                if (evadeSpell.IsTargetted &&
+                                    evadeSpell.ValidTargets.Contains(SpellValidTargets.AllyWards) &&
+                                    Config.Menu.Item("WardJump" + evadeSpell.Name).GetValue<bool>())
+                                {
+                                    var wardSlot = Items.GetWardSlot();
+                                    if (wardSlot != null)
+                                    {
+                                        var points = Evader.GetEvadePoints(evadeSpell.Speed, evadeSpell.Delay, false);
+
+                                        // Remove the points out of range
+                                        points.RemoveAll(
+                                            item => item.Distance(ObjectManager.Player.ServerPosition) > 600);
+
+                                        if (points.Count > 0)
+                                        {
+                                            //Dont dash just to the edge:
+                                            for (var i = 0; i < points.Count; i++)
+                                            {
+                                                var k =
+                                                    (int)
+                                                        (600 -
+                                                         ObjectManager.Player.ServerPosition.To2D().Distance(points[i]));
+
+                                                k = k - new Random(Environment.TickCount).Next(k);
+                                                var extended = points[i] +
+                                                               k *
+                                                               (points[i] - ObjectManager.Player.ServerPosition.To2D())
+                                                                   .Normalized();
+                                                if (IsSafe(extended).IsSafe)
+                                                {
+                                                    points[i] = extended;
+                                                }
+                                            }
+
+                                            var ePoint = to.Closest(points);
+                                            wardSlot.UseItem(ePoint.To3D());
+                                            LastWardJumpAttempt = Environment.TickCount;
+                                            //Let the user move freely inside the skillshot.
+                                            NoSolutionFound = true;
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
                                 //Skillshot type dashes.
                             else
                             {
@@ -732,7 +857,6 @@ namespace Evade
                                 var targets = Evader.GetEvadeTargets(evadeSpell.ValidTargets, int.MaxValue,
                                     evadeSpell.Delay,
                                     evadeSpell.MaxRange, true, false);
-
                                 if (targets.Count > 0)
                                 {
                                     if (IsAboutToHit(ObjectManager.Player, evadeSpell.Delay))
@@ -755,6 +879,56 @@ namespace Evade
                                     //Let the user move freely inside the skillshot.
                                     NoSolutionFound = true;
                                     return;
+                                }
+                                if (Environment.TickCount - LastWardJumpAttempt < 250)
+                                {
+                                    //Let the user move freely inside the skillshot.
+                                    NoSolutionFound = true;
+                                    return;
+                                }
+
+                                if (evadeSpell.IsTargetted &&
+                                    evadeSpell.ValidTargets.Contains(SpellValidTargets.AllyWards) &&
+                                    Config.Menu.Item("WardJump" + evadeSpell.Name).GetValue<bool>())
+                                {
+                                    var wardSlot = Items.GetWardSlot();
+                                    if (wardSlot != null)
+                                    {
+                                        var points = Evader.GetEvadePoints(int.MaxValue, evadeSpell.Delay, true);
+
+                                        // Remove the points out of range
+                                        points.RemoveAll(
+                                            item => item.Distance(ObjectManager.Player.ServerPosition) > 600);
+
+                                        if (points.Count > 0)
+                                        {
+                                            //Dont blink just to the edge:
+                                            for (var i = 0; i < points.Count; i++)
+                                            {
+                                                var k =
+                                                    (int)
+                                                        (600 -
+                                                         ObjectManager.Player.ServerPosition.To2D().Distance(points[i]));
+
+                                                k = k - new Random(Environment.TickCount).Next(k);
+                                                var extended = points[i] +
+                                                               k *
+                                                               (points[i] - ObjectManager.Player.ServerPosition.To2D())
+                                                                   .Normalized();
+                                                if (IsSafe(extended).IsSafe)
+                                                {
+                                                    points[i] = extended;
+                                                }
+                                            }
+
+                                            var ePoint = to.Closest(points);
+                                            wardSlot.UseItem(ePoint.To3D());
+                                            LastWardJumpAttempt = Environment.TickCount;
+                                            //Let the user move freely inside the skillshot.
+                                            NoSolutionFound = true;
+                                            return;
+                                        }
+                                    }
                                 }
                             }
 
@@ -901,9 +1075,12 @@ namespace Evade
                         : Config.Menu.Item("DisabledColor").GetValue<Color>(), Border);
             }
 
+            
             if (Config.TestOnAllies)
             {
+                
                 var myPath = ObjectManager.Player.GetWaypoints();
+                
                 for (var i = 0; i < myPath.Count - 1; i++)
                 {
                     var A = myPath[i];
@@ -915,6 +1092,7 @@ namespace Evade
 
                 Drawing.DrawCircle(EvadePoint.To3D(), 300, Color.White);
             }
+            
         }
 
         public struct IsSafeResult
