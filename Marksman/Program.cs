@@ -77,6 +77,9 @@ namespace Marksman
             var harass = Config.AddSubMenu(new Menu("Harass", "Harass"));
             CClass.HarassMenu(harass);
 
+            var laneclear = Config.AddSubMenu(new Menu("LaneClear", "LaneClear"));
+            CClass.LaneClearMenu(laneclear);
+
             var misc = Config.AddSubMenu(new Menu("Misc", "Misc"));
             CClass.MiscMenu(misc);
 
