@@ -139,9 +139,9 @@ namespace Marksman {
         }
 
         public override void MiscMenu(Menu config) {
-            config.AddItem(new MenuItem("UseEQC" + Id, "Use E-Q Combo").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
-            config.AddItem(new MenuItem("UltHelp" + Id, "Ult Helper").SetValue(new KeyBind("R".ToCharArray()[0], KeyBindType.Press)));
-        }
+            config.AddItem(new MenuItem("UltHelp" + Id, "Ult Target on R").SetValue(new KeyBind("R".ToCharArray()[0], KeyBindType.Press)));
+            config.AddItem(new MenuItem("UseEQC" + Id, "Use E-Q Combo").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press))); 
+       }
 
         public override void DrawingMenu(Menu config) {
             config.AddItem(
