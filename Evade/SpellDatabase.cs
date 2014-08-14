@@ -2993,7 +2993,7 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "ZiggsQSpell",
-                CanBeRemoved = true,
+                CanBeRemoved = false,
                 DisableFowDetection = true,
             });
 
@@ -3013,7 +3013,7 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "ZiggsQSpell2",
                 ExtraMissileNames = new[] { "ZiggsQSpell2" },
-                CanBeRemoved = true,
+                CanBeRemoved = false,
                 DisableFowDetection = true,
             });
 
@@ -3033,7 +3033,7 @@ namespace Evade
                 IsDangerous = false,
                 MissileSpellName = "ZiggsQSpell3",
                 ExtraMissileNames = new[] { "ZiggsQSpell3" },
-                CanBeRemoved = true,
+                CanBeRemoved = false,
                 DisableFowDetection = true,
             });
 
