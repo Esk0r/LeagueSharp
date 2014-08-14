@@ -126,7 +126,7 @@ namespace Evade
                                       spell.SData.MissileSpeed + " r: " + spell.SData.CastRange[0]);
                 }
             } 
-            Console.WriteLine(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name);
+            Console.WriteLine(ObjectManager.Player.ChampionName);
         }
 
         private static void DetectedSkillshots_OnAdd(object sender, EventArgs e)

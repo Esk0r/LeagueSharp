@@ -28,7 +28,7 @@ namespace Evade
             //GameObject.OnCreate += GameObject_OnCreate; TODO: Detect lux R and other large skillshots.
             GameObject.OnDelete += GameObject_OnDelete;
 
-           Game.OnWndProc += Game_OnWndProc;
+           //Game.OnWndProc += Game_OnWndProc;
         }
 
         private static void Game_OnWndProc(WndEventArgs args)
