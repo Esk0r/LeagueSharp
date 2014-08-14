@@ -2,23 +2,24 @@
 
 using System;
 using System.Drawing;
-using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
+
 #endregion
 
-// Base done by Chulbul-Pandey, Drawings and improvements added by Dibes.
-namespace Marksman {
-    internal class Caitlyn : Champion {
-        public Spell Q;
+namespace Marksman
+{
+    internal class Caitlyn : Champion // Base done by Chulbul-Pandey, Drawings and improvements added by Dibes.
+    {
         public Spell E;
+        public Spell Q;
         public Spell R;
-        // Vars for ulting
-        public string ultTarget;
-        public bool showUlt;
 
-        public Caitlyn() {
+        public bool ShowUlt;
+        public string UltTarget;
 
+        public Caitlyn()
+        {
             Utils.PrintMessage("Caitlyn loaded.");
 
             Q = new Spell(SpellSlot.Q, 1240);
@@ -29,34 +30,21 @@ namespace Marksman {
 
             R = new Spell(SpellSlot.R, 2000);
 
-
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter.OnPosibleToInterrupt += Interrupter_OnPosibleToInterrupt;
         }
 
-        public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser) {
+        public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
+        {
             if (E.IsReady() && gapcloser.Sender.IsValidTarget(E.Range))
                 E.CastOnUnit(gapcloser.Sender);
         }
 
-        public void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell) {
-            if (GetValue<bool>("UseEInterrupt") && unit.IsValidTarget(800f))
-                E.Cast(unit);
-        }
-
-        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target) {
-            if ((ComboActive || HarassActive) && !unit.IsMe && (target is Obj_AI_Hero)) {
-                var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-
-                if (Q.IsReady() && useQ) {
-                    Q.Cast(target);
-                }
-            }
-        }
-
-        public override void Drawing_OnDraw(EventArgs args) {
-            Spell[] spellList = { Q, E, R };            
-            foreach (var spell in spellList) {
+        public override void Drawing_OnDraw(EventArgs args)
+        {
+            Spell[] spellList = { Q, E, R };
+            foreach (var spell in spellList)
+            {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
                 if (menuItem.Active)
                     Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
@@ -64,86 +52,109 @@ namespace Marksman {
 
             var drawUlt = GetValue<Circle>("DrawUlt");
 
-            if (drawUlt.Active && showUlt) {
-                float[] playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
-                Drawing.DrawText(playerPos[0] - 65, playerPos[1] + 20, drawUlt.Color, "Hit R To kill " + ultTarget + "!");
+            if (drawUlt.Active && ShowUlt)
+            {
+                var playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
+                Drawing.DrawText(playerPos[0] - 65, playerPos[1] + 20, drawUlt.Color, "Hit R To kill " + UltTarget + "!");
             }
         }
 
-        public override void Game_OnGameUpdate(EventArgs args) {
+        public override void Game_OnGameUpdate(EventArgs args)
+        {
             R.Range = 500 * R.Level + 1500;
 
             Obj_AI_Hero vTarget;
 
-            if (ComboActive || HarassActive) {
-                var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-                var useE = GetValue<bool>("UseEC");
-                var useR = GetValue<bool>("UseRC");
+            if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100)) return;
 
-                if (Orbwalking.CanMove(100)) {
-                     
-                    if (Q.IsReady() && useQ) {
-                        vTarget = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
-                        if (vTarget != null)
-                            Q.Cast(vTarget);
-                    } else if (E.IsReady() && useE) {
-                        vTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
-                        if (vTarget != null && vTarget.Health <= E.GetDamage(vTarget))
-                            E.Cast(vTarget);
-                    }
+            var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
+            var useE = GetValue<bool>("UseEC");
+            var useR = GetValue<bool>("UseRC");
 
-                }
-
-                if (R.IsReady() && useR) {
-                    vTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
-                    if (vTarget != null && vTarget.Health <= R.GetDamage(vTarget) && !Orbwalking.InAutoAttackRange(vTarget)) {
-                        R.CastOnUnit(vTarget);
-                    }
-                }
+            if (Q.IsReady() && useQ)
+            {
+                vTarget = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                if (vTarget != null)
+                    Q.Cast(vTarget, false, true);
             }
-
-            var useEQ = GetValue<KeyBind>("UseEQC").Active;
-
-            if (R.IsReady()) {
-                vTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
-                if (vTarget != null && vTarget.Health <= R.GetDamage(vTarget)) {
-                    if (GetValue<KeyBind>("UltHelp").Active) {
-                        R.Cast(vTarget);
-                    }
-                    ultTarget = vTarget.ChampionName;
-                    showUlt = true;
-                } else {
-                    showUlt = false;
-                }
-            } else {
-                showUlt = false;
-            }
-
-            if (useEQ && E.IsReady() && Q.IsReady()) /* Use EQ Combo */ {
+            else if (E.IsReady() && useE)
+            {
                 vTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
-                if (vTarget != null) {
+                if (vTarget != null && vTarget.Health <= E.GetDamage(vTarget))
                     E.Cast(vTarget);
-                    Q.Cast(vTarget);
+            }
+
+            if (R.IsReady() && useR)
+            {
+                vTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+                if (vTarget != null && vTarget.Health <= R.GetDamage(vTarget) &&
+                    !Orbwalking.InAutoAttackRange(vTarget))
+                {
+                    R.CastOnUnit(vTarget);
+                }
+            }
+
+            if (R.IsReady())
+            {
+                vTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+                if (vTarget != null && vTarget.Health <= R.GetDamage(vTarget))
+                {
+                    if (GetValue<KeyBind>("UltHelp").Active)
+                        R.Cast(vTarget);
+
+                    UltTarget = vTarget.ChampionName;
+                    ShowUlt = true;
+                }
+                else
+                {
+                    ShowUlt = false;
+                }
+            }
+            else
+            {
+                ShowUlt = false;
+            }
+
+            if (GetValue<KeyBind>("UseEQC").Active && E.IsReady() && Q.IsReady())
+            {
+                vTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                if (vTarget != null)
+                {
+                    E.Cast(vTarget);
+                    Q.Cast(vTarget, false, true);
                 }
             }
         }
 
-        public override void ComboMenu(Menu config) {
+        public void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
+        {
+            if (GetValue<bool>("UseEInterrupt") && unit.IsValidTarget(800f))
+                E.Cast(unit);
+        }
+
+        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        {
+            if ((!ComboActive && !HarassActive) || unit.IsMe || (!(target is Obj_AI_Hero))) return;
+
+            var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
+            if (useQ)
+                Q.Cast(target, false, true);
+        }
+
+        public override void ComboMenu(Menu config)
+        {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
             config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(true));
         }
 
-        public override void HarassMenu(Menu config) {
+        public override void HarassMenu(Menu config)
+        {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
         }
 
-        public override void MiscMenu(Menu config) {
-            config.AddItem(new MenuItem("UltHelp" + Id, "Ult Target on R").SetValue(new KeyBind("R".ToCharArray()[0], KeyBindType.Press)));
-            config.AddItem(new MenuItem("UseEQC" + Id, "Use E-Q Combo").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press))); 
-       }
-
-        public override void DrawingMenu(Menu config) {
+        public override void DrawingMenu(Menu config)
+        {
             config.AddItem(
                 new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
             config.AddItem(
@@ -152,6 +163,16 @@ namespace Marksman {
                 new MenuItem("DrawR" + Id, "R range").SetValue(new Circle(false, Color.FromArgb(100, 255, 255, 255))));
             config.AddItem(
                 new MenuItem("DrawUlt" + Id, "Ult Text").SetValue(new Circle(true, Color.FromArgb(255, 255, 255, 255))));
+        }
+
+        public override void MiscMenu(Menu config)
+        {
+            config.AddItem(
+                new MenuItem("UltHelp" + Id, "Ult Target on R").SetValue(new KeyBind("R".ToCharArray()[0],
+                    KeyBindType.Press)));
+            config.AddItem(
+                new MenuItem("UseEQC" + Id, "Use E-Q Combo").SetValue(new KeyBind("T".ToCharArray()[0],
+                    KeyBindType.Press)));
         }
     }
 }

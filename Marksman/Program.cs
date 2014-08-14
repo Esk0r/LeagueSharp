@@ -24,6 +24,9 @@ namespace Marksman
             Config = new Menu("Marksman", "Marksman", true);
 
             CClass = new Champion();
+            if (ObjectManager.Player.ChampionName == "Caitlyn")
+                CClass = new Caitlyn();
+
             if (ObjectManager.Player.ChampionName == "Corki")
                 CClass = new Corki();
 
@@ -53,9 +56,6 @@ namespace Marksman
 
             if (ObjectManager.Player.ChampionName == "Vayne")
                 CClass = new Vayne();
-
-            if (ObjectManager.Player.ChampionName == "Caitlyn")
-                CClass = new Caitlyn();
 
             CClass.Id = ObjectManager.Player.BaseSkinName;
             CClass.Config = Config;
