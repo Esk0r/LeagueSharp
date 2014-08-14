@@ -56,5 +56,9 @@ namespace Marksman
         public virtual void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
         {
         }
+
+        public virtual void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+        }
     }
 }

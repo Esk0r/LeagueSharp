@@ -93,11 +93,7 @@ namespace Marksman
             Drawing.OnDraw += Drawing_OnDraw;
             Game.OnGameUpdate += Game_OnGameUpdate;
             Orbwalking.AfterAttack += Orbwalking_AfterAttack;
-        }
-
-        private static void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
-        {
-            CClass.Orbwalking_AfterAttack(unit, target);
+            Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
         }
 
         private static void Drawing_OnDraw(EventArgs args)
@@ -162,6 +158,16 @@ namespace Marksman
             if (ghostblade && target != null && target.Type == ObjectManager.Player.Type &&
                 Orbwalking.InAutoAttackRange(target))
                 Items.UseItem(3142);
+        }
+
+        private static void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        {
+            CClass.Orbwalking_AfterAttack(unit, target);
+        }
+
+        private static void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+            CClass.Orbwalking_BeforeAttack(args);
         }
     }
 }
