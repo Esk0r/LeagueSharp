@@ -72,7 +72,6 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "AhriOrbMissile",
-                MissileFollowsUnit = true,
                 CollisionObjects = new[] { CollisionObjectTypes.YasuoWall }
             });
 
@@ -90,6 +89,8 @@ namespace Evade
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
+
+                MissileFollowsUnit = true,
                 MissileSpellName = "AhriOrbReturn",
                 CollisionObjects = new[] { CollisionObjectTypes.YasuoWall }
             });
