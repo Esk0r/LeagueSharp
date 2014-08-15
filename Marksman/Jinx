@@ -1,0 +1,257 @@
+#region
+
+using System;
+using System.Drawing;
+using System.Linq;
+using LeagueSharp;
+using LeagueSharp.Common;
+
+#endregion
+
+namespace Marksman
+{
+    internal class Jinx : Champion
+    {
+        public Spell Q;
+        public Spell E;
+        public Spell R;
+        public Spell W;
+        private float QAddRange;
+
+        public Jinx()
+        {
+            Utils.PrintMessage("Jinx loaded.");
+
+            Q = new Spell(SpellSlot.Q, float.MaxValue);  
+          
+            W = new Spell(SpellSlot.W, 1500);
+            W.SetSkillshot(0.6f, 60f, 2000f, true, Prediction.SkillshotType.SkillshotLine);
+
+            E = new Spell(SpellSlot.E, 900);
+            E.SetSkillshot(0.7f, 120f, 1750f, false, Prediction.SkillshotType.SkillshotCircle);
+
+            R = new Spell(SpellSlot.R, 25000);
+            R.SetSkillshot(0.6f, 140f, 1700f, false, Prediction.SkillshotType.SkillshotLine);
+        }
+
+        public override void Drawing_OnDraw(EventArgs args)
+        {
+            Spell[] spellList = { W };
+            foreach (var spell in spellList)
+            {
+                var menuItem = GetValue<Circle>("Draw" + spell.Slot);
+                if (menuItem.Active)
+                    Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
+            }
+        }
+
+        public override void Game_OnGameUpdate(EventArgs args)
+        {   
+            QAddRange = 50 + 25 * ObjectManager.Player.Spellbook.GetSpell(SpellSlot.Q).Level;
+
+            var autoEi = GetValue<bool>("AutoEI");
+            var autoEs = GetValue<bool>("AutoES");
+            var autoEd = GetValue<bool>("AutoED");
+
+            if (autoEd || autoEi)
+            {
+                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsValidTarget(E.Range)))
+                {
+                    if (autoEs && E.IsReady() && enemy.HasBuffOfType(BuffType.Slow))
+                        E.CastIfHitchanceEquals(enemy, Prediction.HitChance.HighHitchance);
+                    if (autoEi && E.IsReady() && (enemy.IsStunned || enemy.HasBuffOfType(BuffType.Snare)))
+                        E.CastIfHitchanceEquals(enemy, Prediction.HitChance.HighHitchance);
+                    if (autoEd && E.IsReady() && enemy.IsDashing())
+                        E.CastIfHitchanceEquals(enemy, Prediction.HitChance.Dashing);
+                }
+            }
+
+            var castR = GetValue<KeyBind>("CastR").Active;
+
+            if (castR && R.IsReady())
+            {
+                var target = SimpleTs.GetTarget(1500, SimpleTs.DamageType.Physical);
+
+                if (target.IsValidTarget())
+                    if (DamageLib.getDmg(target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > target.Health)
+                        R.Cast(target, false, true);
+            }
+
+            if (LaneClearActive && HasFishBones())
+                Q.Cast();
+
+            if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100))
+                return;
+
+            var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
+            var swapDistance = GetValue<bool>("SwapDistance");
+            var swapAOE = GetValue<bool>("SwapAOE");
+            var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
+            var useR = GetValue<bool>("UseRC");
+            var checkROK = GetValue<bool>("ROverKill");
+
+            if (useW && W.IsReady())
+            {
+                var t = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
+
+                if (t.IsValidTarget())
+                    W.Cast(t);
+            }
+
+            if (useQ)
+            {
+                var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+
+                if (t.IsValidTarget())
+                {
+                    if (swapDistance && Q.IsReady())
+                    {
+                        float Distance = t.ServerPosition.Distance(ObjectManager.Player.ServerPosition);
+                        float PowPowRange = GetRealPowPowRange(t);
+
+                        if (Distance > PowPowRange && Distance < (PowPowRange + QAddRange) && !HasFishBones())
+                            Q.Cast();
+                        else if (Distance < PowPowRange && HasFishBones())
+                            Q.Cast();
+                    }
+
+                    if (swapAOE && Q.IsReady())
+                    {
+                        float PowPowStacks = GetPowPowStacks();
+
+                        if (PowPowStacks > 2 && !HasFishBones() && CountEnemies(t, 150) > 1)
+                            Q.Cast();
+                    }
+                }
+            }
+
+            if (useR && R.IsReady())
+            {
+                var minR = GetValue<Slider>("MinRRange").Value;
+                var maxR = GetValue<Slider>("MaxRRange").Value;
+                var t = SimpleTs.GetTarget(maxR, SimpleTs.DamageType.Physical);
+
+                if (t.IsValidTarget())
+                {
+                    float Distance = t.ServerPosition.Distance(ObjectManager.Player.ServerPosition);
+
+                    if (!checkROK)
+                    {
+                        if (DamageLib.getDmg(t, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > t.Health)
+                            R.Cast(t, false, true);
+                    }
+                    else if (checkROK && Distance > minR)
+                    {
+                        var ADamage = DamageLib.getDmg(t, DamageLib.SpellType.AD);
+                        var WDamage = DamageLib.getDmg(t, DamageLib.SpellType.W, DamageLib.StageType.FirstDamage);
+                        var RDamage = DamageLib.getDmg(t, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage);
+                        float PowPowRange = GetRealPowPowRange(t);
+
+                        if (Distance < (PowPowRange + QAddRange) && !(ADamage * 3.5 > t.Health))
+                        {
+                            if(!W.IsReady() || !(WDamage > t.Health) || Distance > W.Range || W.GetPrediction(t).CollisionUnitsList.Count > 0)
+                                if(CountAlliesNearTarget(t, 700) <= 2)
+                                    if (RDamage > t.Health)
+                                        R.Cast(t, false, true);
+                        }
+                        else if(Distance > (PowPowRange + QAddRange))
+                        {
+                            if (!W.IsReady() || !(WDamage > t.Health) || Distance > W.Range || W.GetPrediction(t).CollisionUnitsList.Count > 0)
+                                if (CountAlliesNearTarget(t, 700) <= 2)
+                                    if (RDamage > t.Health)
+                                        R.Cast(t, false, true);
+                        }
+                    }
+                }
+            }
+        }
+
+        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        {
+            if ((ComboActive || HarassActive) && unit.IsMe && (target is Obj_AI_Hero))
+            {
+                var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
+
+                if (useW && W.IsReady())
+                    W.Cast(target);
+            }
+        }
+
+        private bool HasFishBones()
+        {
+            return ObjectManager.Player.AttackRange != 525;
+        }
+
+        private int CountEnemies(Obj_AI_Hero target, float range)
+        {
+            int n = 0;
+
+            foreach (var hero in ObjectManager.Get<Obj_AI_Hero>()
+                .Where(hero => hero.IsValidTarget() && hero.Team != ObjectManager.Player.Team && hero.ServerPosition.Distance(target.ServerPosition) <= range))
+                n++;
+            
+            return n;
+        }
+
+        private int CountAlliesNearTarget(Obj_AI_Hero target, float range)
+        {
+            int n = 0;
+
+            foreach (var hero in ObjectManager.Get<Obj_AI_Hero>()
+                .Where(hero => hero.Team == ObjectManager.Player.Team && hero.ServerPosition.Distance(target.ServerPosition) <= range))
+                n++;
+
+            return n;
+        }
+
+        private int GetPowPowStacks()
+        {
+            int n = 0;
+
+            foreach (var buff in ObjectManager.Player.Buffs)
+                if (buff.DisplayName.ToLower() == "jinxqramp")
+                    n = buff.Count;
+
+            return n;
+        }
+
+        private float GetRealPowPowRange(Obj_AI_Hero target)
+        {
+            return 525 + ObjectManager.Player.BoundingRadius + target.BoundingRadius - ((target.Path.Length > 0) ? 20 : 10);
+        }
+
+        public override void ComboMenu(Menu config)
+        {
+            config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
+            config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
+            config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(true));
+        }
+
+        public override void HarassMenu(Menu config)
+        {
+            config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
+            config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(false));
+        }
+
+        public override void MiscMenu(Menu config)
+        {
+            config.AddItem(
+                new MenuItem("CastR" + Id, "Cast R (2000 Range)").SetValue(new KeyBind("T".ToCharArray()[0],
+                    KeyBindType.Press)));
+            config.AddItem(new MenuItem("ROverKill" + Id, "Check R Overkill").SetValue(true));
+            config.AddItem(new MenuItem("MinRRange" + Id, "Min R range").SetValue(new Slider(300, 0, 1500)));
+            config.AddItem(new MenuItem("MaxRRange" + Id, "Max R range").SetValue(new Slider(1700, 0, 4000)));
+            config.AddItem(new MenuItem("SwapDistance" + Id, "Swap Q for distance").SetValue(true));
+            config.AddItem(new MenuItem("SwapAOE" + Id, "Swap Q for AOE").SetValue(false));
+            config.AddItem(new MenuItem("AutoEI" + Id, "Auto-E on immobile").SetValue(true));
+            config.AddItem(new MenuItem("AutoES" + Id, "Auto-E on slowed").SetValue(true));
+            config.AddItem(new MenuItem("AutoED" + Id, "Auto-E on dashing").SetValue(true));
+        }
+
+        public override void DrawingMenu(Menu config)
+        {
+            config.AddItem(
+                new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(false, Color.FromArgb(100, 255, 255, 255))));
+        }
+    }
+}
