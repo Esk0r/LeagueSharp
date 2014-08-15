@@ -14,6 +14,7 @@ namespace Marksman
         public Menu Config;
         public bool HarassActive;
         public string Id = "";
+        public bool LaneClearActive;
         public Orbwalking.Orbwalker Orbwalker;
 
         public T GetValue<T>(string item)

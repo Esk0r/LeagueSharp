@@ -122,8 +122,8 @@ namespace Marksman
             //Update the combo and harass values.
             CClass.ComboActive = CClass.Config.Item("Orbwalk").GetValue<KeyBind>().Active;
             CClass.HarassActive = CClass.Config.Item("Farm").GetValue<KeyBind>().Active;
+            CClass.LaneClearActive = CClass.Config.Item("LaneClear").GetValue<KeyBind>().Active;
             CClass.Game_OnGameUpdate(args);
-
 
             var useItemModes = Config.Item("UseItemsMode").GetValue<StringList>().SelectedIndex;
 
