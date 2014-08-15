@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caitlyn.cs" />
     <Compile Include="Champion.cs" />
     <Compile Include="Corki.cs" />
     <Compile Include="Ezreal.cs" />
