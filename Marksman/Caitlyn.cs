@@ -106,11 +106,6 @@ namespace Marksman {
             }
         }
 
-        public void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell) {
-            if (GetValue<bool>("UseEInterrupt") && unit.IsValidTarget(800f))
-                E.Cast(unit);
-        }
-
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target) {
             if ((!ComboActive && !HarassActive) || unit.IsMe || (!(target is Obj_AI_Hero))) return;
 
