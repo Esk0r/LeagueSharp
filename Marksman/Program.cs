@@ -41,7 +41,7 @@ namespace Marksman
 
             if (ObjectManager.Player.ChampionName == "KogMaw")
                 CClass = new Kogmaw();
-                
+
             if (ObjectManager.Player.ChampionName == "Lucian")
                 CClass = new Lucian();
 

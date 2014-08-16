@@ -1,12 +1,10 @@
-
 #region
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-using System.Collections.Generic;
-using SharpDX;
 
 #endregion
 
@@ -14,25 +12,26 @@ namespace Marksman
 {
     internal class Lucian : Champion
     {
-        
         // Champion
         private static readonly Obj_AI_Hero vLucian = ObjectManager.Player;
 
         // Spells
-        public Spell Q, W, E, R;
         private static readonly List<Spell> spellList = new List<Spell>();
         private static readonly int maxQ = 1200;
+        public Spell E;
+        public Spell Q;
+        public Spell R;
+        public Spell W;
 
         public Lucian()
         {
             Utils.PrintMessage("Lucian loaded.");
 
             Q = new Spell(SpellSlot.Q, 600);
-            Q.SetSkillshot(0.25f, 65f, float.MaxValue, false, Prediction.SkillshotType.SkillshotCircle);
-
             W = new Spell(SpellSlot.W, 1000);
-            W.SetSkillshot(0.15f, 80f, 1000f, true, Prediction.SkillshotType.SkillshotLine);
 
+            Q.SetSkillshot(0.25f, 65f, float.MaxValue, false, Prediction.SkillshotType.SkillshotCircle);
+            W.SetSkillshot(0.15f, 80f, 1000f, true, Prediction.SkillshotType.SkillshotLine);
         }
 
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
@@ -60,26 +59,23 @@ namespace Marksman
         public static bool HavePassive(Obj_AI_Hero vTarget, string vPassiveName)
         {
             return false;
-
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            Obj_AI_Hero vTarget;
             if (ComboActive || HarassActive)
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
                 var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
 
-                bool xBuffActive;
 
-
-                xBuffActive = (from buff in vLucian.Buffs
-                                    where buff.DisplayName.ToLower() == "lucianpassivebuff"
-                                  select buff.IsActive).FirstOrDefault();
+                var xBuffActive = (from buff in vLucian.Buffs
+                    where buff.DisplayName.ToLower() == "lucianpassivebuff"
+                    select buff.IsActive).FirstOrDefault();
 
                 if (Orbwalking.CanMove(50))
                 {
+                    Obj_AI_Hero vTarget;
                     if (Q.IsReady() && useQ && !xBuffActive)
                     {
                         vTarget = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
@@ -116,9 +112,11 @@ namespace Marksman
         public override void DrawingMenu(Menu config)
         {
             config.AddItem(
-                new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true, System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true,
+                    System.Drawing.Color.FromArgb(100, 255, 0, 255))));
             config.AddItem(
-                new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(false, System.Drawing.Color.FromArgb(100, 255, 255, 255))));
+                new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(false,
+                    System.Drawing.Color.FromArgb(100, 255, 255, 255))));
         }
     }
 }
