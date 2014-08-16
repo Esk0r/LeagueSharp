@@ -261,7 +261,7 @@ namespace Syndra
         {
             var damage = 0d;
 
-            if (Q.IsReady(1000))
+            if (Q.IsReady(420))
                 damage += DamageLib.getDmg(enemy, DamageLib.SpellType.Q);
 
             if (DFG.IsReady())
@@ -276,9 +276,8 @@ namespace Syndra
             if (IgniteSlot != SpellSlot.Unknown && Player.SummonerSpellbook.CanUseSpell(IgniteSlot) == SpellState.Ready)
                 damage += DamageLib.getDmg(enemy, DamageLib.SpellType.IGNITE);
 
-
             if (R.IsReady())
-                damage += Math.Min(7, Math.Max(3, Player.Spellbook.GetSpell(SpellSlot.R).Ammo - 3)) * DamageLib.getDmg(enemy, DamageLib.SpellType.R);
+                damage += Math.Min(7, Player.Spellbook.GetSpell(SpellSlot.R).Ammo) * DamageLib.getDmg(enemy, DamageLib.SpellType.R);
 
             return (float)damage * (DFG.IsReady() ? 1.2f : 1);
         }
@@ -289,7 +288,7 @@ namespace Syndra
             var wTarget = SimpleTs.GetTarget(W.Range + W.Width, SimpleTs.DamageType.Magical);
             var rTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Magical);
             var qeTarget = SimpleTs.GetTarget(EQ.Range, SimpleTs.DamageType.Magical);
-            var comboDamage = GetComboDamage(rTarget);
+            var comboDamage = rTarget != null ? GetComboDamage(rTarget) : 0;
 
             //Q
             if (qTarget != null && useQ)
@@ -504,8 +503,10 @@ namespace Syndra
         {
             if (Player.IsDead) return;
             Orbwalker.SetAttacks(true);
+
             //Update the R range
             R.Range = R.Level == 3 ? 750 : 675;
+           
             if (Config.Item("CastQE").GetValue<KeyBind>().Active && E.IsReady() && Q.IsReady())
                 foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
                     if (enemy.IsValidTarget(EQ.Range) && Game.CursorPos.Distance(enemy.ServerPosition) < 300)
