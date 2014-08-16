@@ -1123,7 +1123,7 @@ namespace Evade
                 Range = 1700,
                 Radius = 150,
                 MissileSpeed = 900,
-                FixedRange = true,
+                FixedRange = false,
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,

@@ -126,7 +126,7 @@ namespace Evade
                                       spell.SData.MissileSpeed + " r: " + spell.SData.CastRange[0]);
                 }
             } 
-            Console.WriteLine(ObjectManager.Player.ChampionName);
+            //Console.WriteLine(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name);
         }
 
         private static void DetectedSkillshots_OnAdd(object sender, EventArgs e)
@@ -334,7 +334,7 @@ namespace Evade
                 if (skillshot.SpellData.DisableFowDetection && skillshot.DetectionType == DetectionType.RecvPacket)
                     return;
 #if DEBUG
-                Console.WriteLine("Adding new skillshot: " + skillshot.SpellData.SpellName);
+                Console.WriteLine(Environment.TickCount+"Adding new skillshot: " + skillshot.SpellData.SpellName);
 #endif
 
                 DetectedSkillshots.Add(skillshot);
@@ -581,7 +581,11 @@ namespace Evade
         {
             if (sender.IsMe)
             {
-                Console.WriteLine(args.Speed);
+                if (Config.PrintSpellData)
+                {
+                    Console.WriteLine(Environment.TickCount+"DASH: Speed: " + args.Speed + " Width:" + args.EndPos.Distance(args.StartPos) );
+                }
+                
                 Utility.DelayAction.Add(args.Duration, delegate { Evading = false; });
             }
         }

@@ -46,6 +46,37 @@ namespace Evade
             Spells.Add(spell);
 
             #region Champion Dashes
+            #region Aatrox
+
+            if (ObjectManager.Player.ChampionName == "Aatrox")
+            {
+                spell = new DashData("Aatrox Q", SpellSlot.Q, 650, false, 400, 3000, 3);
+                spell.Invert = true;
+                Spells.Add(spell);
+            }
+
+            #endregion
+            
+            #region Akali
+
+            if (ObjectManager.Player.ChampionName == "Akali")
+            {
+                spell = new DashData("Akali R", SpellSlot.R, 800, false, 100, 2461, 3);
+                spell.ValidTargets = new[] { SpellValidTargets.EnemyChampions, SpellValidTargets.EnemyMinions };
+                Spells.Add(spell);
+            }
+            #endregion
+
+            #region Alistar
+
+            if (ObjectManager.Player.ChampionName == "Alistar")
+            {
+                spell = new DashData("Alistar W", SpellSlot.W, 650, false, 100, 1900, 3);
+                spell.ValidTargets = new[] { SpellValidTargets.EnemyChampions, SpellValidTargets.EnemyMinions };
+                Spells.Add(spell);
+            }
+
+            #endregion
 
             #region Caitlyn
 
@@ -58,11 +89,72 @@ namespace Evade
 
             #endregion
 
+            #region Caitlyn
+
+            if (ObjectManager.Player.ChampionName == "Corki")
+            {
+                spell = new DashData("Corki W", SpellSlot.W, 790, false, 250, 1044, 3);
+                Spells.Add(spell);
+            }
+
+            #endregion
+
             #region Gragas
 
             if (ObjectManager.Player.ChampionName == "Gragas")
             {
                 spell = new DashData("Gragas E", SpellSlot.E, 600, true, 250, 911, 3);
+                Spells.Add(spell);
+            }
+
+            #endregion
+
+            #region Graves
+
+            if (ObjectManager.Player.ChampionName == "Graves")
+            {
+                spell = new DashData("Graves E", SpellSlot.E, 1223, true, 100, 425, 3);
+                Spells.Add(spell);
+            }
+
+            #endregion
+
+            #region Irelia
+
+            if (ObjectManager.Player.ChampionName == "Irelia")
+            {
+                spell = new DashData("Irelia Q", SpellSlot.Q, 650, false, 100, 2200, 3);
+                spell.ValidTargets = new[] { SpellValidTargets.EnemyChampions, SpellValidTargets.EnemyMinions };
+                Spells.Add(spell);
+            }
+
+            #endregion
+
+            #region Jax
+
+            if (ObjectManager.Player.ChampionName == "Jax")
+            {
+                spell = new DashData("Jax Q", SpellSlot.Q, 700, false, 100, 1400, 3);
+                spell.ValidTargets = new[] {SpellValidTargets.EnemyWards, SpellValidTargets.AllyWards, SpellValidTargets.AllyMinions, SpellValidTargets.AllyChampions, SpellValidTargets.EnemyChampions, SpellValidTargets.EnemyMinions };
+                Spells.Add(spell);
+            }
+
+            #endregion
+
+
+            #region LeBlanc
+
+            if (ObjectManager.Player.ChampionName == "LeBlanc")
+            {
+                spell = new DashData("LeBlanc W1", SpellSlot.W, 600, false, 100, 1621, 3);
+                spell.CheckSpellName = "LeblancSlide";
+                Spells.Add(spell);
+            }
+
+            if (ObjectManager.Player.ChampionName == "LeBlanc")
+            {
+                spell = new DashData("LeBlanc RW", SpellSlot.R, 600, false, 100, 1621, 3);
+                spell.CheckSpellName = "LeblancSlideM";
                 Spells.Add(spell);
             }
 
@@ -87,6 +179,17 @@ namespace Evade
             {
                 spell = new DashData("Nidalee W", SpellSlot.W, 375, true, 250, 943, 3);
                 spell.CheckSpellName = "Pounce";
+                Spells.Add(spell);
+            }
+
+            #endregion
+
+            #region Pantheon
+
+            if (ObjectManager.Player.ChampionName == "Pantheon")
+            {
+                spell = new DashData("Pantheon W", SpellSlot.W, 600, false, 100, 1000, 3);
+                spell.ValidTargets = new[] { SpellValidTargets.EnemyChampions, SpellValidTargets.EnemyMinions };
                 Spells.Add(spell);
             }
 
@@ -131,6 +234,17 @@ namespace Evade
             if (ObjectManager.Player.ChampionName == "Vayne")
             {
                 spell = new DashData("Vayne Q", SpellSlot.Q, 300, true, 250, 900, 2);
+                Spells.Add(spell);
+            }
+
+            #endregion
+
+            #region Wukong
+
+            if (ObjectManager.Player.ChampionName == "MonkeyKing")
+            {
+                spell = new DashData("Wukong E", SpellSlot.E, 650, false, 100, 1400, 3);
+                spell.ValidTargets = new[] { SpellValidTargets.EnemyChampions, SpellValidTargets.EnemyMinions };
                 Spells.Add(spell);
             }
 
@@ -195,6 +309,17 @@ namespace Evade
             {
                 spell = new InvulnerabilityData("Elise E", SpellSlot.E, 250, 3);
                 spell.CheckSpellName = "EliseSpiderEInitial";
+                spell.SelfCast = true;
+                Spells.Add(spell);
+            }
+
+            #endregion
+
+            #region Vladimir
+
+            if (ObjectManager.Player.ChampionName == "Vladimir")
+            {
+                spell = new InvulnerabilityData("Vladimir W", SpellSlot.W, 250, 3);
                 spell.SelfCast = true;
                 Spells.Add(spell);
             }
