@@ -117,16 +117,21 @@ namespace Evade
             Collision.Init();
             
             Game.PrintChat("<font color=\"#00BFFF\">Evade# -</font> <font color=\"#FFFFFF\">Loaded</font>");
-           
-            foreach (var hero in ObjectManager.Get<Obj_AI_Hero>())
+
+            if (Config.PrintSpellData)
             {
-                foreach (var spell in hero.Spellbook.Spells)
+                foreach (var hero in ObjectManager.Get<Obj_AI_Hero>())
                 {
-                    Console.WriteLine(spell.SData.Name + " w:" + spell.SData.LineWidth + " s:" +
-                                      spell.SData.MissileSpeed + " r: " + spell.SData.CastRange[0]);
+                    foreach (var spell in hero.Spellbook.Spells)
+                    {
+                        Console.WriteLine(spell.SData.Name + " w:" + spell.SData.LineWidth + " s:" +
+                                          spell.SData.MissileSpeed + " r: " + spell.SData.CastRange[0]);
+                    }
                 }
-            } 
-            //Console.WriteLine(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name);
+                Console.WriteLine(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).Name);
+            }
+
+            //
         }
 
         private static void DetectedSkillshots_OnAdd(object sender, EventArgs e)

@@ -109,6 +109,16 @@ namespace Evade
 
             #endregion
 
+            #region Gnar
+            if (ObjectManager.Player.ChampionName == "Gnar")
+            {
+                spell = new DashData("Gnar E", SpellSlot.E, 50, false, 0, 900, 3);
+                spell.CheckSpellName = "GnarE";
+                Spells.Add(spell);
+            }
+
+            #endregion
+
             #region Graves
 
             if (ObjectManager.Player.ChampionName == "Graves")
