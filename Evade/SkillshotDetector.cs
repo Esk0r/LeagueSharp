@@ -19,13 +19,13 @@ namespace Evade
         static SkillshotDetector()
         {
             //Detect when the skillshots are created.
-            //Game.OnGameProcessPacket += GameOnOnGameProcessPacket;// not used anymore.
+            Game.OnGameProcessPacket += GameOnOnGameProcessPacket;// Used only for viktor's Laser :^)
             Obj_AI_Base.OnProcessSpellCast += ObjAiHeroOnOnProcessSpellCast;
 
             //Detect when projectiles collide.
             GameObject.OnDelete += ObjSpellMissileOnOnDelete;
             GameObject.OnCreate += ObjSpellMissileOnOnCreate;
-            //GameObject.OnCreate += GameObject_OnCreate; TODO: Detect lux R and other large skillshots.
+            //GameObject.OnCreate += GameObject_OnCreate; //TODO: Detect lux R and other large skillshots.
             GameObject.OnDelete += GameObject_OnDelete;
 
            //Game.OnWndProc += Game_OnWndProc;
@@ -43,6 +43,7 @@ namespace Evade
 
         private static void GameObject_OnCreate(GameObject sender, EventArgs args)
         {
+
         }
 
         private static void GameObject_OnDelete(GameObject sender, EventArgs args)
@@ -63,14 +64,14 @@ namespace Evade
             if (!sender.IsValid || !(sender is Obj_SpellMissile)) return; //not sure if needed
 
             var missile = (Obj_SpellMissile)sender;
-
-#if DEBUG
+            
+            #if DEBUG
             if (missile.SpellCaster is Obj_AI_Hero)
                 Console.WriteLine(Environment.TickCount + " Projectile Created: " + missile.SData.Name + " distance: " +
                                   missile.StartPosition.Distance(missile.EndPosition) + "Radius: " +
                                   missile.SData.CastRadiusSecondary[0] + " Speed: " + missile.SData.MissileSpeed);
 
-#endif
+            #endif
 
             var unit = missile.SpellCaster;
             if (!unit.IsValid || (unit.Team == ObjectManager.Player.Team && !Config.TestOnAllies)) return;
@@ -257,7 +258,7 @@ namespace Evade
                 var spellData = SpellDatabase.GetBySpeed(unit.ChampionName, (int)missileSpeed, id);
 
                 if (spellData == null) return;
-
+                if (spellData.SpellName != "Laser") return;
                 var castTime = Environment.TickCount - Game.Ping / 2 - spellData.Delay -
                                (int)
                                    (1000 * missilePosition.SwitchYZ().To2D().Distance(unitPosition.SwitchYZ()) /
