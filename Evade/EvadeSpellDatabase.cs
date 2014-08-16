@@ -89,7 +89,7 @@ namespace Evade
 
             #endregion
 
-            #region Caitlyn
+            #region Corki
 
             if (ObjectManager.Player.ChampionName == "Corki")
             {
