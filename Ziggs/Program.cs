@@ -303,7 +303,7 @@ namespace Ziggs
             var castToMouse = Config.Item("WToMouse").GetValue<KeyBind>().Active && !Keyboard.IsKeyDown(Key.LeftCtrl);
             if (castToMouse || Environment.TickCount - LastWToMouseT < 400)
             {
-                var pos = ObjectManager.Player.ServerPosition.To2D().Extend(Game.CursorPos.To2D(), 150).To3D();
+                var pos = ObjectManager.Player.ServerPosition.To2D().Extend(Game.CursorPos.To2D(), -150).To3D();
                 W.Cast(pos, true);
                 if (castToMouse)
                     LastWToMouseT = Environment.TickCount;
