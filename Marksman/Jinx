@@ -65,7 +65,8 @@ namespace Marksman
                         if (SlowEndTime >= (Game.Time + E.Delay + 0.5f))
                             E.Cast(CastPosition);
                     }   
-                    if (autoEi && E.IsReady() && (enemy.IsStunned || enemy.HasBuffOfType(BuffType.Snare)))
+                    if (autoEi && E.IsReady() && (enemy.HasBuffOfType(BuffType.Stun) || enemy.HasBuffOfType(BuffType.Snare)
+                        || enemy.HasBuffOfType(BuffType.Charm) || enemy.HasBuffOfType(BuffType.Fear) || enemy.HasBuffOfType(BuffType.Taunt)))
                         E.CastIfHitchanceEquals(enemy, Prediction.HitChance.HighHitchance);
                     if (autoEd && E.IsReady() && enemy.IsDashing())
                         E.CastIfHitchanceEquals(enemy, Prediction.HitChance.Dashing);
