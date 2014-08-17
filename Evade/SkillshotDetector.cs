@@ -43,7 +43,7 @@ namespace Evade
 
         private static void GameObject_OnCreate(GameObject sender, EventArgs args)
         {
-
+            
         }
 
         private static void GameObject_OnDelete(GameObject sender, EventArgs args)
@@ -166,6 +166,7 @@ namespace Evade
         /// </summary>
         private static void ObjAiHeroOnOnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
+            
             if (Config.PrintSpellData && sender is Obj_AI_Hero)
             {
                 Game.PrintChat(Environment.TickCount + " ProcessSpellCast: " + args.SData.Name);

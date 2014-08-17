@@ -1075,13 +1075,15 @@ namespace Evade
         {
             if (!Config.Menu.Item("EnableDrawings").GetValue<bool>()) return;
             var Border = Config.Menu.Item("Border").GetValue<Slider>().Value;
+            var missileColor = Config.Menu.Item("MissileColor").GetValue<Color>();
+      
             //Draw the polygon for each skillshot.
             foreach (var skillshot in DetectedSkillshots)
             {
                 skillshot.Draw(
                     (skillshot.Evade() && Config.Menu.Item("Enabled").GetValue<KeyBind>().Active)
                         ? Config.Menu.Item("EnabledColor").GetValue<Color>()
-                        : Config.Menu.Item("DisabledColor").GetValue<Color>(), Border);
+                        : Config.Menu.Item("DisabledColor").GetValue<Color>(), missileColor, Border);
             }
 
             

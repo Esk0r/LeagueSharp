@@ -104,10 +104,10 @@ namespace Evade
                 Radius = radius;
             }
 
-            public Polygon ToPolygon(int offset = 0)
+            public Polygon ToPolygon(int offset = 0, float overrideWidth = -1)
             {
                 var result = new Polygon();
-                var outRadius = (offset + Radius) / (float)Math.Cos(2 * Math.PI / CircleLineSegmentN);
+                var outRadius = (overrideWidth > 0 ? overrideWidth :  (offset + Radius) / (float)Math.Cos(2 * Math.PI / CircleLineSegmentN));
 
                 for (var i = 1; i <= CircleLineSegmentN; i++)
                 {
@@ -153,9 +153,7 @@ namespace Evade
                 for (var i = 0; i <= Points.Count - 1; i++)
                 {
                     var nextIndex = (Points.Count - 1 == i) ? 0 : (i + 1);
-                    var from = Drawing.WorldToScreen(Points[i].To3D());
-                    var to = Drawing.WorldToScreen(Points[nextIndex].To3D());
-                    Drawing.DrawLine(from[0], from[1], to[0], to[1], width, color);
+                    Utils.DrawLineInWorld(Points[i].To3D(), Points[nextIndex].To3D(), width, color);
                 }
             }
         }
@@ -177,14 +175,14 @@ namespace Evade
                 Perpendicular = Direction.Perpendicular();
             }
 
-            public Polygon ToPolygon(int offset = 0)
+            public Polygon ToPolygon(int offset = 0, float overrideWidth = -1)
             {
                 var result = new Polygon();
 
-                result.Add(RStart + (Width + offset) * Perpendicular - offset * Direction);
-                result.Add(RStart - (Width + offset) * Perpendicular - offset * Direction);
-                result.Add(REnd - (Width + offset) * Perpendicular + offset * Direction);
-                result.Add(REnd + (Width + offset) * Perpendicular + offset * Direction);
+                result.Add(RStart + (overrideWidth > 0 ? overrideWidth : Width + offset) * Perpendicular - offset * Direction);
+                result.Add(RStart - (overrideWidth > 0 ? overrideWidth : Width + offset) * Perpendicular - offset * Direction);
+                result.Add(REnd - (overrideWidth > 0 ? overrideWidth : Width + offset) * Perpendicular + offset * Direction);
+                result.Add(REnd + (overrideWidth > 0 ? overrideWidth : Width + offset) * Perpendicular + offset * Direction);
 
                 return result;
             }

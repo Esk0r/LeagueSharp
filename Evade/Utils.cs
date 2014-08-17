@@ -67,6 +67,14 @@ namespace Evade
 
             return (result == 0f) ? -1 : (int)(Environment.TickCount + (result - Game.Time) * 1000);
         }
+
+
+        public static void DrawLineInWorld(Vector3 start, Vector3 end, int width, System.Drawing.Color color)
+        {
+            var from = Drawing.WorldToScreen(start);
+            var to = Drawing.WorldToScreen(end);
+            Drawing.DrawLine(from[0], from[1], to[0], to[1], width, color);
+        }
     }
 
     internal class SpellList<T> : List<T>

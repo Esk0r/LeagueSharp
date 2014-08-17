@@ -65,12 +65,14 @@ namespace Evade
         public Geometry.Circle Circle;
         public DetectionType DetectionType;
         public Vector2 Direction;
+        public Vector2 Perpendicular { get { return Direction.Perpendicular(); } }
 
         public Vector2 End;
 
         public bool ForceDisabled;
         public Vector2 MissilePosition;
         public Geometry.Polygon Polygon;
+        public Geometry.Polygon DrawingPolygon;
         public Geometry.Rectangle Rectangle;
         public Geometry.Ring Ring;
         public Geometry.Sector Sector;
@@ -221,21 +223,26 @@ namespace Evade
                 case SkillShotType.SkillshotCircle:
                     Polygon = Circle.ToPolygon();
                     EvadePolygon = Circle.ToPolygon(Config.ExtraEvadeDistance);
+                    DrawingPolygon = Circle.ToPolygon(0, !SpellData.AddHitbox ? SpellData.Radius : (SpellData.Radius - ObjectManager.Player.BoundingRadius));
                     break;
                 case SkillShotType.SkillshotLine:
                     Polygon = Rectangle.ToPolygon();
+                    DrawingPolygon = Rectangle.ToPolygon(0, !SpellData.AddHitbox ? SpellData.Radius : (SpellData.Radius - ObjectManager.Player.BoundingRadius));
                     EvadePolygon = Rectangle.ToPolygon(Config.ExtraEvadeDistance);
                     break;
                 case SkillShotType.SkillshotMissileLine:
                     Polygon = Rectangle.ToPolygon();
+                    DrawingPolygon = Rectangle.ToPolygon(0, !SpellData.AddHitbox ? SpellData.Radius : (SpellData.Radius - ObjectManager.Player.BoundingRadius));
                     EvadePolygon = Rectangle.ToPolygon(Config.ExtraEvadeDistance);
                     break;
                 case SkillShotType.SkillshotCone:
                     Polygon = Sector.ToPolygon();
+                    DrawingPolygon = Polygon;
                     EvadePolygon = Sector.ToPolygon(Config.ExtraEvadeDistance);
                     break;
                 case SkillShotType.SkillshotRing:
                     Polygon = Ring.ToPolygon();
+                    DrawingPolygon = Polygon;
                     EvadePolygon = Ring.ToPolygon(Config.ExtraEvadeDistance);
                     break;
             }
@@ -473,10 +480,16 @@ namespace Evade
             return false;
         }
 
-        public void Draw(Color color, int width = 1)
+        public void Draw(Color color, Color missileColor, int width = 1)
         {
             if (!GetValue<bool>("Draw")) return;
-            Polygon.Draw(color, width);
+            DrawingPolygon.Draw(color, width);
+
+            if (SpellData.Type == SkillShotType.SkillshotMissileLine)
+            {
+                var position = GetMissilePosition(0);
+                Utils.DrawLineInWorld((position + SpellData.Radius * Direction.Perpendicular()).To3D(), (position - SpellData.Radius * Direction.Perpendicular()).To3D(), 2, missileColor);
+            }
         }
     }
 }
