@@ -53,7 +53,7 @@ namespace Velkoz
 
         public static Obj_SpellMissile QMissile;
 
-        //Menu FIX IREALIAS R WIDTHB
+        //Menu
         public static Menu Config;
 
         private static Obj_AI_Hero Player;
