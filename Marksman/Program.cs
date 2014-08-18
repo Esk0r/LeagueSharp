@@ -22,42 +22,50 @@ namespace Marksman
         private static void Game_OnGameLoad(EventArgs args)
         {
             Config = new Menu("Marksman", "Marksman", true);
-
             CClass = new Champion();
-            if (ObjectManager.Player.ChampionName == "Caitlyn")
+
+
+            /* Update this with Activator.CreateInstance or Invoke
+               http://stackoverflow.com/questions/801070/dynamically-invoking-any-function-by-passing-function-name-as-string 
+               For now stays cancer.
+             */
+            var ChampionName = ObjectManager.Player.ChampionName;
+
+            
+            if (ChampionName == "Caitlyn")
                 CClass = new Caitlyn();
 
-            if (ObjectManager.Player.ChampionName == "Corki")
+            else if (ChampionName == "Corki")
                 CClass = new Corki();
 
-            if (ObjectManager.Player.ChampionName == "Ezreal")
+            else if (ChampionName == "Ezreal")
                 CClass = new Ezreal();
 
-            if (ObjectManager.Player.ChampionName == "Graves")
+            else if (ChampionName == "Graves")
                 CClass = new Graves();
 
-            if (ObjectManager.Player.ChampionName == "Jinx")
+            else if (ChampionName == "Jinx")
                 CClass = new Jinx();
 
-            if (ObjectManager.Player.ChampionName == "KogMaw")
+            else if (ChampionName == "KogMaw")
                 CClass = new Kogmaw();
 
-            if (ObjectManager.Player.ChampionName == "Lucian")
+            else if (ChampionName == "Lucian")
                 CClass = new Lucian();
 
-            if (ObjectManager.Player.ChampionName == "Sivir")
+            else if (ChampionName == "Sivir")
                 CClass = new Sivir();
 
-            if (ObjectManager.Player.ChampionName == "Teemo")
+            else if (ChampionName == "Teemo")
                 CClass = new Teemo();
 
-            if (ObjectManager.Player.ChampionName == "Tristana")
+            else if (ChampionName == "Tristana")
                 CClass = new Tristana();
 
-            if (ObjectManager.Player.ChampionName == "Twitch")
+            else if (ChampionName == "Twitch")
                 CClass = new Twitch();
 
-            if (ObjectManager.Player.ChampionName == "Vayne")
+            else if (ChampionName == "Vayne")
                 CClass = new Vayne();
 
             CClass.Id = ObjectManager.Player.BaseSkinName;
