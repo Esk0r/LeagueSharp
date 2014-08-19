@@ -23,50 +23,54 @@ namespace Marksman
         {
             Config = new Menu("Marksman", "Marksman", true);
             CClass = new Champion();
-
+            var BaseType = CClass.GetType();
 
             /* Update this with Activator.CreateInstance or Invoke
                http://stackoverflow.com/questions/801070/dynamically-invoking-any-function-by-passing-function-name-as-string 
                For now stays cancer.
              */
-            var ChampionName = ObjectManager.Player.ChampionName;
+            var championName = ObjectManager.Player.ChampionName;
 
-            
-            if (ChampionName == "Caitlyn")
-                CClass = new Caitlyn();
+            switch (championName)
+            {
+                case "Caitlyn":
+                    CClass = new Caitlyn();
+                    break;
+                case "Corki":
+                    CClass = new Corki();
+                    break;
+                case "Ezreal":
+                    CClass = new Ezreal();
+                    break;
+                case "Graves":
+                    CClass = new Graves();
+                    break;
+                case "Jinx":
+                    CClass = new Jinx();
+                    break;
+                case "KogMaw":
+                    CClass = new Kogmaw();
+                    break;
+                case "Lucian":
+                    CClass = new Lucian();
+                    break;
+                case "Sivir":
+                    CClass = new Sivir();
+                    break;
+                case "Teemo":
+                    CClass = new Teemo();
+                    break;
+                case "Tristana":
+                    CClass = new Tristana();
+                    break;
+                case "Twitch":
+                    CClass = new Twitch();
+                    break;
+                case "Vayne":
+                    CClass = new Vayne();
+                    break;
+            }
 
-            else if (ChampionName == "Corki")
-                CClass = new Corki();
-
-            else if (ChampionName == "Ezreal")
-                CClass = new Ezreal();
-
-            else if (ChampionName == "Graves")
-                CClass = new Graves();
-
-            else if (ChampionName == "Jinx")
-                CClass = new Jinx();
-
-            else if (ChampionName == "KogMaw")
-                CClass = new Kogmaw();
-
-            else if (ChampionName == "Lucian")
-                CClass = new Lucian();
-
-            else if (ChampionName == "Sivir")
-                CClass = new Sivir();
-
-            else if (ChampionName == "Teemo")
-                CClass = new Teemo();
-
-            else if (ChampionName == "Tristana")
-                CClass = new Tristana();
-
-            else if (ChampionName == "Twitch")
-                CClass = new Twitch();
-
-            else if (ChampionName == "Vayne")
-                CClass = new Vayne();
 
             CClass.Id = ObjectManager.Player.BaseSkinName;
             CClass.Config = Config;
@@ -83,22 +87,27 @@ namespace Marksman
             items.AddItem(new MenuItem("GHOSTBLADE", "Ghostblade").SetValue(true));
             items.AddItem(
                 new MenuItem("UseItemsMode", "Use items on").SetValue(
-                    new StringList(new[] { "No", "Mixed mode", "Combo mode", "Both" }, 2)));
+                    new StringList(new[] {"No", "Mixed mode", "Combo mode", "Both"}, 2)));
 
-            var combo = Config.AddSubMenu(new Menu("Combo", "Combo"));
-            CClass.ComboMenu(combo);
+            // If Champion is supported draw the extra menus
+            if (BaseType != CClass.GetType())
+            {
+                var combo = Config.AddSubMenu(new Menu("Combo", "Combo"));
+                CClass.ComboMenu(combo);
 
-            var harass = Config.AddSubMenu(new Menu("Harass", "Harass"));
-            CClass.HarassMenu(harass);
+                var harass = Config.AddSubMenu(new Menu("Harass", "Harass"));
+                CClass.HarassMenu(harass);
 
-            var laneclear = Config.AddSubMenu(new Menu("LaneClear", "LaneClear"));
-            CClass.LaneClearMenu(laneclear);
+                var laneclear = Config.AddSubMenu(new Menu("LaneClear", "LaneClear"));
+                CClass.LaneClearMenu(laneclear);
 
-            var misc = Config.AddSubMenu(new Menu("Misc", "Misc"));
-            CClass.MiscMenu(misc);
+                var misc = Config.AddSubMenu(new Menu("Misc", "Misc"));
+                CClass.MiscMenu(misc);
 
-            var drawing = Config.AddSubMenu(new Menu("Drawings", "Drawings"));
-            CClass.DrawingMenu(drawing);
+                var drawing = Config.AddSubMenu(new Menu("Drawings", "Drawings"));
+                CClass.DrawingMenu(drawing);
+            }
+
 
             CClass.MainMenu(Config);
 

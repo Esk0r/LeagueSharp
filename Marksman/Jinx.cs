@@ -48,7 +48,7 @@ namespace Marksman
             {
                 var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
 
-                if (Orbwalking.CanMove(100) && useW && W.IsReady())
+                if (useW && Orbwalking.CanMove(100) && W.IsReady())
                 {
                     var t = Orbwalker.GetTarget() ?? SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
 
