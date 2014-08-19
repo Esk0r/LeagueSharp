@@ -1,24 +1,23 @@
 #region
+
 using System;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
+
 #endregion
 
 namespace Marksman
 {
     internal class Quinn : Champion
     {
-        private static readonly Obj_AI_Hero vQuinn = ObjectManager.Player;
-
-        public Spell Q;
-        public Spell E;
-        public Spell R;
-
         public static float ValorMinDamage = 0;
         public static float ValorMaxDamage = 0;
-        
+        public Spell E;
+        public Spell Q;
+        public Spell R;
+
         public Quinn()
         {
             Utils.PrintMessage("Quinn loaded.");
@@ -28,21 +27,17 @@ namespace Marksman
             R = new Spell(SpellSlot.R, 550);
 
             Q.SetSkillshot(0.25f, 160f, 1150, true, Prediction.SkillshotType.SkillshotLine);
-            E.SetSkillshot(0.15f, 80f, 2000f, false, Prediction.SkillshotType.SkillshotCircle);
+            E.SetTargetted(0.25f, 2000f);
         }
 
-        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base vTarget)
+        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
         {
-            if ((ComboActive || HarassActive) && !unit.IsMe && (vTarget is Obj_AI_Hero))
-            {
-                var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-                var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
-                
-                if (Q.IsReady() && useQ)
-                    Q.Cast(vTarget);
-            }
+            if ((!ComboActive && !HarassActive) || unit.IsMe || (!(target is Obj_AI_Hero))) return;
+
+            if (Q.IsReady() && GetValue<bool>("UseQ" + (ComboActive ? "C" : "H")))
+                Q.Cast(target, false, true);
         }
-        
+
         public override void Drawing_OnDraw(EventArgs args)
         {
             Spell[] spellList = { Q, E };
@@ -50,70 +45,66 @@ namespace Marksman
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
                 if (menuItem.Active && spell.Level > 0)
-                    Utility.DrawCircle(vQuinn.Position, spell.Range, menuItem.Color);
+                    Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
 
                 if (menuItem.Active && spell.Level > 0 && IsValorMode())
-                    Utility.DrawCircle(vQuinn.Position, R.Range, menuItem.Color);
+                    Utility.DrawCircle(ObjectManager.Player.Position, R.Range, menuItem.Color);
             }
         }
-        
-        public static bool IsPositionSafe(Obj_AI_Hero target, Spell spell)
+
+        public static bool IsPositionSafe(Obj_AI_Hero target, Spell spell) // use underTurret and .Extend for this please
         {
-            Vector2 predPos = spell.GetPrediction(target).Position.To2D();
-            Vector2 myPos = vQuinn.Position.To2D();
-            Vector2 newPos = (target.Position.To2D() - myPos);
+            var predPos = spell.GetPrediction(target).Position.To2D();
+            var myPos = ObjectManager.Player.Position.To2D();
+            var newPos = (target.Position.To2D() - myPos);
             newPos.Normalize();
-            
-            Vector2 checkPos = predPos + newPos * (spell.Range - Vector2.Distance(predPos, myPos));
+
+            var checkPos = predPos + newPos * (spell.Range - Vector2.Distance(predPos, myPos));
             Obj_Turret closestTower = null;
-            
-            foreach (Obj_Turret tower in ObjectManager.Get<Obj_Turret>().Where(tower => tower.IsValid && !tower.IsDead && tower.Health != 0))
+
+            foreach (
+                var tower in
+                    ObjectManager.Get<Obj_Turret>().Where(tower => tower.IsValid && !tower.IsDead && Math.Abs(tower.Health) > float.Epsilon))
             {
-                if (Vector3.Distance(tower.Position, vQuinn.Position) < 1450)
+                if (Vector3.Distance(tower.Position, ObjectManager.Player.Position) < 1450)
                     closestTower = tower;
             }
-            
+
             if (closestTower == null)
                 return true;
-            
+
             if (Vector2.Distance(closestTower.Position.To2D(), checkPos) <= 910)
                 return false;
-            
-            return true;
-        }
-        
-        public static bool ThisIsNotPantheon(Obj_AI_Hero vTarget) /* Quinn's Spell E can do nothing when Pantheon's passive is active. I'll add this property for Patheon's Passive. */
-        {
-            if (vTarget.ChampionName.ToLower() == "pantheon" && vTarget.IsEnemy)
-            {
-                foreach (var buff in vTarget.Buffs)
-                {
-                    return buff.Name != "pantheonpassivebuff";
-                }
-            }
+
             return true;
         }
 
-        private static bool IsValorMode()
+        public static bool ThisIsNotPantheon(Obj_AI_Hero target)
+            /* Quinn's Spell E can do nothing when Pantheon's passive is active. I'll add this property for Patheon's Passive. */
+        {
+            return target.Buffs.All(buff => buff.Name != "pantheonpassivebuff");
+        }
+
+        private static bool IsValorMode() // use spell name here, and NEVER ever compare such things with tostring
         {
             //4198404 Transforming Human -> Valor
             //4198407 Valor Mode Active.
             //4194311 Human Mode Active.
-            return vQuinn.CharacterState.ToString() == "4198407";
+            return ObjectManager.Player.CharacterState.ToString() == "4198407";
         }
 
         public static void calculateValorDamage()
         {
-            if (vQuinn.Spellbook.GetSpell(SpellSlot.R).Level > 0)
+            if (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Level > 0)
             {
-                ValorMinDamage = vQuinn.Spellbook.GetSpell(SpellSlot.R).Level * 50 + 50;
-                ValorMinDamage += vQuinn.BaseAttackDamage * 50;
+                ValorMinDamage = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Level * 50 + 50;
+                ValorMinDamage += ObjectManager.Player.BaseAttackDamage * 50;
 
-                ValorMaxDamage = vQuinn.Spellbook.GetSpell(SpellSlot.R).Level * 100 + 100;
-                ValorMaxDamage += vQuinn.BaseAttackDamage * 100;
+                ValorMaxDamage = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Level * 100 + 100;
+                ValorMaxDamage += ObjectManager.Player.BaseAttackDamage * 100;
             }
         }
-            
+
         public override void Game_OnGameUpdate(EventArgs args)
         {
             Obj_AI_Hero vTarget;
@@ -123,7 +114,7 @@ namespace Marksman
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
                 var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
                 var useET = GetValue<bool>("UseET" + (ComboActive ? "C" : "H"));
-                
+
                 if (Orbwalking.CanMove(100))
                 {
                     if (E.IsReady() && useE)
@@ -160,7 +151,7 @@ namespace Marksman
                 }
             }
         }
-        
+
         public override void ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
@@ -169,7 +160,7 @@ namespace Marksman
             config.AddItem(new MenuItem("UseETK" + Id, "Use E Under Turret If Enemy Killable")
                 .SetValue(true));
         }
-        
+
         public override void HarassMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
@@ -177,17 +168,13 @@ namespace Marksman
             config.AddItem(new MenuItem("UseETH" + Id, "Do not Under Turret E").SetValue(true));
         }
 
-        public override void MiscMenu(Menu config)
-        {
-        }
-        
         public override void DrawingMenu(Menu config)
         {
             config.AddItem(
-                new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true, 
+                new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true,
                     System.Drawing.Color.FromArgb(100, 255, 0, 255))));
             config.AddItem(
-                new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(false, 
+                new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(false,
                     System.Drawing.Color.FromArgb(100, 255, 255, 255))));
         }
     }
