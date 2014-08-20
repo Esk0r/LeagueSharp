@@ -55,7 +55,7 @@ namespace Marksman
 
             if (autoEs || autoEi || autoEd)
             {
-                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsValidTarget(E.Range - 50)))
+                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsValidTarget(E.Range - 100)))
                 {
                     if (autoEs && E.IsReady() && enemy.HasBuffOfType(BuffType.Slow))
                     {
@@ -102,7 +102,8 @@ namespace Marksman
                 var t = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
 
                 if (t.IsValidTarget())
-                    W.Cast(t);
+                    if(W.Cast(t) == Spell.CastStates.SuccessfullyCasted)
+                        return;
             }
 
             if (useQ)
@@ -118,18 +119,25 @@ namespace Marksman
 
                     if (swapDistance && Q.IsReady())
                     {
-                        if (Distance > (PowPowRange - 50) && Distance < (PowPowRange + QAddRange) && !HasFishBones())
-                            Q.Cast();
-                        else if (Distance < (PowPowRange - 50) && HasFishBones())
-                            Q.Cast();
+                        if (Distance >= (PowPowRange - 50) && Distance < (PowPowRange + QAddRange + 50) && !HasFishBones())
+                        {
+                            if (Q.Cast())
+                                return;
+                        }
+                        else if (Distance < (PowPowRange - 50) && HasFishBones() && (MoveStatus(t) == "towardme" || !t.IsMoving))
+                        {
+                            if (Q.Cast())
+                                return;
+                        }
                     }
 
                     if (swapAOE && Q.IsReady())
                     {
                         float PowPowStacks = GetPowPowStacks();
 
-                        if (Distance < (PowPowRange + QAddRange) && PowPowStacks > 2 && !HasFishBones() && CountEnemies(t, 150) > 1)
-                            Q.Cast();
+                        if (Distance < (PowPowRange + QAddRange + 50) && PowPowStacks > 2 && !HasFishBones() && CountEnemies(t, 150) > 1)
+                            if(Q.Cast())
+                                return;
                     }
                 }
             }
@@ -147,7 +155,8 @@ namespace Marksman
                     if (!checkROK)
                     {
                         if (DamageLib.getDmg(t, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > t.Health)
-                            R.Cast(t, false, true);
+                            if(R.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted)
+                                return;
                     }
                     else if (checkROK && Distance > minR)
                     {
@@ -161,14 +170,16 @@ namespace Marksman
                             if(!W.IsReady() || !(WDamage > t.Health) || W.GetPrediction(t).CollisionUnitsList.Count > 0)
                                 if(CountAlliesNearTarget(t, 700) <= 2)
                                     if (RDamage > t.Health)
-                                        R.Cast(t, false, true);
+                                        if(R.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted)
+                                            return;
                         }
                         else if(Distance > (PowPowRange + QAddRange))
                         {
                             if (!W.IsReady() || !(WDamage > t.Health) || Distance > W.Range || W.GetPrediction(t).CollisionUnitsList.Count > 0)
                                 if (CountAlliesNearTarget(t, 700) <= 2)
                                     if (RDamage > t.Health)
-                                        R.Cast(t, false, true);
+                                        if(R.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted)
+                                            return;
                         }
                     }
                 }
@@ -198,18 +209,25 @@ namespace Marksman
 
                         if (swapDistance && Q.IsReady())
                         {
-                            if (Distance > (PowPowRange - 50) && Distance < (PowPowRange + QAddRange) && !HasFishBones())
-                                Q.Cast();
-                            else if (Distance < (PowPowRange - 50) && HasFishBones())
-                                Q.Cast();
+                            if (Distance >= (PowPowRange - 50) && Distance < (PowPowRange + QAddRange + 50) && !HasFishBones())
+                            {
+                                if (Q.Cast())
+                                    return;
+                            }
+                            else if (Distance < (PowPowRange - 50) && HasFishBones() && (MoveStatus(t) == "towardme" || !t.IsMoving))
+                            {
+                                if (Q.Cast())
+                                    return;
+                            }
                         }
 
                         if (swapAOE && Q.IsReady())
                         {
                             float PowPowStacks = GetPowPowStacks();
 
-                            if (Distance < (PowPowRange + QAddRange) && PowPowStacks > 2 && !HasFishBones() && CountEnemies(t, 150) > 1)
-                                Q.Cast();
+                            if (Distance < (PowPowRange + QAddRange + 50) && PowPowStacks > 2 && !HasFishBones() && CountEnemies(t, 150) > 1)
+                                if (Q.Cast())
+                                    return;
                         }
                     }
                 }
@@ -268,6 +286,21 @@ namespace Marksman
                     EndTime = buff.EndTime;
 
             return EndTime;
+        }
+
+        private string MoveStatus(Obj_AI_Hero target)
+        {
+            var waypoints = target.GetWaypoints();
+            float distanceFromWp, distanceFromTarget;
+
+            distanceFromWp = waypoints.Last().To3D().Distance(ObjectManager.Player.ServerPosition);
+            distanceFromTarget = target.ServerPosition.Distance(ObjectManager.Player.ServerPosition);
+
+            if (distanceFromWp < distanceFromTarget)
+                return "towardme";
+            else if (distanceFromWp > distanceFromTarget)
+                return "awayfromme";
+            else return "standing";
         }
 
         public override void ComboMenu(Menu config)
