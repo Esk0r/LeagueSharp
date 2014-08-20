@@ -1,4 +1,20 @@
-﻿#region
+﻿// Copyright 2014 - 2014 Esk0r
+// SpellDatabase.cs is part of Evade.
+// 
+// Evade is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// Evade is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with Evade. If not, see <http://www.gnu.org/licenses/>.
+
+#region
 
 using System;
 using System.Collections.Generic;
@@ -16,6 +32,28 @@ namespace Evade
         static SpellDatabase()
         {
             //Add spells to the database 
+
+            #region Test
+
+            if (Config.TestOnAllies)
+                Spells.Add(new SpellData
+                {
+                    ChampionName = ObjectManager.Player.ChampionName,
+                    SpellName = "TestSkillShot",
+                    Slot = SpellSlot.R,
+                    Type = SkillShotType.SkillshotCircle,
+                    Delay = 600,
+                    Range = 650,
+                    Radius = 350,
+                    MissileSpeed = int.MaxValue,
+                    FixedRange = false,
+                    AddHitbox = true,
+                    DangerValue = 5,
+                    IsDangerous = true,
+                    MissileSpellName = "TestSkillShot",
+                });
+
+            #endregion Test
 
             #region Aatrox
 
@@ -66,12 +104,17 @@ namespace Evade
                 Delay = 250,
                 Range = 1000,
                 Radius = 100,
-                MissileSpeed = 1600,
+                MissileSpeed = 2500,
+                MissileAccel = -3200,
+                MissileMaxSpeed = 2500,
+                MissileMinSpeed = 400,
                 FixedRange = true,
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "AhriOrbMissile",
+                CanBeRemoved = true,
+                ForceRemove = true,
                 CollisionObjects = new[] { CollisionObjectTypes.YasuoWall }
             });
 
@@ -84,13 +127,17 @@ namespace Evade
                 Delay = 250,
                 Range = 1000,
                 Radius = 100,
-                MissileSpeed = 1600,
+                MissileSpeed = 60,
+                MissileAccel = 1900,
+                MissileMinSpeed = 60,
+                MissileMaxSpeed = 2600,
                 FixedRange = true,
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-
                 MissileFollowsUnit = true,
+                CanBeRemoved = true,
+                ForceRemove = true,
                 MissileSpellName = "AhriOrbReturn",
                 CollisionObjects = new[] { CollisionObjectTypes.YasuoWall }
             });
@@ -799,6 +846,24 @@ namespace Evade
             Spells.Add(new SpellData
             {
                 ChampionName = "Galio",
+                SpellName = "GalioRighteousGust",
+                Slot = SpellSlot.E,
+                Type = SkillShotType.SkillshotMissileLine,
+                Delay = 250,
+                Range = 1200,
+                Radius = 120,
+                MissileSpeed = 1200,
+                FixedRange = true,
+                AddHitbox = true,
+                DangerValue = 2,
+                IsDangerous = false,
+                MissileSpellName = "GalioRighteousGust",
+                CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
+            });
+
+            Spells.Add(new SpellData
+            {
+                ChampionName = "Galio",
                 SpellName = "GalioIdolOfDurand",
                 Slot = SpellSlot.R,
                 Type = SkillShotType.SkillshotCircle,
@@ -826,12 +891,17 @@ namespace Evade
                 Delay = 250,
                 Range = 1125,
                 Radius = 45,
-                MissileSpeed = 1600,
+                MissileSpeed = 2500,
+                MissileAccel = -3600,
+                MissileMaxSpeed = 2500,
+                MissileMinSpeed = 1000,
                 FixedRange = true,
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
-                MissileSpellName = "GnarQMissile",
+                CanBeRemoved = true,
+                ForceRemove = true,
+                MissileSpellName = "gnarqmissile",
                 CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
             });
 
@@ -842,13 +912,18 @@ namespace Evade
                 Slot = SpellSlot.Q,
                 Type = SkillShotType.SkillshotMissileLine,
                 Delay = 0,
-                Range = 1175,
+                Range = 2500,
                 Radius = 70,
-                MissileSpeed = 600,
+                MissileSpeed = 60,
+                MissileAccel = 800,
+                MissileMaxSpeed = 2400,
+                MissileMinSpeed = 60,
                 FixedRange = true,
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
+                CanBeRemoved = true,
+                ForceRemove = true,
                 MissileSpellName = "GnarQMissileReturn",
                 DisableFowDetection = false,
                 CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
@@ -1053,14 +1128,14 @@ namespace Evade
             Spells.Add(new SpellData
             {
                 ChampionName = "Heimerdinger",
-                SpellName = "Heimerdingerw",
+                SpellName = "Heimerdingerwm",
                 Slot = SpellSlot.W,
                 Type = SkillShotType.SkillshotMissileLine,
                 Delay = 250,
-                Range = 1325,
-                Radius = 1,
-                MissileSpeed = 1400,
-                FixedRange = false,
+                Range = 1500,
+                Radius = 70,
+                MissileSpeed = 1800,
+                FixedRange = true,
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
@@ -1098,7 +1173,7 @@ namespace Evade
                 Type = SkillShotType.SkillshotMissileLine,
                 Delay = 0,
                 Range = 1200,
-                Radius = 50,
+                Radius = 65,
                 MissileSpeed = 1600,
                 FixedRange = true,
                 AddHitbox = true,
@@ -1948,12 +2023,13 @@ namespace Evade
                 Type = SkillShotType.SkillshotCircle,
                 Delay = 0,
                 Range = 1500,
-                Radius = 80,
+                Radius = 90,
                 MissileSpeed = 1200,
                 FixedRange = false,
                 AddHitbox = true,
                 DangerValue = 2,
                 IsDangerous = false,
+                MissileSpellName = "",
                 CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
             });
 
@@ -1983,7 +2059,7 @@ namespace Evade
                 Type = SkillShotType.SkillshotMissileLine,
                 Delay = 0,
                 Range = 1500,
-                Radius = 80,
+                Radius = 85,
                 MissileSpeed = 1850,
                 FixedRange = false,
                 AddHitbox = true,
@@ -2095,7 +2171,7 @@ namespace Evade
                 SpellName = "RumbleGrenade",
                 Slot = SpellSlot.E,
                 Type = SkillShotType.SkillshotMissileLine,
-                Delay = 0,
+                Delay = 250,
                 Range = 950,
                 Radius = 60,
                 MissileSpeed = 2000,
@@ -2108,6 +2184,26 @@ namespace Evade
                 CollisionObjects =
                     new[]
                     { CollisionObjectTypes.Champions, CollisionObjectTypes.Minion, CollisionObjectTypes.YasuoWall },
+            });
+
+            Spells.Add(new SpellData
+            {
+                ChampionName = "Rumble",
+                SpellName = "RumbleCarpetBombM",
+                Slot = SpellSlot.R,
+                Type = SkillShotType.SkillshotMissileLine,
+                Delay = 400,
+                MissileDelayed = true,
+                Range = 1200,
+                Radius = 200,
+                MissileSpeed = 1600,
+                FixedRange = true,
+                AddHitbox = true,
+                DangerValue = 4,
+                IsDangerous = false,
+                MissileSpellName = "RumbleCarpetBombMissile",
+                CanBeRemoved = false,
+                CollisionObjects = new CollisionObjectTypes[] { },
             });
 
             #endregion Rumble
@@ -2403,6 +2499,48 @@ namespace Evade
             });
 
             #endregion Syndra
+
+            #region Talon
+
+            Spells.Add(new SpellData
+            {
+                ChampionName = "Talon",
+                SpellName = "TalonRake",
+                Slot = SpellSlot.W,
+                Type = SkillShotType.SkillshotMissileLine,
+                Delay = 250,
+                Range = 800,
+                Radius = 80,
+                MissileSpeed = 2300,
+                FixedRange = true,
+                AddHitbox = true,
+                DangerValue = 2,
+                IsDangerous = true,
+                MultipleNumber = 3,
+                MultipleAngle = 20 * (float)Math.PI / 180,
+                MissileSpellName = "talonrakemissileone",
+            });
+
+            Spells.Add(new SpellData
+            {
+                ChampionName = "Talon",
+                SpellName = "TalonRakeReturn",
+                Slot = SpellSlot.W,
+                Type = SkillShotType.SkillshotMissileLine,
+                Delay = 250,
+                Range = 800,
+                Radius = 80,
+                MissileSpeed = 1850,
+                FixedRange = true,
+                AddHitbox = true,
+                DangerValue = 2,
+                IsDangerous = true,
+                MultipleNumber = 3,
+                MultipleAngle = 20 * (float)Math.PI / 180,
+                MissileSpellName = "talonrakemissiletwo",
+            });
+
+            #endregion Riven
 
             #region Thresh
 
@@ -2969,6 +3107,7 @@ namespace Evade
                 DangerValue = 2,
                 IsDangerous = false,
                 MissileSpellName = "zedshurikenmisone",
+                FromObjects = new[] { "Zed_Clone_idle.troy", "Zed_Clone_Idle.troy" },
                 ExtraMissileNames = new[] { "zedshurikenmistwo", "zedshurikenmisthree" },
                 CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
             });
@@ -2985,7 +3124,7 @@ namespace Evade
                 Type = SkillShotType.SkillshotCircle,
                 Delay = 250,
                 Range = 850,
-                Radius = 240,
+                Radius = 140,
                 MissileSpeed = 1700,
                 FixedRange = false,
                 AddHitbox = true,
@@ -3004,7 +3143,7 @@ namespace Evade
                 Type = SkillShotType.SkillshotCircle,
                 Delay = 250,
                 Range = 850,
-                Radius = 240,
+                Radius = 140,
                 MissileSpeed = 1700,
                 FixedRange = false,
                 AddHitbox = true,
@@ -3024,7 +3163,7 @@ namespace Evade
                 Type = SkillShotType.SkillshotCircle,
                 Delay = 250,
                 Range = 850,
-                Radius = 240,
+                Radius = 160,
                 MissileSpeed = 1700,
                 FixedRange = false,
                 AddHitbox = true,
@@ -3170,7 +3309,7 @@ namespace Evade
             missileSpellName = missileSpellName.ToLower();
             foreach (var spellData in Spells)
             {
-                if (spellData.MissileSpellName.ToLower() == missileSpellName ||
+                if (spellData.MissileSpellName != null && spellData.MissileSpellName.ToLower() == missileSpellName ||
                     spellData.ExtraMissileNames.Contains(missileSpellName))
                     return spellData;
             }

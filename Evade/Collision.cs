@@ -1,4 +1,20 @@
-﻿#region
+﻿// Copyright 2014 - 2014 Esk0r
+// Collision.cs is part of Evade.
+// 
+// Evade is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// Evade is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with Evade. If not, see <http://www.gnu.org/licenses/>.
+
+#region
 
 using System;
 using System.Collections.Generic;
@@ -27,11 +43,11 @@ namespace Evade
 
     internal class DetectedCollision
     {
-        public Obj_AI_Base Unit;
-        public CollisionObjectTypes Type;
-        public Vector2 Position;
-        public float Distance;
         public float Diff;
+        public float Distance;
+        public Vector2 Position;
+        public CollisionObjectTypes Type;
+        public Obj_AI_Base Unit;
     }
 
     internal static class Collision
@@ -101,12 +117,15 @@ namespace Evade
                                 Math.Max(0, skillshot.SpellData.Delay - (Environment.TickCount - skillshot.StartTick)),
                                 skillshot.SpellData.MissileSpeed);
                             var pos = pred.PredictedPos;
-                            var w = skillshot.SpellData.RawRadius + (!pred.IsMoving ? (minion.BoundingRadius - 15) : 0) - pos.Distance(from, skillshot.End, true);
+                            var w = skillshot.SpellData.RawRadius + (!pred.IsMoving ? (minion.BoundingRadius - 15) : 0) -
+                                    pos.Distance(from, skillshot.End, true);
                             if (w > 0)
                             {
                                 collisions.Add(new DetectedCollision
                                 {
-                                    Position = pos.ProjectOn(skillshot.End, skillshot.Start).LinePoint + skillshot.Direction * 30,
+                                    Position =
+                                        pos.ProjectOn(skillshot.End, skillshot.Start).LinePoint +
+                                        skillshot.Direction * 30,
                                     Unit = minion,
                                     Type = CollisionObjectTypes.Minion,
                                     Distance = pos.Distance(from),
@@ -137,7 +156,9 @@ namespace Evade
                             {
                                 collisions.Add(new DetectedCollision
                                 {
-                                    Position = pos.ProjectOn(skillshot.End, skillshot.Start).LinePoint + skillshot.Direction * 30,
+                                    Position =
+                                        pos.ProjectOn(skillshot.End, skillshot.Start).LinePoint +
+                                        skillshot.Direction * 30,
                                     Unit = hero,
                                     Type = CollisionObjectTypes.Minion,
                                     Distance = pos.Distance(from),

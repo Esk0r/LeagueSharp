@@ -1,4 +1,20 @@
-﻿#region
+﻿// Copyright 2014 - 2014 Esk0r
+// Skillshot.cs is part of Evade.
+// 
+// Evade is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// Evade is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with Evade. If not, see <http://www.gnu.org/licenses/>.
+
+#region
 
 using System;
 using System.Collections.Generic;
@@ -65,14 +81,13 @@ namespace Evade
         public Geometry.Circle Circle;
         public DetectionType DetectionType;
         public Vector2 Direction;
-        public Vector2 Perpendicular { get { return Direction.Perpendicular(); } }
+        public Geometry.Polygon DrawingPolygon;
 
         public Vector2 End;
 
         public bool ForceDisabled;
         public Vector2 MissilePosition;
         public Geometry.Polygon Polygon;
-        public Geometry.Polygon DrawingPolygon;
         public Geometry.Rectangle Rectangle;
         public Geometry.Ring Ring;
         public Geometry.Sector Sector;
@@ -123,6 +138,11 @@ namespace Evade
             UpdatePolygon(); //Create the polygon.
         }
 
+        public Vector2 Perpendicular
+        {
+            get { return Direction.Perpendicular(); }
+        }
+
         public Vector2 CollisionEnd
         {
             get
@@ -162,6 +182,9 @@ namespace Evade
         /// </summary>
         public bool IsActive()
         {
+            if (SpellData.MissileAccel != 0)
+                return Environment.TickCount <= StartTick + 5000;
+
             return Environment.TickCount <=
                    StartTick + SpellData.Delay + SpellData.ExtraDuration +
                    1000 * (Start.Distance(End) / SpellData.MissileSpeed);
@@ -223,16 +246,25 @@ namespace Evade
                 case SkillShotType.SkillshotCircle:
                     Polygon = Circle.ToPolygon();
                     EvadePolygon = Circle.ToPolygon(Config.ExtraEvadeDistance);
-                    DrawingPolygon = Circle.ToPolygon(0, !SpellData.AddHitbox ? SpellData.Radius : (SpellData.Radius - ObjectManager.Player.BoundingRadius));
+                    DrawingPolygon = Circle.ToPolygon(0,
+                        !SpellData.AddHitbox
+                            ? SpellData.Radius
+                            : (SpellData.Radius - ObjectManager.Player.BoundingRadius));
                     break;
                 case SkillShotType.SkillshotLine:
                     Polygon = Rectangle.ToPolygon();
-                    DrawingPolygon = Rectangle.ToPolygon(0, !SpellData.AddHitbox ? SpellData.Radius : (SpellData.Radius - ObjectManager.Player.BoundingRadius));
+                    DrawingPolygon = Rectangle.ToPolygon(0,
+                        !SpellData.AddHitbox
+                            ? SpellData.Radius
+                            : (SpellData.Radius - ObjectManager.Player.BoundingRadius));
                     EvadePolygon = Rectangle.ToPolygon(Config.ExtraEvadeDistance);
                     break;
                 case SkillShotType.SkillshotMissileLine:
                     Polygon = Rectangle.ToPolygon();
-                    DrawingPolygon = Rectangle.ToPolygon(0, !SpellData.AddHitbox ? SpellData.Radius : (SpellData.Radius - ObjectManager.Player.BoundingRadius));
+                    DrawingPolygon = Rectangle.ToPolygon(0,
+                        !SpellData.AddHitbox
+                            ? SpellData.Radius
+                            : (SpellData.Radius - ObjectManager.Player.BoundingRadius));
                     EvadePolygon = Rectangle.ToPolygon(Config.ExtraEvadeDistance);
                     break;
                 case SkillShotType.SkillshotCone:
@@ -264,7 +296,41 @@ namespace Evade
         public Vector2 GetMissilePosition(int time)
         {
             var t = Math.Max(0, Environment.TickCount + time - StartTick - SpellData.Delay);
-            t = (int)Math.Max(0, Math.Min(CollisionEnd.Distance(Start), t * SpellData.MissileSpeed / 1000));
+
+
+            var x = 0;
+
+            //Missile with acceleration = 0.
+            if (SpellData.MissileAccel == 0)
+            {
+                x = t * SpellData.MissileSpeed / 1000;
+            }
+
+                //Missile with constant acceleration.
+            else
+            {
+                var t1 = (SpellData.MissileAccel > 0
+                    ? SpellData.MissileMaxSpeed
+                    : SpellData.MissileMinSpeed - SpellData.MissileSpeed) * 1000f / SpellData.MissileAccel;
+
+                if (t <= t1)
+                {
+                    x =
+                        (int)
+                            (t * SpellData.MissileSpeed / 1000d + 0.5d * SpellData.MissileAccel * Math.Pow(t / 1000d, 2));
+                }
+                else
+                {
+                    x =
+                        (int)
+                            (t1 * SpellData.MissileSpeed / 1000d +
+                             0.5d * SpellData.MissileAccel * Math.Pow(t1 / 1000d, 2) +
+                             (t - t1) / 1000d *
+                             (SpellData.MissileAccel < 0 ? SpellData.MissileMaxSpeed : SpellData.MissileMinSpeed));
+                }
+            }
+
+            t = (int)Math.Max(0, Math.Min(CollisionEnd.Distance(Start), x));
             return Start + Direction * t;
         }
 
@@ -274,13 +340,14 @@ namespace Evade
         /// </summary>
         public bool IsSafeToBlink(Vector2 point, int timeOffset, int delay = 0)
         {
-            timeOffset = timeOffset / 2;
+            timeOffset /= 2;
+
+            if (IsSafe(ObjectManager.Player.ServerPosition.To2D()))
+                return true;
+
             //Skillshots with missile
             if (SpellData.Type == SkillShotType.SkillshotMissileLine)
             {
-                if (IsSafe(ObjectManager.Player.ServerPosition.To2D()))
-                    return true;
-
                 var missilePositionAfterBlink = GetMissilePosition(delay + timeOffset);
                 var myPositionProjection = ObjectManager.Player.ServerPosition.To2D().ProjectOn(Start, End);
 
@@ -290,12 +357,12 @@ namespace Evade
                 return true;
             }
 
-
             //skillshots without missile
             var timeToExplode = SpellData.ExtraDuration + SpellData.Delay +
                                 (int)(1000 * Start.Distance(End) / SpellData.MissileSpeed) -
                                 (Environment.TickCount - StartTick);
-            return timeToExplode < timeOffset + delay;
+
+            return timeToExplode > timeOffset + delay;
         }
 
         /// <summary>
@@ -402,7 +469,6 @@ namespace Evade
                 }
             }
 
-            //Skillshot without missile. TODO: Add timeOffset.
 
             if (IsSafe(ObjectManager.Player.ServerPosition.To2D()))
             {
@@ -423,14 +489,14 @@ namespace Evade
                                 (Environment.TickCount - StartTick);
 
 
-            var myPositionWhenExplodes = path.PositionAfter(timeToExplode, (int)ObjectManager.Player.MoveSpeed, delay);
+            var myPositionWhenExplodes = path.PositionAfter(timeToExplode, speed, delay);
 
             if (!IsSafe(myPositionWhenExplodes))
             {
                 return new SafePathResult(false, allIntersections[0]);
             }
 
-            var myPositionWhenExplodesWithOffset = path.PositionAfter(timeToExplode, (int)ObjectManager.Player.MoveSpeed,
+            var myPositionWhenExplodesWithOffset = path.PositionAfter(timeToExplode, speed,
                 timeOffset);
 
             return new SafePathResult(IsSafe(myPositionWhenExplodesWithOffset), allIntersections[0]);
@@ -488,7 +554,8 @@ namespace Evade
             if (SpellData.Type == SkillShotType.SkillshotMissileLine)
             {
                 var position = GetMissilePosition(0);
-                Utils.DrawLineInWorld((position + SpellData.Radius * Direction.Perpendicular()).To3D(), (position - SpellData.Radius * Direction.Perpendicular()).To3D(), 2, missileColor);
+                Utils.DrawLineInWorld((position + SpellData.Radius * Direction.Perpendicular()).To3D(),
+                    (position - SpellData.Radius * Direction.Perpendicular()).To3D(), 2, missileColor);
             }
         }
     }

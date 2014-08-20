@@ -1,4 +1,20 @@
-﻿#region
+﻿// Copyright 2014 - 2014 Esk0r
+// Program.cs is part of Evade.
+// 
+// Evade is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// Evade is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with Evade. If not, see <http://www.gnu.org/licenses/>.
+
+#region
 
 using System;
 using System.Collections.Generic;
@@ -29,6 +45,7 @@ namespace Evade
         public static Vector2 CutPathPoint = new Vector2();
         public static Vector2 PreviousTickPosition = new Vector2();
         private static bool _recalculate;
+        private static readonly Random RandomN = new Random();
 
         public static bool Evading
         {
@@ -61,7 +78,6 @@ namespace Evade
 
         private static void Main(string[] args)
         {
-
             if (Game.Mode == GameMode.Running)
                 Game_OnGameStart(new EventArgs());
 
@@ -115,7 +131,7 @@ namespace Evade
 
             //Initialze the collision
             Collision.Init();
-            
+
             Game.PrintChat("<font color=\"#00BFFF\">Evade# -</font> <font color=\"#FFFFFF\">Loaded</font>");
 
             if (Config.PrintSpellData)
@@ -128,7 +144,7 @@ namespace Evade
                                           spell.SData.MissileSpeed + " r: " + spell.SData.CastRange[0]);
                     }
                 }
-                Console.WriteLine(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).Name);
+                Console.WriteLine(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name);
             }
 
             //
@@ -166,7 +182,8 @@ namespace Evade
             {
                 if (item.SpellData.SpellName == skillshot.SpellData.SpellName &&
                     (item.Unit.NetworkId == skillshot.Unit.NetworkId &&
-                     (skillshot.Direction).AngleBetween(item.Direction) < 5))
+                     (skillshot.Direction).AngleBetween(item.Direction) < 5 &&
+                     (skillshot.Start.Distance(item.Start) < 100 || skillshot.SpellData.FromObjects.Length == 0)))
                 {
                     alreadyAdded = true;
                 }
@@ -339,7 +356,7 @@ namespace Evade
                 if (skillshot.SpellData.DisableFowDetection && skillshot.DetectionType == DetectionType.RecvPacket)
                     return;
 #if DEBUG
-                Console.WriteLine(Environment.TickCount+"Adding new skillshot: " + skillshot.SpellData.SpellName);
+                Console.WriteLine(Environment.TickCount + "Adding new skillshot: " + skillshot.SpellData.SpellName);
 #endif
 
                 DetectedSkillshots.Add(skillshot);
@@ -465,7 +482,6 @@ namespace Evade
                 if (!safeResult.IsSafe)
                 {
                     //Search for an evade point:
-                    //Game.PrintChat("Need to evade!");
                     TryToEvade(safeResult.SkillshotList, EvadeToPoint);
                     if (Evading)
                         AfterEvadePoint = currentPath[currentPath.Count - 1];
@@ -588,9 +604,10 @@ namespace Evade
             {
                 if (Config.PrintSpellData)
                 {
-                    Console.WriteLine(Environment.TickCount+"DASH: Speed: " + args.Speed + " Width:" + args.EndPos.Distance(args.StartPos) );
+                    Console.WriteLine(Environment.TickCount + "DASH: Speed: " + args.Speed + " Width:" +
+                                      args.EndPos.Distance(args.StartPos));
                 }
-                
+
                 Utility.DelayAction.Add(args.Duration, delegate { Evading = false; });
             }
         }
@@ -717,13 +734,32 @@ namespace Evade
                         }
                     }
 
-                    if ((evadeSpell.CheckSpellName == "" ||
-                         ObjectManager.Player.Spellbook.GetSpell(evadeSpell.Slot).Name == evadeSpell.CheckSpellName) &&
-                        ((evadeSpell.IsSummonerSpell &&
-                          ObjectManager.Player.SummonerSpellbook.CanUseSpell(evadeSpell.Slot) == SpellState.Ready) ||
-                         (!evadeSpell.IsSummonerSpell &&
-                          ObjectManager.Player.Spellbook.CanUseSpell(evadeSpell.Slot) == SpellState.Ready)))
+                    if (evadeSpell.IsReady())
                     {
+                        //MovementSpeed Buff
+                        if (evadeSpell.IsMovementSpeedBuff)
+                        {
+                            var points = Evader.GetEvadePoints((int)evadeSpell.MoveSpeedTotalAmount());
+
+                            if (points.Count > 0)
+                            {
+                                EvadePoint = to.Closest(points);
+                                Evading = true;
+
+                                if (evadeSpell.IsSummonerSpell)
+                                {
+                                    ObjectManager.Player.SummonerSpellbook.CastSpell(evadeSpell.Slot,
+                                        ObjectManager.Player);
+                                }
+                                else
+                                {
+                                    ObjectManager.Player.Spellbook.CastSpell(evadeSpell.Slot, ObjectManager.Player);
+                                }
+
+                                return;
+                            }
+                        }
+
                         //Dashes
                         if (evadeSpell.IsDash)
                         {
@@ -820,6 +856,31 @@ namespace Evade
                                         points[i] = ObjectManager.Player.ServerPosition.To2D()
                                             .Extend(points[i], evadeSpell.MaxRange);
                                     }
+
+                                    for (var i = points.Count - 1; i > 0; i--)
+                                    {
+                                        if (!IsSafe(points[i]).IsSafe)
+                                            points.RemoveAt(i);
+                                    }
+                                }
+                                else
+                                {
+                                    for (var i = 0; i < points.Count; i++)
+                                    {
+                                        var k =
+                                            (int)
+                                                (evadeSpell.MaxRange -
+                                                 ObjectManager.Player.ServerPosition.To2D().Distance(points[i]));
+                                        k -= Math.Max(RandomN.Next(k) - 100, 0);
+                                        var extended = points[i] +
+                                                       k *
+                                                       (points[i] - ObjectManager.Player.ServerPosition.To2D())
+                                                           .Normalized();
+                                        if (IsSafe(extended).IsSafe)
+                                        {
+                                            points[i] = extended;
+                                        }
+                                    }
                                 }
 
                                 if (points.Count > 0)
@@ -866,6 +927,7 @@ namespace Evade
                                 var targets = Evader.GetEvadeTargets(evadeSpell.ValidTargets, int.MaxValue,
                                     evadeSpell.Delay,
                                     evadeSpell.MaxRange, true, false);
+
                                 if (targets.Count > 0)
                                 {
                                     if (IsAboutToHit(ObjectManager.Player, evadeSpell.Delay))
@@ -1076,7 +1138,7 @@ namespace Evade
             if (!Config.Menu.Item("EnableDrawings").GetValue<bool>()) return;
             var Border = Config.Menu.Item("Border").GetValue<Slider>().Value;
             var missileColor = Config.Menu.Item("MissileColor").GetValue<Color>();
-      
+
             //Draw the polygon for each skillshot.
             foreach (var skillshot in DetectedSkillshots)
             {
@@ -1086,24 +1148,22 @@ namespace Evade
                         : Config.Menu.Item("DisabledColor").GetValue<Color>(), missileColor, Border);
             }
 
-            
+
             if (Config.TestOnAllies)
             {
-                
                 var myPath = ObjectManager.Player.GetWaypoints();
-                
+
                 for (var i = 0; i < myPath.Count - 1; i++)
                 {
                     var A = myPath[i];
                     var B = myPath[i + 1];
                     var SA = Drawing.WorldToScreen(A.To3D());
                     var SB = Drawing.WorldToScreen(B.To3D());
-                    Drawing.DrawLine(SA[0], SA[1], SB[0], SB[1], 1, Color.White);
+                    // Drawing.DrawLine(SA.X, SA.Y, SB.X, SB.Y, 1, Color.White);
                 }
 
                 Drawing.DrawCircle(EvadePoint.To3D(), 300, Color.White);
             }
-            
         }
 
         public struct IsSafeResult

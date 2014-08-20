@@ -53,7 +53,7 @@ namespace Marksman
             if (drawUlt.Active && ShowUlt)
             {
                 var playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
-                Drawing.DrawText(playerPos[0] - 65, playerPos[1] + 20, drawUlt.Color, "Hit R To kill " + UltTarget + "!");
+                Drawing.DrawText(playerPos.X - 65, playerPos.Y + 20, drawUlt.Color, "Hit R To kill " + UltTarget + "!");
             }
         }
 
