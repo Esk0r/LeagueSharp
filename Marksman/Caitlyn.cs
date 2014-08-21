@@ -9,7 +9,7 @@ using LeagueSharp.Common;
 
 namespace Marksman
 {
-    internal class Caitlyn : Champion // Base done by Chulbul-Pandey, Drawings and improvements added by Dibes.
+    internal class Caitlyn : Champion // Base done by xQx, Drawings and improvements added by Dibes.
     {
         public Spell E;
         public Spell Q;
