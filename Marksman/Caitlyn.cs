@@ -9,7 +9,7 @@ using LeagueSharp.Common;
 
 namespace Marksman
 {
-    internal class Caitlyn : Champion // Base done by Chulbul-Pandey, Drawings and improvements added by Dibes.
+    internal class Caitlyn : Champion // Base done by xQx, Drawings and improvements added by Dibes.
     {
         public Spell E;
         public Spell Q;
@@ -53,7 +53,7 @@ namespace Marksman
             if (drawUlt.Active && ShowUlt)
             {
                 var playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
-                Drawing.DrawText(playerPos.X - 65, playerPos.Y + 20, drawUlt.Color, "Hit R To kill " + UltTarget + "!");
+                Drawing.DrawText(playerPos[0] - 65, playerPos[1] + 20, drawUlt.Color, "Hit R To kill " + UltTarget + "!");
             }
         }
 
