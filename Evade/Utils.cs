@@ -35,7 +35,9 @@ namespace Evade
         {
             var result = new List<Vector2>();
             foreach (var point in v)
+            {
                 result.Add(point.To2D());
+            }
             return result;
         }
 
@@ -72,17 +74,14 @@ namespace Evade
             foreach (var buff in unit.Buffs)
             {
                 if (buff.IsActive && Game.Time <= buff.EndTime &&
-                    (buff.Type == BuffType.Charm ||
-                     buff.Type == BuffType.Knockup ||
-                     buff.Type == BuffType.Stun ||
-                     buff.Type == BuffType.Suppression ||
-                     buff.Type == BuffType.Snare))
+                    (buff.Type == BuffType.Charm || buff.Type == BuffType.Knockup || buff.Type == BuffType.Stun ||
+                     buff.Type == BuffType.Suppression || buff.Type == BuffType.Snare))
                 {
                     result = Math.Max(result, buff.EndTime);
                 }
             }
 
-            return (result == 0f) ? -1 : (int)(Environment.TickCount + (result - Game.Time) * 1000);
+            return (result == 0f) ? -1 : (int) (Environment.TickCount + (result - Game.Time) * 1000);
         }
 
 
@@ -102,7 +101,9 @@ namespace Evade
         public new void Add(T item)
         {
             if (OnAdd != null)
+            {
                 OnAdd(this, null);
+            }
 
             base.Add(item);
         }

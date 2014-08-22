@@ -68,7 +68,8 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "Blitzcrank")
             {
-                spell = new MoveBuffData("Blitzcrank W", SpellSlot.W, 100, 3,
+                spell = new MoveBuffData(
+                    "Blitzcrank W", SpellSlot.W, 100, 3,
                     () =>
                         ObjectManager.Player.MoveSpeed *
                         (1 + 0.12f + 0.04f * ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Level));
@@ -81,7 +82,8 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "Draven")
             {
-                spell = new MoveBuffData("Draven W", SpellSlot.W, 100, 3,
+                spell = new MoveBuffData(
+                    "Draven W", SpellSlot.W, 100, 3,
                     () =>
                         ObjectManager.Player.MoveSpeed *
                         (1 + 0.35f + 0.05f * ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Level));
@@ -94,7 +96,8 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "Evelynn")
             {
-                spell = new MoveBuffData("Evelynn W", SpellSlot.W, 100, 3,
+                spell = new MoveBuffData(
+                    "Evelynn W", SpellSlot.W, 100, 3,
                     () =>
                         ObjectManager.Player.MoveSpeed *
                         (1 + 0.2f + 0.1f * ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Level));
@@ -117,7 +120,8 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "Katarina")
             {
-                spell = new MoveBuffData("Katarina W", SpellSlot.W, 100, 3,
+                spell = new MoveBuffData(
+                    "Katarina W", SpellSlot.W, 100, 3,
                     () =>
                         ObjectManager.Get<Obj_AI_Hero>().Any(h => h.IsValidTarget(375))
                             ? ObjectManager.Player.MoveSpeed *
@@ -132,7 +136,8 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "Karma")
             {
-                spell = new MoveBuffData("Karma E", SpellSlot.E, 100, 3,
+                spell = new MoveBuffData(
+                    "Karma E", SpellSlot.E, 100, 3,
                     () =>
                         ObjectManager.Player.MoveSpeed *
                         (1 + 0.35f + 0.05f * ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).Level));
@@ -166,7 +171,8 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "Lulu")
             {
-                spell = new MoveBuffData("Lulu W", SpellSlot.W, 100, 5,
+                spell = new MoveBuffData(
+                    "Lulu W", SpellSlot.W, 100, 5,
                     () => ObjectManager.Player.MoveSpeed * (1.3f + ObjectManager.Player.FlatMagicDamageMod / 100 * 0.1f));
                 Spells.Add(spell);
             }
@@ -177,7 +183,8 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "Nunu")
             {
-                spell = new MoveBuffData("Nunu W", SpellSlot.W, 100, 3,
+                spell = new MoveBuffData(
+                    "Nunu W", SpellSlot.W, 100, 3,
                     () =>
                         ObjectManager.Player.MoveSpeed *
                         (1 + 0.1f + 0.01f * ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Level));
@@ -210,7 +217,8 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "Shyvana")
             {
-                spell = new MoveBuffData("Shyvana W", SpellSlot.W, 100, 4,
+                spell = new MoveBuffData(
+                    "Shyvana W", SpellSlot.W, 100, 4,
                     () =>
                         ObjectManager.Player.MoveSpeed *
                         (1 + 0.25f + 0.05f * ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Level));
@@ -224,7 +232,8 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "Sona")
             {
-                spell = new MoveBuffData("Sona E", SpellSlot.E, 100, 3,
+                spell = new MoveBuffData(
+                    "Sona E", SpellSlot.E, 100, 3,
                     () =>
                         ObjectManager.Player.MoveSpeed *
                         (1 + 0.12f + 0.01f * ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).Level +
@@ -239,7 +248,8 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "Teemo")
             {
-                spell = new MoveBuffData("Teemo W", SpellSlot.W, 100, 3,
+                spell = new MoveBuffData(
+                    "Teemo W", SpellSlot.W, 100, 3,
                     () =>
                         ObjectManager.Player.MoveSpeed *
                         (1 + 0.06f + 0.04f * ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Level));
@@ -252,7 +262,8 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "Udyr")
             {
-                spell = new MoveBuffData("Udyr E", SpellSlot.E, 100, 3,
+                spell = new MoveBuffData(
+                    "Udyr E", SpellSlot.E, 100, 3,
                     () =>
                         ObjectManager.Player.MoveSpeed *
                         (1 + 0.1f + 0.05f * ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).Level));
@@ -569,10 +580,7 @@ namespace Evade
             if (ObjectManager.Player.ChampionName == "Talon")
             {
                 spell = new BlinkData("Talon E", SpellSlot.E, 700, 100, 3);
-                spell.ValidTargets = new[]
-                {
-                    SpellValidTargets.EnemyChampions, SpellValidTargets.EnemyMinions
-                };
+                spell.ValidTargets = new[] { SpellValidTargets.EnemyChampions, SpellValidTargets.EnemyMinions };
                 Spells.Add(spell);
             }
 
@@ -731,7 +739,9 @@ namespace Evade
             foreach (var evadeSpellData in Spells)
             {
                 if (evadeSpellData.Name.ToLower() == Name)
+                {
                     return evadeSpellData;
+                }
             }
 
             return null;

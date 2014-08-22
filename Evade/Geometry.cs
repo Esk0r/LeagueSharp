@@ -65,7 +65,7 @@ namespace Evade
             {
                 var from = self[i];
                 var to = self[i + 1];
-                var d = (int)to.Distance(from);
+                var d = (int) to.Distance(from);
                 if (d > distance)
                 {
                     return from + distance * (to - from).Normalized();
@@ -101,8 +101,7 @@ namespace Evade
             var c = new Clipper();
             c.AddPaths(subj, PolyType.ptSubject, true);
             c.AddPaths(clip, PolyType.ptClip, true);
-            c.Execute(ClipType.ctUnion, solution,
-                PolyFillType.pftPositive, PolyFillType.pftEvenOdd);
+            c.Execute(ClipType.ctUnion, solution, PolyFillType.pftPositive, PolyFillType.pftEvenOdd);
 
             return solution;
         }
@@ -124,13 +123,13 @@ namespace Evade
                 var result = new Polygon();
                 var outRadius = (overrideWidth > 0
                     ? overrideWidth
-                    : (offset + Radius) / (float)Math.Cos(2 * Math.PI / CircleLineSegmentN));
+                    : (offset + Radius) / (float) Math.Cos(2 * Math.PI / CircleLineSegmentN));
 
                 for (var i = 1; i <= CircleLineSegmentN; i++)
                 {
                     var angle = i * 2 * Math.PI / CircleLineSegmentN;
-                    var point = new Vector2(Center.X + outRadius * (float)Math.Cos(angle),
-                        Center.Y + outRadius * (float)Math.Sin(angle));
+                    var point = new Vector2(
+                        Center.X + outRadius * (float) Math.Cos(angle), Center.Y + outRadius * (float) Math.Sin(angle));
                     result.Add(point);
                 }
 
@@ -196,14 +195,14 @@ namespace Evade
             {
                 var result = new Polygon();
 
-                result.Add(RStart + (overrideWidth > 0 ? overrideWidth : Width + offset) * Perpendicular -
-                           offset * Direction);
-                result.Add(RStart - (overrideWidth > 0 ? overrideWidth : Width + offset) * Perpendicular -
-                           offset * Direction);
-                result.Add(REnd - (overrideWidth > 0 ? overrideWidth : Width + offset) * Perpendicular +
-                           offset * Direction);
-                result.Add(REnd + (overrideWidth > 0 ? overrideWidth : Width + offset) * Perpendicular +
-                           offset * Direction);
+                result.Add(
+                    RStart + (overrideWidth > 0 ? overrideWidth : Width + offset) * Perpendicular - offset * Direction);
+                result.Add(
+                    RStart - (overrideWidth > 0 ? overrideWidth : Width + offset) * Perpendicular - offset * Direction);
+                result.Add(
+                    REnd - (overrideWidth > 0 ? overrideWidth : Width + offset) * Perpendicular + offset * Direction);
+                result.Add(
+                    REnd + (overrideWidth > 0 ? overrideWidth : Width + offset) * Perpendicular + offset * Direction);
 
                 return result;
             }
@@ -227,22 +226,23 @@ namespace Evade
             {
                 var result = new Polygon();
 
-                var outRadius = (offset + Radius + RingRadius) / (float)Math.Cos(2 * Math.PI / CircleLineSegmentN);
+                var outRadius = (offset + Radius + RingRadius) / (float) Math.Cos(2 * Math.PI / CircleLineSegmentN);
                 var innerRadius = Radius - RingRadius - offset;
 
                 for (var i = 0; i <= CircleLineSegmentN; i++)
                 {
                     var angle = i * 2 * Math.PI / CircleLineSegmentN;
-                    var point = new Vector2(Center.X - outRadius * (float)Math.Cos(angle),
-                        Center.Y - outRadius * (float)Math.Sin(angle));
+                    var point = new Vector2(
+                        Center.X - outRadius * (float) Math.Cos(angle), Center.Y - outRadius * (float) Math.Sin(angle));
                     result.Add(point);
                 }
 
                 for (var i = 0; i <= CircleLineSegmentN; i++)
                 {
                     var angle = i * 2 * Math.PI / CircleLineSegmentN;
-                    var point = new Vector2(Center.X + innerRadius * (float)Math.Cos(angle),
-                        Center.Y - innerRadius * (float)Math.Sin(angle));
+                    var point = new Vector2(
+                        Center.X + innerRadius * (float) Math.Cos(angle),
+                        Center.Y - innerRadius * (float) Math.Sin(angle));
                     result.Add(point);
                 }
 
@@ -269,7 +269,7 @@ namespace Evade
             public Polygon ToPolygon(int offset = 0)
             {
                 var result = new Polygon();
-                var outRadius = (Radius + offset) / (float)Math.Cos(2 * Math.PI / CircleLineSegmentN);
+                var outRadius = (Radius + offset) / (float) Math.Cos(2 * Math.PI / CircleLineSegmentN);
 
                 result.Add(Center);
                 var Side1 = Direction.Rotated(-Angle * 0.5f);

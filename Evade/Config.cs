@@ -59,11 +59,13 @@ namespace Evade
                 var subMenu = new Menu(spell.Name, spell.Name);
 
                 subMenu.AddItem(
-                    new MenuItem("DangerLevel" + spell.Name, "Danger level").SetValue(new Slider(spell.DangerLevel,
-                        5, 1)));
+                    new MenuItem("DangerLevel" + spell.Name, "Danger level").SetValue(
+                        new Slider(spell.DangerLevel, 5, 1)));
 
                 if (spell.IsTargetted && spell.ValidTargets.Contains(SpellValidTargets.AllyWards))
+                {
                     subMenu.AddItem(new MenuItem("WardJump" + spell.Name, "WardJump").SetValue(true));
+                }
 
                 subMenu.AddItem(new MenuItem("Enabled" + spell.Name, "Enabled").SetValue(true));
 
@@ -86,8 +88,7 @@ namespace Evade
 
                             subMenu.AddItem(
                                 new MenuItem("DangerLevel" + spell.MenuItemName, "Danger level").SetValue(
-                                    new Slider(spell.DangerValue,
-                                        5, 1)));
+                                    new Slider(spell.DangerValue, 5, 1)));
 
                             subMenu.AddItem(
                                 new MenuItem("IsDangerous" + spell.MenuItemName, "Is Dangerous").SetValue(
@@ -109,8 +110,10 @@ namespace Evade
             foreach (var ally in ObjectManager.Get<Obj_AI_Hero>())
             {
                 if (ally.IsAlly && !ally.IsMe)
+                {
                     shielding.AddItem(
                         new MenuItem("shield" + ally.ChampionName, "Shield " + ally.ChampionName).SetValue(true));
+                }
             }
             Menu.AddSubMenu(shielding);
 
@@ -132,8 +135,7 @@ namespace Evade
             Menu.AddSubMenu(drawings);
 
             Menu.AddItem(
-                new MenuItem("Enabled", "Enabled").SetValue(new KeyBind("K".ToCharArray()[0], KeyBindType.Toggle,
-                    true)));
+                new MenuItem("Enabled", "Enabled").SetValue(new KeyBind("K".ToCharArray()[0], KeyBindType.Toggle, true)));
 
             Menu.AddItem(
                 new MenuItem("OnlyDangerous", "Dodge only dangerous").SetValue(new KeyBind(32, KeyBindType.Press)));

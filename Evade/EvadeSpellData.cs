@@ -68,9 +68,7 @@ namespace Evade
 
         public int _dangerLevel;
 
-        public EvadeSpellData()
-        {
-        }
+        public EvadeSpellData() { }
 
         public EvadeSpellData(string name, int dangerLevel)
         {
@@ -132,7 +130,11 @@ namespace Evade
 
     internal class BlinkData : EvadeSpellData
     {
-        public BlinkData(string name, SpellSlot slot, float range, int delay, int dangerLevel,
+        public BlinkData(string name,
+            SpellSlot slot,
+            float range,
+            int delay,
+            int dangerLevel,
             bool isSummonerSpell = false)
         {
             Name = name;

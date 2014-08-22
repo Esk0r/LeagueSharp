@@ -33,10 +33,12 @@ namespace Evade
         /// <summary>
         /// Returns the posible evade points.
         /// </summary>
-        public static List<Vector2> GetEvadePoints(int speed = -1, int delay = 0, bool isBlink = false,
+        public static List<Vector2> GetEvadePoints(int speed = -1,
+            int delay = 0,
+            bool isBlink = false,
             bool onlyGood = false)
         {
-            speed = speed == -1 ? (int)ObjectManager.Player.MoveSpeed : speed;
+            speed = speed == -1 ? (int) ObjectManager.Player.MoveSpeed : speed;
 
             var goodCandidates = new List<Vector2>();
             var badCandidates = new List<Vector2>();
@@ -96,16 +98,14 @@ namespace Evade
                             }
                             else
                             {
-                                if (Program.IsSafeToBlink(pathToPoint[pathToPoint.Count - 1],
-                                    Config.EvadingFirstTimeOffset,
-                                    delay))
+                                if (Program.IsSafeToBlink(
+                                    pathToPoint[pathToPoint.Count - 1], Config.EvadingFirstTimeOffset, delay))
                                 {
                                     goodCandidates.Add(candidate);
                                 }
 
-                                if (Program.IsSafeToBlink(pathToPoint[pathToPoint.Count - 1],
-                                    Config.EvadingSecondTimeOffset,
-                                    delay))
+                                if (Program.IsSafeToBlink(
+                                    pathToPoint[pathToPoint.Count - 1], Config.EvadingSecondTimeOffset, delay))
                                 {
                                     badCandidates.Add(candidate);
                                 }
@@ -122,8 +122,13 @@ namespace Evade
         /// <summary>
         /// Returns the safe targets to cast escape spells.
         /// </summary>
-        public static List<Obj_AI_Base> GetEvadeTargets(SpellValidTargets[] validTargets, int speed, int delay,
-            float range, bool isBlink = false, bool onlyGood = false, bool DontCheckForSafety = false)
+        public static List<Obj_AI_Base> GetEvadeTargets(SpellValidTargets[] validTargets,
+            int speed,
+            int delay,
+            float range,
+            bool isBlink = false,
+            bool onlyGood = false,
+            bool DontCheckForSafety = false)
         {
             var badTargets = new List<Obj_AI_Base>();
             var goodTargets = new List<Obj_AI_Base>();
@@ -135,41 +140,59 @@ namespace Evade
                     case SpellValidTargets.AllyChampions:
 
                         foreach (var ally in ObjectManager.Get<Obj_AI_Hero>())
+                        {
                             if (ally.IsValidTarget(range, false) && !ally.IsMe && ally.IsAlly)
+                            {
                                 allTargets.Add(ally);
+                            }
+                        }
                         break;
 
 
                     case SpellValidTargets.AllyMinions:
-                        allTargets.AddRange(MinionManager.GetMinions(ObjectManager.Player.Position, range,
-                            MinionTypes.All, MinionTeam.Ally));
+                        allTargets.AddRange(
+                            MinionManager.GetMinions(
+                                ObjectManager.Player.Position, range, MinionTypes.All, MinionTeam.Ally));
                         break;
 
                     case SpellValidTargets.AllyWards:
 
                         foreach (var gameObject in ObjectManager.Get<Obj_AI_Minion>())
+                        {
                             if (gameObject.Name.ToLower().Contains("ward") && gameObject.IsValidTarget(range, false) &&
                                 gameObject.Team == ObjectManager.Player.Team)
+                            {
                                 allTargets.Add(gameObject);
+                            }
+                        }
                         break;
 
                     case SpellValidTargets.EnemyChampions:
                         foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
+                        {
                             if (enemy.IsValidTarget(range))
+                            {
                                 allTargets.Add(enemy);
+                            }
+                        }
 
                         break;
 
                     case SpellValidTargets.EnemyMinions:
-                        allTargets.AddRange(MinionManager.GetMinions(ObjectManager.Player.Position, range,
-                            MinionTypes.All, MinionTeam.NotAlly));
+                        allTargets.AddRange(
+                            MinionManager.GetMinions(
+                                ObjectManager.Player.Position, range, MinionTypes.All, MinionTeam.NotAlly));
                         break;
 
                     case SpellValidTargets.EnemyWards:
 
                         foreach (var gameObject in ObjectManager.Get<Obj_AI_Minion>())
+                        {
                             if (gameObject.Name.ToLower().Contains("ward") && gameObject.IsValidTarget(range))
+                            {
                                 allTargets.Add(gameObject);
+                            }
+                        }
                         break;
                 }
             }
@@ -182,12 +205,15 @@ namespace Evade
                     {
                         if (Environment.TickCount - Program.LastWardJumpAttempt < 250 ||
                             Program.IsSafeToBlink(target.ServerPosition.To2D(), Config.EvadingFirstTimeOffset, delay))
+                        {
                             goodTargets.Add(target);
+                        }
 
                         if (Environment.TickCount - Program.LastWardJumpAttempt < 250 ||
-                            Program.IsSafeToBlink(target.ServerPosition.To2D(), Config.EvadingSecondTimeOffset,
-                                delay))
+                            Program.IsSafeToBlink(target.ServerPosition.To2D(), Config.EvadingSecondTimeOffset, delay))
+                        {
                             badTargets.Add(target);
+                        }
                     }
                     else
                     {
@@ -197,11 +223,15 @@ namespace Evade
 
                         if (Environment.TickCount - Program.LastWardJumpAttempt < 250 ||
                             Program.IsSafePath(pathToTarget, Config.EvadingFirstTimeOffset, speed, delay).IsSafe)
+                        {
                             goodTargets.Add(target);
+                        }
 
                         if (Environment.TickCount - Program.LastWardJumpAttempt < 250 ||
                             Program.IsSafePath(pathToTarget, Config.EvadingSecondTimeOffset, speed, delay).IsSafe)
+                        {
                             badTargets.Add(target);
+                        }
                     }
                 }
             }

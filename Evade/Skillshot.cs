@@ -101,7 +101,11 @@ namespace Evade
         private Vector2 _collisionEnd;
         private int _lastCollisionCalc;
 
-        public Skillshot(DetectionType detectionType, SpellData spellData, int startT, Vector2 start, Vector2 end,
+        public Skillshot(DetectionType detectionType,
+            SpellData spellData,
+            int startT,
+            Vector2 start,
+            Vector2 end,
             Obj_AI_Base unit)
         {
             DetectionType = detectionType;
@@ -127,8 +131,8 @@ namespace Evade
                     Rectangle = new Geometry.Rectangle(Start, CollisionEnd, spellData.Radius);
                     break;
                 case SkillShotType.SkillshotCone:
-                    Sector = new Geometry.Sector(start, CollisionEnd - start, spellData.Radius * (float)Math.PI / 180,
-                        spellData.Range);
+                    Sector = new Geometry.Sector(
+                        start, CollisionEnd - start, spellData.Radius * (float) Math.PI / 180, spellData.Range);
                     break;
                 case SkillShotType.SkillshotRing:
                     Ring = new Geometry.Ring(CollisionEnd, spellData.Radius, spellData.RingRadius);
@@ -148,7 +152,9 @@ namespace Evade
             get
             {
                 if (_collisionEnd.IsValid())
+                {
                     return _collisionEnd;
+                }
 
                 if (IsGlobal)
                 {
@@ -183,7 +189,9 @@ namespace Evade
         public bool IsActive()
         {
             if (SpellData.MissileAccel != 0)
+            {
                 return Environment.TickCount <= StartTick + 5000;
+            }
 
             return Environment.TickCount <=
                    StartTick + SpellData.Delay + SpellData.ExtraDuration +
@@ -192,9 +200,14 @@ namespace Evade
 
         public bool Evade()
         {
-            if (ForceDisabled) return false;
+            if (ForceDisabled)
+            {
+                return false;
+            }
             if (Environment.TickCount - _cachedValueTick < 100)
+            {
                 return _cachedValue;
+            }
 
             if (!GetValue<bool>("IsDangerous") && Config.Menu.Item("OnlyDangerous").GetValue<KeyBind>().Active)
             {
@@ -246,14 +259,16 @@ namespace Evade
                 case SkillShotType.SkillshotCircle:
                     Polygon = Circle.ToPolygon();
                     EvadePolygon = Circle.ToPolygon(Config.ExtraEvadeDistance);
-                    DrawingPolygon = Circle.ToPolygon(0,
+                    DrawingPolygon = Circle.ToPolygon(
+                        0,
                         !SpellData.AddHitbox
                             ? SpellData.Radius
                             : (SpellData.Radius - ObjectManager.Player.BoundingRadius));
                     break;
                 case SkillShotType.SkillshotLine:
                     Polygon = Rectangle.ToPolygon();
-                    DrawingPolygon = Rectangle.ToPolygon(0,
+                    DrawingPolygon = Rectangle.ToPolygon(
+                        0,
                         !SpellData.AddHitbox
                             ? SpellData.Radius
                             : (SpellData.Radius - ObjectManager.Player.BoundingRadius));
@@ -261,7 +276,8 @@ namespace Evade
                     break;
                 case SkillShotType.SkillshotMissileLine:
                     Polygon = Rectangle.ToPolygon();
-                    DrawingPolygon = Rectangle.ToPolygon(0,
+                    DrawingPolygon = Rectangle.ToPolygon(
+                        0,
                         !SpellData.AddHitbox
                             ? SpellData.Radius
                             : (SpellData.Radius - ObjectManager.Player.BoundingRadius));
@@ -286,7 +302,7 @@ namespace Evade
         public Vector2 GlobalGetMissilePosition(int time)
         {
             var t = Math.Max(0, Environment.TickCount + time - StartTick - SpellData.Delay);
-            t = (int)Math.Max(0, Math.Min(End.Distance(Start), t * SpellData.MissileSpeed / 1000));
+            t = (int) Math.Max(0, Math.Min(End.Distance(Start), t * SpellData.MissileSpeed / 1000));
             return Start + Direction * t;
         }
 
@@ -330,7 +346,7 @@ namespace Evade
                 }
             }
 
-            t = (int)Math.Max(0, Math.Min(CollisionEnd.Distance(Start), x));
+            t = (int) Math.Max(0, Math.Min(CollisionEnd.Distance(Start), x));
             return Start + Direction * t;
         }
 
@@ -343,7 +359,9 @@ namespace Evade
             timeOffset /= 2;
 
             if (IsSafe(ObjectManager.Player.ServerPosition.To2D()))
+            {
                 return true;
+            }
 
             //Skillshots with missile
             if (SpellData.Type == SkillShotType.SkillshotMissileLine)
@@ -352,14 +370,16 @@ namespace Evade
                 var myPositionProjection = ObjectManager.Player.ServerPosition.To2D().ProjectOn(Start, End);
 
                 if (missilePositionAfterBlink.Distance(End) < myPositionProjection.SegmentPoint.Distance(End))
+                {
                     return false;
+                }
 
                 return true;
             }
 
             //skillshots without missile
             var timeToExplode = SpellData.ExtraDuration + SpellData.Delay +
-                                (int)(1000 * Start.Distance(End) / SpellData.MissileSpeed) -
+                                (int) (1000 * Start.Distance(End) / SpellData.MissileSpeed) -
                                 (Environment.TickCount - StartTick);
 
             return timeToExplode > timeOffset + delay;
@@ -368,16 +388,21 @@ namespace Evade
         /// <summary>
         /// Returns if the skillshot will hit the unit if the unit follows the path.
         /// </summary>
-        public SafePathResult IsSafePath(GamePath path, int timeOffset, int speed = -1, int delay = 0,
+        public SafePathResult IsSafePath(GamePath path,
+            int timeOffset,
+            int speed = -1,
+            int delay = 0,
             Obj_AI_Base unit = null)
         {
             var Distance = 0f;
             timeOffset += Game.Ping / 2;
 
-            speed = (speed == -1) ? (int)ObjectManager.Player.MoveSpeed : speed;
+            speed = (speed == -1) ? (int) ObjectManager.Player.MoveSpeed : speed;
 
             if (unit == null)
+            {
                 unit = ObjectManager.Player;
+            }
 
             var allIntersections = new List<FoundIntersection>();
             for (var i = 0; i <= path.Count - 2; i++)
@@ -395,9 +420,11 @@ namespace Evade
 
                     if (intersection.Intersects)
                     {
-                        segmentIntersections.Add(new FoundIntersection(Distance + intersection.Point.Distance(from),
-                            (int)((Distance + intersection.Point.Distance(from)) * 1000 / speed), intersection.Point,
-                            from));
+                        segmentIntersections.Add(
+                            new FoundIntersection(
+                                Distance + intersection.Point.Distance(from),
+                                (int) ((Distance + intersection.Point.Distance(from)) * 1000 / speed),
+                                intersection.Point, from));
                     }
                 }
 
@@ -416,7 +443,9 @@ namespace Evade
                 {
                     //No intersections -> Safe
                     if (allIntersections.Count == 0)
+                    {
                         return new SafePathResult(true, new FoundIntersection());
+                    }
 
                     for (var i = 0; i <= allIntersections.Count - 1; i = i + 2)
                     {
@@ -455,7 +484,9 @@ namespace Evade
                 }
                 //Inside the skillshot.
                 if (allIntersections.Count == 0)
+                {
                     return new SafePathResult(false, new FoundIntersection());
+                }
 
                 if (allIntersections.Count > 0)
                 {
@@ -465,7 +496,9 @@ namespace Evade
 
                     var missilePosOnExit = GetMissilePosition(exitIntersection.Time + timeOffset);
                     if (missilePosOnExit.Distance(End) <= exitIntersectionProjection.Distance(End))
+                    {
                         return new SafePathResult(false, allIntersections[0]);
+                    }
                 }
             }
 
@@ -473,19 +506,25 @@ namespace Evade
             if (IsSafe(ObjectManager.Player.ServerPosition.To2D()))
             {
                 if (allIntersections.Count == 0)
+                {
                     return new SafePathResult(true, new FoundIntersection());
+                }
 
                 if (SpellData.DontCross)
+                {
                     return new SafePathResult(false, allIntersections[0]);
+                }
             }
             else
             {
                 if (allIntersections.Count == 0)
+                {
                     return new SafePathResult(false, new FoundIntersection());
+                }
             }
 
             var timeToExplode = (SpellData.DontAddExtraDuration ? 0 : SpellData.ExtraDuration) + SpellData.Delay +
-                                (int)(1000 * Start.Distance(End) / SpellData.MissileSpeed) -
+                                (int) (1000 * Start.Distance(End) / SpellData.MissileSpeed) -
                                 (Environment.TickCount - StartTick);
 
 
@@ -496,8 +535,7 @@ namespace Evade
                 return new SafePathResult(false, allIntersections[0]);
             }
 
-            var myPositionWhenExplodesWithOffset = path.PositionAfter(timeToExplode, speed,
-                timeOffset);
+            var myPositionWhenExplodesWithOffset = path.PositionAfter(timeToExplode, speed, timeOffset);
 
             return new SafePathResult(IsSafe(myPositionWhenExplodesWithOffset), allIntersections[0]);
         }
@@ -523,8 +561,7 @@ namespace Evade
                 //TODO: Check for minion collision etc.. in the future.
                 var projection = unit.ServerPosition.To2D().ProjectOn(missilePos, missilePosAfterT);
 
-                if (projection.IsOnSegment &&
-                    projection.SegmentPoint.Distance(unit.ServerPosition) < SpellData.Radius)
+                if (projection.IsOnSegment && projection.SegmentPoint.Distance(unit.ServerPosition) < SpellData.Radius)
                 {
                     return true;
                 }
@@ -535,7 +572,7 @@ namespace Evade
             if (!IsSafe(unit.ServerPosition.To2D()))
             {
                 var timeToExplode = SpellData.ExtraDuration + SpellData.Delay +
-                                    (int)((1000 * Start.Distance(End)) / SpellData.MissileSpeed) -
+                                    (int) ((1000 * Start.Distance(End)) / SpellData.MissileSpeed) -
                                     (Environment.TickCount - StartTick);
                 if (timeToExplode <= time)
                 {
@@ -548,13 +585,17 @@ namespace Evade
 
         public void Draw(Color color, Color missileColor, int width = 1)
         {
-            if (!GetValue<bool>("Draw")) return;
+            if (!GetValue<bool>("Draw"))
+            {
+                return;
+            }
             DrawingPolygon.Draw(color, width);
 
             if (SpellData.Type == SkillShotType.SkillshotMissileLine)
             {
                 var position = GetMissilePosition(0);
-                Utils.DrawLineInWorld((position + SpellData.Radius * Direction.Perpendicular()).To3D(),
+                Utils.DrawLineInWorld(
+                    (position + SpellData.Radius * Direction.Perpendicular()).To3D(),
                     (position - SpellData.Radius * Direction.Perpendicular()).To3D(), 2, missileColor);
             }
         }

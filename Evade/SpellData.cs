@@ -63,12 +63,19 @@ namespace Evade
         private int _radius;
         private int _range;
 
-        public SpellData()
-        {
-        }
+        public SpellData() { }
 
-        public SpellData(string championName, string spellName, SpellSlot slot, SkillShotType type, int delay, int range,
-            int radius, int missileSpeed, bool addHitbox, bool fixedRange, int defaultDangerValue)
+        public SpellData(string championName,
+            string spellName,
+            SpellSlot slot,
+            SkillShotType type,
+            int delay,
+            int range,
+            int radius,
+            int missileSpeed,
+            bool addHitbox,
+            bool fixedRange,
+            int defaultDangerValue)
         {
             ChampionName = championName;
             SpellName = spellName;
@@ -94,7 +101,7 @@ namespace Evade
             {
                 return (!AddHitbox)
                     ? _radius + Config.SkillShotsExtraRadius
-                    : Config.SkillShotsExtraRadius + _radius + (int)ObjectManager.Player.BoundingRadius;
+                    : Config.SkillShotsExtraRadius + _radius + (int) ObjectManager.Player.BoundingRadius;
             }
             set { _radius = value; }
         }
