@@ -15,24 +15,42 @@ namespace Marksman
     {
         public Spell E;
         public Spell Q;
-        public float QAddRange;
         public Spell R;
         public Spell W;
 
         public Jinx()
         {
-            Utils.PrintMessage("Jinx by Pingo loaded.");
+            Utils.PrintMessage("Jinx by [Credits in Github] loaded.");
 
             Q = new Spell(SpellSlot.Q, float.MaxValue);
+            W = new Spell(SpellSlot.W, 1500f);
+            E = new Spell(SpellSlot.E, 900f);
+            R = new Spell(SpellSlot.R, 25000f);
 
-            W = new Spell(SpellSlot.W, 1500);
-            W.SetSkillshot(0.6f, 60f, 2000f, true, Prediction.SkillshotType.SkillshotLine);
-
-            E = new Spell(SpellSlot.E, 900);
+            W.SetSkillshot(0.6f, 60f, 3300f, true, Prediction.SkillshotType.SkillshotLine);
             E.SetSkillshot(0.7f, 120f, 1750f, false, Prediction.SkillshotType.SkillshotCircle);
-
-            R = new Spell(SpellSlot.R, 25000);
             R.SetSkillshot(0.6f, 140f, 1700f, false, Prediction.SkillshotType.SkillshotLine);
+        }
+
+        public float QAddRange
+        {
+            get { return 50 + 25 * ObjectManager.Player.Spellbook.GetSpell(SpellSlot.Q).Level; }
+        }
+
+        private static bool FishBoneActive
+        {
+            get { return Math.Abs(ObjectManager.Player.AttackRange - 525f) > float.Epsilon; }
+        }
+
+        private static int PowPowStacks
+        {
+            get
+            {
+                return
+                    ObjectManager.Player.Buffs.Where(buff => buff.DisplayName.ToLower() == "jinxqramp")
+                        .Select(buff => buff.Count)
+                        .FirstOrDefault();
+            }
         }
 
         public override void Drawing_OnDraw(EventArgs args)
@@ -51,7 +69,7 @@ namespace Marksman
 
             if (drawQbound.Active)
             {
-                if (HasFishBones())
+                if (FishBoneActive)
                 {
                     Utility.DrawCircle(
                         ObjectManager.Player.Position, 525f + ObjectManager.Player.BoundingRadius + 65f,
@@ -68,8 +86,6 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            QAddRange = 50 + 25 * ObjectManager.Player.Spellbook.GetSpell(SpellSlot.Q).Level;
-
             var autoEi = GetValue<bool>("AutoEI");
             var autoEs = GetValue<bool>("AutoES");
             var autoEd = GetValue<bool>("AutoED");
@@ -81,18 +97,18 @@ namespace Marksman
                 {
                     if (autoEs && E.IsReady() && enemy.HasBuffOfType(BuffType.Slow))
                     {
-                        var CastPosition =
+                        var castPosition =
                             Prediction.GetBestPosition(
                                 enemy, 0.7f, 120f, 1750f, ObjectManager.Player.ServerPosition, 900f, false,
                                 Prediction.SkillshotType.SkillshotCircle, ObjectManager.Player.ServerPosition)
                                 .CastPosition;
-                        var SlowEndTime = GetSlowEndTime(enemy);
 
-                        if (SlowEndTime >= (Game.Time + E.Delay + 0.5f))
+                        if (GetSlowEndTime(enemy) >= (Game.Time + E.Delay + 0.5f))
                         {
-                            E.Cast(CastPosition);
+                            E.Cast(castPosition);
                         }
                     }
+
                     if (autoEi && E.IsReady() &&
                         (enemy.HasBuffOfType(BuffType.Stun) || enemy.HasBuffOfType(BuffType.Snare) ||
                          enemy.HasBuffOfType(BuffType.Charm) || enemy.HasBuffOfType(BuffType.Fear) ||
@@ -100,6 +116,7 @@ namespace Marksman
                     {
                         E.CastIfHitchanceEquals(enemy, Prediction.HitChance.HighHitchance);
                     }
+
                     if (autoEd && E.IsReady() && enemy.IsDashing())
                     {
                         E.CastIfHitchanceEquals(enemy, Prediction.HitChance.Dashing);
@@ -107,9 +124,7 @@ namespace Marksman
                 }
             }
 
-            var castR = GetValue<KeyBind>("CastR").Active;
-
-            if (castR && R.IsReady())
+            if (GetValue<KeyBind>("CastR").Active && R.IsReady())
             {
                 var target = SimpleTs.GetTarget(1500, SimpleTs.DamageType.Physical);
 
@@ -122,9 +137,7 @@ namespace Marksman
                 }
             }
 
-            var swapQ = GetValue<bool>("SwapQ");
-
-            if (swapQ && HasFishBones() &&
+            if (GetValue<bool>("SwapQ") && FishBoneActive &&
                 (LaneClearActive ||
                  (HarassActive && SimpleTs.GetTarget(675f + QAddRange, SimpleTs.DamageType.Physical) == null)))
             {
@@ -156,26 +169,25 @@ namespace Marksman
 
             if (useQ)
             {
-                foreach (
-                    var t in
-                        ObjectManager.Get<Obj_AI_Hero>()
-                            .Where(t => t.IsValidTarget(GetRealPowPowRange(t) + QAddRange + 20f)))
+                foreach (var t in
+                    ObjectManager.Get<Obj_AI_Hero>()
+                        .Where(t => t.IsValidTarget(GetRealPowPowRange(t) + QAddRange + 20f)))
                 {
                     var swapDistance = GetValue<bool>("SwapDistance");
-                    var swapAOE = GetValue<bool>("SwapAOE");
-                    var Distance = GetRealDistance(t);
-                    var PowPowRange = GetRealPowPowRange(t);
+                    var swapAoe = GetValue<bool>("SwapAOE");
+                    var distance = GetRealDistance(t);
+                    var powPowRange = GetRealPowPowRange(t);
 
                     if (swapDistance && Q.IsReady())
                     {
-                        if (Distance > PowPowRange && !HasFishBones())
+                        if (distance > powPowRange && !FishBoneActive)
                         {
                             if (Q.Cast())
                             {
                                 return;
                             }
                         }
-                        else if (Distance < PowPowRange && HasFishBones())
+                        else if (distance < powPowRange && FishBoneActive)
                         {
                             if (Q.Cast())
                             {
@@ -184,11 +196,9 @@ namespace Marksman
                         }
                     }
 
-                    if (swapAOE && Q.IsReady())
+                    if (swapAoe && Q.IsReady())
                     {
-                        float PowPowStacks = GetPowPowStacks();
-
-                        if (Distance > PowPowRange && PowPowStacks > 2 && !HasFishBones() && CountEnemies(t, 150) > 1)
+                        if (distance > powPowRange && PowPowStacks > 2 && !FishBoneActive && CountEnemies(t, 150) > 1)
                         {
                             if (Q.Cast())
                             {
@@ -201,63 +211,54 @@ namespace Marksman
 
             if (useR && R.IsReady())
             {
-                var checkROK = GetValue<bool>("ROverKill");
+                var checkRok = GetValue<bool>("ROverKill");
                 var minR = GetValue<Slider>("MinRRange").Value;
                 var maxR = GetValue<Slider>("MaxRRange").Value;
                 var t = SimpleTs.GetTarget(maxR, SimpleTs.DamageType.Physical);
 
                 if (t.IsValidTarget())
                 {
-                    var Distance = GetRealDistance(t);
+                    var distance = GetRealDistance(t);
 
-                    if (!checkROK)
+                    if (!checkRok)
                     {
                         if (DamageLib.getDmg(t, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > t.Health)
                         {
-                            if (R.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted)
-                            {
-                                return;
-                            }
+                            if (R.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted) { }
                         }
                     }
-                    else if (checkROK && Distance > minR)
+                    else if (checkRok && distance > minR)
                     {
-                        var ADamage = DamageLib.getDmg(t, DamageLib.SpellType.AD);
-                        var WDamage = DamageLib.getDmg(t, DamageLib.SpellType.W, DamageLib.StageType.FirstDamage);
-                        var RDamage = DamageLib.getDmg(t, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage);
-                        var PowPowRange = GetRealPowPowRange(t);
+                        var aDamage = DamageLib.getDmg(t, DamageLib.SpellType.AD);
+                        var wDamage = DamageLib.getDmg(t, DamageLib.SpellType.W, DamageLib.StageType.FirstDamage);
+                        var rDamage = DamageLib.getDmg(t, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage);
+                        var powPowRange = GetRealPowPowRange(t);
 
-                        if (Distance < (PowPowRange + QAddRange) && !(ADamage * 3.5 > t.Health))
+                        if (distance < (powPowRange + QAddRange) && !(aDamage * 3.5 > t.Health))
                         {
-                            if (!W.IsReady() || !(WDamage > t.Health) || W.GetPrediction(t).CollisionUnitsList.Count > 0)
+                            if (!W.IsReady() || !(wDamage > t.Health) || W.GetPrediction(t).CollisionUnitsList.Count > 0)
                             {
                                 if (CountAlliesNearTarget(t, 500) <= 3)
                                 {
-                                    if (RDamage > t.Health && !ObjectManager.Player.IsAutoAttacking &&
+                                    if (rDamage > t.Health && !ObjectManager.Player.IsAutoAttacking &&
                                         !ObjectManager.Player.IsChanneling)
                                     {
-                                        if (R.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted)
-                                        {
-                                            return;
-                                        }
+                                        if (R.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted) { }
                                     }
                                 }
                             }
                         }
-                        else if (Distance > (PowPowRange + QAddRange))
+                        else if (distance > (powPowRange + QAddRange))
                         {
-                            if (!W.IsReady() || !(WDamage > t.Health) || Distance > W.Range ||
+                            if (!W.IsReady() || !(wDamage > t.Health) || distance > W.Range ||
                                 W.GetPrediction(t).CollisionUnitsList.Count > 0)
                             {
                                 if (CountAlliesNearTarget(t, 500) <= 3)
                                 {
-                                    if (RDamage > t.Health && !ObjectManager.Player.IsAutoAttacking &&
+                                    if (rDamage > t.Health && !ObjectManager.Player.IsAutoAttacking &&
                                         !ObjectManager.Player.IsChanneling)
                                     {
-                                        if (R.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted)
-                                        {
-                                            return;
-                                        }
+                                        if (R.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted) { }
                                     }
                                 }
                             }
@@ -290,26 +291,25 @@ namespace Marksman
 
                 if (useQ)
                 {
-                    foreach (
-                        var t in
-                            ObjectManager.Get<Obj_AI_Hero>()
-                                .Where(t => t.IsValidTarget(GetRealPowPowRange(t) + QAddRange + 20f)))
+                    foreach (var t in
+                        ObjectManager.Get<Obj_AI_Hero>()
+                            .Where(t => t.IsValidTarget(GetRealPowPowRange(t) + QAddRange + 20f)))
                     {
                         var swapDistance = GetValue<bool>("SwapDistance");
-                        var swapAOE = GetValue<bool>("SwapAOE");
-                        var Distance = GetRealDistance(t);
-                        var PowPowRange = GetRealPowPowRange(t);
+                        var swapAoe = GetValue<bool>("SwapAOE");
+                        var distance = GetRealDistance(t);
+                        var powPowRange = GetRealPowPowRange(t);
 
                         if (swapDistance && Q.IsReady())
                         {
-                            if (Distance > PowPowRange && !HasFishBones())
+                            if (distance > powPowRange && !FishBoneActive)
                             {
                                 if (Q.Cast())
                                 {
                                     return;
                                 }
                             }
-                            else if (Distance < PowPowRange && HasFishBones())
+                            else if (distance < powPowRange && FishBoneActive)
                             {
                                 if (Q.Cast())
                                 {
@@ -318,11 +318,9 @@ namespace Marksman
                             }
                         }
 
-                        if (swapAOE && Q.IsReady())
+                        if (swapAoe && Q.IsReady())
                         {
-                            float PowPowStacks = GetPowPowStacks();
-
-                            if (Distance > PowPowRange && PowPowStacks > 2 && !HasFishBones() &&
+                            if (distance > powPowRange && PowPowStacks > 2 && !FishBoneActive &&
                                 CountEnemies(t, 150) > 1)
                             {
                                 if (Q.Cast())
@@ -336,80 +334,44 @@ namespace Marksman
             }
         }
 
-        private bool HasFishBones()
+        private static int CountEnemies(Obj_AI_Base target, float range)
         {
-            return ObjectManager.Player.AttackRange != 525f;
+            return
+                ObjectManager.Get<Obj_AI_Hero>()
+                    .Count(
+                        hero =>
+                            hero.IsValidTarget() && hero.Team != ObjectManager.Player.Team &&
+                            hero.ServerPosition.Distance(target.ServerPosition) <= range);
         }
 
-        private int CountEnemies(Obj_AI_Hero target, float range)
+        private int CountAlliesNearTarget(Obj_AI_Base target, float range)
         {
-            var n = 0;
-
-            foreach (
-                var hero in
-                    ObjectManager.Get<Obj_AI_Hero>()
-                        .Where(
-                            hero =>
-                                hero.IsValidTarget() && hero.Team != ObjectManager.Player.Team &&
-                                hero.ServerPosition.Distance(target.ServerPosition) <= range))
-            {
-                n++;
-            }
-
-            return n;
+            return
+                ObjectManager.Get<Obj_AI_Hero>()
+                    .Count(
+                        hero =>
+                            hero.Team == ObjectManager.Player.Team &&
+                            hero.ServerPosition.Distance(target.ServerPosition) <= range);
         }
 
-        private int CountAlliesNearTarget(Obj_AI_Hero target, float range)
-        {
-            var n = 0;
-
-            foreach (
-                var hero in
-                    ObjectManager.Get<Obj_AI_Hero>()
-                        .Where(
-                            hero =>
-                                hero.Team == ObjectManager.Player.Team &&
-                                hero.ServerPosition.Distance(target.ServerPosition) <= range))
-            {
-                n++;
-            }
-
-            return n;
-        }
-
-        private int GetPowPowStacks()
-        {
-            var n = 0;
-
-            foreach (var buff in ObjectManager.Player.Buffs.Where(buff => buff.DisplayName.ToLower() == "jinxqramp"))
-            {
-                n = buff.Count;
-            }
-
-            return n;
-        }
-
-        private float GetRealPowPowRange(Obj_AI_Hero target)
+        private static float GetRealPowPowRange(GameObject target)
         {
             return 525f + ObjectManager.Player.BoundingRadius + target.BoundingRadius;
         }
 
-        private float GetRealDistance(Obj_AI_Hero target)
+        private static float GetRealDistance(GameObject target)
         {
             return ObjectManager.Player.Position.Distance(target.Position) + ObjectManager.Player.BoundingRadius +
                    target.BoundingRadius;
         }
 
-        private float GetSlowEndTime(Obj_AI_Hero target)
+        private static float GetSlowEndTime(Obj_AI_Base target)
         {
-            var EndTime = 0f;
-
-            foreach (var buff in target.Buffs.Where(buff => buff.Type == BuffType.Slow))
-            {
-                EndTime = buff.EndTime;
-            }
-
-            return EndTime;
+            return
+                target.Buffs.OrderByDescending(buff => buff.EndTime - Game.Time)
+                    .Where(buff => buff.Type == BuffType.Slow)
+                    .Select(buff => buff.EndTime)
+                    .FirstOrDefault();
         }
 
         public override void ComboMenu(Menu config)
@@ -434,10 +396,10 @@ namespace Marksman
         {
             config.AddItem(new MenuItem("SwapDistance" + Id, "Swap Q for distance").SetValue(true));
             config.AddItem(new MenuItem("SwapAOE" + Id, "Swap Q for AOE").SetValue(false));
-            config.AddItem(new MenuItem("MinWRange" + Id, "Min W range").SetValue(new Slider(700, 0, 1200)));
+            config.AddItem(new MenuItem("MinWRange" + Id, "Min W range").SetValue(new Slider(525 + 65 * 2, 0, 1200)));
             config.AddItem(new MenuItem("AutoEI" + Id, "Auto-E on immobile").SetValue(true));
             config.AddItem(new MenuItem("AutoES" + Id, "Auto-E on slowed").SetValue(true));
-            config.AddItem(new MenuItem("AutoED" + Id, "Auto-E on dashing").SetValue(true));
+            config.AddItem(new MenuItem("AutoED" + Id, "Auto-E on dashing").SetValue(false));
             config.AddItem(
                 new MenuItem("CastR" + Id, "Cast R (2000 Range)").SetValue(
                     new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
