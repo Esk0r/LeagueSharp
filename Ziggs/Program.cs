@@ -2,16 +2,16 @@
 
 using System;
 using System.Collections.Generic;
-using LeagueSharp;
-using LeagueSharp.Common;
-using SharpDX;
 using Color = System.Drawing.Color;
+using System.Linq;
 using System.Windows.Input;
 
-#endregion
+using LeagueSharp;
+using LeagueSharp.Common;
 
-//Ziggs.
-//by lepqm && Esk0r
+using SharpDX;
+
+#endregion
 
 namespace Ziggs
 {
@@ -34,25 +34,22 @@ namespace Ziggs
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
-            Obj_AI_Hero.OnPropertyChange += Obj_AI_Hero_OnPropertyChange;
-        }
-
-        static void Obj_AI_Hero_OnPropertyChange(GameObject sender, GameObjectPropertyChangeEventArgs args)
-        {
-            Game.PrintChat(args.Property);
         }
 
         private static void Game_OnGameLoad(EventArgs args)
         {
-            if (ObjectManager.Player.BaseSkinName != ChampionName) return;
+            if (ObjectManager.Player.ChampionName != ChampionName)
+            {
+                return;
+            }
 
-            Q1 = new Spell(SpellSlot.Q, 850);
-            Q2 = new Spell(SpellSlot.Q, 1125);
-            Q3 = new Spell(SpellSlot.Q, 1400);
+            Q1 = new Spell(SpellSlot.Q, 850f);
+            Q2 = new Spell(SpellSlot.Q, 1125f);
+            Q3 = new Spell(SpellSlot.Q, 1400f);
 
-            W = new Spell(SpellSlot.W, 1000);
-            E = new Spell(SpellSlot.E, 900);
-            R = new Spell(SpellSlot.R, 5300);
+            W = new Spell(SpellSlot.W, 1000f);
+            E = new Spell(SpellSlot.E, 900f);
+            R = new Spell(SpellSlot.R, 5300f);
 
             Q1.SetSkillshot(0.3f, 130f, 1700f, false, Prediction.SkillshotType.SkillshotCircle);
             Q2.SetSkillshot(0.25f + Q1.Delay, 130f, 1700f, false, Prediction.SkillshotType.SkillshotCircle);
@@ -94,90 +91,112 @@ namespace Ziggs
                 .AddItem(new MenuItem("ManaSliderHarass", "Mana To Harass").SetValue(new Slider(50, 100, 0)));
             Config.SubMenu("Harass")
                 .AddItem(
-                    new MenuItem("HarassActive", "Harass!").SetValue(new KeyBind("C".ToCharArray()[0], KeyBindType.Press)));
+                    new MenuItem("HarassActive", "Harass!").SetValue(
+                        new KeyBind("C".ToCharArray()[0], KeyBindType.Press)));
 
             Config.AddSubMenu(new Menu("Farm", "Farm"));
-            Config.SubMenu("Farm").AddItem(new MenuItem("UseQFarm", "Use Q").SetValue(new StringList(new[] {"Freeze", "LaneClear", "Both", "No"}, 2)));
-            Config.SubMenu("Farm").AddItem(new MenuItem("UseEFarm", "Use E").SetValue(new StringList(new[] {"Freeze", "LaneClear", "Both", "No"}, 1)));
-            Config.SubMenu("Farm").AddItem(new MenuItem("ManaSliderFarm", "Mana To Farm").SetValue(new Slider(25, 100, 0)));
-            Config.SubMenu("Farm").AddItem(new MenuItem("FreezeActive", "Freeze!").SetValue(new KeyBind("C".ToCharArray()[0], KeyBindType.Press)));
-            Config.SubMenu("Farm").AddItem(new MenuItem("LaneClearActive", "LaneClear!").SetValue(new KeyBind("V".ToCharArray()[0], KeyBindType.Press)));
+            Config.SubMenu("Farm")
+                .AddItem(
+                    new MenuItem("UseQFarm", "Use Q").SetValue(
+                        new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 2)));
+            Config.SubMenu("Farm")
+                .AddItem(
+                    new MenuItem("UseEFarm", "Use E").SetValue(
+                        new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 1)));
+            Config.SubMenu("Farm")
+                .AddItem(new MenuItem("ManaSliderFarm", "Mana To Farm").SetValue(new Slider(25, 100, 0)));
+            Config.SubMenu("Farm")
+                .AddItem(
+                    new MenuItem("FreezeActive", "Freeze!").SetValue(
+                        new KeyBind("C".ToCharArray()[0], KeyBindType.Press)));
+            Config.SubMenu("Farm")
+                .AddItem(
+                    new MenuItem("LaneClearActive", "LaneClear!").SetValue(
+                        new KeyBind("V".ToCharArray()[0], KeyBindType.Press)));
 
             Config.AddSubMenu(new Menu("JungleFarm", "JungleFarm"));
             Config.SubMenu("JungleFarm").AddItem(new MenuItem("UseQJFarm", "Use Q").SetValue(true));
             Config.SubMenu("JungleFarm").AddItem(new MenuItem("UseEJFarm", "Use E").SetValue(true));
-            Config.SubMenu("JungleFarm").AddItem(new MenuItem("JungleFarmActive", "JungleFarm!").SetValue(new KeyBind("V".ToCharArray()[0], KeyBindType.Press)));
+            Config.SubMenu("JungleFarm")
+                .AddItem(
+                    new MenuItem("JungleFarmActive", "JungleFarm!").SetValue(
+                        new KeyBind("V".ToCharArray()[0], KeyBindType.Press)));
 
             Config.AddSubMenu(new Menu("Misc", "Misc"));
             Config.SubMenu("Misc")
                 .AddItem(
-                    new MenuItem("WToMouse", "W to mouse").SetValue(new KeyBind("T".ToCharArray()[0],
-                        KeyBindType.Press)));
+                    new MenuItem("WToMouse", "W to mouse").SetValue(
+                        new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
             Config.SubMenu("Misc").AddItem(new MenuItem("Peel", "Use W defensively").SetValue(true));
 
 
             Config.AddSubMenu(new Menu("Drawings", "Drawings"));
             Config.SubMenu("Drawings")
                 .AddItem(
-                    new MenuItem("DrawQRange", "Draw Q Range").SetValue(new Circle(true,
-                        Color.FromArgb(100, 255, 0, 255))));
+                    new MenuItem("DrawQRange", "Draw Q Range").SetValue(
+                        new Circle(true, Color.FromArgb(100, 255, 0, 255))));
             Config.SubMenu("Drawings")
                 .AddItem(
-                    new MenuItem("DrawWRange", "Draw W Range").SetValue(new Circle(true,
-                        Color.FromArgb(100, 255, 255, 255))));
+                    new MenuItem("DrawWRange", "Draw W Range").SetValue(
+                        new Circle(true, Color.FromArgb(100, 255, 255, 255))));
             Config.SubMenu("Drawings")
                 .AddItem(
-                    new MenuItem("DrawERange", "Draw E Range").SetValue(new Circle(false,
-                        Color.FromArgb(100, 255, 255, 255))));
+                    new MenuItem("DrawERange", "Draw E Range").SetValue(
+                        new Circle(false, Color.FromArgb(100, 255, 255, 255))));
             Config.SubMenu("Drawings")
                 .AddItem(
-                    new MenuItem("DrawRRange", "Draw R Range").SetValue(new Circle(false,
-                        Color.FromArgb(100, 255, 255, 255))));
+                    new MenuItem("DrawRRange", "Draw R Range").SetValue(
+                        new Circle(false, Color.FromArgb(100, 255, 255, 255))));
             Config.SubMenu("Drawings")
                 .AddItem(
-                    new MenuItem("DrawRRangeM", "Draw R Range (Minimap)").SetValue(new Circle(false,
-                        Color.FromArgb(100, 255, 255, 255))));
+                    new MenuItem("DrawRRangeM", "Draw R Range (Minimap)").SetValue(
+                        new Circle(false, Color.FromArgb(100, 255, 255, 255))));
 
             Config.AddToMainMenu();
 
             Game.OnGameUpdate += Game_OnGameUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
 
+            AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter.OnPosibleToInterrupt += Interrupter_OnPosibleToInterrupt;
+        }
 
+        private static void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
+        {
+            W.Cast(gapcloser.Sender);
         }
 
         private static void Drawing_OnDraw(EventArgs args)
         {
             var qValue = Config.Item("DrawQRange").GetValue<Circle>();
             if (qValue.Active)
-                Utility.DrawCircle(ObjectManager.Player.Position, Q3.Range,
-                    qValue.Color);
+            {
+                Utility.DrawCircle(ObjectManager.Player.Position, Q3.Range, qValue.Color);
+            }
 
             var wValue = Config.Item("DrawWRange").GetValue<Circle>();
             if (wValue.Active)
-                Utility.DrawCircle(ObjectManager.Player.Position, W.Range,
-                    wValue.Color);
+            {
+                Utility.DrawCircle(ObjectManager.Player.Position, W.Range, wValue.Color);
+            }
 
             var eValue = Config.Item("DrawERange").GetValue<Circle>();
             if (eValue.Active)
-                Utility.DrawCircle(ObjectManager.Player.Position, E.Range,
-                    eValue.Color);
+            {
+                Utility.DrawCircle(ObjectManager.Player.Position, E.Range, eValue.Color);
+            }
 
             var rValue = Config.Item("DrawRRange").GetValue<Circle>();
             if (rValue.Active)
-                Utility.DrawCircle(ObjectManager.Player.Position, R.Range,
-                    rValue.Color);
+            {
+                Utility.DrawCircle(ObjectManager.Player.Position, R.Range, rValue.Color);
+            }
 
             var rValueM = Config.Item("DrawRRangeM").GetValue<Circle>();
             if (rValueM.Active)
-                Utility.DrawCircle(ObjectManager.Player.Position, R.Range,
-                    rValueM.Color, 2, 30, true);
-        }
-
-        private static void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
-        {
-            W.Cast(unit);
+            {
+                Utility.DrawCircle(ObjectManager.Player.Position, R.Range, rValueM.Color, 2, 30, true);
+            }
         }
 
         private static void Game_OnGameUpdate(EventArgs args)
@@ -185,7 +204,7 @@ namespace Ziggs
             //Combo & Harass
             if (Config.Item("ComboActive").GetValue<KeyBind>().Active ||
                 (Config.Item("HarassActive").GetValue<KeyBind>().Active &&
-                 (ObjectManager.Player.Mana/ObjectManager.Player.MaxMana*100) >
+                 (ObjectManager.Player.Mana / ObjectManager.Player.MaxMana * 100) >
                  Config.Item("ManaSliderHarass").GetValue<Slider>().Value))
             {
                 var target = SimpleTs.GetTarget(1200f, SimpleTs.DamageType.Magical);
@@ -194,34 +213,35 @@ namespace Ziggs
                     var comboActive = Config.Item("ComboActive").GetValue<KeyBind>().Active;
                     var harassActive = Config.Item("HarassActive").GetValue<KeyBind>().Active;
 
-                    if (((comboActive &&
-                          Config.Item("UseQCombo").GetValue<bool>()) ||
-                         (harassActive &&
-                          Config.Item("UseQHarass").GetValue<bool>())) && Q1.IsReady())
+                    if (((comboActive && Config.Item("UseQCombo").GetValue<bool>()) ||
+                         (harassActive && Config.Item("UseQHarass").GetValue<bool>())) && Q1.IsReady())
                     {
                         CastQ(target);
                     }
 
-                    if (((comboActive &&
-                          Config.Item("UseWCombo").GetValue<bool>()) ||
-                         (harassActive &&
-                          Config.Item("UseWHarass").GetValue<bool>())) && W.IsReady())
+                    if (((comboActive && Config.Item("UseWCombo").GetValue<bool>()) ||
+                         (harassActive && Config.Item("UseWHarass").GetValue<bool>())) && W.IsReady())
                     {
                         var prediction = W.GetPrediction(target);
-                        if(prediction.HitChance >= Prediction.HitChance.HighHitchance)
-                            if (ObjectManager.Player.ServerPosition.Distance(prediction.Position) < W.Range  && ObjectManager.Player.ServerPosition.Distance(prediction.Position) > W.Range - 250 && prediction.Position.Distance(ObjectManager.Player.ServerPosition) > target.Distance(ObjectManager.Player))
+                        if (prediction.HitChance >= Prediction.HitChance.HighHitchance)
+                        {
+                            if (ObjectManager.Player.ServerPosition.Distance(prediction.Position) < W.Range &&
+                                ObjectManager.Player.ServerPosition.Distance(prediction.Position) > W.Range - 250 &&
+                                prediction.Position.Distance(ObjectManager.Player.ServerPosition) >
+                                target.Distance(ObjectManager.Player))
                             {
-                                var cp = ObjectManager.Player.ServerPosition.To2D()
-                                    .Extend(prediction.Position.To2D(), W.Range).To3D();
-                                    W.Cast(cp);
-                                    UseSecondWT = Environment.TickCount;
+                                var cp =
+                                    ObjectManager.Player.ServerPosition.To2D()
+                                        .Extend(prediction.Position.To2D(), W.Range)
+                                        .To3D();
+                                W.Cast(cp);
+                                UseSecondWT = Environment.TickCount;
                             }
+                        }
                     }
 
-                    if (((comboActive &&
-                          Config.Item("UseECombo").GetValue<bool>()) ||
-                         (harassActive &&
-                          Config.Item("UseEHarass").GetValue<bool>())) && E.IsReady())
+                    if (((comboActive && Config.Item("UseECombo").GetValue<bool>()) ||
+                         (harassActive && Config.Item("UseEHarass").GetValue<bool>())) && E.IsReady())
                     {
                         E.Cast(target, false, true);
                     }
@@ -233,11 +253,10 @@ namespace Ziggs
                         (DamageLib.getDmg(target, DamageLib.SpellType.Q) +
                          DamageLib.getDmg(target, DamageLib.SpellType.W) +
                          DamageLib.getDmg(target, DamageLib.SpellType.E) +
-                         DamageLib.getDmg(target, DamageLib.SpellType.R) > target.Health)
-                        && ObjectManager.Player.Distance(target) <= Q2.Range
-)
+                         DamageLib.getDmg(target, DamageLib.SpellType.R) > target.Health) &&
+                        ObjectManager.Player.Distance(target) <= Q2.Range)
                     {
-                        R.Delay = 2000 + 1500 * target.Distance(ObjectManager.Player)/5300;
+                        R.Delay = 2000 + 1500 * target.Distance(ObjectManager.Player) / 5300;
                         R.Cast(target, true, true);
                     }
 
@@ -248,17 +267,22 @@ namespace Ziggs
                         var n = 0;
                         foreach (var ally in ObjectManager.Get<Obj_AI_Hero>())
                         {
-                            if (ally.Team == ObjectManager.Player.Team && !ally.IsMe &&
-                                ally.IsValidTarget(float.MaxValue, false) && ally.Distance(target) < 700)
+                            if (ally.IsAlly && !ally.IsMe && ally.IsValidTarget(float.MaxValue, false) &&
+                                ally.Distance(target) < 700)
                             {
-                               alliesarround++;
+                                alliesarround++;
                                 if (Environment.TickCount - ally.LastCastedSpellT() < 1500)
+                                {
                                     n++;
+                                }
                             }
                         }
 
-                        if (n < Math.Max(alliesarround / 2 -1, 1)) return;
-                        
+                        if (n < Math.Max(alliesarround / 2 - 1, 1))
+                        {
+                            return;
+                        }
+
                         switch (alliesarround)
                         {
                             case 2:
@@ -270,34 +294,37 @@ namespace Ziggs
                             case 4:
                                 R.CastIfWillHit(target, 4);
                                 break;
-                        } 
+                        }
                     }
 
                     //R if killable
                     if (comboActive && useR && R.IsReady() &&
-                         DamageLib.getDmg(target, DamageLib.SpellType.R) > target.Health)
+                        DamageLib.getDmg(target, DamageLib.SpellType.R) > target.Health)
                     {
                         R.Delay = 2000 + 1500 * target.Distance(ObjectManager.Player) / 5300;
                         R.Cast(target, true, true);
                     }
-
-
-                   
                 }
             }
 
             if (Environment.TickCount - UseSecondWT < 500 &&
                 ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name == "ziggswtoggle")
+            {
                 W.Cast(ObjectManager.Player.ServerPosition, true);
+            }
 
             //Farm
             var lc = Config.Item("LaneClearActive").GetValue<KeyBind>().Active;
             if (lc || Config.Item("FreezeActive").GetValue<KeyBind>().Active)
+            {
                 Farm(lc);
+            }
 
             //Jungle farm.
             if (Config.Item("JungleFarmActive").GetValue<KeyBind>().Active)
+            {
                 JungleFarm();
+            }
 
             //W to mouse
             var castToMouse = Config.Item("WToMouse").GetValue<KeyBind>().Active && !Keyboard.IsKeyDown(Key.LeftCtrl);
@@ -306,26 +333,34 @@ namespace Ziggs
                 var pos = ObjectManager.Player.ServerPosition.To2D().Extend(Game.CursorPos.To2D(), -150).To3D();
                 W.Cast(pos, true);
                 if (castToMouse)
+                {
                     LastWToMouseT = Environment.TickCount;
+                }
             }
 
             //Peel from melees
             if (Config.Item("Peel").GetValue<bool>())
             {
-                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
+                foreach (var pos in from enemy in ObjectManager.Get<Obj_AI_Hero>()
+                    where
+                        enemy.IsValidTarget() &&
+                        enemy.Distance(ObjectManager.Player) <=
+                        enemy.BoundingRadius + enemy.AttackRange + ObjectManager.Player.BoundingRadius &&
+                        enemy.IsMelee()
+                    let direction =
+                        (enemy.ServerPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized()
+                    let pos = ObjectManager.Player.ServerPosition.To2D()
+                    select pos + Math.Min(200, Math.Max(50, enemy.Distance(ObjectManager.Player) / 2)) * direction)
                 {
-                    if (enemy.IsValidTarget() && enemy.Distance(ObjectManager.Player) <= enemy.BoundingRadius + enemy.AttackRange + ObjectManager.Player.BoundingRadius && enemy.IsMelee() )
-                    {
-                        var direction =
-                            (enemy.ServerPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized();
-
-                        var pos = ObjectManager.Player.ServerPosition.To2D();
-                        pos = pos + Math.Min(200, Math.Max(50, enemy.Distance(ObjectManager.Player) / 2 ) ) *  direction;
-                        W.Cast(pos.To3D(), true);
-                        UseSecondWT = Environment.TickCount;
-                    }
+                    W.Cast(pos.To3D(), true);
+                    UseSecondWT = Environment.TickCount;
                 }
             }
+        }
+
+        private static void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
+        {
+            W.Cast(unit);
         }
 
         private static void CastQ(Obj_AI_Base target)
@@ -363,35 +398,39 @@ namespace Ziggs
                     if (ObjectManager.Player.ServerPosition.Distance(prediction.CastPosition) > 300)
                     {
                         p = prediction.CastPosition -
-                              100 *
-                              (prediction.CastPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized()
-                                  .To3D();  
+                            100 *
+                            (prediction.CastPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized()
+                                .To3D();
                     }
                     else
                     {
-                        p = prediction.CastPosition; 
+                        p = prediction.CastPosition;
                     }
-                     
+
                     Q1.Cast(p);
                 }
                 else if (ObjectManager.Player.ServerPosition.Distance(prediction.CastPosition) <=
-                         ((Q1.Range + Q2.Range)/2))
+                         ((Q1.Range + Q2.Range) / 2))
                 {
                     var p = ObjectManager.Player.ServerPosition.To2D()
                         .Extend(prediction.CastPosition.To2D(), Q1.Range - 100);
-                      
+
                     if (!CheckQCollision(target, prediction.Position, p.To3D()))
+                    {
                         Q1.Cast(p.To3D());
+                    }
                 }
                 else
                 {
                     var p = ObjectManager.Player.ServerPosition.To2D() +
-                            Q1.Range*
+                            Q1.Range *
                             (prediction.CastPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized
                                 ();
 
                     if (!CheckQCollision(target, prediction.Position, p.To3D()))
+                    {
                         Q1.Cast(p.To3D());
+                    }
                 }
             }
         }
@@ -401,10 +440,10 @@ namespace Ziggs
             var direction = (castPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized();
             var firstBouncePosition = castPosition.To2D();
             var secondBouncePosition = firstBouncePosition +
-                                       direction*0.4f*
+                                       direction * 0.4f *
                                        ObjectManager.Player.ServerPosition.To2D().Distance(firstBouncePosition);
             var thirdBouncePosition = secondBouncePosition +
-                                      direction*0.6f*firstBouncePosition.Distance(secondBouncePosition);
+                                      direction * 0.6f * firstBouncePosition.Distance(secondBouncePosition);
 
             //TODO: Check for wall collision.
 
@@ -418,7 +457,9 @@ namespace Ziggs
                         var predictedPos = Q2.GetPrediction(minion);
                         if (predictedPos.Position.To2D().Distance(secondBouncePosition) <
                             Q2.Width + minion.BoundingRadius)
+                        {
                             return true;
+                        }
                     }
                 }
             }
@@ -434,7 +475,9 @@ namespace Ziggs
                         var predictedPos = Q1.GetPrediction(minion);
                         if (predictedPos.Position.To2D().Distance(firstBouncePosition) <
                             Q1.Width + minion.BoundingRadius)
+                        {
                             return true;
+                        }
                     }
                 }
 
@@ -446,13 +489,19 @@ namespace Ziggs
 
         private static void Farm(bool laneClear)
         {
-            if (!Orbwalking.CanMove(40)) return;
+            if (!Orbwalking.CanMove(40))
+            {
+                return;
+            }
             if (Config.Item("ManaSliderFarm").GetValue<Slider>().Value >
-                ObjectManager.Player.Mana/ObjectManager.Player.MaxMana*100) return;
+                ObjectManager.Player.Mana / ObjectManager.Player.MaxMana * 100)
+            {
+                return;
+            }
 
-            var rangedMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q2.Range,
-                MinionTypes.Ranged);
-            var allMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q2.Range, MinionTypes.All);
+            var rangedMinions = MinionManager.GetMinions(
+                ObjectManager.Player.ServerPosition, Q2.Range, MinionTypes.Ranged);
+            var allMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q2.Range);
 
             var useQi = Config.Item("UseQFarm").GetValue<StringList>().SelectedIndex;
             var useEi = Config.Item("UseEFarm").GetValue<StringList>().SelectedIndex;
@@ -476,8 +525,8 @@ namespace Ziggs
 
                 if (E.IsReady() && useE)
                 {
-                    var rangedLocation = E.GetCircularFarmLocation(rangedMinions, E.Width*2);
-                    var location = E.GetCircularFarmLocation(allMinions, E.Width*2);
+                    var rangedLocation = E.GetCircularFarmLocation(rangedMinions, E.Width * 2);
+                    var location = E.GetCircularFarmLocation(allMinions, E.Width * 2);
 
                     var bLocation = (location.MinionsHit > rangedLocation.MinionsHit + 1) ? location : rangedLocation;
 
@@ -490,11 +539,12 @@ namespace Ziggs
             else
             {
                 if (useQ && Q1.IsReady())
+                {
                     foreach (var minion in allMinions)
                     {
                         if (!Orbwalking.InAutoAttackRange(minion))
                         {
-                            var Qdamage = DamageLib.getDmg(minion, DamageLib.SpellType.Q)*0.75;
+                            var Qdamage = DamageLib.getDmg(minion, DamageLib.SpellType.Q) * 0.75;
 
                             if (Qdamage > Q1.GetHealthPrediction(minion))
                             {
@@ -502,11 +552,12 @@ namespace Ziggs
                             }
                         }
                     }
+                }
 
                 if (E.IsReady() && useE)
                 {
                     var rangedLocation = E.GetCircularFarmLocation(rangedMinions, E.Width * 2);
-                    var location = E.GetCircularFarmLocation(allMinions, E.Width*2);
+                    var location = E.GetCircularFarmLocation(allMinions, E.Width * 2);
 
                     var bLocation = (location.MinionsHit > rangedLocation.MinionsHit + 1) ? location : rangedLocation;
 
@@ -518,24 +569,29 @@ namespace Ziggs
             }
         }
 
-        static void JungleFarm()
+        private static void JungleFarm()
         {
             var useQ = Config.Item("UseQJFarm").GetValue<bool>();
             var useE = Config.Item("UseEJFarm").GetValue<bool>();
 
-            var mobs = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q1.Range, MinionTypes.All,
-                MinionTeam.Neutral, MinionOrderTypes.MaxHealth);
+            var mobs = MinionManager.GetMinions(
+                ObjectManager.Player.ServerPosition, Q1.Range, MinionTypes.All, MinionTeam.Neutral,
+                MinionOrderTypes.MaxHealth);
 
             if (mobs.Count > 0)
             {
                 var mob = mobs[0];
 
                 if (Q1.IsReady() && useQ)
+                {
                     Q1.Cast(mob);
+                }
 
 
                 if (useE && E.IsReady())
+                {
                     E.Cast(mob);
+                }
             }
         }
     }
