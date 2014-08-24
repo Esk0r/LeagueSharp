@@ -2,14 +2,12 @@
 
 using System;
 using System.Collections.Generic;
-using Color = System.Drawing.Color;
 using System.Linq;
 using System.Windows.Input;
-
 using LeagueSharp;
 using LeagueSharp.Common;
-
 using SharpDX;
+using Color = System.Drawing.Color;
 
 #endregion
 
@@ -582,13 +580,13 @@ namespace Ziggs
             {
                 var mob = mobs[0];
 
-                if (Q1.IsReady() && useQ)
+                if (useQ && Q1.IsReady())
                 {
                     Q1.Cast(mob);
                 }
 
 
-                if (useE && E.IsReady())
+                if (useE)
                 {
                     E.Cast(mob);
                 }
