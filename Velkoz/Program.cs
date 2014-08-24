@@ -213,7 +213,7 @@ namespace Velkoz
 
         private static void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
         {
-            if (!Config.Item("InterruptSpells").GetValue<bool>()) return;
+            if (!Config.Item("InterruptSpells").GetValue<bool>() || Vector2.DistanceSquared(unit.ServerPosition.To2D(), ObjectManager.Player.Position.To2D()) > E.Range * E.Range) return;
 
             E.Cast(unit.ServerPosition);
         }
