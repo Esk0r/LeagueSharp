@@ -21,13 +21,13 @@ namespace Marksman
             Utils.PrintMessage("Ezreal loaded.");
 
             Q = new Spell(SpellSlot.Q, 1200);
-            Q.SetSkillshot(0.25f, 60f, 2000f, true, Prediction.SkillshotType.SkillshotLine);
+            Q.SetSkillshot(0.25f, 60f, 2000f, true, SkillshotType.SkillshotLine);
 
             W = new Spell(SpellSlot.W, 1050);
-            W.SetSkillshot(0.25f, 80f, 1600f, false, Prediction.SkillshotType.SkillshotLine);
+            W.SetSkillshot(0.25f, 80f, 1600f, false, SkillshotType.SkillshotLine);
 
             R = new Spell(SpellSlot.R, 2500);
-            R.SetSkillshot(1f, 160f, 2000f, false, Prediction.SkillshotType.SkillshotLine);
+            R.SetSkillshot(1f, 160f, 2000f, false, SkillshotType.SkillshotLine);
 
         }
 

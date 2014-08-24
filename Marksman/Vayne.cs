@@ -48,11 +48,11 @@ namespace Marksman
             foreach (var hero in from hero in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsValidTarget(550f))
                 let prediction = E.GetPrediction(hero)
                 where NavMesh.GetCollisionFlags(
-                    prediction.Position.To2D()
+                    prediction.UnitPosition.To2D()
                         .Extend(ObjectManager.Player.ServerPosition.To2D(), -GetValue<Slider>("PushDistance").Value)
                         .To3D())
                     .HasFlag(CollisionFlags.Wall) || NavMesh.GetCollisionFlags(
-                        prediction.Position.To2D()
+                        prediction.UnitPosition.To2D()
                             .Extend(ObjectManager.Player.ServerPosition.To2D(),
                                 -(GetValue<Slider>("PushDistance").Value / 2))
                             .To3D())

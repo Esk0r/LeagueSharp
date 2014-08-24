@@ -26,6 +26,7 @@ using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
+using SharpDX.Design;
 using Color = System.Drawing.Color;
 
 #endregion
@@ -57,7 +58,6 @@ namespace Velkoz
         public static Menu Config;
 
         private static Obj_AI_Hero Player;
-
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -80,12 +80,12 @@ namespace Velkoz
             IgniteSlot = Player.GetSpellSlot("SummonerDot");
 
 
-            Q.SetSkillshot(0.25f, 50f, 1300f, true, Prediction.SkillshotType.SkillshotLine);
-            QSplit.SetSkillshot(0.25f, 55f, 2100, true, Prediction.SkillshotType.SkillshotLine);
-            QDummy.SetSkillshot(0.25f, 55f, float.MaxValue, false, Prediction.SkillshotType.SkillshotLine);
-            W.SetSkillshot(0.25f, 85f, 1700f, false, Prediction.SkillshotType.SkillshotLine);
-            E.SetSkillshot(0.5f, 100f, 1500f, false, Prediction.SkillshotType.SkillshotCircle);
-            R.SetSkillshot(0.3f, 1f, float.MaxValue, false, Prediction.SkillshotType.SkillshotLine);
+            Q.SetSkillshot(0.25f, 50f, 1300f, true, SkillshotType.SkillshotLine);
+            QSplit.SetSkillshot(0.25f, 55f, 2100, true, SkillshotType.SkillshotLine);
+            QDummy.SetSkillshot(0.25f, 55f, float.MaxValue, false, SkillshotType.SkillshotLine);
+            W.SetSkillshot(0.25f, 85f, 1700f, false, SkillshotType.SkillshotLine);
+            E.SetSkillshot(0.5f, 100f, 1500f, false, SkillshotType.SkillshotCircle);
+            R.SetSkillshot(0.3f, 1f, float.MaxValue, false, SkillshotType.SkillshotLine);
 
 
             SpellList.Add(Q);
@@ -213,9 +213,9 @@ namespace Velkoz
 
         private static void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
         {
-            if (!Config.Item("InterruptSpells").GetValue<bool>() || Vector2.DistanceSquared(unit.ServerPosition.To2D(), ObjectManager.Player.Position.To2D()) > E.Range * E.Range) return;
+            if (!Config.Item("InterruptSpells").GetValue<bool>()) return;
 
-            E.Cast(unit.ServerPosition);
+            E.Cast(unit);
         }
 
         private static void Combo()
@@ -236,7 +236,7 @@ namespace Velkoz
         {
             var damage = 0d;
 
-            if (Q.IsReady() && Q.GetCollision(ObjectManager.Player.ServerPosition.To2D(), new List<Vector2>{enemy.ServerPosition.To2D()}).Count == 0)
+            if (Q.IsReady() && Q.GetCollision(ObjectManager.Player.ServerPosition.To2D(), new List<Vector2> { enemy.ServerPosition.To2D() }).Count == 0)
                 damage += DamageLib.getDmg(enemy, DamageLib.SpellType.Q);
 
             if (W.IsReady())
@@ -250,7 +250,7 @@ namespace Velkoz
                 damage += DamageLib.getDmg(enemy, DamageLib.SpellType.IGNITE);
 
             if (R.IsReady())
-                damage += 7 * DamageLib.getDmg(enemy, DamageLib.SpellType.R); 
+                damage += 7 * DamageLib.getDmg(enemy, DamageLib.SpellType.R);
 
             return (float)damage;
         }
@@ -275,7 +275,6 @@ namespace Velkoz
                 E.Cast(eTarget);
                 return;
             }
-
             if (useQ && qTarget != null && Q.IsReady() && Q.Instance.Name == "VelkozQ")
             {
                 if (Q.Cast(qTarget) == Spell.CastStates.SuccessfullyCasted)
@@ -288,7 +287,7 @@ namespace Velkoz
                 QDummy.Delay = Q.Delay + Q.Range / Q.Speed * 1000 + QSplit.Range / QSplit.Speed * 1000;
 
                 var predictedPos = QDummy.GetPrediction(qDummyTarget);
-                if (predictedPos.HitChance >= Prediction.HitChance.HighHitchance)
+                if (predictedPos.Hitchance >= HitChance.High)
                 {
                     for (var i = -1; i < 1; i = i + 2)
                     {
@@ -460,9 +459,9 @@ namespace Velkoz
                                     (h.ServerPosition.To2D().Distance(qMissilePosition, QMissile.EndPosition.To2D(), true) > Q.Width + h.BoundingRadius)))
                 {
                     var prediction = QSplit.GetPrediction(enemy);
-                    var d1 = prediction.Position.To2D().Distance(qMissilePosition, lineSegment1End, true);
-                    var d2 = prediction.Position.To2D().Distance(qMissilePosition, lineSegment2End, true);
-                    if (prediction.HitChance >= Prediction.HitChance.HighHitchance &&
+                    var d1 = prediction.UnitPosition.To2D().Distance(qMissilePosition, lineSegment1End, true);
+                    var d2 = prediction.UnitPosition.To2D().Distance(qMissilePosition, lineSegment2End, true);
+                    if (prediction.Hitchance >= HitChance.High &&
                         (d1 < QSplit.Width + enemy.BoundingRadius || d2 < QSplit.Width + enemy.BoundingRadius))
                     {
                         Q.Cast();

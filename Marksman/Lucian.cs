@@ -31,8 +31,8 @@ namespace Marksman
             Q2 = new Spell(SpellSlot.Q, 1600);
             W = new Spell(SpellSlot.W, 1000);
 
-            Q.SetSkillshot(0.25f, 65f, 1200f, false, Prediction.SkillshotType.SkillshotCircle);
-            W.SetSkillshot(0.15f, 80f, 1000f, true, Prediction.SkillshotType.SkillshotLine);
+            Q.SetSkillshot(0.25f, 65f, 1200f, false, SkillshotType.SkillshotCircle);
+            W.SetSkillshot(0.15f, 80f, 1000f, true, SkillshotType.SkillshotLine);
         }
 
         public bool LucianHasPassive

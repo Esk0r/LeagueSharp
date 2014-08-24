@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
@@ -80,6 +81,7 @@ namespace Evade
 
         private static void Main(string[] args)
         {
+
             if (Game.Mode == GameMode.Running)
             {
                 Game_OnGameStart(new EventArgs());
@@ -1244,7 +1246,7 @@ namespace Evade
                     var B = myPath[i + 1];
                     var SA = Drawing.WorldToScreen(A.To3D());
                     var SB = Drawing.WorldToScreen(B.To3D());
-                    // Drawing.DrawLine(SA.X, SA.Y, SB.X, SB.Y, 1, Color.White);
+                     Drawing.DrawLine(SA.X, SA.Y, SB.X, SB.Y, 1, Color.White);
                 }
 
                 Drawing.DrawCircle(EvadePoint.To3D(), 300, Color.White);

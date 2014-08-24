@@ -21,7 +21,7 @@ namespace Marksman
             Utils.PrintMessage("Twitch loaded.");
 
             W = new Spell(SpellSlot.W, 950);
-            W.SetSkillshot(0.25f, 120f, 1400f, true, Prediction.SkillshotType.SkillshotCircle);
+            W.SetSkillshot(0.25f, 120f, 1400f, true, SkillshotType.SkillshotCircle);
             E = new Spell(SpellSlot.E, 1200);
         }
 

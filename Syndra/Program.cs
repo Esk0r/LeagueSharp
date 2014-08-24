@@ -61,10 +61,10 @@ namespace Syndra
 
             DFG = Utility.Map.GetMap() == Utility.Map.MapType.TwistedTreeline ? new Items.Item(3188, 750) : new Items.Item(3128, 750);
 
-            Q.SetSkillshot(0.6f, 125f, float.MaxValue, false, Prediction.SkillshotType.SkillshotCircle);
-            W.SetSkillshot(0.25f, 125f, 1450f, false, Prediction.SkillshotType.SkillshotCircle);
-            E.SetSkillshot(0.25f, (float)(45 * 0.5), 2500f, true, Prediction.SkillshotType.SkillshotCircle);
-            EQ.SetSkillshot(float.MaxValue, 60f, 1600f, true, Prediction.SkillshotType.SkillshotCircle);
+            Q.SetSkillshot(0.6f, 125f, float.MaxValue, false, SkillshotType.SkillshotCircle);
+            W.SetSkillshot(0.25f, 125f, 1450f, false, SkillshotType.SkillshotCircle);
+            E.SetSkillshot(0.25f, (float)(45 * 0.5), 2500f, true, SkillshotType.SkillshotCircle);
+            EQ.SetSkillshot(float.MaxValue, 60f, 1600f, true, SkillshotType.SkillshotCircle);
 
             SpellList.Add(Q);
             SpellList.Add(W);
@@ -223,8 +223,8 @@ namespace Syndra
                     EQ.Delay = E.Delay + Player.Distance(orb) / E.Speed;
                     EQ.From = orb;
                     var enemyPred = EQ.GetPrediction(enemy);
-                    if (enemyPred.HitChance >= Prediction.HitChance.HighHitchance &&
-                        enemyPred.Position.To2D().Distance(startPoint, endPoint, false) <
+                    if (enemyPred.Hitchance >= HitChance.High &&
+                        enemyPred.UnitPosition.To2D().Distance(startPoint, endPoint, false) <
                         EQ.Width + enemy.BoundingRadius)
                     {
                         E.Cast(orb, true);
@@ -239,7 +239,7 @@ namespace Syndra
             EQ.Delay = E.Delay + Q.Range / E.Speed;
             EQ.From = Player.ServerPosition.To2D().Extend(enemy.ServerPosition.To2D(), Q.Range).To3D();
             var prediction = EQ.GetPrediction(enemy);
-            if (prediction.HitChance >= Prediction.HitChance.HighHitchance)
+            if (prediction.Hitchance >= HitChance.High)
             {
                 Q.Cast(Player.ServerPosition.To2D().Extend(prediction.CastPosition.To2D(), Q.Range - 100));
                 QEComboT = Environment.TickCount;
@@ -367,7 +367,7 @@ namespace Syndra
                 EQ.Delay = E.Delay + W.Range / E.Speed;
                 EQ.From = Player.ServerPosition.To2D().Extend(qeTarget.ServerPosition.To2D(), W.Range).To3D();
                 var prediction = EQ.GetPrediction(qeTarget);
-                if (prediction.HitChance >= Prediction.HitChance.HighHitchance)
+                if (prediction.Hitchance >= HitChance.High)
                 {
                     W.Cast(Player.ServerPosition.To2D().Extend(prediction.CastPosition.To2D(), W.Range - 100));
                     WEComboT = Environment.TickCount;

@@ -30,7 +30,7 @@ namespace TwistedFate
             if (ObjectManager.Player.BaseSkinName != "TwistedFate") return;
 
             Q = new Spell(SpellSlot.Q, 1450);
-            Q.SetSkillshot(0.25f, 40f, 1000f, false, Prediction.SkillshotType.SkillshotLine);
+            Q.SetSkillshot(0.25f, 40f, 1000f, false, SkillshotType.SkillshotLine);
 
             //Make the menu
             Config = new Menu("Twisted Fate", "TwistedFate", true);
@@ -160,9 +160,9 @@ namespace TwistedFate
                 if (enemy.IsValidTarget() && enemy.NetworkId != unit.NetworkId)
                 {
                     var pos = Q.GetPrediction(enemy);
-                    if (pos.HitChance >= Prediction.HitChance.LowHitchance)
+                    if (pos.Hitchance >= HitChance.Medium)
                     {
-                        points.Add(pos.Position.To2D());
+                        points.Add(pos.UnitPosition.To2D());
                         hitBoxes.Add((int) enemy.BoundingRadius);
                     }
                 }
@@ -277,10 +277,10 @@ namespace TwistedFate
                     if (enemy.IsValidTarget(Q.Range * 2))
                     {
                         var pred = Q.GetPrediction(enemy);
-                        if ((pred.HitChance == Prediction.HitChance.Immobile && autoQI) ||
-                            (pred.HitChance == Prediction.HitChance.Dashing  && autoQD))
+                        if ((pred.Hitchance == HitChance.Immobile && autoQI) ||
+                            (pred.Hitchance == HitChance.Dashing && autoQD))
                         {
-                            CastQ(enemy, pred.Position.To2D());
+                            CastQ(enemy, pred.UnitPosition.To2D());
                         }
                     }
                 }

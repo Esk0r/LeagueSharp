@@ -26,7 +26,7 @@ namespace Marksman
             E = new Spell(SpellSlot.E, 800);
             R = new Spell(SpellSlot.R, 550);
 
-            Q.SetSkillshot(0.25f, 160f, 1150, true, Prediction.SkillshotType.SkillshotLine);
+            Q.SetSkillshot(0.25f, 160f, 1150, true, SkillshotType.SkillshotLine);
             E.SetTargetted(0.25f, 2000f);
         }
 
@@ -54,7 +54,7 @@ namespace Marksman
 
         public static bool IsPositionSafe(Obj_AI_Hero target, Spell spell) // use underTurret and .Extend for this please
         {
-            var predPos = spell.GetPrediction(target).Position.To2D();
+            var predPos = spell.GetPrediction(target).UnitPosition.To2D();
             var myPos = ObjectManager.Player.Position.To2D();
             var newPos = (target.Position.To2D() - myPos);
             newPos.Normalize();

@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
@@ -72,10 +73,10 @@ namespace Xerath
             E = new Spell(SpellSlot.E, 1150);
             R = new Spell(SpellSlot.R, 675);
 
-            Q.SetSkillshot(0.6f, 100f, float.MaxValue, false, Prediction.SkillshotType.SkillshotLine);
-            W.SetSkillshot(0.7f, 125f, float.MaxValue, false, Prediction.SkillshotType.SkillshotCircle);
-            E.SetSkillshot(0.25f, 60f, 1400f, true, Prediction.SkillshotType.SkillshotLine);
-            R.SetSkillshot(0.7f, 120f, float.MaxValue, false, Prediction.SkillshotType.SkillshotCircle);
+            Q.SetSkillshot(0.6f, 100f, float.MaxValue, false, SkillshotType.SkillshotLine);
+            W.SetSkillshot(0.7f, 125f, float.MaxValue, false, SkillshotType.SkillshotCircle);
+            E.SetSkillshot(0.25f, 60f, 1400f, true, SkillshotType.SkillshotLine);
+            R.SetSkillshot(0.7f, 120f, float.MaxValue, false, SkillshotType.SkillshotCircle);
 
             Q.SetCharged("XerathArcanopulseChargeUp", "XerathArcanopulseChargeUp", 750, 1550, 1.5f);
 
@@ -336,7 +337,7 @@ namespace Xerath
             if (useW && W.IsReady())
             {
                 var locW = W.GetCircularFarmLocation(rangedMinionsW, W.Width * 0.75f);
-                if (locW.MinionsHit >= 3)
+                if (locW.MinionsHit >= 3 && W.InRange(locW.Position.To3D()))
                 {
                     W.Cast(locW.Position);
                     return;
@@ -344,7 +345,7 @@ namespace Xerath
                 else
                 {
                     var locW2 = W.GetCircularFarmLocation(allMinionsQ, W.Width * 0.75f);
-                    if (locW2.MinionsHit >= 1)
+                    if (locW2.MinionsHit >= 1 && W.InRange(locW.Position.To3D()))
                     {
                         W.Cast(locW.Position);
                         return;

@@ -27,9 +27,9 @@ namespace Marksman
             E = new Spell(SpellSlot.E, 900f);
             R = new Spell(SpellSlot.R, 25000f);
 
-            W.SetSkillshot(0.6f, 60f, 3300f, true, Prediction.SkillshotType.SkillshotLine);
-            E.SetSkillshot(0.7f, 120f, 1750f, false, Prediction.SkillshotType.SkillshotCircle);
-            R.SetSkillshot(0.6f, 140f, 1700f, false, Prediction.SkillshotType.SkillshotLine);
+            W.SetSkillshot(0.6f, 60f, 3300f, true, SkillshotType.SkillshotLine);
+            E.SetSkillshot(0.7f, 120f, 1750f, false, SkillshotType.SkillshotCircle);
+            R.SetSkillshot(0.6f, 140f, 1700f, false, SkillshotType.SkillshotLine);
         }
 
         public float QAddRange
@@ -98,10 +98,17 @@ namespace Marksman
                     if (autoEs && E.IsReady() && enemy.HasBuffOfType(BuffType.Slow))
                     {
                         var castPosition =
-                            Prediction.GetBestPosition(
-                                enemy, 0.7f, 120f, 1750f, ObjectManager.Player.ServerPosition, 900f, false,
-                                Prediction.SkillshotType.SkillshotCircle, ObjectManager.Player.ServerPosition)
-                                .CastPosition;
+                            Prediction.GetPrediction(
+                                new PredictionInput
+                                {
+                                    Unit = enemy,
+                                    Delay = 0.7f,
+                                    Radius = 120f,
+                                    Speed = 1750f,
+                                    Range = 900f,
+                                    Type = SkillshotType.SkillshotCircle,
+                                }).CastPosition;
+
 
                         if (GetSlowEndTime(enemy) >= (Game.Time + E.Delay + 0.5f))
                         {
@@ -114,12 +121,12 @@ namespace Marksman
                          enemy.HasBuffOfType(BuffType.Charm) || enemy.HasBuffOfType(BuffType.Fear) ||
                          enemy.HasBuffOfType(BuffType.Taunt)))
                     {
-                        E.CastIfHitchanceEquals(enemy, Prediction.HitChance.HighHitchance);
+                        E.CastIfHitchanceEquals(enemy, HitChance.High);
                     }
 
                     if (autoEd && E.IsReady() && enemy.IsDashing())
                     {
-                        E.CastIfHitchanceEquals(enemy, Prediction.HitChance.Dashing);
+                        E.CastIfHitchanceEquals(enemy, HitChance.Dashing);
                     }
                 }
             }
@@ -236,7 +243,7 @@ namespace Marksman
 
                         if (distance < (powPowRange + QAddRange) && !(aDamage * 3.5 > t.Health))
                         {
-                            if (!W.IsReady() || !(wDamage > t.Health) || W.GetPrediction(t).CollisionUnitsList.Count > 0)
+                            if (!W.IsReady() || !(wDamage > t.Health) || W.GetPrediction(t).CollisionObjects.Count > 0)
                             {
                                 if (CountAlliesNearTarget(t, 500) <= 3)
                                 {
@@ -251,7 +258,7 @@ namespace Marksman
                         else if (distance > (powPowRange + QAddRange))
                         {
                             if (!W.IsReady() || !(wDamage > t.Health) || distance > W.Range ||
-                                W.GetPrediction(t).CollisionUnitsList.Count > 0)
+                                W.GetPrediction(t).CollisionObjects.Count > 0)
                             {
                                 if (CountAlliesNearTarget(t, 500) <= 3)
                                 {

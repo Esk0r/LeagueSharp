@@ -26,9 +26,9 @@ namespace Marksman
             E = new Spell(SpellSlot.E, 1360f);
             R = new Spell(SpellSlot.R, float.MaxValue);
 
-            Q.SetSkillshot(0.25f, 70f, 1650f, true, Prediction.SkillshotType.SkillshotLine);
-            E.SetSkillshot(0.25f, 120f, 1400f, false, Prediction.SkillshotType.SkillshotLine);
-            R.SetSkillshot(1.2f, 120f, float.MaxValue, false, Prediction.SkillshotType.SkillshotCircle);
+            Q.SetSkillshot(0.25f, 70f, 1650f, true, SkillshotType.SkillshotLine);
+            E.SetSkillshot(0.25f, 120f, 1400f, false, SkillshotType.SkillshotLine);
+            R.SetSkillshot(1.2f, 120f, float.MaxValue, false, SkillshotType.SkillshotCircle);
         }
 
         public override void Drawing_OnDraw(EventArgs args)

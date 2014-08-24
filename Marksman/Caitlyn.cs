@@ -26,8 +26,8 @@ namespace Marksman
             E = new Spell(SpellSlot.E, 800);
             R = new Spell(SpellSlot.R, 2000);
 
-            Q.SetSkillshot(0.25f, 60f, 2000f, false, Prediction.SkillshotType.SkillshotLine);
-            E.SetSkillshot(0.25f, 80f, 1600f, true, Prediction.SkillshotType.SkillshotLine);
+            Q.SetSkillshot(0.25f, 60f, 2000f, false, SkillshotType.SkillshotLine);
+            E.SetSkillshot(0.25f, 80f, 1600f, true, SkillshotType.SkillshotLine);
 
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
         }
