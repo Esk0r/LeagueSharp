@@ -64,7 +64,7 @@ namespace Evade
 
         private static void GameObject_OnDelete(GameObject sender, EventArgs args)
         {
-            if (!sender.IsValid || sender.Team == ObjectManager.Player.Team && !Config.TestOnAllies)
+            if (!sender.IsValid || !Config.TestOnAllies && sender.Team == ObjectManager.Player.Team)
             {
                 return;
             }

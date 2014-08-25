@@ -63,8 +63,8 @@ namespace Syndra
 
             Q.SetSkillshot(0.6f, 125f, float.MaxValue, false, SkillshotType.SkillshotCircle);
             W.SetSkillshot(0.25f, 125f, 1450f, false, SkillshotType.SkillshotCircle);
-            E.SetSkillshot(0.25f, (float)(45 * 0.5), 2500f, true, SkillshotType.SkillshotCircle);
-            EQ.SetSkillshot(float.MaxValue, 60f, 1600f, true, SkillshotType.SkillshotCircle);
+            E.SetSkillshot(0.25f, (float)(45 * 0.5), 2500f, false, SkillshotType.SkillshotCircle);
+            EQ.SetSkillshot(float.MaxValue, 85f, 1600f, false, SkillshotType.SkillshotLine);
 
             SpellList.Add(Q);
             SpellList.Add(W);

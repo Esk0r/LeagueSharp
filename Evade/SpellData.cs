@@ -46,7 +46,7 @@ namespace Evade
         public int Id = -1;
         public bool Invert;
         public bool IsDangerous = false;
-        public int MissileAccel;
+        public int MissileAccel = 0;
         public bool MissileDelayed;
         public bool MissileFollowsUnit;
         public int MissileMaxSpeed;
