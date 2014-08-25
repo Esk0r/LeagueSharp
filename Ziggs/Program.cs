@@ -49,13 +49,13 @@ namespace Ziggs
             E = new Spell(SpellSlot.E, 900f);
             R = new Spell(SpellSlot.R, 5300f);
 
-            Q1.SetSkillshot(0.3f, 130f, 1700f, false, Prediction.SkillshotType.SkillshotCircle);
-            Q2.SetSkillshot(0.25f + Q1.Delay, 130f, 1700f, false, Prediction.SkillshotType.SkillshotCircle);
-            Q3.SetSkillshot(0.3f + Q2.Delay, 130f, 1700f, false, Prediction.SkillshotType.SkillshotCircle);
+            Q1.SetSkillshot(0.3f, 130f, 1700f, false, SkillshotType.SkillshotCircle);
+            Q2.SetSkillshot(0.25f + Q1.Delay, 130f, 1700f, false, SkillshotType.SkillshotCircle);
+            Q3.SetSkillshot(0.3f + Q2.Delay, 130f, 1700f, false, SkillshotType.SkillshotCircle);
 
-            W.SetSkillshot(0.25f, 275f, 1750f, false, Prediction.SkillshotType.SkillshotCircle);
-            E.SetSkillshot(0.5f, 100f, 1750f, false, Prediction.SkillshotType.SkillshotCircle);
-            R.SetSkillshot(1f, 500f, float.MaxValue, false, Prediction.SkillshotType.SkillshotCircle);
+            W.SetSkillshot(0.25f, 275f, 1750f, false, SkillshotType.SkillshotCircle);
+            E.SetSkillshot(0.5f, 100f, 1750f, false, SkillshotType.SkillshotCircle);
+            R.SetSkillshot(1f, 500f, float.MaxValue, false, SkillshotType.SkillshotCircle);
 
             SpellList.Add(Q1);
             SpellList.Add(Q2);
@@ -221,16 +221,16 @@ namespace Ziggs
                          (harassActive && Config.Item("UseWHarass").GetValue<bool>())) && W.IsReady())
                     {
                         var prediction = W.GetPrediction(target);
-                        if (prediction.HitChance >= Prediction.HitChance.HighHitchance)
+                        if (prediction.Hitchance >= HitChance.High)
                         {
-                            if (ObjectManager.Player.ServerPosition.Distance(prediction.Position) < W.Range &&
-                                ObjectManager.Player.ServerPosition.Distance(prediction.Position) > W.Range - 250 &&
-                                prediction.Position.Distance(ObjectManager.Player.ServerPosition) >
+                            if (ObjectManager.Player.ServerPosition.Distance(prediction.UnitPosition) < W.Range &&
+                                ObjectManager.Player.ServerPosition.Distance(prediction.UnitPosition) > W.Range - 250 &&
+                                prediction.UnitPosition.Distance(ObjectManager.Player.ServerPosition) >
                                 target.Distance(ObjectManager.Player))
                             {
                                 var cp =
                                     ObjectManager.Player.ServerPosition.To2D()
-                                        .Extend(prediction.Position.To2D(), W.Range)
+                                        .Extend(prediction.UnitPosition.To2D(), W.Range)
                                         .To3D();
                                 W.Cast(cp);
                                 UseSecondWT = Environment.TickCount;
@@ -363,7 +363,7 @@ namespace Ziggs
 
         private static void CastQ(Obj_AI_Base target)
         {
-            Prediction.PredictionOutput prediction;
+            PredictionOutput prediction;
 
             if (ObjectManager.Player.Distance(target) < Q1.Range)
             {
@@ -388,7 +388,7 @@ namespace Ziggs
                 return;
             }
 
-            if (prediction.HitChance >= Prediction.HitChance.HighHitchance)
+            if (prediction.Hitchance >= HitChance.High)
             {
                 if (ObjectManager.Player.ServerPosition.Distance(prediction.CastPosition) <= Q1.Range + Q1.Width)
                 {
@@ -413,7 +413,7 @@ namespace Ziggs
                     var p = ObjectManager.Player.ServerPosition.To2D()
                         .Extend(prediction.CastPosition.To2D(), Q1.Range - 100);
 
-                    if (!CheckQCollision(target, prediction.Position, p.To3D()))
+                    if (!CheckQCollision(target, prediction.UnitPosition, p.To3D()))
                     {
                         Q1.Cast(p.To3D());
                     }
@@ -425,7 +425,7 @@ namespace Ziggs
                             (prediction.CastPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized
                                 ();
 
-                    if (!CheckQCollision(target, prediction.Position, p.To3D()))
+                    if (!CheckQCollision(target, prediction.UnitPosition, p.To3D()))
                     {
                         Q1.Cast(p.To3D());
                     }
@@ -453,7 +453,7 @@ namespace Ziggs
                     if (minion.IsValidTarget(3000))
                     {
                         var predictedPos = Q2.GetPrediction(minion);
-                        if (predictedPos.Position.To2D().Distance(secondBouncePosition) <
+                        if (predictedPos.UnitPosition.To2D().Distance(secondBouncePosition) <
                             Q2.Width + minion.BoundingRadius)
                         {
                             return true;
@@ -471,7 +471,7 @@ namespace Ziggs
                     if (minion.IsValidTarget(3000))
                     {
                         var predictedPos = Q1.GetPrediction(minion);
-                        if (predictedPos.Position.To2D().Distance(firstBouncePosition) <
+                        if (predictedPos.UnitPosition.To2D().Distance(firstBouncePosition) <
                             Q1.Width + minion.BoundingRadius)
                         {
                             return true;
