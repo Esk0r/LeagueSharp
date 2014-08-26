@@ -2,6 +2,7 @@
 
 using System;
 using System.Drawing;
+using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 
@@ -27,6 +28,15 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
+            if (GetValue<bool>("AutoQ"))
+            {
+                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsValidTarget(Q.Range)))
+                {
+                    Q.CastIfHitchanceEquals(enemy, HitChance.Immobile);
+                }
+            }
+
+
             if (ComboActive || HarassActive)
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
@@ -84,6 +94,11 @@ namespace Marksman
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(false));
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(false));
+        }
+
+        public override void MiscMenu(Menu config)
+        {
+            config.AddItem(new MenuItem("AutoQ" + Id, "Auto Q on stunned targets").SetValue(true));
         }
 
         public override void DrawingMenu(Menu config)

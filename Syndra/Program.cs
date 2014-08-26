@@ -179,8 +179,14 @@ namespace Syndra
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
             Drawing.OnDraw += Drawing_OnDraw;
             Interrupter.OnPosibleToInterrupt += Interrupter_OnPosibleToInterrupt;
-
+            Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
             Game.PrintChat(ChampionName + " Loaded!");
+        }
+
+        static void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+            if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
+                args.Process = !(Q.IsReady() || W.IsReady());
         }
 
         private static void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
@@ -200,7 +206,6 @@ namespace Syndra
 
         private static void Combo()
         {
-            Orbwalker.SetAttacks(!(Q.IsReady() || W.IsReady()));
             UseSpells(Config.Item("UseQCombo").GetValue<bool>(), Config.Item("UseWCombo").GetValue<bool>(),
                 Config.Item("UseECombo").GetValue<bool>(), Config.Item("UseRCombo").GetValue<bool>(),
                 Config.Item("UseQECombo").GetValue<bool>(), Config.Item("UseIgniteCombo").GetValue<bool>(), false);
@@ -309,7 +314,7 @@ namespace Syndra
                     //WObject
                     var gObjectPos = GetGrabableObjectPos(wTarget == null);
 
-                    if (gObjectPos.To2D().IsValid() && Environment.TickCount - W.LastCastAttemptT > Game.Ping + 100)
+                    if (gObjectPos.To2D().IsValid() && Environment.TickCount - W.LastCastAttemptT > Game.Ping + 100 && Environment.TickCount - E.LastCastAttemptT > Game.Ping + 100)
                     {
                         W.Cast(gObjectPos);
                         W.LastCastAttemptT = Environment.TickCount;
@@ -485,10 +490,9 @@ namespace Syndra
                     Q.Cast(mob);
                 }
 
-
-                if (W.IsReady() && useW && GetGrabableObjectPos(true).To2D().IsValid())
+                if (W.IsReady() && useW && Environment.TickCount - Q.LastCastAttemptT > 800)
                 {
-                    W.Cast(GetGrabableObjectPos(true));
+                    W.Cast(mob);
                 }
 
                 if (useE && E.IsReady())
@@ -502,7 +506,6 @@ namespace Syndra
         private static void Game_OnGameUpdate(EventArgs args)
         {
             if (Player.IsDead) return;
-            Orbwalker.SetAttacks(true);
 
             //Update the R range
             R.Range = R.Level == 3 ? 750 : 675;
