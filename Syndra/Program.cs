@@ -159,6 +159,15 @@ namespace Syndra
                 Config.SubMenu("Misc")
                     .SubMenu("DontUlt")
                     .AddItem(new MenuItem("DontUlt" + enemy.BaseSkinName, enemy.BaseSkinName).SetValue(false));
+            
+            //Damage after combo:
+            var dmgAfterComboItem =  new MenuItem("DamageAfterCombo", "Draw damage after combo").SetValue(true);
+            Utility.HpBarDamageIndicator.DamageToUnit = GetComboDamage;
+            Utility.HpBarDamageIndicator.Enabled = dmgAfterComboItem.GetValue<bool>();
+            dmgAfterComboItem.ValueChanged += delegate(object sender, OnValueChangeEventArgs eventArgs)
+            {
+                Utility.HpBarDamageIndicator.Enabled = eventArgs.GetNewValue<bool>();
+            };
 
             //Drawings menu:
             Config.AddSubMenu(new Menu("Drawings", "Drawings"));
@@ -172,6 +181,8 @@ namespace Syndra
                 .AddItem(new MenuItem("RRange", "R range").SetValue(new Circle(false, Color.FromArgb(100, 255, 0, 255))));
             Config.SubMenu("Drawings")
                 .AddItem(new MenuItem("QERange", "QE range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
+            Config.SubMenu("Drawings")
+                .AddItem(dmgAfterComboItem);
             Config.AddToMainMenu();
 
             //Add the events we are going to use:
