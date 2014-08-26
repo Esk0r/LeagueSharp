@@ -33,6 +33,18 @@ namespace Xerath
 
         private static Obj_AI_Hero Player;
 
+        private static bool AttacksEnabled
+        {
+            get
+            {
+                if (Q.IsCharging)
+                    return false;
+                if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
+                    return IsPassiveUp || (!Q.IsReady() && !W.IsReady() && !E.IsReady() && !R.IsReady());
+                return true;
+            }
+        }
+
         public static bool IsPassiveUp
         {
             get { return ObjectManager.Player.HasBuff("xerathascended2onhit", true); }
@@ -195,6 +207,12 @@ namespace Xerath
             Obj_AI_Hero.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
             Game.OnWndProc += Game_OnWndProc;
             Game.PrintChat(ChampionName + " Loaded!");
+            Orbwalking.BeforeAttack += OrbwalkingOnBeforeAttack;
+        }
+
+        private static void OrbwalkingOnBeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+            args.Process = AttacksEnabled;
         }
 
         static void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
@@ -246,8 +264,7 @@ namespace Xerath
 
         private static void Combo()
         {
-            if(!Q.IsCharging)
-                Orbwalker.SetAttacks(IsPassiveUp || (!Q.IsReady() && !W.IsReady() && !E.IsReady() && !R.IsReady()));
+
             UseSpells(Config.Item("UseQCombo").GetValue<bool>(), Config.Item("UseWCombo").GetValue<bool>(),
                 Config.Item("UseECombo").GetValue<bool>());
         }
@@ -394,7 +411,6 @@ namespace Xerath
         private static void Game_OnGameUpdate(EventArgs args)
         {
             if (Player.IsDead) return;
-            Orbwalker.SetAttacks(!Q.IsCharging);
             Orbwalker.SetMovement(true);
 
             //Update the R range
