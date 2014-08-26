@@ -20,7 +20,7 @@ namespace Marksman
         {
             Utils.PrintMessage("Sivir loaded.");
 
-            Q = new Spell(SpellSlot.Q, 1175);
+            Q = new Spell(SpellSlot.Q, 1250);
             Q.SetSkillshot(0.25f, 90f, 1350f, false, SkillshotType.SkillshotLine);
 
             W = new Spell(SpellSlot.W, 1050);
