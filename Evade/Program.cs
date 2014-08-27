@@ -86,7 +86,7 @@ namespace Evade
             {
                 Game_OnGameStart(new EventArgs());
             }
-
+           
             Game.OnGameStart += Game_OnGameStart;
         }
 
@@ -582,6 +582,8 @@ namespace Evade
                 }
 
                 var decodedPacket = Packet.C2S.Move.Decoded(args.PacketData);
+
+                if(decodedPacket.UnitNetworkId != ObjectManager.Player.NetworkId) return;
 
                 if (decodedPacket.MoveType == 2)
                 {
