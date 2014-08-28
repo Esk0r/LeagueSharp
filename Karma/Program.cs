@@ -129,8 +129,6 @@ namespace Karma
                     new MenuItem("ERange", "E Range").SetValue(new Circle(false, Color.FromArgb(255, 255, 255, 255))));
 
             _config.AddToMainMenu();
-            Packet.S2C.UpdateModel.Encoded(
-                new Packet.S2C.UpdateModel.Struct(ObjectManager.Player.NetworkId, 1, "Karma")).Process();
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Drawing.OnDraw += Drawing_OnDraw;
             Game.OnGameUpdate += Game_OnGameUpdate;
