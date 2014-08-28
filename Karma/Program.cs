@@ -142,7 +142,7 @@ namespace Karma
             if (gapcloser.Sender.IsValidTarget(300f))
             {
                 _e.Cast(ObjectManager.Player);
-                _q.Cast(gapcloser.Sender, false, true);
+                _q.Cast(gapcloser.Sender);
             }
         }
 
