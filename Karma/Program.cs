@@ -123,12 +123,12 @@ namespace Karma
                     new MenuItem("WRange", "W Range").SetValue(new Circle(false, Color.FromArgb(255, 255, 255, 255))));
             _config.SubMenu("Drawings")
                 .AddItem(new MenuItem("WRootRange", "W Root Range").SetValue(new Circle(true, Color.MintCream)));
-            //Gay color for W.
             _config.SubMenu("Drawings")
                 .AddItem(
                     new MenuItem("ERange", "E Range").SetValue(new Circle(false, Color.FromArgb(255, 255, 255, 255))));
 
             _config.AddToMainMenu();
+
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Drawing.OnDraw += Drawing_OnDraw;
             Game.OnGameUpdate += Game_OnGameUpdate;
@@ -245,7 +245,7 @@ namespace Karma
 
                 if (!rActive || !_r.IsReady())
                 {
-                    var qPrediction = _q.GetPrediction(qTarget, true);
+                    var qPrediction = _q.GetPrediction(qTarget);
                     if (qPrediction.Hitchance >= HitChance.High)
                     {
                         _q.Cast(qPrediction.CastPosition);
