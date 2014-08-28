@@ -84,33 +84,6 @@ namespace Karma
                     new MenuItem("HarassActive", "Harass!").SetValue(
                         new KeyBind(_config.Item("Farm").GetValue<KeyBind>().Key, KeyBindType.Press)));
 
-            _config.AddSubMenu(new Menu("Farm", "Farm"));
-            _config.SubMenu("Farm")
-                .AddItem(
-                    new MenuItem("UseQFarm", "Use Q").SetValue(
-                        new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 2)));
-            _config.SubMenu("Farm")
-                .AddItem(
-                    new MenuItem("UseEFarm", "Use E").SetValue(
-                        new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 1)));
-            _config.SubMenu("Farm")
-                .AddItem(new MenuItem("ManaSliderFarm", "Mana To Farm").SetValue(new Slider(25, 100, 0)));
-            _config.SubMenu("Farm")
-                .AddItem(
-                    new MenuItem("FreezeActive", "Freeze!").SetValue(
-                        new KeyBind(_config.Item("LastHit").GetValue<KeyBind>().Key, KeyBindType.Press)));
-            _config.SubMenu("Farm")
-                .AddItem(
-                    new MenuItem("LaneClearActive", "LaneClear!").SetValue(
-                        new KeyBind(_config.Item("LaneClear").GetValue<KeyBind>().Key, KeyBindType.Press)));
-
-            _config.AddSubMenu(new Menu("JungleFarm", "JungleFarm"));
-            _config.SubMenu("JungleFarm").AddItem(new MenuItem("UseQJFarm", "Use Q").SetValue(true));
-            _config.SubMenu("JungleFarm")
-                .AddItem(
-                    new MenuItem("JungleFarmActive", "JungleFarm!").SetValue(
-                        _config.Item("LaneClear").GetValue<KeyBind>().Key));
-
             _config.AddSubMenu(new Menu("Misc", "Misc"));
             _config.SubMenu("Misc").AddItem(new MenuItem("UseEDefense", "Use E For Defense").SetValue(true));
 
@@ -123,12 +96,12 @@ namespace Karma
                     new MenuItem("WRange", "W Range").SetValue(new Circle(false, Color.FromArgb(255, 255, 255, 255))));
             _config.SubMenu("Drawings")
                 .AddItem(new MenuItem("WRootRange", "W Root Range").SetValue(new Circle(true, Color.MintCream)));
+
             _config.SubMenu("Drawings")
                 .AddItem(
                     new MenuItem("ERange", "E Range").SetValue(new Circle(false, Color.FromArgb(255, 255, 255, 255))));
 
             _config.AddToMainMenu();
-
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Drawing.OnDraw += Drawing_OnDraw;
             Game.OnGameUpdate += Game_OnGameUpdate;
@@ -155,10 +128,10 @@ namespace Karma
                     var distance = (1 - Math.Min(Math.Max(850 - ObjectManager.Player.Distance(enemy), 0), 450) / 450);
 
                     Render.Circle.DrawCircle(
-                        ObjectManager.Player.Position, 850, Color.FromArgb((int) (50 * distance), menuItem.Color), -420,
+                        ObjectManager.Player.Position, 850, Color.FromArgb((int)(50 * distance), menuItem.Color), -420,
                         true);
                     Render.Circle.DrawCircle(
-                        ObjectManager.Player.Position, 850, Color.FromArgb((int) (255 * distance), menuItem.Color), 10);
+                        ObjectManager.Player.Position, 850, Color.FromArgb((int)(255 * distance), menuItem.Color), 10);
 
                     break;
                 }
@@ -177,8 +150,7 @@ namespace Karma
         private static void Game_OnGameUpdate(EventArgs args)
         {
             _q.Width = MantraIsActive ? 80f : 60f; // Mantra increases the q line width
-            _q.Range = MantraIsActive ? 1250f : 1050f; // And the range (the aoe zone)
-
+            _q.Range = MantraIsActive ? 1250f : 1050f;
             if (_config.Item("UseEDefense").GetValue<bool>())
             {
                 foreach (var hero in
@@ -238,7 +210,7 @@ namespace Karma
 
             if (qActive && qTarget != null && _q.IsReady())
             {
-                if (rActive && _q.WillHit(qTarget, _q.GetPrediction(qTarget).CastPosition))
+                if (rActive)
                 {
                     _r.Cast();
                 }
@@ -252,10 +224,11 @@ namespace Karma
                     }
                     else if (qPrediction.Hitchance == HitChance.Collision)
                     {
-                        var collisionObjects = qPrediction.CollisionObjects;
-                        var closest = collisionObjects.Where(o => o.NetworkId != ObjectManager.Player.NetworkId)
-                            // Yasuo wall returns ObjectManager.Player.NetworkId
-                            .OrderBy(o => o.Distance(ObjectManager.Player)).FirstOrDefault();
+                        var minionsHit = qPrediction.CollisionObjects;
+                        var closest =
+                            minionsHit.Where(m => m.NetworkId != ObjectManager.Player.NetworkId)
+                                .OrderBy(m => m.Distance(ObjectManager.Player))
+                                .FirstOrDefault();
 
                         if (closest != null && closest.Distance(qPrediction.UnitPosition) < 200)
                         {
