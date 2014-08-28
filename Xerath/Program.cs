@@ -37,10 +37,15 @@ namespace Xerath
         {
             get
             {
+                if (IsCastingR)
+                    return false;
+
                 if (Q.IsCharging)
                     return false;
+
                 if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
                     return IsPassiveUp || (!Q.IsReady() && !W.IsReady() && !E.IsReady() && !R.IsReady());
+
                 return true;
             }
         }
@@ -178,6 +183,16 @@ namespace Xerath
             Config.SubMenu("Misc").AddItem(new MenuItem("InterruptSpells", "Interrupt spells").SetValue(true));
             Config.SubMenu("Misc").AddItem(new MenuItem("AutoEGC", "AutoE gapclosers").SetValue(true));
 
+
+            //Damage after combo:
+            var dmgAfterComboItem = new MenuItem("DamageAfterR", "Draw damage after 3xR").SetValue(true);
+            Utility.HpBarDamageIndicator.DamageToUnit += hero => (float)DamageLib.getDmg(hero, DamageLib.SpellType.R);
+            Utility.HpBarDamageIndicator.Enabled = dmgAfterComboItem.GetValue<bool>();
+            dmgAfterComboItem.ValueChanged += delegate(object sender, OnValueChangeEventArgs eventArgs)
+            {
+                Utility.HpBarDamageIndicator.Enabled = eventArgs.GetNewValue<bool>();
+            };
+
             //Drawings menu:
             Config.AddSubMenu(new Menu("Drawings", "Drawings"));
             Config.SubMenu("Drawings")
@@ -196,6 +211,8 @@ namespace Xerath
                 .AddItem(
                     new MenuItem("RRangeM", "R range (minimap)").SetValue(new Circle(false,
                         Color.FromArgb(150, Color.DodgerBlue))));
+            Config.SubMenu("Drawings")
+                .AddItem(dmgAfterComboItem);
             Config.AddToMainMenu();
 
             //Add the events we are going to use:
@@ -419,7 +436,6 @@ namespace Xerath
             if (IsCastingR)
             {
                 Orbwalker.SetMovement(false);
-                Orbwalker.SetAttacks(false);
                 WhileCastingR();
                 return;
             }
