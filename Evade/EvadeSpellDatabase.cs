@@ -702,7 +702,15 @@ namespace Evade
 
             #endregion
 
-            #region Akali
+            #region Karma
+
+            if (ObjectManager.Player.ChampionName == "Karma")
+            {
+                spell = new ShieldData("Karma E", SpellSlot.E, 100, 2);
+                spell.CanShieldAllies = true;
+                spell.MaxRange = 800;
+                Spells.Add(spell);
+            }
 
             #endregion
 
