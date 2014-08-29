@@ -82,9 +82,9 @@ namespace Marksman
         }
 
         public static bool Intersection(Vector2 p1, Vector2 p2, Vector2 pC, float radius)
-            /* Credits by DETUKS https://github.com/detuks/LeagueSharp/blob/master/YasuoSharp/YasMath.cs */
+            /* Credits to DETUKS https://github.com/detuks/LeagueSharp/blob/master/YasuoSharp/YasMath.cs */
         {
-            var p3 = new Vector2 { X = pC.X + radius, Y = pC.Y + radius };
+            var p3 = new Vector2(pC.X + radius, pC.Y + radius);
 
             var m = ((p2.Y - p1.Y) / (p2.X - p1.X));
             var constant = (m * p1.X) - p1.Y;
