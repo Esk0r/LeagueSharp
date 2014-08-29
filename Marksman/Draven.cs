@@ -142,7 +142,6 @@ namespace Marksman
             {
                 return;
             }
-            ;
             if (W.IsReady() && Config.Item("UseWC").GetValue<bool>() &&
                 ObjectManager.Player.Buffs.FirstOrDefault(
                     buff => buff.Name == "dravenfurybuff" || buff.Name == "DravenFury") == null)
