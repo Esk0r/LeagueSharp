@@ -54,6 +54,9 @@ namespace Marksman
                 case "Lucian":
                     CClass = new Lucian();
                     break;
+                case "MissFortune":
+                    CClass = new MissFortune();
+                    break;
                 case "Quinn":
                     CClass = new Quinn();
                     break;
