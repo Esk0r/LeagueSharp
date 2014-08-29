@@ -1,4 +1,5 @@
 #region
+
 using System;
 using System.Linq;
 using LeagueSharp;
@@ -9,41 +10,61 @@ using SharpDX;
 
 namespace Marksman
 {
-    internal class Lucian : Champion 
+    internal class Lucian : Champion
     {
-        private static readonly Obj_AI_Hero vLucian = ObjectManager.Player;
-
         public static Spell Q;
         public static Spell Q2;
         public static Spell W;
 
         public Lucian()
         {
-            Utils.PrintMessage("Lucian loaded."); 
+            Utils.PrintMessage("Lucian loaded.");
 
             Q = new Spell(SpellSlot.Q, 630);
             Q2 = new Spell(SpellSlot.Q, 1100);
             W = new Spell(SpellSlot.W, 1000);
 
-            Q.SetSkillshot(0.25f, 65f, 1200f, false, SkillshotType.SkillshotCircle);
+            Q.SetSkillshot(0.25f, 65f, 1200f, false, SkillshotType.SkillshotLine);
             W.SetSkillshot(0.15f, 80f, 1000f, true, SkillshotType.SkillshotLine);
         }
 
         public bool LucianHasPassive
         {
-            get { return vLucian.Buffs.Any(buff => buff.Name == "lucianpassivebuff"); }
+            get { return ObjectManager.Player.Buffs.Any(buff => buff.Name == "lucianpassivebuff"); }
+        }
+
+        public static Obj_AI_Base QMinion
+        {
+            get
+            {
+                var vTarget = SimpleTs.GetTarget(Q2.Range, SimpleTs.DamageType.Physical);
+                var vMinions = MinionManager.GetMinions(
+                    ObjectManager.Player.ServerPosition, Q.Range, MinionTypes.All, MinionTeam.NotAlly,
+                    MinionOrderTypes.None);
+
+                return (from vMinion in vMinions.Where(vMinion => vMinion.IsValidTarget(Q.Range))
+                    let endPoint =
+                        vMinion.ServerPosition.To2D()
+                            .Extend(ObjectManager.Player.ServerPosition.To2D(), -Q2.Range)
+                            .To3D()
+                    where
+                        Intersection(
+                            ObjectManager.Player.ServerPosition.To2D(), endPoint.To2D(), vTarget.ServerPosition.To2D(),
+                            vTarget.BoundingRadius + Q.Width / 2)
+                    select vMinion).FirstOrDefault();
+            }
         }
 
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
         {
-            if ((ComboActive || HarassActive) && unit.IsMe && (target is Obj_AI_Hero))
+            if ((!ComboActive && !HarassActive) || !unit.IsMe || (!(target is Obj_AI_Hero)))
             {
-                var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
+                return;
+            }
 
-                if (useQ && Q.IsReady() && !LucianHasPassive)
-                {
-                    Q.CastOnUnit(target);
-                }
+            if (GetValue<bool>("UseQ" + (ComboActive ? "C" : "H")) && Q.IsReady() && !LucianHasPassive)
+            {
+                Q.CastOnUnit(target);
             }
         }
 
@@ -55,100 +76,81 @@ namespace Marksman
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
                 if (menuItem.Active && spell.Level > 0)
                 {
-                    Utility.DrawCircle(vLucian.Position, spell.Range, menuItem.Color);
+                    Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
                 }
             }
         }
 
-        public static bool Interact(Vector2 p1, Vector2 p2, Vector2 pC, float radius) /* Credits by DETUKS https://github.com/detuks/LeagueSharp/blob/master/YasuoSharp/YasMath.cs */
+        public static bool Intersection(Vector2 p1, Vector2 p2, Vector2 pC, float radius)
+            /* Credits by DETUKS https://github.com/detuks/LeagueSharp/blob/master/YasuoSharp/YasMath.cs */
         {
-            Vector2 p3 = new Vector2();
-            p3.X = pC.X + radius;
-            p3.Y = pC.Y + radius;
+            var p3 = new Vector2 { X = pC.X + radius, Y = pC.Y + radius };
 
-            float m = ((p2.Y - p1.Y) / (p2.X - p1.X));
-            float constant = (m * p1.X) - p1.Y;
-            float b = -(2f * ((m * constant) + p3.X + (m * p3.Y)));
-            float a = (1 + (m * m));
-            float c = ((p3.X * p3.X) + (p3.Y * p3.Y) - (radius * radius) + (2f * constant * p3.Y) + (constant * constant));
-            float D = ((b * b) - (4f * a * c));
-           
-            if (D > 0)
-            {
-                return true;
-            }
-            else
-                return false;
-        }
-        public static Obj_AI_Base GetBestMinionForExtendedQ()
-        {
+            var m = ((p2.Y - p1.Y) / (p2.X - p1.X));
+            var constant = (m * p1.X) - p1.Y;
+            var b = -(2f * ((m * constant) + p3.X + (m * p3.Y)));
+            var a = (1 + (m * m));
+            var c = ((p3.X * p3.X) + (p3.Y * p3.Y) - (radius * radius) + (2f * constant * p3.Y) + (constant * constant));
+            var d = ((b * b) - (4f * a * c));
 
-            var vTarget = SimpleTs.GetTarget(Q2.Range, SimpleTs.DamageType.Physical);
-            var vMinions = MinionManager.GetMinions(
-                vLucian.ServerPosition, Q.Range, MinionTypes.All, MinionTeam.NotAlly, MinionOrderTypes.None);
-
-            foreach (var vMinion in vMinions.Where(vMinion => vMinion.IsValidTarget(Q.Range)))
-            {
-                var qWidth = Q.Width / 2;
-                var vecMaxRngePoint = vLucian.ServerPosition + Vector3.Normalize(vMinion.ServerPosition - vLucian.ServerPosition) * Q2.Range;
-                if (Interact(vLucian.ServerPosition.To2D(), vecMaxRngePoint.To2D(), vTarget.ServerPosition.To2D(), vTarget.BoundingRadius + qWidth))
-                {
-                    return vMinion;
-                }
-            }
-            return null;
+            return d > 0;
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            if (ComboActive || HarassActive)
+            if (!ComboActive && !HarassActive)
             {
-                var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-                var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
-                var useQExtended = GetValue<bool>("UseQExtended" + (ComboActive ? "C" : "H"));
+                return;
+            }
 
-                if (vLucian.Spellbook.GetSpell(SpellSlot.R).Level > 0)
+            var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
+            var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
+            var useQExtended = GetValue<bool>("UseQExtended" + (ComboActive ? "C" : "H"));
+
+            if (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Level > 0)
+            {
+                Config.Item("GHOSTBLADE")
+                    .SetValue(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Name == "LucianR");
+            }
+
+            if (!Orbwalking.CanMove(100))
+            {
+                return;
+            }
+
+            if (Q.IsReady() && useQExtended)
+            {
+                var vTarget = Orbwalker.GetTarget() ?? SimpleTs.GetTarget(Q2.Range, SimpleTs.DamageType.Physical);
+
+                if (vTarget != null && QMinion != null)
                 {
-                    Config.Item("GHOSTBLADE")
-                        .SetValue(vLucian.Spellbook.GetSpell(SpellSlot.R).Name == "LucianR");
+                    Q.CastOnUnit(QMinion);
                 }
-
-                if (Orbwalking.CanMove(100))
+            }
+            else if (Q.IsReady() && useQ && !LucianHasPassive)
+            {
+                var vTarget = Orbwalker.GetTarget() ?? SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                if (vTarget != null)
                 {
-                    if (Q.IsReady() && useQExtended)
-                    {
-                        var vTarget = Orbwalker.GetTarget() ??
-                                      SimpleTs.GetTarget(Q2.Range, SimpleTs.DamageType.Physical);
-                        var bestminion = GetBestMinionForExtendedQ();
-                        if (vTarget != null && bestminion != null)
-                        {
-                            Q.CastOnUnit(bestminion);
-                        }
-                    }
-                    else 
-       
-                    if (Q.IsReady() && useQ && !LucianHasPassive)
-                    {
-                        var vTarget = Orbwalker.GetTarget() ?? SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
-                        if (vTarget != null)
-                            Q.Cast(vTarget);
-                    }
+                    Q.Cast(vTarget);
+                }
+            }
 
-                    if (W.IsReady() && useW)
+            if (W.IsReady() && useW)
+            {
+                var vTarget = Orbwalker.GetTarget() ?? SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
+                if (vTarget != null)
+                {
+                    if (ObjectManager.Player.Distance(vTarget) <= ObjectManager.Player.AttackRange)
                     {
-                        var vTarget = Orbwalker.GetTarget() ?? SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
-                        if (vTarget != null)
+                        if (!LucianHasPassive)
                         {
-                            if (vLucian.Distance(vTarget) <= vLucian.AttackRange)
-                            {
-                                if (!LucianHasPassive)
-                                    W.Cast(vTarget);
-                            }
-                            else
-                            { 
-                                W.Cast(vTarget); 
-                            }
+                            W.Cast(vTarget);
                         }
+                    }
+                    else
+                    {
+                        W.Cast(vTarget);
                     }
                 }
             }
