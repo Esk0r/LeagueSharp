@@ -90,7 +90,7 @@ namespace Xerath
             E = new Spell(SpellSlot.E, 1150);
             R = new Spell(SpellSlot.R, 675);
 
-            Q.SetSkillshot(0.6f, 100f, float.MaxValue, false, SkillshotType.SkillshotLine);
+            Q.SetSkillshot(0.6f, 90f, float.MaxValue, false, SkillshotType.SkillshotLine);
             W.SetSkillshot(0.7f, 125f, float.MaxValue, false, SkillshotType.SkillshotCircle);
             E.SetSkillshot(0.25f, 60f, 1400f, true, SkillshotType.SkillshotLine);
             R.SetSkillshot(0.7f, 120f, float.MaxValue, false, SkillshotType.SkillshotCircle);
@@ -351,8 +351,6 @@ namespace Xerath
                             R.Cast(rTarget, true);
                         break;
                 }
-
-                
             }
         }
 
@@ -428,6 +426,7 @@ namespace Xerath
         private static void Game_OnGameUpdate(EventArgs args)
         {
             if (Player.IsDead) return;
+
             Orbwalker.SetMovement(true);
 
             //Update the R range
