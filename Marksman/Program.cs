@@ -72,6 +72,9 @@ namespace Marksman
                 case "Vayne":
                     CClass = new Vayne();
                     break;
+                case "Draven":
+                	CClass = new Draven();
+                	break;
             }
 
 
