@@ -209,7 +209,7 @@ namespace Ryze
         {
             var target = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Magical);
 
-            if (target != null)
+            if (target != null && Config.Item("UseQHarass").GetValue<bool>())
             {
                 Q.CastOnUnit(target);
             }

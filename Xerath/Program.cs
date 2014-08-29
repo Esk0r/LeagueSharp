@@ -44,7 +44,7 @@ namespace Xerath
                     return false;
 
                 if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
-                    return IsPassiveUp || (!Q.IsReady() && !W.IsReady() && !E.IsReady() && !R.IsReady());
+                    return IsPassiveUp || (!Q.IsReady() && !W.IsReady() && !E.IsReady());
 
                 return true;
             }
