@@ -1,34 +1,28 @@
 #region
-
 using System;
 using System.Linq;
-
 using LeagueSharp;
 using LeagueSharp.Common;
+using SharpDX;
 
 #endregion
 
 namespace Marksman
 {
-    internal class Lucian : Champion
+    internal class Lucian : Champion 
     {
+        private static readonly Obj_AI_Hero vLucian = ObjectManager.Player;
+
         public static Spell Q;
-        public static Spell Q1;
         public static Spell Q2;
         public static Spell W;
 
-        public static float X1 = 0;
-        public static float Y1 = 0;
-        public static float X2 = 0;
-        public static float Y2 = 0;
-
         public Lucian()
         {
-            Utils.PrintMessage("Lucian loaded.");
+            Utils.PrintMessage("Lucian loaded."); 
 
             Q = new Spell(SpellSlot.Q, 630);
-            Q1 = new Spell(SpellSlot.Q, 1150);
-            Q2 = new Spell(SpellSlot.Q, 1600);
+            Q2 = new Spell(SpellSlot.Q, 1100);
             W = new Spell(SpellSlot.W, 1000);
 
             Q.SetSkillshot(0.25f, 65f, 1200f, false, SkillshotType.SkillshotCircle);
@@ -37,7 +31,7 @@ namespace Marksman
 
         public bool LucianHasPassive
         {
-            get { return ObjectManager.Player.Buffs.Any(buff => buff.Name == "lucianpassivebuff"); }
+            get { return vLucian.Buffs.Any(buff => buff.Name == "lucianpassivebuff"); }
         }
 
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
@@ -46,7 +40,7 @@ namespace Marksman
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
 
-                if (useQ)
+                if (useQ && Q.IsReady() && !LucianHasPassive)
                 {
                     Q.CastOnUnit(target);
                 }
@@ -59,45 +53,45 @@ namespace Marksman
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
-                if (menuItem.Active)
+                if (menuItem.Active && spell.Level > 0)
                 {
-                    Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
+                    Utility.DrawCircle(vLucian.Position, spell.Range, menuItem.Color);
                 }
             }
         }
 
+        public static bool Interact(Vector2 p1, Vector2 p2, Vector2 pC, float radius) /* Credits by DETUKS https://github.com/detuks/LeagueSharp/blob/master/YasuoSharp/YasMath.cs */
+        {
+            Vector2 p3 = new Vector2();
+            p3.X = pC.X + radius;
+            p3.Y = pC.Y + radius;
+
+            float m = ((p2.Y - p1.Y) / (p2.X - p1.X));
+            float constant = (m * p1.X) - p1.Y;
+            float b = -(2f * ((m * constant) + p3.X + (m * p3.Y)));
+            float a = (1 + (m * m));
+            float c = ((p3.X * p3.X) + (p3.Y * p3.Y) - (radius * radius) + (2f * constant * p3.Y) + (constant * constant));
+            float D = ((b * b) - (4f * a * c));
+           
+            if (D > 0)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
         public static Obj_AI_Base GetBestMinionForExtendedQ()
         {
-            var vTarget2 = SimpleTs.GetTarget(Q1.Range, SimpleTs.DamageType.Physical);
 
-            var targetX = vTarget2.ServerPosition.X;
-            var targetY = vTarget2.ServerPosition.Y;
-
-            var lucianX = ObjectManager.Player.ServerPosition.X;
-            var lucianY = ObjectManager.Player.ServerPosition.Y;
-
-            const int xWidth = 47;
-            const int xHeight = 47;
-
+            var vTarget = SimpleTs.GetTarget(Q2.Range, SimpleTs.DamageType.Physical);
             var vMinions = MinionManager.GetMinions(
-                ObjectManager.Player.ServerPosition, Q.Range, MinionTypes.All, MinionTeam.NotAlly, MinionOrderTypes.None);
+                vLucian.ServerPosition, Q.Range, MinionTypes.All, MinionTeam.NotAlly, MinionOrderTypes.None);
 
             foreach (var vMinion in vMinions.Where(vMinion => vMinion.IsValidTarget(Q.Range)))
             {
-                X1 = lucianX > targetX ? lucianX : targetX;
-                X2 = lucianX > targetX ? targetX : lucianX;
-
-                Y1 = lucianY > targetY ? lucianY : targetY;
-                Y2 = lucianY > targetY ? targetY : lucianY;
-
-                var minionMustBeX1 = X1 - (X1 - X2) / 2 + xWidth;
-                var minionMustBeX2 = X2 + (X1 - X2) / 2 - xWidth;
-
-                var minionMustBeY1 = Y1 - (Y1 - Y2) / 2 + xHeight;
-                var minionMustBeY2 = Y2 + (Y1 - Y2) / 2 - xHeight;
-
-                if (vMinion.ServerPosition.X < minionMustBeX1 && vMinion.ServerPosition.X > minionMustBeX2 &&
-                    vMinion.ServerPosition.Y < minionMustBeY1 && vMinion.ServerPosition.Y > minionMustBeY2)
+                var qWidth = Q.Width / 2;
+                var vecMaxRngePoint = vLucian.ServerPosition + Vector3.Normalize(vMinion.ServerPosition - vLucian.ServerPosition) * Q2.Range;
+                if (Interact(vLucian.ServerPosition.To2D(), vecMaxRngePoint.To2D(), vTarget.ServerPosition.To2D(), vTarget.BoundingRadius + qWidth))
                 {
                     return vMinion;
                 }
@@ -113,11 +107,10 @@ namespace Marksman
                 var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
                 var useQExtended = GetValue<bool>("UseQExtended" + (ComboActive ? "C" : "H"));
 
-
-                if (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Level > 0)
+                if (vLucian.Spellbook.GetSpell(SpellSlot.R).Level > 0)
                 {
                     Config.Item("GHOSTBLADE")
-                        .SetValue(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Name == "LucianR");
+                        .SetValue(vLucian.Spellbook.GetSpell(SpellSlot.R).Name == "LucianR");
                 }
 
                 if (Orbwalking.CanMove(100))
@@ -125,20 +118,20 @@ namespace Marksman
                     if (Q.IsReady() && useQExtended)
                     {
                         var vTarget = Orbwalker.GetTarget() ??
-                                      SimpleTs.GetTarget(Q1.Range, SimpleTs.DamageType.Physical);
+                                      SimpleTs.GetTarget(Q2.Range, SimpleTs.DamageType.Physical);
                         var bestminion = GetBestMinionForExtendedQ();
                         if (vTarget != null && bestminion != null)
                         {
                             Q.CastOnUnit(bestminion);
                         }
                     }
-                    else if (Q.IsReady() && useQ && !LucianHasPassive)
+                    else 
+       
+                    if (Q.IsReady() && useQ && !LucianHasPassive)
                     {
                         var vTarget = Orbwalker.GetTarget() ?? SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
                         if (vTarget != null)
-                        {
                             Q.Cast(vTarget);
-                        }
                     }
 
                     if (W.IsReady() && useW)
@@ -146,9 +139,14 @@ namespace Marksman
                         var vTarget = Orbwalker.GetTarget() ?? SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
                         if (vTarget != null)
                         {
-                            if (!LucianHasPassive)
+                            if (vLucian.Distance(vTarget) <= vLucian.AttackRange)
                             {
-                                W.Cast(vTarget);
+                                if (!LucianHasPassive)
+                                    W.Cast(vTarget);
+                            }
+                            else
+                            { 
+                                W.Cast(vTarget); 
                             }
                         }
                     }
