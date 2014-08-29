@@ -51,7 +51,7 @@ namespace Marksman
         {
             if (E.IsReady() && Config.Item("EGapCloser").GetValue<bool>() && gapcloser.Sender.IsValidTarget(E.Range))
             {
-                E.CastOnUnit(gapcloser.Sender);
+                E.Cast(gapcloser.Sender);
             }
         }
 
@@ -59,7 +59,7 @@ namespace Marksman
         {
             if (E.IsReady() && Config.Item("EInterruptable").GetValue<bool>() && unit.IsValidTarget(E.Range))
             {
-                E.CastOnUnit(unit);
+                E.Cast(unit);
             }
         }
 
@@ -69,7 +69,7 @@ namespace Marksman
             {
                 return;
             }
-            ExistingReticles.RemoveAll(reticle => Math.Abs(reticle.NetworkId - sender.NetworkId) < 1);
+            ExistingReticles.RemoveAll(reticle => reticle.NetworkId == sender.NetworkId);
             //Packet.S2C.Ping.Encoded(new Packet.S2C.Ping.Struct(sender.Position.X, sender.Position.Y)).Process();
         }
 
@@ -161,6 +161,23 @@ namespace Marksman
             {
                 R.Cast(rtarget);
             }
+            //Peel from melees
+            if (Config.Item("EPeel").GetValue<bool>()) //Taken from ziggs(by pq/esk0r)
+            {
+                foreach (var pos in from enemy in ObjectManager.Get<Obj_AI_Hero>()
+                                    where
+                                    enemy.IsValidTarget() &&
+                                    enemy.Distance(ObjectManager.Player) <=
+                                    enemy.BoundingRadius + enemy.AttackRange + ObjectManager.Player.BoundingRadius &&
+                                    enemy.IsMelee()
+                                    let direction =
+                                    (enemy.ServerPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized()
+                                    let pos = ObjectManager.Player.ServerPosition.To2D()
+                                    select pos + Math.Min(200, Math.Max(50, enemy.Distance(ObjectManager.Player) / 2)) * direction)
+                {
+                    E.Cast(pos.To3D());
+                }
+            }
         }
 
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
@@ -208,8 +225,9 @@ namespace Marksman
             config.AddItem(new MenuItem("maxqamount", "Max Qs to use simultaneous").SetValue(new Slider(2, 4, 1)));
             config.AddItem(new MenuItem("EGapCloser", "Auto E Gap closers").SetValue(true));
             config.AddItem(new MenuItem("EInterruptable", "Auto E interruptable spells").SetValue(true));
-            Config.AddItem(new MenuItem("RManualCast", "Cast R to best target(2000 range)"))
+            config.AddItem(new MenuItem("RManualCast", "Cast R to best target(2000 range)"))
                 .SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press));
+            config.AddItem(new MenuItem("Epeel", "Peel self with E").SetValue(true));
         }
 
         public static int QBuffCount()
