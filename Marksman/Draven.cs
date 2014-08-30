@@ -287,9 +287,9 @@ namespace Marksman
                         reticle =>
                             reticle.ReticlePos.Distance(cursor) <= Config.Item("CatchRadius").GetValue<Slider>().Value &&
                             reticle.Object.IsValid &&
-                            myHero.GetPath(reticle.ReticlePos).ToList().To2D().PathLength() / myHero.MoveSpeed + Game.Time <
+                            (myHero.GetPath(reticle.ReticlePos).ToList().To2D().PathLength()-100) / myHero.MoveSpeed + Game.Time <
                             reticle.ExpireTime);
-
+//-100 is the radius of the border
             return reticles != null && myHero.Distance(reticles.ReticlePos) >= 100 ? reticles.ReticlePos : cursor;
         }
 
