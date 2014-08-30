@@ -39,6 +39,9 @@ namespace Marksman
                 case "Corki":
                     CClass = new Corki();
                     break;
+                case "Draven":
+                	CClass = new Draven();
+                	break;
                 case "Ezreal":
                     CClass = new Ezreal();
                     break;
@@ -72,9 +75,6 @@ namespace Marksman
                 case "Vayne":
                     CClass = new Vayne();
                     break;
-                case "Draven":
-                	CClass = new Draven();
-                	break;
             }
 
 
