@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using LeagueSharp;
@@ -287,7 +287,7 @@ namespace Marksman
                         reticle =>
                             reticle.ReticlePos.Distance(cursor) <= Config.Item("CatchRadius").GetValue<Slider>().Value &&
                             reticle.Object.IsValid &&
-                            myHero.GetPath(reticle.ReticlePos).Length / myHero.MoveSpeed + Game.Time <
+                            myHero.GetPath(reticle.ReticlePos).ToList().To2D().PathLength() / myHero.MoveSpeed + Game.Time <
                             reticle.ExpireTime);
 
             return reticles != null && myHero.Distance(reticles.ReticlePos) >= 100 ? reticles.ReticlePos : cursor;
