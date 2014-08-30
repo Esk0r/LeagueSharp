@@ -151,7 +151,7 @@ namespace Evade
                                 .Where(
                                     h =>
                                         (h.IsValidTarget(1200, false) && h.Team == ObjectManager.Player.Team && !h.IsMe ||
-                                         Config.TestOnAllies && h.Team != ObjectManager.Player.Team)))
+                                         Config.TestOnAllies)))
                         {
                             var pred = FastPrediction(
                                 from, hero,
