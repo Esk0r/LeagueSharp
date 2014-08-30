@@ -40,8 +40,8 @@ namespace Marksman
                     CClass = new Corki();
                     break;
                 case "Draven":
-                	CClass = new Draven();
-                	break;
+                    CClass = new Draven();
+                    break;
                 case "Ezreal":
                     CClass = new Ezreal();
                     break;
