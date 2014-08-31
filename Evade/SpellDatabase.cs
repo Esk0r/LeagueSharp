@@ -1784,7 +1784,67 @@ namespace Evade
                     MissileSpellName = "LeonaSolarFlare",
                 });
 
-            #endregion Leona+
+            #endregion Leona
+
+            #region Lissandra
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Lissandra",
+                    SpellName = "LissandraQ",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 250,
+                    Range = 700,
+                    Radius = 75,
+                    MissileSpeed = 2200,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "LissandraQMissile",
+                    CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Lissandra",
+                    SpellName = "LissandraQShards",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 250,
+                    Range = 700,
+                    Radius = 90,
+                    MissileSpeed = 2200,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "lissandraqshards",
+                    CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Lissandra",
+                    SpellName = "LissandraE",
+                    Slot = SpellSlot.E,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 250,
+                    Range = 1025,
+                    Radius = 125,
+                    MissileSpeed = 850,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "LissandraEMissile",
+                    CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
+                });
+            #endregion Lulu
 
             #region Lucian
 
@@ -1825,7 +1885,7 @@ namespace Evade
                     AddHitbox = true,
                     DangerValue = 2,
                     IsDangerous = false,
-                    MissileSpellName = "LuluQMissile", //LuluQMissileTwo
+                    MissileSpellName = "LuluQMissile",
                     ExtraMissileNames = new[] { "LuluQMissileTwo" },
                     CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
                 });

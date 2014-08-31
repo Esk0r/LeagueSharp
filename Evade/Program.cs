@@ -81,7 +81,6 @@ namespace Evade
 
         private static void Main(string[] args)
         {
-
             if (Game.Mode == GameMode.Running)
             {
                 Game_OnGameStart(new EventArgs());
@@ -1253,6 +1252,7 @@ namespace Evade
 
                 Drawing.DrawCircle(EvadePoint.To3D(), 300, Color.White);
             }
+
         }
 
         public struct IsSafeResult

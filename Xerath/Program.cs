@@ -310,7 +310,7 @@ namespace Xerath
             {
                 if (Q.IsCharging)
                 {
-                    Q.Cast(qTarget, false, true);
+                    Q.Cast(qTarget, false, false);
                 }
                 else if (qTarget != null && (!useW || !W.IsReady() || Player.Distance(qTarget) > W.Range))
                 {

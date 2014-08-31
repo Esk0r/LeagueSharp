@@ -126,6 +126,13 @@ namespace Ryze
             //Add the events we are going to use:
             Drawing.OnDraw += Drawing_OnDraw;
             Game.OnGameUpdate += Game_OnGameUpdate;
+            Orbwalking.BeforeAttack += OrbwalkingOnBeforeAttack;
+        }
+
+        private static void OrbwalkingOnBeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+            if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
+                args.Process = !(Q.IsReady() || W.IsReady() || E.IsReady() || Player.Distance(args.Target) >= 600);
         }
 
         private static void Drawing_OnDraw(EventArgs args)
@@ -143,7 +150,6 @@ namespace Ryze
 
         private static void Game_OnGameUpdate(EventArgs args)
         {
-            Orbwalker.SetAttacks(true);
             if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
             {
                 Combo();
@@ -166,8 +172,6 @@ namespace Ryze
         {
             var target = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Magical);
             var qCd = Player.Spellbook.GetSpell(SpellSlot.Q).CooldownExpires - Game.Time;
-            Orbwalker.SetAttacks(
-                !(Q.IsReady() || W.IsReady() || E.IsReady() || Player.Distance(target) >= 600));
 
             if (target != null)
             {
