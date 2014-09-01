@@ -62,9 +62,9 @@ namespace Syndra
             DFG = Utility.Map.GetMap() == Utility.Map.MapType.TwistedTreeline ? new Items.Item(3188, 750) : new Items.Item(3128, 750);
 
             Q.SetSkillshot(0.6f, 125f, float.MaxValue, false, SkillshotType.SkillshotCircle);
-            W.SetSkillshot(0.25f, 125f, 1450f, false, SkillshotType.SkillshotCircle);
+            W.SetSkillshot(0.25f, 140f, 1600f, false, SkillshotType.SkillshotCircle);
             E.SetSkillshot(0.25f, (float)(45 * 0.5), 2500f, false, SkillshotType.SkillshotCircle);
-            EQ.SetSkillshot(float.MaxValue, 85f, 1600f, false, SkillshotType.SkillshotLine);
+            EQ.SetSkillshot(float.MaxValue, 55f, 2000f, false, SkillshotType.SkillshotCircle);
 
             SpellList.Add(Q);
             SpellList.Add(W);
@@ -254,6 +254,7 @@ namespace Syndra
         {
             EQ.Delay = E.Delay + Q.Range / E.Speed;
             EQ.From = Player.ServerPosition.To2D().Extend(enemy.ServerPosition.To2D(), Q.Range).To3D();
+
             var prediction = EQ.GetPrediction(enemy);
             if (prediction.Hitchance >= HitChance.High)
             {
@@ -340,6 +341,7 @@ namespace Syndra
                         W.Cast(wTarget, false, true);
                     }
                 }
+
             if (rTarget != null)
                 useR = (Config.Item("DontUlt" + rTarget.BaseSkinName) != null &&
                         Config.Item("DontUlt" + rTarget.BaseSkinName).GetValue<bool>() == false) && useR;
@@ -380,12 +382,12 @@ namespace Syndra
             //WE
             if (wTarget == null && qeTarget != null && E.IsReady() && useE && OrbManager.WObject(true) != null)
             {
-                EQ.Delay = E.Delay + W.Range / E.Speed;
-                EQ.From = Player.ServerPosition.To2D().Extend(qeTarget.ServerPosition.To2D(), W.Range).To3D();
+                EQ.Delay = E.Delay + Q.Range / W.Speed;
+                EQ.From = Player.ServerPosition.To2D().Extend(qeTarget.ServerPosition.To2D(), Q.Range).To3D();
                 var prediction = EQ.GetPrediction(qeTarget);
                 if (prediction.Hitchance >= HitChance.High)
                 {
-                    W.Cast(Player.ServerPosition.To2D().Extend(prediction.CastPosition.To2D(), W.Range - 100));
+                    W.Cast(Player.ServerPosition.To2D().Extend(prediction.CastPosition.To2D(), Q.Range - 100));
                     WEComboT = Environment.TickCount;
                 }
             }
@@ -401,7 +403,7 @@ namespace Syndra
             }
 
             if (sender.IsMe && Environment.TickCount - WEComboT < 500 &&
-                (args.SData.Name == "SyndraW" || args.SData.Name == "syndraw2"))
+                (args.SData.Name == "SyndraW" || args.SData.Name == "syndrawcast"))
             {
                 W.LastCastAttemptT = Environment.TickCount + 400;
                 E.Cast(args.End, true);
