@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 using System.Drawing;
@@ -30,13 +30,13 @@ namespace Marksman
 
         public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
         {
-            if (R.IsReady() && gapcloser.Sender.IsValidTarget(R.Range))
+            if (R.IsReady() && gapcloser.Sender.IsValidTarget(R.Range) && GetValue<bool>("UseRMG"))
                 R.CastOnUnit(gapcloser.Sender);
         }
 
         public void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
         {
-            if (R.IsReady() && unit.IsValidTarget(R.Range))
+            if (R.IsReady() && unit.IsValidTarget(R.Range) && GetValue<bool>("UseRMI"))
                 R.CastOnUnit(unit);
         }
 
@@ -115,7 +115,9 @@ namespace Marksman
 
         public override void MiscMenu(Menu config)
         {
-            config.AddItem(new MenuItem("UseRM" + Id, "Use R").SetValue(true));
+            config.AddItem(new MenuItem("UseRM" + Id, "Use R KillSteal").SetValue(true));
+            config.AddItem(new MenuItem("UseRMG" + Id, "Use R Gapclosers").SetValue(true));
+            config.AddItem(new MenuItem("UseRMI" + Id, "Use R Interrupt").SetValue(true));
         }
     }
 }
