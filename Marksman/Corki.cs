@@ -27,8 +27,8 @@ namespace Marksman
 
             Q.SetSkillshot(0.3f, 120f, 1225f, false, SkillshotType.SkillshotCircle);
             E.SetSkillshot(0f, (float)(45 * Math.PI / 180), 1500, false, SkillshotType.SkillshotCone);
-            R1.SetSkillshot(0.2f, 40f, 828.5f, true, SkillshotType.SkillshotLine);
-            R2.SetSkillshot(0.2f, 40f, 828.5f, true, SkillshotType.SkillshotLine);
+            R1.SetSkillshot(0.2f, 40f, 2000f, true, SkillshotType.SkillshotLine);
+            R2.SetSkillshot(0.2f, 40f, 2000f, true, SkillshotType.SkillshotLine);
         }
 
         public override void Drawing_OnDraw(EventArgs args)
