@@ -90,7 +90,7 @@ namespace Xerath
             E = new Spell(SpellSlot.E, 1150);
             R = new Spell(SpellSlot.R, 675);
 
-            Q.SetSkillshot(0.6f, 90f, float.MaxValue, false, SkillshotType.SkillshotLine);
+            Q.SetSkillshot(0.6f, 100f, float.MaxValue, false, SkillshotType.SkillshotLine);
             W.SetSkillshot(0.7f, 125f, float.MaxValue, false, SkillshotType.SkillshotCircle);
             E.SetSkillshot(0.25f, 60f, 1400f, true, SkillshotType.SkillshotLine);
             R.SetSkillshot(0.7f, 120f, float.MaxValue, false, SkillshotType.SkillshotCircle);
@@ -331,8 +331,11 @@ namespace Xerath
             if (rTarget != null)
             {
                 //Wait at least 0.6f if the target is going to die or if the target is to far away
-                if(rTarget.Health - R.GetDamage(rTarget) < 0 || (RCharge.Index != 0 && rTarget.Distance(RCharge.Position) > 1500))
-                    if (Environment.TickCount - RCharge.CastT <= 600) return;
+                if(rTarget.Health - R.GetDamage(rTarget) < 0)
+                    if (Environment.TickCount - RCharge.CastT <= 700) return;
+
+                if ((RCharge.Index != 0 && rTarget.Distance(RCharge.Position) > 1000))
+                    if (Environment.TickCount - RCharge.CastT <= Math.Max(2500, rTarget.Distance(RCharge.Position) - 1000)  ) return;
 
                 switch (rMode)
                 {
