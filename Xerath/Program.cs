@@ -33,6 +33,8 @@ namespace Xerath
 
         private static Obj_AI_Hero Player;
 
+        private static Vector2 PingLocation;
+        private static int LastPingT = 0;
         private static bool AttacksEnabled
         {
             get
@@ -134,7 +136,8 @@ namespace Xerath
             Config.SubMenu("R").AddSubMenu(new Menu("Custom delays", "Custom delays"));
             for (int i = 1; i <= 3; i++)
                 Config.SubMenu("R").SubMenu("Custom delays").AddItem(new MenuItem("Delay"+i, "Delay"+i).SetValue(new Slider(0, 1500, 0)));
-
+            Config.SubMenu("R").AddItem(new MenuItem("PingRKillable", "Ping on killable targets (only local)").SetValue(true));
+            Config.SubMenu("R").AddItem(new MenuItem("BlockMovement", "Block right click while casting R").SetValue(false));
             
 
             //Harass menu:
@@ -225,6 +228,15 @@ namespace Xerath
             Game.OnWndProc += Game_OnWndProc;
             Game.PrintChat(ChampionName + " Loaded!");
             Orbwalking.BeforeAttack += OrbwalkingOnBeforeAttack;
+            Game.OnGameSendPacket += GameOnOnGameSendPacket;
+        }
+
+        private static void GameOnOnGameSendPacket(GamePacketEventArgs args)
+        {
+            if (args.PacketData[0] == Packet.C2S.Move.Header && IsCastingR && Config.Item("BlockMovement").GetValue<bool>())
+            {
+                args.Process = false;
+            }
         }
 
         private static void OrbwalkingOnBeforeAttack(Orbwalking.BeforeAttackEventArgs args)
@@ -426,6 +438,23 @@ namespace Xerath
             }
         }
 
+        private static void Ping(Vector2 position)
+        {
+            if (Environment.TickCount - LastPingT < 30 * 1000) return;
+            LastPingT = Environment.TickCount;
+            PingLocation = position;
+            SimplePing();
+            Utility.DelayAction.Add(150, SimplePing);
+            Utility.DelayAction.Add(300, SimplePing);
+            Utility.DelayAction.Add(400, SimplePing);
+            Utility.DelayAction.Add(800, SimplePing);
+        }
+
+        private static void SimplePing()
+        {
+            Packet.S2C.Ping.Encoded(new Packet.S2C.Ping.Struct(PingLocation.X, PingLocation.Y, 0, 0, Packet.PingType.FallbackSound)).Process();
+        }
+
         private static void Game_OnGameUpdate(EventArgs args)
         {
             if (Player.IsDead) return;
@@ -442,6 +471,13 @@ namespace Xerath
                 return;
             }
 
+            if (R.IsReady() && Config.Item("PingRKillable").GetValue<bool>())
+            {
+                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsValidTarget() && (float)DamageLib.getDmg(h, DamageLib.SpellType.R) > h.Health))
+                {
+                    Ping(enemy.Position.To2D());
+                }
+            }
 
             if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
             {

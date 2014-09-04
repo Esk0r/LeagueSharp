@@ -2,7 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using LeagueSharp;
 using LeagueSharp.Common;
@@ -19,10 +21,28 @@ namespace TwistedFate
         private static Spell Q;
         private static float Qangle = 28*(float) Math.PI/180;
         private static Orbwalking.Orbwalker SOW;
-
+        private static Vector2 PingLocation;
+        private static int LastPingT = 0;
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
+        }
+
+        private static void Ping(Vector2 position)
+        {
+            if (Environment.TickCount - LastPingT < 30 * 1000) return;
+            LastPingT = Environment.TickCount;
+            PingLocation = position;
+            SimplePing();
+            Utility.DelayAction.Add(150, SimplePing);
+            Utility.DelayAction.Add(300, SimplePing);
+            Utility.DelayAction.Add(400, SimplePing);
+            Utility.DelayAction.Add(800, SimplePing);
+        }
+
+        private static void SimplePing()
+        {
+            Packet.S2C.Ping.Encoded(new Packet.S2C.Ping.Struct(PingLocation.X, PingLocation.Y, 0, 0, Packet.PingType.FallbackSound)).Process();
         }
 
         private static void Game_OnGameLoad(EventArgs args)
@@ -64,6 +84,10 @@ namespace TwistedFate
             r.AddItem(new MenuItem("AutoY", "Select yellow card after R").SetValue(true));
             Config.AddSubMenu(r);
 
+            var misc = new Menu("Misc", "Misc");
+            misc.AddItem(new MenuItem("PingLH", "Ping low health enemies (Only local)").SetValue(true));
+            Config.AddSubMenu(misc);
+
             //Damage after combo:
             var dmgAfterComboItem = new MenuItem("DamageAfterCombo", "Draw damage after combo").SetValue(true);
             Utility.HpBarDamageIndicator.DamageToUnit = ComboDamage;
@@ -89,6 +113,13 @@ namespace TwistedFate
             Drawing.OnDraw += Drawing_OnDraw;
             Drawing.OnEndScene += DrawingOnOnEndScene;
             Obj_AI_Hero.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
+            Orbwalking.BeforeAttack += OrbwalkingOnBeforeAttack;
+        }
+
+        private static void OrbwalkingOnBeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+            if(args.Target is Obj_AI_Hero)
+                args.Process = CardSelector.Status != SelectStatus.Selecting && Environment.TickCount - CardSelector.LastWSent > 300;
         }
 
         static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
@@ -227,7 +258,6 @@ namespace TwistedFate
             dmg += DamageLib.getDmg(hero, DamageLib.SpellType.E, DamageLib.StageType.ThirdDamage);
 
 
-
             if (Items.HasItem("ItemBlackfireTorch"))
             {
                 dmg += DamageLib.getDmg(hero, DamageLib.SpellType.DFG);
@@ -244,8 +274,12 @@ namespace TwistedFate
 
         private static void Game_OnGameUpdate(EventArgs args)
         {
+            if (Config.Item("PingLH").GetValue<bool>())
+                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsValidTarget() && ComboDamage(h) > h.Health))
+                {
+                    Ping(enemy.Position.To2D());
+                }
 
-            SOW.SetAttacks(CardSelector.Status != SelectStatus.Selecting && Environment.TickCount - CardSelector.LastWSent > 300);
             var combo = Config.Item("Combo").GetValue<KeyBind>().Active;
 
             //Select cards.
