@@ -738,6 +738,18 @@ namespace Evade
 
             #endregion
 
+            #region Orianna
+            
+            if (Object.Player.ChampionName == "Orianna")
+            {
+                spell = new ShieldData("Orianna E", SpellSlot.E, 100, 2); //idk about delay, this may be wrong
+                spell.CanShieldAllies = true;
+                spell.MaxRange = 1100;
+                Spell.Add(spell);
+            }
+            
+            #endregion
+            
             #endregion
         }
 
