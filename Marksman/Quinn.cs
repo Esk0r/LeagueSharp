@@ -28,6 +28,14 @@ namespace Marksman
 
             Q.SetSkillshot(0.25f, 160f, 1150, true, SkillshotType.SkillshotLine);
             E.SetTargetted(0.25f, 2000f);
+            
+            AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
+        }
+
+        public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
+        {
+            if (E.IsReady() && gapcloser.Sender.IsValidTarget(E.Range))
+                E.CastOnUnit(gapcloser.Sender);
         }
 
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
