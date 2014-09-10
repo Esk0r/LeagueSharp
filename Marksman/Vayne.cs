@@ -97,7 +97,7 @@ namespace Marksman
             };
             for (int i=0; i<gapcloser.Length; i++)
             {
-                menu.SubMenu("gap").AddItem(new MenuItem(gapcloser[i], gapcloser[i])).SetValue(true);
+                menu.SubMenu("gap").AddItem(new MenuItem(interrupt[i], interrupt[i])).SetValue(true);
             }
             for (int i = 0; i < notarget.Length; i++)
             {
@@ -105,7 +105,7 @@ namespace Marksman
             }
             for (int i = 0; i < interrupt.Length; i++)
             {
-                menu.SubMenu("int").AddItem(new MenuItem(interrupt[i], interrupt[i])).SetValue(true);
+                menu.SubMenu("int").AddItem(new MenuItem(notarget[i], notarget[i])).SetValue(true);
             }
         }
         
@@ -146,7 +146,7 @@ namespace Marksman
                 }
             }
             
-            if (menu.Item("UseEInterrupt").GetValue<bool>() && hero.IsValidTarget(550f))
+            if (menu.Item("UseEInterrupt").GetValue<bool>() && hero.IsValidTarget(550f) && menu.Item(args.SData.Name).GetValue<bool>())
             {
                 if (interrupt.Any(str => str.Contains(args.SData.Name)))
                 {
