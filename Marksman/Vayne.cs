@@ -26,21 +26,7 @@ namespace Marksman
 
             E.SetTargetted(0.25f, 2200f);
             Obj_AI_Base.OnProcessSpellCast += Game_ProcessSpell;
-            //AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
-            //Interrupter.OnPosibleToInterrupt += Interrupter_OnPosibleToInterrupt;
         }
-
-        //public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
-        //{
-        //    if (E.IsReady() && gapcloser.Sender.IsValidTarget(E.Range))
-        //        E.CastOnUnit(gapcloser.Sender);
-        //}
-
-        //public void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
-        //{
-        //    if (GetValue<bool>("UseEInterrupt") && unit.IsValidTarget(550f))
-        //        E.Cast(unit);
-        //}
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
@@ -128,33 +114,31 @@ namespace Marksman
             var t = SimpleTs.GetTarget(550, SimpleTs.DamageType.Physical);
             if (hero.IsMe)
             {
-                if (menu.Item("UseEaa").GetValue<KeyBind>().Active)
+                if (args.SData.Name.ToLower().Contains("attack"))
                 {
-                    if (args.SData.Name.ToLower().Contains("attack"))
+                    if (menu.Item("UseEaa").GetValue<KeyBind>().Active)
                     {
-                        if (menu.Item("UseEaa").GetValue<KeyBind>().Active)
-                        {
-                            E.Cast(t);
-                        }
-
-                        if (orbwalker.ActiveMode.ToString() == "Combo" && menu.Item("UseQC").GetValue<bool>())
-                        {
-                            var after = ObjectManager.Player.Position +
-                                        Normalize(Game.CursorPos - ObjectManager.Player.Position)*300;
-                            var disafter = Vector3.DistanceSquared(after, t.Position);
-                            if (disafter < 630*630 && disafter > 100*100)
-                            {
-                                Q.Cast(Game.CursorPos);
-                            }
-                            if (Vector3.DistanceSquared(t.Position, ObjectManager.Player.Position) > 630*630 &&
-                                disafter < 630*630)
-                            {
-                                Q.Cast(Game.CursorPos);
-                            }
-                        }
-
+                        E.Cast(t);
                     }
+
+                    if (orbwalker.ActiveMode.ToString() == "Combo" && menu.Item("UseQC").GetValue<bool>())
+                    {
+                        var after = ObjectManager.Player.Position +
+                            Normalize(Game.CursorPos - ObjectManager.Player.Position)*300;
+                        var disafter = Vector3.DistanceSquared(after, t.Position);
+                        if (disafter < 630*630 && disafter > 100*100)
+                        {
+                            Q.Cast(Game.CursorPos);
+                        }
+                        if (Vector3.DistanceSquared(t.Position, ObjectManager.Player.Position) > 630*630 &&
+                            disafter < 630*630)
+                        {
+                            Q.Cast(Game.CursorPos);
+                        }
+                    }
+
                 }
+                
 
                 if (args.SData.Name == "VayneCondemnMissile")
                 {
