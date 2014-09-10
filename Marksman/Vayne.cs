@@ -126,7 +126,7 @@ namespace Marksman
                         var after = ObjectManager.Player.Position +
                             Normalize(Game.CursorPos - ObjectManager.Player.Position)*300;
                         var disafter = Vector3.DistanceSquared(after, t.Position);
-                        if (disafter < 630*630 && disafter > 100*100)
+                        if (disafter < 630*630 && disafter > 175*175)
                         {
                             Q.Cast(Game.CursorPos);
                         }
