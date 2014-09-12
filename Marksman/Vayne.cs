@@ -23,6 +23,7 @@ namespace Marksman
 
             Q = new Spell(SpellSlot.Q, 0f);
             E = new Spell(SpellSlot.E, 550f);
+            QE = new Spell(SpellSlot.Q, 750f);
 
             E.SetTargetted(0.25f, 2200f);
             QE.SetTargetted(0.50f, 2200f);
@@ -42,6 +43,7 @@ namespace Marksman
             if (GetValue<bool>("UseEInterrupt") && unit.IsValidTarget(550f))
                 E.Cast(unit);
         }
+
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
@@ -71,6 +73,9 @@ namespace Marksman
 
         }
 
+
+
+
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
         {
             if (unit.IsMe && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo && GetValue<bool>("UseQC"))
@@ -86,8 +91,7 @@ namespace Marksman
                 return false;
             }
 
-            var hitbox = (int) enemy.BoundingRadius;
-            for (var i = 0; i < GetValue<Slider>("PushDistance").Value; i+=hitbox)
+            for (var i = 0; i < GetValue<Slider>("PushDistance").Value; i += (int)enemy.BoundingRadius)
             {
                 if (NavMesh.GetCollisionFlags(prediction.UnitPosition.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), -i).To3D()).HasFlag(CollisionFlags.Wall))
                 {
@@ -101,7 +105,7 @@ namespace Marksman
         public void CastTumble(Obj_AI_Hero target)
         {
 
-            var posAfterTumble = Game.CursorPos.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), -300).To3D();
+            var posAfterTumble = ObjectManager.Player.ServerPosition.To2D().Extend(Game.CursorPos.To2D(), 300).To3D();
             var distanceAfterTumble = Vector3.DistanceSquared(posAfterTumble, target.ServerPosition);
             if (distanceAfterTumble < 550*550 && distanceAfterTumble > 100*100)
             {
