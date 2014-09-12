@@ -1,9 +1,12 @@
 ﻿#region
 
 using System;
+using System.Drawing;
 using System.Linq;
+using System.Security.AccessControl;
 using LeagueSharp;
 using LeagueSharp.Common;
+using SharpDX;
 
 #endregion
 
@@ -13,15 +16,16 @@ namespace Marksman
     {
         public Spell E;
         public Spell Q;
-
+        public Spell QE;
         public Vayne()
         {
             Utils.PrintMessage("Vayne loaded");
 
             Q = new Spell(SpellSlot.Q, 0f);
-            E = new Spell(SpellSlot.E, float.MaxValue);
+            E = new Spell(SpellSlot.E, 550f);
 
             E.SetTargetted(0.25f, 2200f);
+            QE.SetTargetted(0.50f, 2200f);
 
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter.OnPosibleToInterrupt += Interrupter_OnPosibleToInterrupt;
@@ -45,34 +49,72 @@ namespace Marksman
                 ((Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo || !GetValue<bool>("UseEC")) &&
                  !GetValue<KeyBind>("UseET").Active)) return;
 
-            foreach (var hero in from hero in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsValidTarget(550f))
-                let prediction = E.GetPrediction(hero)
-                where NavMesh.GetCollisionFlags(
-                    prediction.UnitPosition.To2D()
-                        .Extend(ObjectManager.Player.ServerPosition.To2D(), -GetValue<Slider>("PushDistance").Value)
-                        .To3D())
-                    .HasFlag(CollisionFlags.Wall) || NavMesh.GetCollisionFlags(
-                        prediction.UnitPosition.To2D()
-                            .Extend(ObjectManager.Player.ServerPosition.To2D(),
-                                -(GetValue<Slider>("PushDistance").Value / 2))
-                            .To3D())
-                        .HasFlag(CollisionFlags.Wall)
-                select hero)
+            var normalTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+            var qeTarget = SimpleTs.GetTarget(200+E.Range, SimpleTs.DamageType.Physical);
+            if (normalTarget.IsValid)
             {
-                E.Cast(hero);
+                if (IsStunable(normalTarget))
+                {
+                    E.Cast(normalTarget);
+                }   
             }
+            else if (qeTarget.IsValid)
+            {
+                if (!IsStunable(qeTarget) || !GetValue<bool>("UseQEC") || !Q.IsReady())
+                {
+                    return;
+                }
+                Q.Cast(qeTarget);
+                Utility.DelayAction.Add(250, () => E.Cast(qeTarget));
+            }
+
+
         }
 
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
         {
             if (unit.IsMe && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo && GetValue<bool>("UseQC"))
+                CastTumble((Obj_AI_Hero) target);
+        }
+
+        public bool IsStunable(Obj_AI_Hero enemy)
+        {
+            var prediction = Vector3.DistanceSquared(enemy.ServerPosition, ObjectManager.Player.ServerPosition) > 550*550 ? QE.GetPrediction(enemy) : E.GetPrediction(enemy);
+            
+            if (prediction.Hitchance.Equals(HitChance.OutOfRange))
+            {
+                return false;
+            }
+
+            var hitbox = (int) enemy.BoundingRadius;
+            for (var i = 0; i < GetValue<Slider>("PushDistance").Value; i+=hitbox)
+            {
+                if (NavMesh.GetCollisionFlags(prediction.UnitPosition.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), -i).To3D()).HasFlag(CollisionFlags.Wall))
+                {
+                    return true;
+                }
+                
+            }
+            return false;
+        }
+
+        public void CastTumble(Obj_AI_Hero target)
+        {
+
+            var posAfterTumble = Game.CursorPos.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), -300).To3D();
+            var distanceAfterTumble = Vector3.DistanceSquared(posAfterTumble, target.ServerPosition);
+            if (distanceAfterTumble < 550*550 && distanceAfterTumble > 100*100)
+            {
                 Q.Cast(Game.CursorPos);
+            }
+
         }
 
         public override void ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
+            config.AddItem(new MenuItem("UseQEC" + Id, "Use QE if not in E range").SetValue(false));
         }
 
         public override void MiscMenu(Menu config)
