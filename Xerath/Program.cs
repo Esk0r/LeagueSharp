@@ -347,7 +347,7 @@ namespace Xerath
                     if (Environment.TickCount - RCharge.CastT <= 700) return;
 
                 if ((RCharge.Index != 0 && rTarget.Distance(RCharge.Position) > 1000))
-                    if (Environment.TickCount - RCharge.CastT <= Math.Max(2500, rTarget.Distance(RCharge.Position) - 1000)  ) return;
+                    if (Environment.TickCount - RCharge.CastT <= Math.Min(2500, rTarget.Distance(RCharge.Position) - 1000)) return;
 
                 switch (rMode)
                 {
