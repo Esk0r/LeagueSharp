@@ -196,6 +196,11 @@ namespace Evade
             //Check if the skillshot is already added.
             var alreadyAdded = false;
 
+            if (Config.Menu.Item("DisableFow").GetValue<bool>() && !skillshot.Unit.IsVisible)
+            {
+                return;
+            }
+                
             foreach (var item in DetectedSkillshots)
             {
                 if (item.SpellData.SpellName == skillshot.SpellData.SpellName &&

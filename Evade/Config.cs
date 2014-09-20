@@ -134,6 +134,10 @@ namespace Evade
             drawings.AddItem(new MenuItem("EnableDrawings", "Enabled").SetValue(true));
             Menu.AddSubMenu(drawings);
 
+            var misc = new Menu("Misc", "Misc");
+            misc.AddItem(new MenuItem("DisableFow", "Disable fog of war dodging").SetValue(false));
+            Menu.AddSubMenu(misc);
+
             Menu.AddItem(
                 new MenuItem("Enabled", "Enabled").SetValue(new KeyBind("K".ToCharArray()[0], KeyBindType.Toggle, true)));
 
