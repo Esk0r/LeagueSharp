@@ -275,7 +275,7 @@ namespace TwistedFate
         private static void Game_OnGameUpdate(EventArgs args)
         {
             if (Config.Item("PingLH").GetValue<bool>())
-                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsValidTarget() && ComboDamage(h) > h.Health))
+                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(h => ObjectManager.Player.Spellbook.CanUseSpell(SpellSlot.R) == SpellState.Ready && h.IsValidTarget() && ComboDamage(h) > h.Health))
                 {
                     Ping(enemy.Position.To2D());
                 }
