@@ -179,7 +179,7 @@ namespace Velkoz
             //Add the events we are going to use:
             Game.OnGameUpdate += Game_OnGameUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
-            Interrupter.OnPosibleToInterrupt += Interrupter_OnPosibleToInterrupt;
+            Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
             Game.OnGameSendPacket += Game_OnGameSendPacket;
             GameObject.OnCreate += Obj_SpellMissile_OnCreate;
             Game.PrintChat(ChampionName + " Loaded!");
@@ -211,7 +211,7 @@ namespace Velkoz
             }
         }
 
-        private static void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
+        private static void Interrupter_OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
         {
             if (!Config.Item("InterruptSpells").GetValue<bool>()) return;
 
