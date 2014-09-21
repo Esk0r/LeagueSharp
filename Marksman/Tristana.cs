@@ -25,7 +25,7 @@ namespace Marksman
             R = new Spell(SpellSlot.R, 703);
 
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
-            Interrupter.OnPosibleToInterrupt += Interrupter_OnPosibleToInterrupt;
+            Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
         }
 
         public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
@@ -34,7 +34,7 @@ namespace Marksman
                 R.CastOnUnit(gapcloser.Sender);
         }
 
-        public void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
+        public void Interrupter_OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
         {
             if (R.IsReady() && unit.IsValidTarget(R.Range) && GetValue<bool>("UseRMI"))
                 R.CastOnUnit(unit);
