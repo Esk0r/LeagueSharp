@@ -24,7 +24,7 @@ namespace Marksman
             E.SetTargetted(0.25f, 2200f);
 
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
-            Interrupter.OnPosibleToInterrupt += Interrupter_OnPosibleToInterrupt;
+            Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
         }
 
         public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
@@ -33,7 +33,7 @@ namespace Marksman
                 E.CastOnUnit(gapcloser.Sender);
         }
 
-        public void Interrupter_OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
+        public void Interrupter_OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
         {
             if (GetValue<bool>("UseEInterrupt") && unit.IsValidTarget(550f))
                 E.Cast(unit);
