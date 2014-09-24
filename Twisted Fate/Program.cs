@@ -23,6 +23,7 @@ namespace TwistedFate
         private static Orbwalking.Orbwalker SOW;
         private static Vector2 PingLocation;
         private static int LastPingT = 0;
+        private static Obj_AI_Hero Player;
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -48,7 +49,7 @@ namespace TwistedFate
         private static void Game_OnGameLoad(EventArgs args)
         {
             if (ObjectManager.Player.BaseSkinName != "TwistedFate") return;
-
+            Player = ObjectManager.Player;
             Q = new Spell(SpellSlot.Q, 1450);
             Q.SetSkillshot(0.25f, 40f, 1000f, false, SkillshotType.SkillshotLine);
 
@@ -253,9 +254,9 @@ namespace TwistedFate
         private static float ComboDamage(Obj_AI_Hero hero)
         {   
             var dmg = 0d;
-            dmg += DamageLib.getDmg(hero, DamageLib.SpellType.Q) * 2;
-            dmg += DamageLib.getDmg(hero, DamageLib.SpellType.W, DamageLib.StageType.ThirdDamage);
-            dmg += DamageLib.getDmg(hero, DamageLib.SpellType.E, DamageLib.StageType.ThirdDamage);
+            dmg += Player.GetSpellDamage(hero, SpellSlot.Q) * 2;
+            dmg += Player.GetSpellDamage(hero, SpellSlot.W);
+            dmg += Player.GetSpellDamage(hero, SpellSlot.Q);
 
 
             if (Items.HasItem("ItemBlackfireTorch"))
