@@ -76,7 +76,7 @@ namespace Marksman
                 {
                     if (castR ||
                         (GetValue<bool>("UseRC") &&
-                         DamageLib.getDmg(target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) >
+                         ObjectManager.Player.GetSpellDamage(target, SpellSlot.R, 1) >
                          target.Health))
                     {
                         R.Cast(target);

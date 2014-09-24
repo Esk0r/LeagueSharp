@@ -68,7 +68,7 @@ namespace Marksman
                             .Where(
                                 hero =>
                                     hero.IsValidTarget(Q.Range) &&
-                                    DamageLib.getDmg(hero, DamageLib.SpellType.Q) - 20 > hero.Health))
+                                    ObjectManager.Player.GetSpellDamage(hero, SpellSlot.Q) - 20 > hero.Health))
                     Q.CastOnUnit(hero);
             }
 

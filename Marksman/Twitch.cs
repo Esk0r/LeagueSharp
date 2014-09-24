@@ -83,7 +83,7 @@ namespace Marksman
                             .Where(
                                 hero =>
                                     hero.IsValidTarget(E.Range) &&
-                                    DamageLib.getDmg(hero, DamageLib.SpellType.E) - 15 > hero.Health))
+                                    ObjectManager.Player.GetSpellDamage(hero, SpellSlot.E) - 15 > hero.Health))
                     E.Cast();
             }
 
