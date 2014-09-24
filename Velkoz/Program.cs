@@ -237,20 +237,20 @@ namespace Velkoz
             var damage = 0d;
 
             if (Q.IsReady() && Q.GetCollision(ObjectManager.Player.ServerPosition.To2D(), new List<Vector2> { enemy.ServerPosition.To2D() }).Count == 0)
-                damage += DamageLib.getDmg(enemy, DamageLib.SpellType.Q);
+                damage += Player.GetSpellDamage(enemy, SpellSlot.Q);
 
             if (W.IsReady())
                 damage += W.Instance.Ammo *
-                          DamageLib.getDmg(enemy, DamageLib.SpellType.W, DamageLib.StageType.FirstDamage);
+                          Player.GetSpellDamage(enemy, SpellSlot.W);
 
             if (E.IsReady())
-                damage += DamageLib.getDmg(enemy, DamageLib.SpellType.E);
+                damage += Player.GetSpellDamage(enemy, SpellSlot.E);
 
             if (IgniteSlot != SpellSlot.Unknown && Player.SummonerSpellbook.CanUseSpell(IgniteSlot) == SpellState.Ready)
                 damage += DamageLib.getDmg(enemy, DamageLib.SpellType.IGNITE);
 
             if (R.IsReady())
-                damage += 7 * DamageLib.getDmg(enemy, DamageLib.SpellType.R);
+                damage += 7 * Player.GetSpellDamage(enemy, SpellSlot.R) / 10;
 
             return (float)damage;
         }
