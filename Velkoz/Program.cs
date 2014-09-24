@@ -247,7 +247,7 @@ namespace Velkoz
                 damage += Player.GetSpellDamage(enemy, SpellSlot.E);
 
             if (IgniteSlot != SpellSlot.Unknown && Player.SummonerSpellbook.CanUseSpell(IgniteSlot) == SpellState.Ready)
-                damage += DamageLib.getDmg(enemy, DamageLib.SpellType.IGNITE);
+                damage += Player.GetSummonerSpellDamage(enemy, Damage.SummonerSpell.Ignite);
 
             if (R.IsReady())
                 damage += 7 * Player.GetSpellDamage(enemy, SpellSlot.R) / 10;

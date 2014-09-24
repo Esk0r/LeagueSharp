@@ -282,7 +282,7 @@ namespace Syndra
                 damage += Player.GetSpellDamage(enemy, SpellSlot.Q);
 
             if (DFG.IsReady())
-                damage += DamageLib.getDmg(enemy, DamageLib.SpellType.DFG) / 1.2;
+                damage += Player.GetItemDamage(enemy, Damage.DamageItems.Dfg) / 1.2;
 
             if (W.IsReady())
                 damage += Player.GetSpellDamage(enemy, SpellSlot.W);
@@ -291,7 +291,7 @@ namespace Syndra
                 damage += Player.GetSpellDamage(enemy, SpellSlot.E);
 
             if (IgniteSlot != SpellSlot.Unknown && Player.SummonerSpellbook.CanUseSpell(IgniteSlot) == SpellState.Ready)
-                damage += DamageLib.getDmg(enemy, DamageLib.SpellType.IGNITE);
+                damage += ObjectManager.Player.GetSummonerSpellDamage(enemy, Damage.SummonerSpell.Ignite);
 
             if (R.IsReady())
                 damage += Math.Min(7, Player.Spellbook.GetSpell(SpellSlot.R).Ammo) * Player.GetSpellDamage(enemy, SpellSlot.R, 1);

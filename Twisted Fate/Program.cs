@@ -261,13 +261,13 @@ namespace TwistedFate
 
             if (Items.HasItem("ItemBlackfireTorch"))
             {
-                dmg += DamageLib.getDmg(hero, DamageLib.SpellType.DFG);
+                dmg += ObjectManager.Player.GetItemDamage(hero, Damage.DamageItems.Dfg);
                 dmg = dmg * 1.2;
             }
 
             if(ObjectManager.Player.GetSpellSlot("SummonerIgnite") != SpellSlot.Unknown)
             {
-                dmg += DamageLib.getDmg(hero, DamageLib.SpellType.IGNITE);
+                dmg += ObjectManager.Player.GetSummonerSpellDamage(hero, Damage.SummonerSpell.Ignite);
             }
 
             return (float) dmg;
