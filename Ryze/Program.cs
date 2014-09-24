@@ -104,7 +104,7 @@ namespace Ryze
 
             //Damage after combo:
             var dmgAfterComboItem = new MenuItem("DamageAfterCombo", "Draw damage after a rotation").SetValue(true);
-            Utility.HpBarDamageIndicator.DamageToUnit += hero => (float)(DamageLib.getDmg(hero, DamageLib.SpellType.Q) * 2 + DamageLib.getDmg(hero, DamageLib.SpellType.W) + DamageLib.getDmg(hero, DamageLib.SpellType.E) );
+            Utility.HpBarDamageIndicator.DamageToUnit += hero => (float)(Player.GetSpellDamage(hero, SpellSlot.Q) * 2 + Player.GetSpellDamage(hero, SpellSlot.W) + Player.GetSpellDamage(hero, SpellSlot.E));
             Utility.HpBarDamageIndicator.Enabled = dmgAfterComboItem.GetValue<bool>();
             dmgAfterComboItem.ValueChanged += delegate(object sender, OnValueChangeEventArgs eventArgs)
             {
@@ -202,7 +202,7 @@ namespace Ryze
                         }
                     }
                 }
-                else if (DamageLib.getDmg(target, DamageLib.SpellType.Q) > target.Health)
+                else if (Player.GetSpellDamage(target, SpellSlot.Q) > target.Health)
                 {
                     Q.CastOnUnit(target);
                 }
@@ -237,7 +237,7 @@ namespace Ryze
                     if (minion.IsValidTarget() &&
                         HealthPrediction.GetHealthPrediction(minion,
                             (int)(Player.Distance(minion) * 1000 / 1400)) <
-                         DamageLib.getDmg(minion, DamageLib.SpellType.Q) - 10)
+                         Player.GetSpellDamage(minion, SpellSlot.Q))
                     {
                         Q.CastOnUnit(minion);
                         return;
@@ -249,7 +249,7 @@ namespace Ryze
                 foreach (var minion in allMinions)
                 {
                     if (minion.IsValidTarget(W.Range) &&
-                        minion.Health <  DamageLib.getDmg(minion, DamageLib.SpellType.W) - 10)
+                        minion.Health < Player.GetSpellDamage(minion, SpellSlot.Q))
                     {
                         W.CastOnUnit(minion);
                         return;
@@ -263,7 +263,7 @@ namespace Ryze
                     if (minion.IsValidTarget(E.Range) &&
                         HealthPrediction.GetHealthPrediction(minion,
                             (int)(Player.Distance(minion) * 1000 / 1000)) <
-                        DamageLib.getDmg(minion, DamageLib.SpellType.E) - 10)
+                        Player.GetSpellDamage(minion, SpellSlot.Q) - 10)
                     {
                         E.CastOnUnit(minion);
                         return;
