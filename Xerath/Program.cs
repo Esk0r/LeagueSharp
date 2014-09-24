@@ -189,7 +189,7 @@ namespace Xerath
 
             //Damage after combo:
             var dmgAfterComboItem = new MenuItem("DamageAfterR", "Draw damage after 3xR").SetValue(true);
-            Utility.HpBarDamageIndicator.DamageToUnit += hero => (float)DamageLib.getDmg(hero, DamageLib.SpellType.R);
+            Utility.HpBarDamageIndicator.DamageToUnit += hero => (float)Player.GetSpellDamage(hero, SpellSlot.R) * 3;
             Utility.HpBarDamageIndicator.Enabled = dmgAfterComboItem.GetValue<bool>();
             dmgAfterComboItem.ValueChanged += delegate(object sender, OnValueChangeEventArgs eventArgs)
             {
@@ -473,7 +473,7 @@ namespace Xerath
 
             if (R.IsReady() && Config.Item("PingRKillable").GetValue<bool>())
             {
-                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsValidTarget() && (float)DamageLib.getDmg(h, DamageLib.SpellType.R) > h.Health))
+                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsValidTarget() && (float)Player.GetSpellDamage(h, SpellSlot.R) * 3 > h.Health))
                 {
                     Ping(enemy.Position.To2D());
                 }
