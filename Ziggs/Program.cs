@@ -248,10 +248,10 @@ namespace Ziggs
 
                     //R at close range
                     if (comboActive && useR && R.IsReady() &&
-                        (DamageLib.getDmg(target, DamageLib.SpellType.Q) +
-                         DamageLib.getDmg(target, DamageLib.SpellType.W) +
-                         DamageLib.getDmg(target, DamageLib.SpellType.E) +
-                         DamageLib.getDmg(target, DamageLib.SpellType.R) > target.Health) &&
+                        (ObjectManager.Player.GetSpellDamage(target, SpellSlot.Q) +
+                         ObjectManager.Player.GetSpellDamage(target, SpellSlot.W) +
+                         ObjectManager.Player.GetSpellDamage(target, SpellSlot.E) +
+                         ObjectManager.Player.GetSpellDamage(target, SpellSlot.R) > target.Health) &&
                         ObjectManager.Player.Distance(target) <= Q2.Range)
                     {
                         R.Delay = 2000 + 1500 * target.Distance(ObjectManager.Player) / 5300;
@@ -297,7 +297,7 @@ namespace Ziggs
 
                     //R if killable
                     if (comboActive && useR && R.IsReady() &&
-                        DamageLib.getDmg(target, DamageLib.SpellType.R) > target.Health)
+                        ObjectManager.Player.GetSpellDamage(target, SpellSlot.R) > target.Health)
                     {
                         R.Delay = 2000 + 1500 * target.Distance(ObjectManager.Player) / 5300;
                         R.Cast(target, true, true);
@@ -542,7 +542,7 @@ namespace Ziggs
                     {
                         if (!Orbwalking.InAutoAttackRange(minion))
                         {
-                            var Qdamage = DamageLib.getDmg(minion, DamageLib.SpellType.Q) * 0.75;
+                            var Qdamage = ObjectManager.Player.GetSpellDamage(minion, SpellSlot.Q) * 0.75;
 
                             if (Qdamage > Q1.GetHealthPrediction(minion))
                             {
