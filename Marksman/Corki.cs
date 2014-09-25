@@ -131,7 +131,7 @@ namespace Marksman
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
             config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(true));
-            config.AddItem(new MenuItem("RlimC" + Id, "Keep R Stacks").SetValue(new Slider(0, 0, 7)));
+            config.AddItem(new MenuItem("RlimC" + Id, "Keep R Stacks").SetValue(new Slider(0, 7, 0)));
         }
 
         public override void HarassMenu(Menu config)
@@ -139,7 +139,7 @@ namespace Marksman
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseEH" + Id, "Use E").SetValue(false));
             config.AddItem(new MenuItem("UseRH" + Id, "Use R").SetValue(true));
-            config.AddItem(new MenuItem("RlimH" + Id, "Keep R Stacks").SetValue(new Slider(3, 0, 7)));
+            config.AddItem(new MenuItem("RlimH" + Id, "Keep R Stacks").SetValue(new Slider(3, 7, 0)));
         }
 
         public override void DrawingMenu(Menu config)
