@@ -2416,7 +2416,30 @@ namespace Evade
                     CollisionObjects = new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.YasuoWall },
                 });
 
-            #endregion Shen
+            #endregion Sejuani
+
+            #region Soraka
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Soraka",
+                    SpellName = "SorakaQ",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotCircle,
+                    Delay = 500,
+                    Range = 950,
+                    Radius = 300,
+                    MissileSpeed = 1750,
+                    FixedRange = false,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "",
+                    CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
+                });
+
+            #endregion Soraka
 
             #region Shen
 
