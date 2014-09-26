@@ -29,50 +29,50 @@ namespace Marksman
                http://stackoverflow.com/questions/801070/dynamically-invoking-any-function-by-passing-function-name-as-string 
                For now stays cancer.
              */
-            var championName = ObjectManager.Player.ChampionName;
+            var championName = ObjectManager.Player.ChampionName.ToLowerInvariant();
 
             switch (championName)
             {
-                case "Caitlyn":
+                case "caitlyn":
                     CClass = new Caitlyn();
                     break;
-                case "Corki":
+                case "corki":
                     CClass = new Corki();
                     break;
-                case "Draven":
+                case "draven":
                     CClass = new Draven();
                     break;
-                case "Ezreal":
+                case "ezreal":
                     CClass = new Ezreal();
                     break;
-                case "Graves":
+                case "graves":
                     CClass = new Graves();
                     break;
-                case "Jinx":
+                case "jinx":
                     CClass = new Jinx();
                     break;
-                case "Kogmaw":
+                case "kogmaw":
                     CClass = new Kogmaw();
                     break;
-                case "Lucian":
+                case "lucian":
                     CClass = new Lucian();
                     break;
-                case "Quinn":
+                case "quinn":
                     CClass = new Quinn();
                     break;
-                case "Sivir":
+                case "sivir":
                     CClass = new Sivir();
                     break;
-                case "Teemo":
+                case "teemo":
                     CClass = new Teemo();
                     break;
-                case "Tristana":
+                case "tristana":
                     CClass = new Tristana();
                     break;
-                case "Twitch":
+                case "twitch":
                     CClass = new Twitch();
                     break;
-                case "Vayne":
+                case "vayne":
                     CClass = new Vayne();
                     break;
             }
