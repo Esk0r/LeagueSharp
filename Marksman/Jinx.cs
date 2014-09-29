@@ -137,9 +137,9 @@ namespace Marksman
 
                 if (target.IsValidTarget())
                 {
-                    if (DamageLib.getDmg(target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > target.Health)
+                    if (ObjectManager.Player.GetSpellDamage(target, SpellSlot.R) > target.Health)
                     {
-                        R.Cast(target, false, true);
+                        R.Cast(target, false);
                     }
                 }
             }
@@ -229,16 +229,16 @@ namespace Marksman
 
                     if (!checkRok)
                     {
-                        if (DamageLib.getDmg(t, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) > t.Health)
+                        if (ObjectManager.Player.GetSpellDamage(t, SpellSlot.R, 1) > t.Health)
                         {
-                            if (R.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted) { }
+                            if (R.Cast(t, false) == Spell.CastStates.SuccessfullyCasted) { }
                         }
                     }
                     else if (checkRok && distance > minR)
                     {
-                        var aDamage = DamageLib.getDmg(t, DamageLib.SpellType.AD);
-                        var wDamage = DamageLib.getDmg(t, DamageLib.SpellType.W, DamageLib.StageType.FirstDamage);
-                        var rDamage = DamageLib.getDmg(t, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage);
+                        var aDamage = ObjectManager.Player.GetAutoAttackDamage(t);
+                        var wDamage = ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
+                        var rDamage = ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
                         var powPowRange = GetRealPowPowRange(t);
 
                         if (distance < (powPowRange + QAddRange) && !(aDamage * 3.5 > t.Health))
@@ -250,7 +250,7 @@ namespace Marksman
                                     if (rDamage > t.Health && !ObjectManager.Player.IsAutoAttacking &&
                                         !ObjectManager.Player.IsChanneling)
                                     {
-                                        if (R.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted) { }
+                                        if (R.Cast(t, false) == Spell.CastStates.SuccessfullyCasted) { }
                                     }
                                 }
                             }
@@ -265,7 +265,7 @@ namespace Marksman
                                     if (rDamage > t.Health && !ObjectManager.Player.IsAutoAttacking &&
                                         !ObjectManager.Player.IsChanneling)
                                     {
-                                        if (R.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted) { }
+                                        if (R.Cast(t, false) == Spell.CastStates.SuccessfullyCasted) { }
                                     }
                                 }
                             }
