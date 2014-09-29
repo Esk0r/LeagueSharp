@@ -177,7 +177,7 @@ namespace Marksman
                     if (hasBotrk || hasCutGlass)
                     {
                         var itemId = hasCutGlass ? 3144 : 3153;
-                        var damage = DamageLib.getDmg(target, DamageLib.SpellType.BOTRK);
+                        var damage = ObjectManager.Player.GetItemDamage(target, Damage.DamageItems.Botrk);
                         if (hasCutGlass || ObjectManager.Player.Health + damage < ObjectManager.Player.MaxHealth)
                             Items.UseItem(itemId, target);
                     }
