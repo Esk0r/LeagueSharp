@@ -567,6 +567,7 @@ namespace Evade
             if (args.PacketData[0] == Packet.C2S.Move.Header)
             {
                 CutPathPoint = new Vector2();
+
                 //Don't block the movement packets if cant find an evade point.
                 if (NoSolutionFound)
                 {
@@ -575,6 +576,11 @@ namespace Evade
 
                 //Evading disabled
                 if (!Config.Menu.Item("Enabled").GetValue<KeyBind>().Active)
+                {
+                    return;
+                }
+
+                if (EvadeSpellDatabase.Spells.Any(evadeSpell => evadeSpell.Name == "Walking" && !evadeSpell.Enabled)) 
                 {
                     return;
                 }
