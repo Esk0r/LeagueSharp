@@ -160,23 +160,25 @@ namespace Marksman
             }
         }
 
-        public override void ComboMenu(Menu config)
+        public override bool ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
             config.AddItem(new MenuItem("UseETC" + Id, "Do not Under Turret E").SetValue(true));
             config.AddItem(new MenuItem("UseETK" + Id, "Use E Under Turret If Enemy Killable")
                 .SetValue(true));
+            return true;
         }
 
-        public override void HarassMenu(Menu config)
+        public override bool HarassMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseEH" + Id, "Use E").SetValue(true));
             config.AddItem(new MenuItem("UseETH" + Id, "Do not Under Turret E").SetValue(true));
+            return true;
         }
 
-        public override void DrawingMenu(Menu config)
+        public override bool DrawingMenu(Menu config)
         {
             config.AddItem(
                 new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true,
@@ -184,6 +186,7 @@ namespace Marksman
             config.AddItem(
                 new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(false,
                     System.Drawing.Color.FromArgb(100, 255, 255, 255))));
+            return true;
         }
     }
 }

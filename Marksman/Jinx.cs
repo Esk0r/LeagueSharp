@@ -382,25 +382,28 @@ namespace Marksman
                     .FirstOrDefault();
         }
 
-        public override void ComboMenu(Menu config)
+        public override bool ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
             config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(true));
+            return true;
         }
 
-        public override void HarassMenu(Menu config)
+        public override bool HarassMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(false));
+            return true;
         }
 
-        public override void LaneClearMenu(Menu config)
+        public override bool LaneClearMenu(Menu config)
         {
             config.AddItem(new MenuItem("SwapQ" + Id, "Always swap to Minigun").SetValue(false));
+            return true;
         }
 
-        public override void MiscMenu(Menu config)
+        public override bool MiscMenu(Menu config)
         {
             config.AddItem(new MenuItem("SwapDistance" + Id, "Swap Q for distance").SetValue(true));
             config.AddItem(new MenuItem("SwapAOE" + Id, "Swap Q for AOE").SetValue(false));
@@ -414,15 +417,17 @@ namespace Marksman
             config.AddItem(new MenuItem("ROverKill" + Id, "Check R Overkill").SetValue(true));
             config.AddItem(new MenuItem("MinRRange" + Id, "Min R range").SetValue(new Slider(300, 0, 1500)));
             config.AddItem(new MenuItem("MaxRRange" + Id, "Max R range").SetValue(new Slider(1700, 0, 4000)));
+            return true;
         }
 
-        public override void DrawingMenu(Menu config)
+        public override bool DrawingMenu(Menu config)
         {
             config.AddItem(
                 new MenuItem("DrawQBound" + Id, "Draw Q bound").SetValue(
                     new Circle(true, Color.FromArgb(100, 255, 0, 0))));
             config.AddItem(
                 new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(false, Color.FromArgb(100, 255, 255, 255))));
+            return true;
         }
     }
 }

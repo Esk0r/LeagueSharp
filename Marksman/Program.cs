@@ -98,20 +98,35 @@ namespace Marksman
             // If Champion is supported draw the extra menus
             if (BaseType != CClass.GetType())
             {
-                var combo = Config.AddSubMenu(new Menu("Combo", "Combo"));
-                CClass.ComboMenu(combo);
+                var combo = new Menu("Combo", "Combo");
+                if (CClass.ComboMenu(combo))
+                {
+                    Config.AddSubMenu(combo);
+                }
 
-                var harass = Config.AddSubMenu(new Menu("Harass", "Harass"));
-                CClass.HarassMenu(harass);
+                var harass = new Menu("Harass", "Harass");
+                if (CClass.HarassMenu(harass))
+                {
+                    Config.AddSubMenu(harass);
+                }
 
-                var laneclear = Config.AddSubMenu(new Menu("LaneClear", "LaneClear"));
-                CClass.LaneClearMenu(laneclear);
+                var laneclear = new Menu("LaneClear", "LaneClear");
+                if (CClass.LaneClearMenu(laneclear))
+                {
+                    Config.AddSubMenu(laneclear);
+                }
 
-                var misc = Config.AddSubMenu(new Menu("Misc", "Misc"));
-                CClass.MiscMenu(misc);
+                var misc = new Menu("Misc", "Misc");
+                if (CClass.MiscMenu(misc))
+                {
+                    Config.AddSubMenu(misc);
+                }
 
-                var drawing = Config.AddSubMenu(new Menu("Drawings", "Drawings"));
-                CClass.DrawingMenu(drawing);
+                var drawing = new Menu("Drawings", "Drawings");
+                if (CClass.DrawingMenu(drawing))
+                {
+                    Config.AddSubMenu(drawing);
+                }
             }
 
 

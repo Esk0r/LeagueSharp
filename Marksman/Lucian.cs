@@ -156,23 +156,23 @@ namespace Marksman
             }
         }
 
-        public override void ComboMenu(Menu config)
+        public override bool ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
             config.AddItem(new MenuItem("UseQExtendedC" + Id, "Use Extended Q").SetValue(true));
+            return true;
         }
 
-        public override void HarassMenu(Menu config)
+        public override bool HarassMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
             config.AddItem(new MenuItem("UseQExtendedH" + Id, "Use Extended Q").SetValue(true));
+            return true;
         }
 
-        public override void MiscMenu(Menu config) { }
-
-        public override void DrawingMenu(Menu config)
+        public override bool DrawingMenu(Menu config)
         {
             config.AddItem(
                 new MenuItem("DrawQ" + Id, "Q range").SetValue(
@@ -181,6 +181,7 @@ namespace Marksman
             config.AddItem(
                 new MenuItem("DrawW" + Id, "W range").SetValue(
                     new Circle(false, System.Drawing.Color.FromArgb(100, 255, 255, 255))));
+            return true;
         }
     }
 }
