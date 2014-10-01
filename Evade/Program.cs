@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
@@ -47,12 +48,19 @@ namespace Evade
         public static Vector2 PreviousTickPosition = new Vector2();
         private static bool _recalculate;
         private static readonly Random RandomN = new Random();
+        private static int LastSentMovePacketT = 0;
 
         public static bool Evading
         {
             get { return _evading; } //
             set
             {
+                if (value == true)
+                {
+                    LastSentMovePacketT = 0;
+                    ObjectManager.Player.SendMovePacket(EvadePoint);
+                }
+
                 _evading = value;
                 if (value == false && !_recalculate)
                 {
@@ -62,6 +70,7 @@ namespace Evade
                         AfterEvadePoint = new Vector2();
                     }
                 }
+                
                 _recalculate = false;
             }
         }
@@ -525,7 +534,11 @@ namespace Evade
                 }
                 else
                 {
-                    ObjectManager.Player.SendMovePacket(EvadePoint);
+                    if (Environment.TickCount - LastSentMovePacketT > 1000/15)
+                    {
+                        LastSentMovePacketT = Environment.TickCount;
+                        ObjectManager.Player.SendMovePacket(EvadePoint);
+                    }
                     return;
                 }
             }
