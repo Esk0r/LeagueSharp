@@ -92,31 +92,35 @@ namespace Marksman
                 R.Cast(t);
         }
 
-        public override void ComboMenu(Menu config)
+        public override bool ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
+            return true;
         }
 
-        public override void HarassMenu(Menu config)
+        public override bool HarassMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
+            return true;
         }
 
-        public override void MiscMenu(Menu config)
+        public override bool MiscMenu(Menu config)
         {
             config.AddItem(
                 new MenuItem("CastR" + Id, "Cast R (2000 Range)").SetValue(new KeyBind("T".ToCharArray()[0],
                     KeyBindType.Press)));
+            return true;
         }
 
-        public override void DrawingMenu(Menu config)
+        public override bool DrawingMenu(Menu config)
         {
             config.AddItem(
                 new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
             config.AddItem(
                 new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(false, Color.FromArgb(100, 255, 255, 255))));
+            return true;
         }
     }
 }

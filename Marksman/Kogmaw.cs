@@ -131,25 +131,27 @@ namespace Marksman
                 select buff.Count).FirstOrDefault();
         }
 
-        public override void ComboMenu(Menu config)
+        public override bool ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
             config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(true));
             config.AddItem(new MenuItem("RlimC" + Id, "R Limiter").SetValue(new Slider(3, 5, 1)));
+            return true;
         }
 
-        public override void HarassMenu(Menu config)
+        public override bool HarassMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(false));
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(false));
             config.AddItem(new MenuItem("UseEH" + Id, "Use E").SetValue(false));
             config.AddItem(new MenuItem("UseRH" + Id, "Use R").SetValue(true));
             config.AddItem(new MenuItem("RlimH" + Id, "R Limiter").SetValue(new Slider(1, 5, 1)));
+            return true;
         }
 
-        public override void DrawingMenu(Menu config)
+        public override bool DrawingMenu(Menu config)
         {
             config.AddItem(
                 new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true,
@@ -163,11 +165,13 @@ namespace Marksman
             config.AddItem(
                 new MenuItem("DrawR" + Id, "R range").SetValue(new Circle(false,
                     System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+            return true;
         }
 
-        public override void MiscMenu(Menu config)
+        public override bool MiscMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseRM" + Id, "Use R To Killsteal").SetValue(true));
+            return true;
         }
     }
 }

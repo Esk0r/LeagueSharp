@@ -94,30 +94,34 @@ namespace Marksman
                 R.CastOnUnit(hero);
         }
 
-        public override void ComboMenu(Menu config)
+        public override bool ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
+            return true;
         }
 
-        public override void HarassMenu(Menu config)
+        public override bool HarassMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(false));
             config.AddItem(new MenuItem("UseEH" + Id, "Use E").SetValue(true));
+            return true;
         }
 
-        public override void DrawingMenu(Menu config)
+        public override bool DrawingMenu(Menu config)
         {
             config.AddItem(
                 new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
+            return true;
 
         }
 
-        public override void MiscMenu(Menu config)
+        public override bool MiscMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseRM" + Id, "Use R KillSteal").SetValue(true));
             config.AddItem(new MenuItem("UseRMG" + Id, "Use R Gapclosers").SetValue(true));
             config.AddItem(new MenuItem("UseRMI" + Id, "Use R Interrupt").SetValue(true));
+            return true;
         }
     }
 }

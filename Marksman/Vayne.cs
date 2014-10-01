@@ -69,13 +69,14 @@ namespace Marksman
                 Q.Cast(Game.CursorPos);
         }
 
-        public override void ComboMenu(Menu config)
+        public override bool ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
+            return true;
         }
 
-        public override void MiscMenu(Menu config)
+        public override bool MiscMenu(Menu config)
         {
             config.AddItem(
                 new MenuItem("UseET" + Id, "Use E (Toggle)").SetValue(
@@ -83,6 +84,7 @@ namespace Marksman
             config.AddItem(new MenuItem("UseEInterrupt" + Id, "Use E To Interrupt").SetValue(true));
             config.AddItem(
                 new MenuItem("PushDistance" + Id, "E Push Distance").SetValue(new Slider(425, 475, 300)));
+            return true;
         }
     }
 }

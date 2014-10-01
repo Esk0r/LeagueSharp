@@ -1572,12 +1572,12 @@ namespace Evade
 
             #endregion Khazix
 
-            #region KogMaw
+            #region Kogmaw
 
             Spells.Add(
                 new SpellData
                 {
-                    ChampionName = "KogMaw",
+                    ChampionName = "Kogmaw",
                     SpellName = "KogMawQ",
                     Slot = SpellSlot.Q,
                     Type = SkillShotType.SkillshotMissileLine,
@@ -1599,7 +1599,7 @@ namespace Evade
             Spells.Add(
                 new SpellData
                 {
-                    ChampionName = "KogMaw",
+                    ChampionName = "Kogmaw",
                     SpellName = "KogMawVoidOoze",
                     Slot = SpellSlot.E,
                     Type = SkillShotType.SkillshotMissileLine,
@@ -1618,7 +1618,7 @@ namespace Evade
             Spells.Add(
                 new SpellData
                 {
-                    ChampionName = "KogMaw",
+                    ChampionName = "Kogmaw",
                     SpellName = "KogMawLivingArtillery",
                     Slot = SpellSlot.R,
                     Type = SkillShotType.SkillshotCircle,
@@ -1633,7 +1633,7 @@ namespace Evade
                     MissileSpellName = "KogMawLivingArtillery",
                 });
 
-            #endregion KogMaw
+            #endregion Kogmaw
 
             #region Leblanc
 
@@ -2416,7 +2416,30 @@ namespace Evade
                     CollisionObjects = new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.YasuoWall },
                 });
 
-            #endregion Shen
+            #endregion Sejuani
+
+            #region Soraka
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Soraka",
+                    SpellName = "SorakaQ",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotCircle,
+                    Delay = 500,
+                    Range = 950,
+                    Radius = 300,
+                    MissileSpeed = 1750,
+                    FixedRange = false,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "",
+                    CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
+                });
+
+            #endregion Soraka
 
             #region Shen
 

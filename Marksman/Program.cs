@@ -29,50 +29,50 @@ namespace Marksman
                http://stackoverflow.com/questions/801070/dynamically-invoking-any-function-by-passing-function-name-as-string 
                For now stays cancer.
              */
-            var championName = ObjectManager.Player.ChampionName;
+            var championName = ObjectManager.Player.ChampionName.ToLowerInvariant();
 
             switch (championName)
             {
-                case "Caitlyn":
+                case "caitlyn":
                     CClass = new Caitlyn();
                     break;
-                case "Corki":
+                case "corki":
                     CClass = new Corki();
                     break;
-                case "Draven":
+                case "draven":
                     CClass = new Draven();
                     break;
-                case "Ezreal":
+                case "ezreal":
                     CClass = new Ezreal();
                     break;
-                case "Graves":
+                case "graves":
                     CClass = new Graves();
                     break;
-                case "Jinx":
+                case "jinx":
                     CClass = new Jinx();
                     break;
-                case "KogMaw":
+                case "kogmaw":
                     CClass = new Kogmaw();
                     break;
-                case "Lucian":
+                case "lucian":
                     CClass = new Lucian();
                     break;
-                case "Quinn":
+                case "quinn":
                     CClass = new Quinn();
                     break;
-                case "Sivir":
+                case "sivir":
                     CClass = new Sivir();
                     break;
-                case "Teemo":
+                case "teemo":
                     CClass = new Teemo();
                     break;
-                case "Tristana":
+                case "tristana":
                     CClass = new Tristana();
                     break;
-                case "Twitch":
+                case "twitch":
                     CClass = new Twitch();
                     break;
-                case "Vayne":
+                case "vayne":
                     CClass = new Vayne();
                     break;
             }
@@ -98,20 +98,35 @@ namespace Marksman
             // If Champion is supported draw the extra menus
             if (BaseType != CClass.GetType())
             {
-                var combo = Config.AddSubMenu(new Menu("Combo", "Combo"));
-                CClass.ComboMenu(combo);
+                var combo = new Menu("Combo", "Combo");
+                if (CClass.ComboMenu(combo))
+                {
+                    Config.AddSubMenu(combo);
+                }
 
-                var harass = Config.AddSubMenu(new Menu("Harass", "Harass"));
-                CClass.HarassMenu(harass);
+                var harass = new Menu("Harass", "Harass");
+                if (CClass.HarassMenu(harass))
+                {
+                    Config.AddSubMenu(harass);
+                }
 
-                var laneclear = Config.AddSubMenu(new Menu("LaneClear", "LaneClear"));
-                CClass.LaneClearMenu(laneclear);
+                var laneclear = new Menu("LaneClear", "LaneClear");
+                if (CClass.LaneClearMenu(laneclear))
+                {
+                    Config.AddSubMenu(laneclear);
+                }
 
-                var misc = Config.AddSubMenu(new Menu("Misc", "Misc"));
-                CClass.MiscMenu(misc);
+                var misc = new Menu("Misc", "Misc");
+                if (CClass.MiscMenu(misc))
+                {
+                    Config.AddSubMenu(misc);
+                }
 
-                var drawing = Config.AddSubMenu(new Menu("Drawings", "Drawings"));
-                CClass.DrawingMenu(drawing);
+                var drawing = new Menu("Drawings", "Drawings");
+                if (CClass.DrawingMenu(drawing))
+                {
+                    Config.AddSubMenu(drawing);
+                }
             }
 
 
@@ -177,7 +192,7 @@ namespace Marksman
                     if (hasBotrk || hasCutGlass)
                     {
                         var itemId = hasCutGlass ? 3144 : 3153;
-                        var damage = DamageLib.getDmg(target, DamageLib.SpellType.BOTRK);
+                        var damage = ObjectManager.Player.GetItemDamage(target, Damage.DamageItems.Botrk);
                         if (hasCutGlass || ObjectManager.Player.Health + damage < ObjectManager.Player.MaxHealth)
                             Items.UseItem(itemId, target);
                     }

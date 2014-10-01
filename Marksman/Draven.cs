@@ -230,20 +230,22 @@ namespace Marksman
             }
         }
 
-        public override void ComboMenu(Menu config)
+        public override bool ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC", "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWC", "Use W").SetValue(true));
             config.AddItem(new MenuItem("UseEC", "Use E").SetValue(true));
             config.AddItem(new MenuItem("UseRC", "Use R").SetValue(true));
+            return true;
         }
 
-        public override void HarassMenu(Menu config)
+        public override bool HarassMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQH", "Use Q").SetValue(true));
+            return true;
         }
 
-        public override void DrawingMenu(Menu config)
+        public override bool DrawingMenu(Menu config)
         {
             config.AddItem(
                 new MenuItem("DrawE", "E range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
@@ -253,9 +255,10 @@ namespace Marksman
             config.AddItem(
                 new MenuItem("DrawOrbwalk", "Draw orbwalk position").SetValue(new Circle(true, Color.Yellow)));
             config.AddItem(new MenuItem("DrawReticles", "Draw on reticles").SetValue(new Circle(true, Color.Green)));
+            return true;
         }
 
-        public override void MiscMenu(Menu config)
+        public override bool MiscMenu(Menu config)
         {
             config.AddItem(new MenuItem("maxqamount", "Max Qs to use simultaneous").SetValue(new Slider(2, 4, 1)));
             config.AddItem(new MenuItem("EGapCloser", "Auto E Gap closers").SetValue(true));
@@ -264,6 +267,7 @@ namespace Marksman
                 .SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press));
             config.AddItem(new MenuItem("Epeel", "Peel self with E").SetValue(true));
             config.AddItem(new MenuItem("CatchRadius", "Axe catch radius").SetValue(new Slider(600, 200, 1000)));
+            return true;
         }
 
         public static int QBuffCount()

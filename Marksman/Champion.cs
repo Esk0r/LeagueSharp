@@ -22,28 +22,34 @@ namespace Marksman
             return Config.Item(item + Id).GetValue<T>();
         }
 
-        public virtual void ComboMenu(Menu config)
+        public virtual bool ComboMenu(Menu config)
         {
+            return false;
         }
 
-        public virtual void HarassMenu(Menu config)
+        public virtual bool HarassMenu(Menu config)
         {
+            return false;
         }
 
-        public virtual void LaneClearMenu(Menu config)
+        public virtual bool LaneClearMenu(Menu config)
         {
+            return false;
         }
 
-        public virtual void MiscMenu(Menu config)
+        public virtual bool MiscMenu(Menu config)
         {
+            return false;
         }
 
-        public virtual void DrawingMenu(Menu config)
+        public virtual bool DrawingMenu(Menu config)
         {
+            return false;
         }
 
-        public virtual void MainMenu(Menu config)
+        public virtual bool MainMenu(Menu config)
         {
+            return false;
         }
 
         public virtual void Drawing_OnDraw(EventArgs args)
