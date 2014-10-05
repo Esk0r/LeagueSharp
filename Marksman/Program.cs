@@ -33,6 +33,9 @@ namespace Marksman
 
             switch (championName)
             {
+                case "ashe":
+                    CClass = new Ashe();
+                    break;
                 case "caitlyn":
                     CClass = new Caitlyn();
                     break;
