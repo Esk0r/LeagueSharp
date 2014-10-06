@@ -16,6 +16,8 @@ namespace Marksman
         public static Spell Q2;
         public static Spell W;
 
+        public static bool DoubleHit = false;
+
         public Lucian()
         {
             Utils.PrintMessage("Lucian loaded.");
@@ -26,11 +28,35 @@ namespace Marksman
 
             Q.SetSkillshot(0.25f, 65f, 1200f, false, SkillshotType.SkillshotLine);
             W.SetSkillshot(0.15f, 80f, 1000f, true, SkillshotType.SkillshotLine);
+
+            Obj_AI_Base.OnProcessSpellCast += Game_OnProcessSpell;
         }
 
-        public bool LucianHasPassive
+        public void Game_OnProcessSpell(Obj_AI_Base unit, GameObjectProcessSpellCastEventArgs spell)
         {
-            get { return ObjectManager.Player.Buffs.Any(buff => buff.Name == "lucianpassivebuff"); }
+            if (unit.IsMe)
+            {
+                if (!spell.SData.Name.Contains("summoner"))
+                {
+                    if (spell.SData.Name.Contains("Lucian") && spell.SData.Name.Contains("Attack")) return;
+
+                    DoubleHit = true;
+
+                    Utility.DelayAction.Add(6000, () =>
+                    {
+                        if (DoubleHit)
+                            DoubleHit = !DoubleHit;
+                    });
+                }
+            }
+        }
+
+        public bool LucianHasPassive()
+        {
+            if (ObjectManager.Player.HasBuff("lucianpassivebuff"))
+                DoubleHit = true;
+
+            return DoubleHit;
         }
 
         public static Obj_AI_Base QMinion
@@ -57,12 +83,15 @@ namespace Marksman
 
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
         {
+            Utility.DelayAction.ActionList.Clear();
+            DoubleHit = false;
+
             if ((!ComboActive && !HarassActive) || !unit.IsMe || (!(target is Obj_AI_Hero)))
             {
                 return;
             }
 
-            if (GetValue<bool>("UseQ" + (ComboActive ? "C" : "H")) && Q.IsReady() && !LucianHasPassive)
+            if (GetValue<bool>("UseQ" + (ComboActive ? "C" : "H")) && Q.IsReady() && !LucianHasPassive())
             {
                 Q.CastOnUnit(target);
             }
@@ -98,6 +127,7 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
+            Game.PrintChat("Passive Active: " + (LucianHasPassive() ? "True" : "False"));
             if (!ComboActive && !HarassActive)
             {
                 return;
@@ -127,7 +157,7 @@ namespace Marksman
                     Q.CastOnUnit(QMinion);
                 }
             }
-            else if (Q.IsReady() && useQ && !LucianHasPassive)
+            else if (Q.IsReady() && useQ && !LucianHasPassive())
             {
                 var vTarget = Orbwalker.GetTarget() ?? SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
                 if (vTarget != null)
@@ -143,7 +173,7 @@ namespace Marksman
                 {
                     if (ObjectManager.Player.Distance(vTarget) <= ObjectManager.Player.AttackRange)
                     {
-                        if (!LucianHasPassive)
+                        if (!LucianHasPassive())
                         {
                             W.Cast(vTarget);
                         }
