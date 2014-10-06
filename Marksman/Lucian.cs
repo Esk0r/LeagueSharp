@@ -127,7 +127,6 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            Game.PrintChat("Passive Active: " + (LucianHasPassive() ? "True" : "False"));
             if (!ComboActive && !HarassActive)
             {
                 return;
