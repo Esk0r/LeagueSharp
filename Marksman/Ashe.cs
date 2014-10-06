@@ -35,7 +35,7 @@ namespace Marksman
 
         public void Game_OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
         {
-            if (R.IsReady() && Config.Item("RInterruptable").GetValue<bool>() && unit.IsValidTarget(1500))
+            if (R.IsReady() && Config.Item("RInterruptable" + Id).GetValue<bool>() && unit.IsValidTarget(1500))
             {
                 R.Cast(unit);
             }
@@ -50,13 +50,13 @@ namespace Marksman
 
                 if (spell.SData.Name.ToLower() == "frostarrow")
                 {
-                    if (LaneClearActive && Config.Item("DeactivateQ").GetValue<bool>()) return;
+                    if (LaneClearActive && Config.Item("DeactivateQ" + Id).GetValue<bool>()) return;
 
                     Q.Cast();
                 }
             }
 
-            if (!Config.Item("EFlash").GetValue<bool>() || unit.Team == ObjectManager.Player.Team) return;
+            if (!Config.Item("EFlash" + Id).GetValue<bool>() || unit.Team == ObjectManager.Player.Team) return;
 
             if (spell.SData.Name.ToLower() == "summonerflash")
                 E.Cast(spell.End);
@@ -64,13 +64,13 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            var drawW = Config.Item("DrawW").GetValue<Circle>();
+            var drawW = Config.Item("DrawW" + Id).GetValue<Circle>();
             if (drawW.Active)
             {
                 Utility.DrawCircle(ObjectManager.Player.Position, W.Range, drawW.Color);
             }
 
-            var drawE = Config.Item("DrawE").GetValue<Circle>();
+            var drawE = Config.Item("DrawE" + Id).GetValue<Circle>();
             if (drawE.Active)
             {
                 Utility.DrawCircle(ObjectManager.Player.Position, E.Range, drawE.Color);
@@ -85,13 +85,13 @@ namespace Marksman
                 var target = SimpleTs.GetTarget(1200, SimpleTs.DamageType.Physical);
                 if (target == null) return;
 
-                if (!Config.Item("QExploit").GetValue<bool>() && !IsQActive() && Config.Item("UseQC").GetValue<bool>())
+                if (!Config.Item("QExploit" + Id).GetValue<bool>() && !IsQActive() && Config.Item("UseQC" + Id).GetValue<bool>())
                     Q.Cast();
 
-                if (Config.Item("UseWC").GetValue<bool>() && W.IsReady())
+                if (Config.Item("UseWC" + Id).GetValue<bool>() && W.IsReady())
                     W.Cast(target);
 
-                if (Config.Item("UseRC").GetValue<bool>() && R.IsReady())
+                if (Config.Item("UseRC" + Id).GetValue<bool>() && R.IsReady())
                 {
                     var rTarget = SimpleTs.GetTarget(1500, SimpleTs.DamageType.Physical);
 
@@ -106,21 +106,24 @@ namespace Marksman
             if (HarassActive)
             {
                 var target = SimpleTs.GetTarget(1200, SimpleTs.DamageType.Physical);
-                if (target == null) return;
+                var mana = ObjectManager.Player.MaxMana * (Config.Item("ManaH" + Id).GetValue<Slider>().Value / 100.0);
 
-                if (!Config.Item("QExploit").GetValue<bool>() && !IsQActive() && Config.Item("UseQH").GetValue<bool>())
+                if (target == null) return;
+                if (!(ObjectManager.Player.Mana > mana)) return;
+
+                if (!Config.Item("QExploit" + Id).GetValue<bool>() && !IsQActive() && Config.Item("UseQH" + Id).GetValue<bool>())
                     Q.Cast();
 
-                if (Config.Item("UseWH").GetValue<bool>() && W.IsReady())
+                if (Config.Item("UseWH" + Id).GetValue<bool>() && W.IsReady())
                     W.Cast(target);
             }
 
             //Lane Clear
-            if (LaneClearActive && Config.Item("DeactivateQ").GetValue<bool>() && IsQActive())
+            if (LaneClearActive && Config.Item("DeactivateQ" + Id).GetValue<bool>() && IsQActive())
                 Q.Cast();
 
             //Manual cast R
-            if (Config.Item("RManualCast").GetValue<KeyBind>().Active)
+            if (Config.Item("RManualCast" + Id).GetValue<KeyBind>().Active)
             {
                 var rTarget = SimpleTs.GetTarget(2000, SimpleTs.DamageType.Physical);
                 R.Cast(rTarget);
@@ -129,49 +132,50 @@ namespace Marksman
 
         public override void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
         {
-            if (LaneClearActive && Config.Item("DeactivateQ").GetValue<bool>()) return;
+            if (LaneClearActive && Config.Item("DeactivateQ" + Id).GetValue<bool>()) return;
 
-            if ((Config.Item("QExploit").GetValue<bool>() && !IsQActive()))
+            if ((Config.Item("QExploit" + Id).GetValue<bool>() && !IsQActive()))
                 Q.Cast();
         }
 
         public override bool ComboMenu(Menu config)
         {
-            config.AddItem(new MenuItem("UseQC", "Use Q").SetValue(true));
-            config.AddItem(new MenuItem("UseWC", "Use W").SetValue(true));
-            config.AddItem(new MenuItem("UseRC", "Use R").SetValue(true));
+            config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
+            config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
+            config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(true));
             return true;
         }
 
         public override bool HarassMenu(Menu config)
         {
-            config.AddItem(new MenuItem("UseQH", "Use Q").SetValue(true));
-            config.AddItem(new MenuItem("UseWH", "Use W").SetValue(true));
+            config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
+            config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
+            config.AddItem(new MenuItem("ManaH" + Id, "Min. Mana Percent").SetValue(new Slider()));
             return true;
         }
 
         public override bool LaneClearMenu(Menu config)
         {
-            config.AddItem(new MenuItem("DeactivateQ", "Always deactivate Frost Arrow").SetValue(false));
+            config.AddItem(new MenuItem("DeactivateQ" + Id, "Always deactivate Frost Arrow").SetValue(false));
             return true;
         }
 
         public override bool DrawingMenu(Menu config)
         {
             config.AddItem(
-                new MenuItem("DrawW", "W range").SetValue(new Circle(true, Color.CornflowerBlue)));
+                new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(true, Color.CornflowerBlue)));
             config.AddItem(
-                new MenuItem("DrawE", "E range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
+                new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
             return true;
         }
 
         public override bool MiscMenu(Menu config)
         {
-            config.AddItem(new MenuItem("QExploit", "Use Q Exploit").SetValue(true));
-            config.AddItem(new MenuItem("RInterruptable", "Auto R Interruptable Spells").SetValue(true));
-            config.AddItem(new MenuItem("EFlash", "Use E against Flashes").SetValue(true));
-            config.AddItem(new MenuItem("RManualCast", "Cast R Manually(2000 range)"))
-                .SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press));
+            config.AddItem(new MenuItem("QExploit" + Id, "Use Q Exploit").SetValue(true));
+            config.AddItem(new MenuItem("RInterruptable" + Id, "Auto R Interruptable Spells").SetValue(true));
+            config.AddItem(new MenuItem("EFlash" + Id, "Use E against Flashes").SetValue(true));
+            config.AddItem(new MenuItem("RManualCast" + Id, "Cast R Manually(2000 range)"))
+                .SetValue(new KeyBind('T', KeyBindType.Press));
             return true;
         }
 
