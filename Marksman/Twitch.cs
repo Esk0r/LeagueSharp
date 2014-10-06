@@ -14,31 +14,29 @@ namespace Marksman
     {
         public Spell W;
         public Spell E;
-        public int ExpungeBuffStacks = 0;
 
         public Twitch()
         {
             Utils.PrintMessage("Twitch loaded.");
 
             W = new Spell(SpellSlot.W, 950);
-            W.SetSkillshot(0.25f, 120f, 1400f, true, SkillshotType.SkillshotCircle);
+            W.SetSkillshot(0.25f, 120f, 1400f, false, SkillshotType.SkillshotCircle);
             E = new Spell(SpellSlot.E, 1200);
         }
 
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
         {
-            if ((ComboActive || HarassActive) && unit.IsMe && (target is Obj_AI_Hero))
-            {
-                var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
+            if ((!ComboActive && !HarassActive) || !unit.IsMe || (!(target is Obj_AI_Hero))) return;
 
-                if (useW && W.IsReady())
-                    W.Cast(target, false, true);
-            }
+            var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
+
+            if (useW && W.IsReady())
+                W.Cast(target, false, true);
         }
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { W};
+            Spell[] spellList = { W };
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -53,46 +51,41 @@ namespace Marksman
             {
                 var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
                 var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
-                
+
                 if (useW)
                 {
                     var wTarget = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
                     if (W.IsReady() && wTarget.IsValidTarget())
                         W.Cast(wTarget, false, true);
                 }
-                
-                if (useE)
+
+                if (useE && E.IsReady())
                 {
                     var eTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
-                    //foreach (var buff in eTarget.Buffs) { Game.PrintChat(buff.DisplayName); }
-                    if (E.IsReady() && eTarget.IsValidTarget() && eTarget.HasBuff("TwitchDeadlyVenom"))
-                    ExpungeBuffStacks = (from buff in eTarget.Buffs
-                                 where buff.DisplayName.ToLower() == "twitchdeadlyvenom"
-                                 select buff.Count).FirstOrDefault();
-                    if (ExpungeBuffStacks > 5)
-                       E.Cast();
-                     
+                    if (eTarget.IsValidTarget(E.Range))
+                    {
+                        foreach (var buff in eTarget.Buffs.Where(buff => buff.DisplayName.ToLower() == "twitchdeadlyvenom").Where(buff => buff.Count == 6))
+                        {
+                            E.Cast();
+                        }
+                    }
+                    
                 }
             }
 
             if (GetValue<bool>("UseEM") && E.IsReady())
             {
-                foreach (
-                    var hero in
-                        ObjectManager.Get<Obj_AI_Hero>()
-                            .Where(
-                                hero =>
-                                    hero.IsValidTarget(E.Range) &&
-                                    ObjectManager.Player.GetSpellDamage(hero, SpellSlot.E) - 15 > hero.Health))
+                foreach (var hero in ObjectManager.Get<Obj_AI_Hero>().Where(hero => ObjectManager.Player.GetSpellDamage(hero, SpellSlot.E) - 10 > hero.Health))
+                {
                     E.Cast();
+                }
             }
-
         }
 
         public override bool ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
-            config.AddItem(new MenuItem("UseEC" + Id, "Use E max Stacks").SetValue(false));
+            config.AddItem(new MenuItem("UseEC" + Id, "Use E max Stacks").SetValue(true));
             return true;
         }
 
