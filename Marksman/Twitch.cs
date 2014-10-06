@@ -75,7 +75,7 @@ namespace Marksman
 
             if (GetValue<bool>("UseEM") && E.IsReady())
             {
-                foreach (var hero in ObjectManager.Get<Obj_AI_Hero>().Where(hero => ObjectManager.Player.GetSpellDamage(hero, SpellSlot.E) - 10 > hero.Health))
+                foreach (var hero in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsValidTarget(E.Range) && (ObjectManager.Player.GetSpellDamage(hero, SpellSlot.E) - 10 > hero.Health)))
                 {
                     E.Cast();
                 }
