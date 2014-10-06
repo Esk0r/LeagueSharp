@@ -47,6 +47,13 @@ namespace Marksman
             {
                 if (spell.SData.Name.ToLower() == "frostshot")
                     QActive = !QActive;
+
+                if (spell.SData.Name.ToLower() == "frostarrow")
+                {
+                    if (LaneClearActive && Config.Item("DeactivateQ").GetValue<bool>()) return;
+
+                    Q.Cast();
+                }
             }
 
             if (!Config.Item("EFlash").GetValue<bool>() || unit.Team == ObjectManager.Player.Team) return;
@@ -125,15 +132,6 @@ namespace Marksman
             if (LaneClearActive && Config.Item("DeactivateQ").GetValue<bool>()) return;
 
             if ((Config.Item("QExploit").GetValue<bool>() && !IsQActive()))
-                Q.Cast();
-        }
-
-        public void Orbwalking_OnAttack(Obj_AI_Base unit, Obj_AI_Base target)
-        {
-            if (!unit.IsMe) return;
-            if (LaneClearActive && Config.Item("DeactivateQ").GetValue<bool>()) return;
-
-            if (Config.Item("QExploit").GetValue<bool>() && IsQActive())
                 Q.Cast();
         }
 
