@@ -1,7 +1,6 @@
-﻿#region
+#region
 
 using System;
-using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using Color = System.Drawing.Color;
@@ -18,18 +17,19 @@ namespace Marksman
         public static Spell E;
         public static Spell R;
 
+        public static bool QActive = false;
+
         public Ashe()
         {
             Q = new Spell(SpellSlot.Q);
             W = new Spell(SpellSlot.W, 1200);
             E = new Spell(SpellSlot.E, 2500);
             R = new Spell(SpellSlot.R, 20000);
-            W.SetSkillshot(250f, 24.32f, 902f, true, SkillshotType.SkillshotCone);
+            W.SetSkillshot(250f, (float)(24.32f * Math.PI / 180), 902f, true, SkillshotType.SkillshotCone);
             E.SetSkillshot(377f, 299f, 1400f, false, SkillshotType.SkillshotLine);
             R.SetSkillshot(250f, 130f, 1600f, false, SkillshotType.SkillshotLine);
             Interrupter.OnPossibleToInterrupt += Game_OnPossibleToInterrupt;
             Obj_AI_Base.OnProcessSpellCast += Game_OnProcessSpell;
-            Orbwalking.OnAttack += Orbwalking_OnAttack;
             Utils.PrintMessage("Ashe loaded.");
         }
 
@@ -43,9 +43,15 @@ namespace Marksman
 
         public void Game_OnProcessSpell(Obj_AI_Base unit, GameObjectProcessSpellCastEventArgs spell)
         {
-            if (!Config.Item("EFlash").GetValue<bool>() || unit.Team != ObjectManager.Player.Team || unit.Type != ObjectManager.Player.Type) return;
+            if (unit.IsMe)
+            {
+                if (spell.SData.Name.ToLower() == "frostshot")
+                    QActive = !QActive;
+            }
 
-            if (spell.SData.Name == "SummonerFlash")
+            if (!Config.Item("EFlash").GetValue<bool>() || unit.Team == ObjectManager.Player.Team) return;
+
+            if (spell.SData.Name.ToLower() == "summonerflash")
                 E.Cast(spell.End);
         }
 
@@ -173,7 +179,10 @@ namespace Marksman
 
         public static bool IsQActive()
         {
-            return ObjectManager.Player.Buffs.Where(buff => buff.Name == "FrostShot" && buff.IsActive).Select(buff => buff.IsActive).FirstOrDefault() || ObjectManager.Player.HasBuff("FrostShot");
+            if (ObjectManager.Player.HasBuff("FrostShot"))
+                QActive = true;
+
+            return QActive;
         }
     }
 }
