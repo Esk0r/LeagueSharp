@@ -150,7 +150,7 @@ namespace Marksman
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
-            config.AddItem(new MenuItem("ManaH" + Id, "Min. Mana Percent").SetValue(new Slider()));
+            config.AddItem(new MenuItem("ManaH" + Id, "Min Mana Percent").SetValue(new Slider()));
             return true;
         }
 
