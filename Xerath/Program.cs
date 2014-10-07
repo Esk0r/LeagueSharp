@@ -123,7 +123,6 @@ namespace Xerath
             Config.SubMenu("Combo").AddItem(new MenuItem("UseQCombo", "Use Q").SetValue(true));
             Config.SubMenu("Combo").AddItem(new MenuItem("UseWCombo", "Use W").SetValue(true));
             Config.SubMenu("Combo").AddItem(new MenuItem("UseECombo", "Use E").SetValue(true));
-            Config.SubMenu("Combo").AddItem(new MenuItem("UseRCombo", "Use R").SetValue(true));
             Config.SubMenu("Combo")
                 .AddItem(
                     new MenuItem("ComboActive", "Combo!").SetValue(
@@ -131,6 +130,7 @@ namespace Xerath
 
             //Misc
             Config.AddSubMenu(new Menu("R", "R"));
+            Config.SubMenu("R").AddItem(new MenuItem("EnableRUsage", "Auto use charges").SetValue(true));
             Config.SubMenu("R").AddItem(new MenuItem("rMode", "Mode").SetValue(new StringList(new[] { "Normal", "Custom delays", "OnTap"})));
             Config.SubMenu("R").AddItem(new MenuItem("rModeKey", "OnTap key").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
             Config.SubMenu("R").AddSubMenu(new Menu("Custom delays", "Custom delays"));
@@ -336,7 +336,7 @@ namespace Xerath
 
         private static void WhileCastingR()
         {
-            if(!Config.Item("UseRCombo").GetValue<bool>()) return;
+            if (!Config.Item("EnableRUsage").GetValue<bool>()) return;
             var rMode = Config.Item("rMode").GetValue<StringList>().SelectedIndex;
 
             var rTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Magical);
