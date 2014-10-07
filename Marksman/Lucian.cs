@@ -37,12 +37,12 @@ namespace Marksman
             if (!unit.IsMe) return;
             if (spell.SData.Name.Contains("summoner")) return;
 
-            if (spell.SData.Name.Contains("Lucian") && spell.SData.Name.Contains("Attack"))
+            if (spell.SData.Name.ToLower() == "lucianpassiveattack")
             {
                 DoubleHit = false;
                 Utility.DelayAction.ActionList.Clear();
             }
-            else if (!spell.SData.Name.Contains("Lucian") && !spell.SData.Name.Contains("Attack"))
+            else if (!spell.SData.Name.Contains("Attack"))
             {
                 DoubleHit = true;
                 Orbwalking.ResetAutoAttackTimer();
@@ -179,7 +179,7 @@ namespace Marksman
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
             config.AddItem(new MenuItem("UseQExtendedH" + Id, "Use Extended Q").SetValue(true));
-            config.AddItem(new MenuItem("ManaH" + Id, "Min. Mana Percent").SetValue(new Slider()));
+            config.AddItem(new MenuItem("ManaH" + Id, "Min Mana Percent").SetValue(new Slider()));
             return true;
         }
 
