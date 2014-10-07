@@ -96,6 +96,7 @@
     <Compile Include="Tristana.cs" />
     <Compile Include="Twitch.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="Varus.cs" />
     <Compile Include="Vayne.cs" />
   </ItemGroup>
   <ItemGroup>
