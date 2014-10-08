@@ -50,7 +50,7 @@ namespace Marksman
                 Utility.DelayAction.Add(6000, () =>
                 {
                     if (DoubleHit)
-                        DoubleHit = !DoubleHit;
+                        DoubleHit = false;
                 });
             }
         }
@@ -60,7 +60,7 @@ namespace Marksman
             if (ObjectManager.Player.HasBuff("lucianpassivebuff"))
                 DoubleHit = true;
 
-            return DoubleHit;
+            return Config.Item("Passive" + Id).GetValue<bool>() && DoubleHit;
         }
 
         public static Obj_AI_Base QMinion
@@ -127,17 +127,13 @@ namespace Marksman
                 Config.Item("GHOSTBLADE")
                     .SetValue(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Name == "LucianR");
 
-            if (!Orbwalking.CanMove(100)) return;
-
             if (Q.IsReady() && useQExtended)
             {
                 var vTarget = Orbwalker.GetTarget() ?? SimpleTs.GetTarget(Q2.Range, SimpleTs.DamageType.Physical);
 
                 if (vTarget == null || QMinion == null) return;
 
-                if (useQ && ObjectManager.Player.Distance(vTarget) <= Q.Range && !LucianHasPassive())
-                    Q.CastOnUnit(vTarget);
-                else if (useQ && ObjectManager.Player.Distance(vTarget) > Q.Range)
+                if (ObjectManager.Player.Distance(vTarget) > Q.Range)
                     Q.CastOnUnit(QMinion);
             }
 
@@ -180,6 +176,12 @@ namespace Marksman
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
             config.AddItem(new MenuItem("UseQExtendedH" + Id, "Use Extended Q").SetValue(true));
             config.AddItem(new MenuItem("ManaH" + Id, "Min Mana Percent").SetValue(new Slider()));
+            return true;
+        }
+
+        public override bool MiscMenu(Menu config)
+        {
+            config.AddItem(new MenuItem("Passive" + Id, "Take in consideration Passive").SetValue(true));
             return true;
         }
 
