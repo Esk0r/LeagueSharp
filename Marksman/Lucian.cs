@@ -44,8 +44,13 @@ namespace Marksman
             }
             else if (!spell.SData.Name.Contains("Attack"))
             {
-                DoubleHit = true;
                 Orbwalking.ResetAutoAttackTimer();
+
+                if (ObjectManager.Get<Obj_AI_Hero>().Any(target => ObjectManager.Player.Distance(target) > ObjectManager.Player.AttackRange ||
+                    (spell.SData.Name.ToLower() == "luciane" && target.Distance(spell.End) > ObjectManager.Player.AttackRange)))
+                        return;
+
+                DoubleHit = true;
 
                 Utility.DelayAction.Add(6000, () =>
                 {
@@ -55,12 +60,9 @@ namespace Marksman
             }
         }
 
-        public bool LucianHasPassive()
+        public bool LucianHasPassive
         {
-            if (ObjectManager.Player.HasBuff("lucianpassivebuff"))
-                DoubleHit = true;
-
-            return Config.Item("Passive" + Id).GetValue<bool>() && DoubleHit;
+            get { return Config.Item("Passive" + Id).GetValue<bool>() && DoubleHit; }
         }
 
         public static Obj_AI_Base QMinion
@@ -137,13 +139,14 @@ namespace Marksman
                     Q.CastOnUnit(QMinion);
             }
 
-            if (Q.IsReady() && useQ && !LucianHasPassive())
+            if (Q.IsReady() && useQ)
             {
                 var vTarget = Orbwalker.GetTarget() ?? SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
 
                 if (vTarget == null) return;
 
-                Q.Cast(vTarget);
+                if (!LucianHasPassive)
+                    Q.Cast(vTarget);
             }
 
             if (W.IsReady() && useW)
@@ -152,12 +155,7 @@ namespace Marksman
 
                 if (vTarget == null) return;
 
-                if (ObjectManager.Player.Distance(vTarget) <= ObjectManager.Player.AttackRange)
-                {
-                    if (!LucianHasPassive())
-                        W.Cast(vTarget);
-                }
-                else
+                if (!LucianHasPassive)
                     W.Cast(vTarget);
             }
         }
