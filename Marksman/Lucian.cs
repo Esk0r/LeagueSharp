@@ -146,7 +146,7 @@ namespace Marksman
                 if (vTarget == null) return;
 
                 if (!LucianHasPassive)
-                    Q.Cast(vTarget);
+                    Q.CastOnUnit(vTarget);
             }
 
             if (W.IsReady() && useW)
