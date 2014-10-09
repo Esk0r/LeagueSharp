@@ -22,12 +22,12 @@ namespace Marksman
         {
             Utils.PrintMessage("Lucian loaded.");
 
-            Q = new Spell(SpellSlot.Q, 630);
+            Q = new Spell(SpellSlot.Q, 675);
             Q2 = new Spell(SpellSlot.Q, 1100);
             W = new Spell(SpellSlot.W, 1000);
 
             Q.SetSkillshot(0.25f, 65f, 1100f, false, SkillshotType.SkillshotLine);
-            W.SetSkillshot(0.15f, 80f, 1000f, true, SkillshotType.SkillshotLine);
+            W.SetSkillshot(0.30f, 80f, 1600f, true, SkillshotType.SkillshotLine);
 
             Obj_AI_Base.OnProcessSpellCast += Game_OnProcessSpell;
         }
@@ -37,32 +37,32 @@ namespace Marksman
             if (!unit.IsMe) return;
             if (spell.SData.Name.Contains("summoner")) return;
 
-            if (spell.SData.Name.ToLower() == "lucianpassiveattack")
+            if (spell.SData.Name.Contains("Attack"))
             {
-                DoubleHit = false;
-                Utility.DelayAction.ActionList.Clear();
+                Utility.DelayAction.Add(50, () =>
+                {
+                    DoubleHit = false;
+                    Utility.DelayAction.ActionList.Clear();
+                });
+
             }
-            else if (!spell.SData.Name.Contains("Attack"))
+            else if (spell.SData.Name.Contains("Lucian") && !spell.SData.Name.Contains("Attack"))
             {
                 Orbwalking.ResetAutoAttackTimer();
-
-                if (ObjectManager.Get<Obj_AI_Hero>().Any(target => ObjectManager.Player.Distance(target) > ObjectManager.Player.AttackRange ||
-                    (spell.SData.Name.ToLower() == "luciane" && target.Distance(spell.End) > ObjectManager.Player.AttackRange)))
-                        return;
-
-                DoubleHit = true;
 
                 Utility.DelayAction.Add(6000, () =>
                 {
                     if (DoubleHit)
                         DoubleHit = false;
                 });
+
+                DoubleHit = true;
             }
         }
 
-        public bool LucianHasPassive
+        public bool LucianHasPassive()
         {
-            get { return Config.Item("Passive" + Id).GetValue<bool>() && DoubleHit; }
+            return Config.Item("Passive" + Id).GetValue<bool>() && DoubleHit;
         }
 
         public static Obj_AI_Base QMinion
@@ -119,11 +119,11 @@ namespace Marksman
         {
             var mana = ObjectManager.Player.MaxMana * (Config.Item("ManaH" + Id).GetValue<Slider>().Value / 100.0);
 
-            if ((!ComboActive && !HarassActive) || HarassActive && !(ObjectManager.Player.Mana > mana)) return;
+            if ((!ComboActive && !HarassActive) || (HarassActive && !(ObjectManager.Player.Mana > mana))) return;
 
-            var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-            var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
-            var useQExtended = GetValue<bool>("UseQExtended" + (ComboActive ? "C" : "H"));
+            var useQ = Config.Item("UseQ" + (ComboActive ? "C" : "H") + Id).GetValue<bool>();
+            var useW = Config.Item("UseW" + (ComboActive ? "C" : "H") + Id).GetValue<bool>();
+            var useQExtended = Config.Item("UseQExtended" + (ComboActive ? "C" : "H") + Id).GetValue<bool>();
 
             if (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Level > 0)
                 Config.Item("GHOSTBLADE")
@@ -131,9 +131,9 @@ namespace Marksman
 
             if (Q.IsReady() && useQExtended)
             {
-                var vTarget = Orbwalker.GetTarget() ?? SimpleTs.GetTarget(Q2.Range, SimpleTs.DamageType.Physical);
+                var vTarget = SimpleTs.GetTarget(Q2.Range, SimpleTs.DamageType.Physical);
 
-                if (vTarget == null || QMinion == null) return;
+                if (!vTarget.IsValidTarget() || !QMinion.IsValidTarget()) return;
 
                 if (ObjectManager.Player.Distance(vTarget) > Q.Range)
                     Q.CastOnUnit(QMinion);
@@ -141,21 +141,25 @@ namespace Marksman
 
             if (Q.IsReady() && useQ)
             {
-                var vTarget = Orbwalker.GetTarget() ?? SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                var vTarget = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
 
-                if (vTarget == null) return;
+                if (!vTarget.IsValidTarget()) return;
 
-                if (!LucianHasPassive)
+                if (!LucianHasPassive())
                     Q.CastOnUnit(vTarget);
             }
 
             if (W.IsReady() && useW)
             {
-                var vTarget = Orbwalker.GetTarget() ?? SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
+                var vTarget = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
 
-                if (vTarget == null) return;
-
-                if (!LucianHasPassive)
+                if (!vTarget.IsValidTarget()) return;
+                if (ObjectManager.Player.Distance(vTarget) <= ObjectManager.Player.AttackRange)
+                {
+                    if (!LucianHasPassive())
+                        W.Cast(vTarget);
+                }
+                else
                     W.Cast(vTarget);
             }
         }
@@ -173,7 +177,7 @@ namespace Marksman
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
             config.AddItem(new MenuItem("UseQExtendedH" + Id, "Use Extended Q").SetValue(true));
-            config.AddItem(new MenuItem("ManaH" + Id, "Min Mana Percent").SetValue(new Slider()));
+            config.AddItem(new MenuItem("ManaH" + Id, "Min Mana").SetValue(new Slider(50)));
             return true;
         }
 
