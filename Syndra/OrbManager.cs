@@ -20,6 +20,8 @@ namespace Syndra
         public static int tmpWOrbT;
         public static Vector3 tmpWOrbPos = new Vector3();
 
+        public static bool ActiveRecv = false;
+        public static Byte Activebyte = 0x00;
 
         static OrbManager()
         {
@@ -58,12 +60,24 @@ namespace Syndra
                 packet.Position = 1;
                 var networkId = packet.ReadInteger();
                 var leByte = packet.ReadByte();
-                var active = (leByte == 0x01 || leByte == 0xDD || leByte == 0xDF || leByte == 0xDB);
+                var active = (leByte == 0x01);
                 
-                if (active)
+                if (ActiveRecv)
+                {
+                    Activebyte = leByte;
+                }
+
+                ActiveRecv = active;
+
+                if (ActiveRecv || leByte == Activebyte)
+                {
                     WObjectNetworkId = networkId;
+                }
                 else
+                {
                     WObjectNetworkId = -1;
+                    Activebyte = 0x00;
+                }  
             }
         }
 
