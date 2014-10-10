@@ -56,7 +56,7 @@ namespace TwistedFate
                 Select = card;
                 if (Environment.TickCount - LastWSent > 200)
                 {
-                    if (ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W))
+                    if (ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W, ObjectManager.Player))
                         LastWSent = Environment.TickCount;
                 }
             }
@@ -87,7 +87,7 @@ namespace TwistedFate
                 packet.Position = 1;
                 if (packet.ReadInteger() == ObjectManager.Player.NetworkId)
                 {
-                    packet.Position = 7;
+                    packet.Position = 11;
                     var id = packet.ReadByte();
                     switch (id)
                     {
