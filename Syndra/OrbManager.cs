@@ -52,12 +52,13 @@ namespace Syndra
 
         private static void Game_OnGameProcessPacket(GamePacketEventArgs args)
         {
-            if (args.PacketData[0] == 113)
+            if (args.PacketData[0] == 0x71)
             {
                 var packet = new GamePacket(args.PacketData);
                 packet.Position = 1;
                 var networkId = packet.ReadInteger();
-                var active = packet.ReadByte() == 1;
+                var leByte = packet.ReadByte();
+                var active = (leByte == 0x01 || leByte == 0xDD);
 
                 if (active)
                     WObjectNetworkId = networkId;
