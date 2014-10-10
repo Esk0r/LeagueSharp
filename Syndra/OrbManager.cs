@@ -58,8 +58,8 @@ namespace Syndra
                 packet.Position = 1;
                 var networkId = packet.ReadInteger();
                 var leByte = packet.ReadByte();
-                var active = (leByte == 0x01 || leByte == 0xDD);
-
+                var active = (leByte == 0x01 || leByte == 0xDD || leByte == 0xDF);
+                Game.PrintChat(leByte.ToString("X"));
                 if (active)
                     WObjectNetworkId = networkId;
                 else
