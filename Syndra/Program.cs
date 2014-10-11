@@ -320,8 +320,8 @@ namespace Syndra
                 }
 
             //W
-            if (useW && W.IsReady())
-                if (Player.Spellbook.GetSpell(SpellSlot.W).ToggleState == 1 && qeTarget != null)
+            if (useW)
+                if (Player.Spellbook.GetSpell(SpellSlot.W).ToggleState == 1 && W.IsReady() && qeTarget != null)
                 {
                     //WObject
                     var gObjectPos = GetGrabableObjectPos(wTarget == null);
@@ -332,18 +332,14 @@ namespace Syndra
                         W.LastCastAttemptT = Environment.TickCount;
                     }
                 }
-                else if (wTarget != null && Player.Spellbook.GetSpell(SpellSlot.W).ToggleState != 1 &&
+                else if (wTarget != null && Player.Spellbook.GetSpell(SpellSlot.W).ToggleState != 1 && W.IsReady() &&
                          Environment.TickCount - W.LastCastAttemptT > Game.Ping + 100)
                 {
-                    if (W.InRange(wTarget.Position))
-                    {
-                        W.Cast(wTarget);
-                    }
-                    /*if (OrbManager.WObject(false) != null)
+                    if (OrbManager.WObject(false) != null)
                     {
                         W.From = OrbManager.WObject(false).ServerPosition;
                         W.Cast(wTarget, false, true);
-                    }*/
+                    }
                 }
 
             if (rTarget != null)
