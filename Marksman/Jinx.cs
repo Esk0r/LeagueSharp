@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 using System.Drawing;
@@ -22,7 +22,7 @@ namespace Marksman
         {
             Utils.PrintMessage("Jinx by [Credits in Github] loaded.");
 
-            Q = new Spell(SpellSlot.Q, float.MaxValue);
+            Q = new Spell(SpellSlot.Q);
             W = new Spell(SpellSlot.W, 1500f);
             E = new Spell(SpellSlot.E, 900f);
             R = new Spell(SpellSlot.R, 25000f);
@@ -39,7 +39,7 @@ namespace Marksman
 
         private static bool FishBoneActive
         {
-            get { return Math.Abs(ObjectManager.Player.AttackRange - 525f) > float.Epsilon; }
+            get { return ObjectManager.Player.AttackRange > 565f; }
         }
 
         private static int PowPowStacks
@@ -139,7 +139,7 @@ namespace Marksman
                 {
                     if (ObjectManager.Player.GetSpellDamage(target, SpellSlot.R) > target.Health)
                     {
-                        R.Cast(target, false);
+                        R.Cast(target);
                     }
                 }
             }
@@ -231,10 +231,10 @@ namespace Marksman
                     {
                         if (ObjectManager.Player.GetSpellDamage(t, SpellSlot.R, 1) > t.Health)
                         {
-                            if (R.Cast(t, false) == Spell.CastStates.SuccessfullyCasted) { }
+                            if (R.Cast(t) == Spell.CastStates.SuccessfullyCasted) { }
                         }
                     }
-                    else if (checkRok && distance > minR)
+                    else if (distance > minR)
                     {
                         var aDamage = ObjectManager.Player.GetAutoAttackDamage(t);
                         var wDamage = ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
@@ -250,7 +250,7 @@ namespace Marksman
                                     if (rDamage > t.Health && !ObjectManager.Player.IsAutoAttacking &&
                                         !ObjectManager.Player.IsChanneling)
                                     {
-                                        if (R.Cast(t, false) == Spell.CastStates.SuccessfullyCasted) { }
+                                        if (R.Cast(t) == Spell.CastStates.SuccessfullyCasted) { }
                                     }
                                 }
                             }
@@ -265,7 +265,7 @@ namespace Marksman
                                     if (rDamage > t.Health && !ObjectManager.Player.IsAutoAttacking &&
                                         !ObjectManager.Player.IsChanneling)
                                     {
-                                        if (R.Cast(t, false) == Spell.CastStates.SuccessfullyCasted) { }
+                                        if (R.Cast(t) == Spell.CastStates.SuccessfullyCasted) { }
                                     }
                                 }
                             }
@@ -426,7 +426,7 @@ namespace Marksman
                 new MenuItem("DrawQBound" + Id, "Draw Q bound").SetValue(
                     new Circle(true, Color.FromArgb(100, 255, 0, 0))));
             config.AddItem(
-                new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(false, Color.FromArgb(100, 255, 255, 255))));
+                new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(false, Color.CornflowerBlue)));
             return true;
         }
     }
