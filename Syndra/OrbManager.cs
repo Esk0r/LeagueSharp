@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 using System.Collections.Generic;
@@ -20,6 +20,8 @@ namespace Syndra
         public static int tmpWOrbT;
         public static Vector3 tmpWOrbPos = new Vector3();
 
+        public static bool ActiveRecv = false;
+        public static Byte Activebyte = 0x00;
 
         static OrbManager()
         {
@@ -52,17 +54,30 @@ namespace Syndra
 
         private static void Game_OnGameProcessPacket(GamePacketEventArgs args)
         {
-            if (args.PacketData[0] == 113)
+            if (args.PacketData[0] == 0x71)
             {
                 var packet = new GamePacket(args.PacketData);
                 packet.Position = 1;
                 var networkId = packet.ReadInteger();
-                var active = packet.ReadByte() == 1;
+                var leByte = packet.ReadByte();
+                var active = (leByte == 0x01 || leByte == 0xDD || leByte == 0xDF || leByte == 0xDB);
+                
+                if (ActiveRecv)
+                {
+                    Activebyte = leByte;
+                }
 
-                if (active)
+                ActiveRecv = active;
+
+                if (ActiveRecv || leByte == Activebyte)
+                {
                     WObjectNetworkId = networkId;
+                }
                 else
+                {
                     WObjectNetworkId = -1;
+                    Activebyte = 0x00;
+                }  
             }
         }
 
