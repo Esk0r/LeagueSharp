@@ -68,9 +68,9 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            //Update E and R range depending on level; 550 + 9 Ã— ( Tristana's level - 1)
-            E.Range = 550 + 9 * (ObjectManager.Player.Level - 1);
-            R.Range = 550 + 9 * (ObjectManager.Player.Level - 1);
+            //Update E and R range depending on level; 590 + 9 Ã— ( Tristana's level - 1)
+            E.Range = 590 + 9 * (ObjectManager.Player.Level - 1);
+            R.Range = 590 + 9 * (ObjectManager.Player.Level - 1);
             if (Orbwalking.CanMove(100) && (ComboActive || HarassActive))
             {
                 var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
@@ -111,7 +111,7 @@ namespace Marksman
         public override bool DrawingMenu(Menu config)
         {
             config.AddItem(
-                new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
+                new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(true, Color.CornflowerBlue)));
             return true;
 
         }
