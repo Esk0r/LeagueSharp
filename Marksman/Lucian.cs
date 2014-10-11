@@ -90,15 +90,18 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { Q, W, Q2 };
+            Spell[] spellList = { Q, W };
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
-                if (menuItem.Active && spell.Level > 0)
-                {
-                    Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
-                }
+                if (!menuItem.Active || spell.Level < 0) return;
+
+                Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
             }
+
+            if (!GetValue<Circle>("DrawQ2").Active && Q.Level < 0) return;
+
+            Utility.DrawCircle(ObjectManager.Player.Position, Q2.Range, GetValue<Circle>("DrawQ2").Color);
         }
 
         public static bool Intersection(Vector2 p1, Vector2 p2, Vector2 pC, float radius)
@@ -130,38 +133,42 @@ namespace Marksman
                 Config.Item("GHOSTBLADE")
                     .SetValue(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Name == "LucianR");
 
-            if (Q.IsReady() && useQExtended)
+            if (useQExtended)
             {
                 var vTarget = SimpleTs.GetTarget(Q2.Range, SimpleTs.DamageType.Physical);
 
-                if (!vTarget.IsValidTarget() || !QMinion.IsValidTarget()) return;
-
-                if (ObjectManager.Player.Distance(vTarget) > Q.Range)
-                    Q.CastOnUnit(QMinion);
+                if (vTarget.IsValidTarget() && QMinion.IsValidTarget())
+                {
+                    if (ObjectManager.Player.Distance(vTarget) > ObjectManager.Player.AttackRange)
+                        Q.CastOnUnit(QMinion);
+                }
             }
 
-            if (Q.IsReady() && useQ)
+            if (useQ)
             {
                 var vTarget = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
 
-                if (!vTarget.IsValidTarget()) return;
-
-                if (!LucianHasPassive())
-                    Q.CastOnUnit(vTarget);
+                if (vTarget.IsValidTarget())
+                {
+                    if (!LucianHasPassive())
+                        Q.CastOnUnit(vTarget);
+                }
             }
 
-            if (W.IsReady() && useW)
+            if (useW)
             {
                 var vTarget = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
 
-                if (!vTarget.IsValidTarget()) return;
-                if (ObjectManager.Player.Distance(vTarget) <= ObjectManager.Player.AttackRange)
+                if (vTarget.IsValidTarget())
                 {
-                    if (!LucianHasPassive())
+                    if (ObjectManager.Player.Distance(vTarget) <= ObjectManager.Player.AttackRange)
+                    {
+                        if (!LucianHasPassive())
+                            W.Cast(vTarget);
+                    }
+                    else
                         W.Cast(vTarget);
                 }
-                else
-                    W.Cast(vTarget);
             }
         }
 
