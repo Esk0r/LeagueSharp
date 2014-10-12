@@ -529,6 +529,7 @@ namespace Evade
             #endregion
 
             #region Champion Blinks
+            
 
             #region Ezreal
 
