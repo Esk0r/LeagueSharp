@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace Marksman
 {
     internal class Varus : Champion
     {
-        public Spell Q, E, R;
+        public Spell Q, W, E, R;
         private float LastSpellTick; 
 
         public Varus()
@@ -20,6 +20,7 @@ namespace Marksman
             Utils.PrintMessage("Varus loaded!");
 
             Q = new Spell(SpellSlot.Q, 1600f);
+            W = new Spell(SpellSlot.W);
             E = new Spell(SpellSlot.E, 925f);
             R = new Spell(SpellSlot.R, 1200f);
 
@@ -94,9 +95,11 @@ namespace Marksman
             if (Environment.TickCount < LastSpellTick + GetValue<Slider>("spellDelay").Value)
                 return;
 
-            if (ComboActive || HarassActive || Q.IsCharging)
+            var Target = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+
+            if (ComboActive || HarassActive)
             {
-                
+
                 if (HarassActive && Orbwalker.GetTarget().IsMinion)
                     return;
 
@@ -104,10 +107,9 @@ namespace Marksman
                 var useW = GetValue<Slider>("UseW" + (ComboActive ? "C" : "H"));
                 var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
 
-                var Target = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
-                var WBuff = Target.Buffs.FirstOrDefault(buff => buff.Name == "varuswdebuff");
+                var WStacks = Target.HasBuff("varuswdebuff", true) ? Target.Buffs.FirstOrDefault(buff => buff.Name == "varuswdebuff").Count : 0;
 
-                if (WBuff.Count < useW.Value && !Q.IsCharging)
+                if (W.Level > 0 && WStacks < useW.Value)
                     return;
 
                 if (Q.IsReady() && useQ.SelectedIndex > 0 && Target.IsValidTarget(useQ.SelectedIndex > 1 ? Q.Range : Q.ChargedMinRange))
@@ -118,6 +120,8 @@ namespace Marksman
                 else if (E.IsReady() && Target.IsValidTarget(E.Range + (E.Width / 2)))
                     E.Cast(Target);
             }
+            else if (Q.IsCharging && Target.IsValidTarget(Q.Range))
+                Q.Cast(Target);
         }
 
         public override void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
