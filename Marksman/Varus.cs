@@ -20,7 +20,7 @@ namespace Marksman
         public Varus()
         {
             Utils.PrintMessage("Varus loaded!");
-            
+        
             Q = new Spell(SpellSlot.Q, 1550f);
             W = new Spell(SpellSlot.W);
             E = new Spell(SpellSlot.E, 925f);
