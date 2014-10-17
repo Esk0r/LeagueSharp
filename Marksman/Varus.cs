@@ -1,11 +1,13 @@
 
 #region
+
 using System;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
+
 #endregion
 
 namespace Marksman
@@ -18,7 +20,7 @@ namespace Marksman
         public Varus()
         {
             Utils.PrintMessage("Varus loaded!");
-        
+            
             Q = new Spell(SpellSlot.Q, 1550f);
             W = new Spell(SpellSlot.W);
             E = new Spell(SpellSlot.E, 925f);
@@ -41,24 +43,20 @@ namespace Marksman
             LastSpellTick = Environment.TickCount;
         }
         
-        static int EnemyWStackCount
+        public static Obj_AI_Hero EnemyWStackCount(int buffCount)
         {
-            get
-            {
-                var xBuffCount = 0;
-                foreach (var buff in from enemy in ObjectManager.Get<Obj_AI_Hero>()
-                                                                .Where(
-                                                                     enemy =>
-                                                                             enemy.IsEnemy && !enemy.IsDead && ObjectManager.Player.Distance(enemy) < Q.Range && W.Level > 0)
-                                     from buff in enemy.Buffs
-                                     where buff.Name.Contains("varuswdebuff")
-                                     select buff) 
-                {
-                    xBuffCount = buff.Count;
-                }
-                return xBuffCount;
-            }
+            return
+                (from enemy in
+                    ObjectManager.Get<Obj_AI_Hero>()
+                        .Where(
+                            xEnemy =>
+                                xEnemy.IsEnemy && !xEnemy.IsDead && ObjectManager.Player.Distance(xEnemy) < Q.Range &&
+                                W.Level > 0)
+                    from buff in enemy.Buffs
+                    where buff.Name == "varuswdebuff" && buff.Count >= buffCount
+                    select enemy).FirstOrDefault();
         }
+
         
         public override void Drawing_OnDraw(EventArgs args)
         {
@@ -114,17 +112,13 @@ namespace Marksman
         
         private static void CastQEnemy(Obj_AI_Hero vTarget)
         {
-            if (!Q.IsReady())
-                return;
+            if (vTarget == null) return;
+            if (!Q.IsReady()) return;
             
             if (Q.IsCharging)
-            {
                 Q.Cast(vTarget, false, true);
-            }
             else
-            { 
                 Q.StartCharging();
-            }
         }
         
         public override void Game_OnGameUpdate(EventArgs args)
@@ -169,20 +163,19 @@ namespace Marksman
                     {
                         case 1: /* [ Use Q everytime ] */
                             {
-                                CastQEnemy(qTarget);
+                                if (Q.IsReady())
+                                    CastQEnemy(qTarget);
                                 break;
                             }
                         case 2: /* [ Use Q with W Stack Option Count ] */
                             {
-                                if (EnemyWStackCount == useW.Value) 
-                                    CastQEnemy(qTarget);
+                                CastQEnemy(EnemyWStackCount2(useW.Value));
                                 break;
                             }
                         
                         case 3: /* [ Use Q with W Max Stack ] */
                             {
-                                if (EnemyWStackCount == 3)
-                                    CastQEnemy(qTarget);
+                                CastQEnemy(EnemyWStackCount2(3));
                                 break;
                             }
                     }
