@@ -68,17 +68,25 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
+            if (!Orbwalking.CanMove(100)) return;
+            
             //Update Q range depending on level; 600 + 5 Ã— ( Tristana's level - 1)/* dont waste your Q for only 1 or 2 hits. */
             //Update E and R range depending on level; 630 + 9 Ã— ( Tristana's level - 1)
             Q.Range = 600 + 5 * (ObjectManager.Player.Level - 1);
             E.Range = 630 + 9 * (ObjectManager.Player.Level - 1);
             R.Range = 630 + 9 * (ObjectManager.Player.Level - 1);
-            
-            
-            if (Orbwalking.CanMove(100) && (ComboActive || HarassActive))
+
+            if (GetValue<KeyBind>("UseETH").Active)
+            {
+                var eTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                if (E.IsReady() && eTarget.IsValidTarget())
+                    E.CastOnUnit(eTarget);
+            }
+
+            if (ComboActive || HarassActive)
             {
                 var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
-                
+
                 if (useE)
                 {
                     var eTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
@@ -91,7 +99,6 @@ namespace Marksman
                     var eTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Magical);
                     Dfg.Cast(eTarget);
                 }
-
             }
 
             //Killsteal
@@ -117,6 +124,9 @@ namespace Marksman
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(false));
             config.AddItem(new MenuItem("UseEH" + Id, "Use E").SetValue(true));
+            config.AddItem(
+                new MenuItem("UseETH" + Id, "Use E (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
+                    KeyBindType.Toggle)));
             return true;
         }
 
