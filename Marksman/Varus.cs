@@ -169,13 +169,13 @@ namespace Marksman
                             }
                         case 2: /* [ Use Q with W Stack Option Count ] */
                             {
-                                CastQEnemy(EnemyWStackCount2(useW.Value));
+                                CastQEnemy(EnemyWStackCount(useW.Value));
                                 break;
                             }
                         
                         case 3: /* [ Use Q with W Max Stack ] */
                             {
-                                CastQEnemy(EnemyWStackCount2(3));
+                                CastQEnemy(EnemyWStackCount(3));
                                 break;
                             }
                     }
