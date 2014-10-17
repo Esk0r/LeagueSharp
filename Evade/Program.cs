@@ -454,7 +454,7 @@ namespace Evade
             }
 
             /**/
-            if (EvadeToPoint.IsValid())
+            if (EvadeToPoint.IsValid() && DetectedSkillshots.Count > 0)
             {
                 ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, EvadeToPoint.To3D()); 
             }
