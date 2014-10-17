@@ -55,6 +55,20 @@ namespace Marksman
                     from buff in enemy.Buffs
                     where buff.Name == "varuswdebuff" && buff.Count >= buffCount
                     select enemy).FirstOrDefault();
+
+            /*
+            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(xEnemy => xEnemy.IsEnemy && !xEnemy.IsDead && ObjectManager.Player.Distance(xEnemy) < Q.Range && W.Level > 0))
+            {
+                foreach (var buff in enemy.Buffs)
+                {
+                    if (buff.Name == "varuswdebuff" && buff.Count >= buffCount)
+                    {
+                        return enemy;
+                    }
+                }
+            }
+            return null;
+            */
         }
 
         
@@ -91,7 +105,7 @@ namespace Marksman
         private static float CalcWExplodeDamage(Obj_AI_Hero vTarget)
         {
             var wExplodePerStack = new[] { 2f, 2.75f, 3.5f, 4.25f, 5f };
-            var xWDamage = EnemyWStackCount * wExplodePerStack[W.Level - 1];
+            var xWDamage = /*EnemyWStackCount **/ wExplodePerStack[W.Level - 1];
             
             var fxWDamage = vTarget.Health / 100 * xWDamage;
             return fxWDamage;
@@ -112,8 +126,10 @@ namespace Marksman
         
         private static void CastQEnemy(Obj_AI_Hero vTarget)
         {
-            if (vTarget == null) return;
-            if (!Q.IsReady()) return;
+            if (vTarget == null)
+                return;
+            if (!Q.IsReady())
+                return;
             
             if (Q.IsCharging)
                 Q.Cast(vTarget, false, true);
