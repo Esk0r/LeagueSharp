@@ -68,10 +68,10 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            //Update Q range depending on level; 600 + 5 Ã— ( Tristana's level - 1) /* dont waste your Q for only 1 or 2 hits. */
+            //Update Q range depending on level; 600 + 5 Ã— ( Tristana's level - 1)/* dont waste your Q for only 1 or 2 hits. */
             //Update E and R range depending on level; 630 + 9 Ã— ( Tristana's level - 1)
             Q.Range = 600 + 5 * (ObjectManager.Player.Level - 1);
-            E.Range = 630 + 9 * (ObjectManager.Player.Level - 1); 
+            E.Range = 630 + 9 * (ObjectManager.Player.Level - 1);
             R.Range = 630 + 9 * (ObjectManager.Player.Level - 1);
             
             
@@ -88,7 +88,7 @@ namespace Marksman
 
                 if (Dfg.IsReady())
                 {
-                    var eTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                    var eTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Magical);
                     Dfg.Cast(eTarget);
                 }
 
