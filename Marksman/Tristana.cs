@@ -1,11 +1,9 @@
 #region
-
 using System;
 using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-
 #endregion
 
 namespace Marksman
@@ -15,6 +13,8 @@ namespace Marksman
         public Spell E;
         public Spell Q;
         public Spell R;
+
+        public static Items.Item Dfg = new Items.Item(3128, 750);
 
         public Tristana()
         {
@@ -68,18 +68,30 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            //Update E and R range depending on level; 590 + 9 Ã— ( Tristana's level - 1)
-            E.Range = 590 + 9 * (ObjectManager.Player.Level - 1);
-            R.Range = 590 + 9 * (ObjectManager.Player.Level - 1);
+            //Update Q range depending on level; 600 + 5 Ã— ( Tristana's level - 1) /* dont waste your Q for only 1 or 2 hits. */
+            //Update E and R range depending on level; 630 + 9 Ã— ( Tristana's level - 1)
+            Q.Range = 600 + 5 * (ObjectManager.Player.Level - 1);
+            E.Range = 630 + 9 * (ObjectManager.Player.Level - 1); 
+            R.Range = 630 + 9 * (ObjectManager.Player.Level - 1);
+            
+            
             if (Orbwalking.CanMove(100) && (ComboActive || HarassActive))
             {
                 var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
+                
                 if (useE)
                 {
                     var eTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
                     if (E.IsReady() && eTarget.IsValidTarget())
                         E.CastOnUnit(eTarget);
                 }
+
+                if (Dfg.IsReady())
+                {
+                    var eTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                    Dfg.Cast(eTarget);
+                }
+
             }
 
             //Killsteal
@@ -113,7 +125,6 @@ namespace Marksman
             config.AddItem(
                 new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(true, Color.CornflowerBlue)));
             return true;
-
         }
 
         public override bool MiscMenu(Menu config)
