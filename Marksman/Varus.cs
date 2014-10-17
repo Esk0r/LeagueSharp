@@ -145,7 +145,7 @@ namespace Marksman
                                  .OrderByDescending(SimpleTs.GetPriority)
                                  .First();
                 
-                if (rTarget != null)
+                if (rTarget != null && R.IsReady())
                     R.Cast(rTarget);
             }
             if (ComboActive || HarassActive)
