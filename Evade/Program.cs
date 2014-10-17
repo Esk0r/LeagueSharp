@@ -649,17 +649,18 @@ namespace Evade
                         }
                         else
                         {
-                            if (DetectedSkillshots.Count == 1 && Environment.TickCount - LastSMovePacketT > 400)
+                            if (/*DetectedSkillshots.Count == 1 &&*/ Environment.TickCount - LastSMovePacketT > 400)
                             {
                                 LastSMovePacketT = Environment.TickCount;
-                                var skillshot = DetectedSkillshots[0];
-                                if (skillshot.SpellData.Type == SkillShotType.SkillshotMissileLine || skillshot.SpellData.Type == SkillShotType.SkillshotLine)
-                                {
-                                    var d1 =
+                                
+                                    var perpendicular =
                                         (ObjectManager.Player.ServerPosition.To2D() - safePath.Intersection.Point)
                                             .Normalized();
-                                    var p = ObjectManager.Player.ServerPosition.To2D() + 5 * d1  + 150 * skillshot.Direction;
-                                    var p2 = ObjectManager.Player.ServerPosition.To2D() + 5 * d1 - 150 * skillshot.Direction;
+                                    var direction = perpendicular.Perpendicular();
+
+                                    var p = ObjectManager.Player.ServerPosition.To2D() + 5 * perpendicular + 150 * direction;
+                                    var p2 = ObjectManager.Player.ServerPosition.To2D() + 5 * perpendicular - 150 * direction;
+
                                     if (!IsSafePath(ObjectManager.Player.GetPath(p.To3D()).To2DList(), 100).IsSafe)
                                     {
                                         p = new Vector2();
@@ -673,11 +674,6 @@ namespace Evade
                                     {
                                         ObjectManager.Player.SendMovePacket(EvadeToPoint2);
                                     }
-                                }
-                                else
-                                {
-                                    
-                                }
                             }
                         }
                     }
