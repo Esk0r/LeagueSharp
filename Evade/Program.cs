@@ -456,7 +456,7 @@ namespace Evade
             /**/
             if (EvadeToPoint.IsValid())
             {
-                ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, EvadeToPoint.To3D());
+                ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, EvadeToPoint.To3D()); 
             }
 
             //Shield allies.
@@ -702,6 +702,14 @@ namespace Evade
                             args.Process = false;
                         }
                     }
+                }
+            }
+
+            if (args.PacketData[0] == Packet.C2S.Cast.Header)
+            {
+                if (Packet.C2S.Cast.Decoded(args.PacketData).Slot == SpellSlot.Recall)
+                {
+                    EvadeToPoint = new Vector2();
                 }
             }
         }
