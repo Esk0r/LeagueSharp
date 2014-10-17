@@ -13,7 +13,23 @@ namespace Syndra
 {
     public static class OrbManager
     {
-        public static int WObjectNetworkId = -1;
+        private static int _wobjectnetworkid = -1;
+
+        public static int WObjectNetworkId
+        {
+            get
+            {
+                if (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).ToggleState == 1)
+                    return -1;
+
+                return _wobjectnetworkid;
+            }
+            set
+            {
+                _wobjectnetworkid = value;
+            }
+        }
+
         public static int tmpQOrbT;
         public static Vector3 tmpQOrbPos = new Vector3();
 
@@ -59,25 +75,7 @@ namespace Syndra
                 var packet = new GamePacket(args.PacketData);
                 packet.Position = 1;
                 var networkId = packet.ReadInteger();
-                var leByte = packet.ReadByte();
-                var active = (leByte == 0x01 || leByte == 0xB5 || leByte == 0xB7);
-                
-                if (ActiveRecv)
-                {
-                    Activebyte = leByte;
-                }
-
-                ActiveRecv = active;
-
-                if (ActiveRecv || leByte == Activebyte)
-                {
-                    WObjectNetworkId = networkId;
-                }
-                else
-                {
-                    WObjectNetworkId = -1;
-                    Activebyte = 0x00;
-                } 
+                WObjectNetworkId = networkId;
             }
         }
 
