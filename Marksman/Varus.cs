@@ -169,20 +169,19 @@ namespace Marksman
                     {
                         case 1: /* [ Use Q everytime ] */
                             {
-                                if (Q.IsReady())
-                                    CastQEnemy(qTarget);
+                                CastQEnemy(qTarget);
                                 break;
                             }
                         case 2: /* [ Use Q with W Stack Option Count ] */
                             {
-                                if (EnemyWStackCount == useW.Value && Q.IsReady()) 
+                                if (EnemyWStackCount == useW.Value) 
                                     CastQEnemy(qTarget);
                                 break;
                             }
                         
                         case 3: /* [ Use Q with W Max Stack ] */
                             {
-                                if (EnemyWStackCount == 3 && Q.IsReady())
+                                if (EnemyWStackCount == 3)
                                     CastQEnemy(qTarget);
                                 break;
                             }
