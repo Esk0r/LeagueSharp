@@ -75,7 +75,11 @@ namespace Marksman
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
             return true;
         }
-
+        
+        public override bool HarassMenu(Menu config)
+        {
+            return true;
+        }
         public override bool MiscMenu(Menu config)
         {
             config.AddItem(
