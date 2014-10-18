@@ -183,9 +183,6 @@ namespace Marksman
 
                 if (useE && E.IsReady() && eTarget != null)
                     E.Cast(eTarget, false, true);
-
-                if (useE && E.IsReady() && eTarget != null)
-                    E.Cast(eTarget, false, true);
             }
         }
         
