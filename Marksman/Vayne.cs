@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 using System.Linq;
@@ -13,13 +13,13 @@ namespace Marksman
     {
         public Spell E;
         public Spell Q;
-
+        
         public Vayne()
         {
             Utils.PrintMessage("Vayne loaded");
-
-            Q = new Spell(SpellSlot.Q, 0f);
-            E = new Spell(SpellSlot.E, float.MaxValue);
+            
+            Q = new Spell(SpellSlot.Q);
+            E = new Spell(SpellSlot.E);
 
             E.SetTargetted(0.25f, 2200f);
 
@@ -39,34 +39,58 @@ namespace Marksman
                 E.Cast(unit);
         }
 
+        static int GetSilverBuffCount
+        {
+            get
+            {
+                var xBuffCount = 0;
+                foreach (var buff in from enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy) from buff in enemy.Buffs where buff.Name.Contains("vaynesilvereddebuf") select buff)
+                {
+                    xBuffCount = buff.Count;
+                }
+                return xBuffCount;
+            }
+        }
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            if ((!E.IsReady()) ||
-                ((Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo || !GetValue<bool>("UseEC")) &&
-                 !GetValue<KeyBind>("UseET").Active)) return;
+            if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100)) return;
 
-            foreach (var hero in from hero in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsValidTarget(550f))
-                let prediction = E.GetPrediction(hero)
-                where NavMesh.GetCollisionFlags(
-                    prediction.UnitPosition.To2D()
-                        .Extend(ObjectManager.Player.ServerPosition.To2D(), -GetValue<Slider>("PushDistance").Value)
-                        .To3D())
-                    .HasFlag(CollisionFlags.Wall) || NavMesh.GetCollisionFlags(
-                        prediction.UnitPosition.To2D()
-                            .Extend(ObjectManager.Player.ServerPosition.To2D(),
-                                -(GetValue<Slider>("PushDistance").Value / 2))
-                            .To3D())
-                        .HasFlag(CollisionFlags.Wall)
-                select hero)
+            var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
+
+            if (E.IsReady() && useE)
             {
-                E.Cast(hero);
+                foreach (
+                    var hero in from hero in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsValidTarget(550f))
+                        let prediction = E.GetPrediction(hero)
+                        where NavMesh.GetCollisionFlags(
+                            prediction.UnitPosition.To2D()
+                                .Extend(ObjectManager.Player.ServerPosition.To2D(),
+                                    -GetValue<Slider>("PushDistance").Value)
+                                .To3D())
+                            .HasFlag(CollisionFlags.Wall) || NavMesh.GetCollisionFlags(
+                                prediction.UnitPosition.To2D()
+                                    .Extend(ObjectManager.Player.ServerPosition.To2D(),
+                                        -(GetValue<Slider>("PushDistance").Value/2))
+                                    .To3D())
+                                .HasFlag(CollisionFlags.Wall)
+                        select hero)
+                {
+                    E.Cast(hero);
+                }
             }
         }
 
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
         {
-            if (unit.IsMe && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo && GetValue<bool>("UseQC"))
+            var useQ =
+                GetValue<bool>("UseQ" +
+                               (ComboActive
+                                   ? Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo ? "C" : ""
+                                   : Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Mixed ? "H" : ""));
+            //if (unit.IsMe && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo && GetValue<bool>("UseQC"))
+            if (unit.IsMe && useQ)
                 Q.Cast(Game.CursorPos);
+ 
         }
 
         public override bool ComboMenu(Menu config)
@@ -75,9 +99,11 @@ namespace Marksman
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
             return true;
         }
-        
+
         public override bool HarassMenu(Menu config)
         {
+            config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
+            config.AddItem(new MenuItem("UseEH" + Id, "Use E").SetValue(true));
             return true;
         }
         public override bool MiscMenu(Menu config)
