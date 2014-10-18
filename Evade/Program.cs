@@ -456,7 +456,11 @@ namespace Evade
             /**/
             if (EvadeToPoint.IsValid() && DetectedSkillshots.Count > 0)
             {
-                ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, EvadeToPoint.To3D()); 
+                if (Environment.TickCount - LastSentMovePacketT > 1000 / 10)
+                {
+                    ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, EvadeToPoint.To3D());
+                    LastSentMovePacketT = Environment.TickCount;
+                }
             }
 
             //Shield allies.
