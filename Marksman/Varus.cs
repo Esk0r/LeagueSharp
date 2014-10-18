@@ -157,26 +157,32 @@ namespace Marksman
                 //     return;
                 //var wBuff = qTarget.Buffs.Count(buff => buff.Name == "varuswdebuff");
                 
-                    switch (useQ.SelectedIndex)
+                if (qTarget.Health < CalcQDamage(qTarget) + CalcWExplodeDamage(qTarget))
+                     CastQEnemy(qTarget);
+                else
+                switch (useQ.SelectedIndex)
+                {
+                    case 1: /* [ Use Q everytime ] */
                     {
-                        case 1: /* [ Use Q everytime ] */
-                            {
-                                if (Q.IsReady())
-                                    CastQEnemy(qTarget);
-                                break;
-                            }
-                        case 2: /* [ Use Q with W Stack Option Count ] */
-                            {
-                                CastQEnemy(EnemyWStackCount(useW.Value));
-                                break;
-                            }
-                        
-                        case 3: /* [ Use Q with W Max Stack ] */
-                            {
-                                CastQEnemy(EnemyWStackCount(3));
-                                break;
-                            }
+                        if (Q.IsReady())
+                            CastQEnemy(qTarget);
+                        break;
                     }
+                    case 2: /* [ Use Q with W Stack Option Count ] */
+                    {
+                        CastQEnemy(EnemyWStackCount(useW.Value));
+                        break;
+                    }
+
+                    case 3: /* [ Use Q with W Max Stack ] */
+                    {
+                        CastQEnemy(EnemyWStackCount(3));
+                        break;
+                    }
+                }
+
+                if (useE && E.IsReady() && eTarget != null)
+                    E.Cast(eTarget, false, true);
 
                 if (useE && E.IsReady() && eTarget != null)
                     E.Cast(eTarget, false, true);
