@@ -1,11 +1,10 @@
 #region
-
 using System;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
-
+using Color = System.Drawing.Color;
 #endregion
 
 namespace Marksman
@@ -28,7 +27,7 @@ namespace Marksman
 
             Q.SetSkillshot(0.25f, 160f, 1150, true, SkillshotType.SkillshotLine);
             E.SetTargetted(0.25f, 2000f);
-            
+
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
         }
 
@@ -48,8 +47,8 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { Q, E };
-            foreach (var spell in spellList)
+            Spell[] spellList = {Q, E};
+            foreach (Spell spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
                 if (menuItem.Active && spell.Level > 0)
@@ -60,22 +59,22 @@ namespace Marksman
             }
         }
 
-        public static bool IsPositionSafe(Obj_AI_Hero target, Spell spell) // use underTurret and .Extend for this please
+        public static bool IsPositionSafe(Obj_AI_Hero target, Spell spell)
+            // use underTurret and .Extend for this please
         {
             var predPos = spell.GetPrediction(target).UnitPosition.To2D();
             var myPos = ObjectManager.Player.Position.To2D();
             var newPos = (target.Position.To2D() - myPos);
             newPos.Normalize();
 
-            var checkPos = predPos + newPos * (spell.Range - Vector2.Distance(predPos, myPos));
+            var checkPos = predPos + newPos*(spell.Range - Vector2.Distance(predPos, myPos));
             Obj_Turret closestTower = null;
 
-            foreach (
-                var tower in
-                    ObjectManager.Get<Obj_Turret>().Where(tower => tower.IsValid && !tower.IsDead && Math.Abs(tower.Health) > float.Epsilon))
+            foreach (var tower in ObjectManager.Get<Obj_Turret>()
+                .Where(tower => tower.IsValid && !tower.IsDead && Math.Abs(tower.Health) > float.Epsilon)
+                .Where(tower => Vector3.Distance(tower.Position, ObjectManager.Player.Position) < 1450)) 
             {
-                if (Vector3.Distance(tower.Position, ObjectManager.Player.Position) < 1450)
-                    closestTower = tower;
+                closestTower = tower;
             }
 
             if (closestTower == null)
@@ -87,36 +86,31 @@ namespace Marksman
             return true;
         }
 
-        public static bool ThisIsNotPantheon(Obj_AI_Hero target)
-            /* Quinn's Spell E can do nothing when Pantheon's passive is active. I'll add this property for Patheon's Passive. */
+        public static bool isHePantheon(Obj_AI_Hero target)
         {
+            /* Quinn's Spell E can do nothing when Pantheon's passive is active. */
             return target.Buffs.All(buff => buff.Name != "pantheonpassivebuff");
         }
 
-        private static bool IsValorMode() // use spell name here, and NEVER ever compare such things with tostring
+        private static bool IsValorMode()
         {
-            //4198404 Transforming Human -> Valor
-            //4198407 Valor Mode Active.
-            //4194311 Human Mode Active.
-            return ObjectManager.Player.CharacterState.ToString() == "4198407";
+            return ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Name == "QuinnRFinale";
         }
 
         public static void calculateValorDamage()
         {
             if (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Level > 0)
             {
-                ValorMinDamage = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Level * 50 + 50;
-                ValorMinDamage += ObjectManager.Player.BaseAttackDamage * 50;
+                ValorMinDamage = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Level*50 + 50;
+                ValorMinDamage += ObjectManager.Player.BaseAttackDamage*50;
 
-                ValorMaxDamage = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Level * 100 + 100;
-                ValorMaxDamage += ObjectManager.Player.BaseAttackDamage * 100;
+                ValorMaxDamage = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Level*100 + 100;
+                ValorMaxDamage += ObjectManager.Player.BaseAttackDamage*100;
             }
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            Obj_AI_Hero vTarget;
-
             if (ComboActive || HarassActive)
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
@@ -127,28 +121,28 @@ namespace Marksman
                 {
                     if (E.IsReady() && useE)
                     {
-                        vTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
-                        if (vTarget != null)
+                        var vTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                        if (vTarget != null && !isHePantheon(vTarget))
                         {
-                            if (vTarget.Health <= E.GetDamage(vTarget) + Q.GetDamage(vTarget) * 2) /* Enemy killable */
+                            if (vTarget.Health <= E.GetDamage(vTarget) + Q.GetDamage(vTarget)*2)
                                 E.CastOnUnit(vTarget);
                             else if (!useET)
                                 E.CastOnUnit(vTarget);
-                            else if (IsPositionSafe(vTarget, E))
+                            else if (!Utility.UnderTurret(vTarget))
                                 E.CastOnUnit(vTarget);
                         }
                     }
 
                     if (Q.IsReady() && useQ)
                     {
-                        vTarget = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                        var vTarget = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
                         if (vTarget != null)
                             Q.Cast(vTarget);
                     }
 
                     if (IsValorMode() && !E.IsReady())
                     {
-                        vTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+                        var vTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
                         if (vTarget != null)
                         {
                             calculateValorDamage();
@@ -182,10 +176,10 @@ namespace Marksman
         {
             config.AddItem(
                 new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true,
-                    System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                    Color.FromArgb(100, 255, 0, 255))));
             config.AddItem(
                 new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(false,
-                    System.Drawing.Color.FromArgb(100, 255, 255, 255))));
+                    Color.FromArgb(100, 255, 255, 255))));
             return true;
         }
     }
