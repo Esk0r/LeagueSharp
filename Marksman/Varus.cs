@@ -157,10 +157,6 @@ namespace Marksman
                 //     return;
                 //var wBuff = qTarget.Buffs.Count(buff => buff.Name == "varuswdebuff");
                 
-                if (qTarget.Health < CalcQDamage(qTarget) + CalcWExplodeDamage(qTarget))
-                     CastQEnemy(qTarget);
-                else
-                {
                     switch (useQ.SelectedIndex)
                     {
                         case 1: /* [ Use Q everytime ] */
@@ -181,8 +177,7 @@ namespace Marksman
                                 break;
                             }
                     }
-                }
-                
+
                 if (useE && E.IsReady() && eTarget != null)
                     E.Cast(eTarget, false, true);
             }
