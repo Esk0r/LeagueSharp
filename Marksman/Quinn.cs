@@ -89,7 +89,7 @@ namespace Marksman
         public static bool isHePantheon(Obj_AI_Hero target)
         {
             /* Quinn's Spell E can do nothing when Pantheon's passive is active. */
-            return target.Buffs.All(buff => buff.Name != "pantheonpassivebuff");
+            return target.Buffs.All(buff => buff.Name == "pantheonpassivebuff");
         }
 
         private static bool IsValorMode()
