@@ -55,20 +55,6 @@ namespace Marksman
                     from buff in enemy.Buffs
                     where buff.Name == "varuswdebuff" && buff.Count >= buffCount
                     select enemy).FirstOrDefault();
-
-            /*
-            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(xEnemy => xEnemy.IsEnemy && !xEnemy.IsDead && ObjectManager.Player.Distance(xEnemy) < Q.Range && W.Level > 0))
-            {
-                foreach (var buff in enemy.Buffs)
-                {
-                    if (buff.Name == "varuswdebuff" && buff.Count >= buffCount)
-                    {
-                        return enemy;
-                    }
-                }
-            }
-            return null;
-            */
         }
 
         
