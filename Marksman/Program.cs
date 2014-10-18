@@ -116,6 +116,7 @@ namespace Marksman
                 var harass = new Menu("Harass", "Harass");
                 if (CClass.HarassMenu(harass))
                 {
+                    harass.AddItem(new MenuItem("HarassMana", "Min. Mana Percent").SetValue(new Slider(50, 100, 0)));
                     Config.AddSubMenu(harass);
                 }
 
@@ -171,7 +172,11 @@ namespace Marksman
         {
             //Update the combo and harass values.
             CClass.ComboActive = CClass.Config.Item("Orbwalk").GetValue<KeyBind>().Active;
-            CClass.HarassActive = CClass.Config.Item("Farm").GetValue<KeyBind>().Active;
+            
+            var existsMana = ObjectManager.Player.MaxMana/100*Config.Item("HarassMana").GetValue<Slider>().Value;
+            CClass.HarassActive = CClass.Config.Item("Farm").GetValue<KeyBind>().Active &&
+                                  ObjectManager.Player.Mana >= existsMana;
+                                  
             CClass.LaneClearActive = CClass.Config.Item("LaneClear").GetValue<KeyBind>().Active;
             CClass.Game_OnGameUpdate(args);
 
