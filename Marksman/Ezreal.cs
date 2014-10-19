@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 using System.Drawing;
@@ -15,7 +15,7 @@ namespace Marksman
         public Spell R;
         public Spell W;
 
-
+        public static Items.Item Dfg = new Items.Item(3128, 750);
         public Ezreal()
         {
             Utils.PrintMessage("Ezreal loaded.");
@@ -70,6 +70,20 @@ namespace Marksman
 
                 if (Orbwalking.CanMove(100))
                 {
+
+                    if (GetValue<KeyBind>("UseQTH").Active)
+                    {
+                        t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                        if (Q.IsReady() && t.IsValidTarget())
+                            Q.CastOnUnit(t);
+                    }
+
+                    if (Dfg.IsReady())
+                    {
+                        t = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Magical);
+                        Dfg.Cast(t);
+                    }
+
                     if (Q.IsReady() && useQ)
                     {
                         t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
@@ -103,6 +117,9 @@ namespace Marksman
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
+            config.AddItem(
+                new MenuItem("UseQTH" + Id, "Use Q (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
+                    KeyBindType.Toggle)));
             return true;
         }
 
