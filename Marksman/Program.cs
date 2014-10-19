@@ -100,6 +100,16 @@ namespace Marksman
             var items = Config.AddSubMenu(new Menu("Items", "Items"));
             items.AddItem(new MenuItem("BOTRK", "BOTRK").SetValue(true));
             items.AddItem(new MenuItem("GHOSTBLADE", "Ghostblade").SetValue(true));
+            var quickSilverMenu = new Menu("Quick Silver Sash", "QuickSilverSash");
+            items.AddSubMenu(quickSilverMenu);
+            foreach (var t in AActivator.BuffList)
+            {
+                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy))
+                {
+                    if (t.ChampionName == enemy.ChampionName)
+                        quickSilverMenu.AddItem(new MenuItem(t.BuffName, t.DisplayName).SetValue(true));
+                }
+            }
             items.AddItem(
                 new MenuItem("UseItemsMode", "Use items on").SetValue(
                     new StringList(new[] {"No", "Mixed mode", "Combo mode", "Both"}, 2)));
@@ -170,6 +180,7 @@ namespace Marksman
 
         private static void Game_OnGameUpdate(EventArgs args)
         {
+            CheckChampionBuff();
             //Update the combo and harass values.
             CClass.ComboActive = CClass.Config.Item("Orbwalk").GetValue<KeyBind>().Active;
             
@@ -216,6 +227,23 @@ namespace Marksman
             if (ghostblade && target != null && target.Type == ObjectManager.Player.Type &&
                 Orbwalking.InAutoAttackRange(target))
                 Items.UseItem(3142);
+        }
+        
+        private static void CheckChampionBuff()
+        {
+            foreach (var t1 in ObjectManager.Player.Buffs)
+            {
+                foreach (var t in Config.SubMenu("Items").SubMenu("QuickSilverSash").Items)
+                {
+                    if (t1.Name.ToLower().Contains(t.Name.ToLower()))
+                    {
+                        if (Items.HasItem(3140))
+                        { 
+                            Items.UseItem(3140);
+                        }
+                    }
+                }
+            }
         }
 
         private static void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
