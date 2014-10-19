@@ -63,6 +63,14 @@ namespace Marksman
         public override void Game_OnGameUpdate(EventArgs args)
         {
             Obj_AI_Hero t;
+
+            if (Q.IsReady() &&  GetValue<KeyBind>("UseQTH").Active)
+            {
+                t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                if (t != null)
+                Q.Cast(t);
+            }
+
             if (ComboActive || HarassActive)
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
@@ -70,14 +78,6 @@ namespace Marksman
 
                 if (Orbwalking.CanMove(100))
                 {
-
-                    if (GetValue<KeyBind>("UseQTH").Active)
-                    {
-                        t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
-                        if (Q.IsReady() && t.IsValidTarget())
-                            Q.Cast(t);
-                    }
-
                     if (Dfg.IsReady())
                     {
                         t = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Magical);
