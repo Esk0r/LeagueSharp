@@ -68,7 +68,7 @@ namespace Marksman
             {
                 t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
                 if (t != null)
-                Q.Cast(t);
+                    Q.Cast(t);
             }
 
             if (ComboActive || HarassActive)
