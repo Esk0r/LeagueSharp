@@ -90,6 +90,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Lucian.cs" />
+    <Compile Include="MissFortune.cs" />
     <Compile Include="Quinn.cs" />
     <Compile Include="Sivir.cs" />
     <Compile Include="Teemo.cs" />
