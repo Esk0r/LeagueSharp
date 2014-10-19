@@ -13,7 +13,7 @@ namespace Marksman
     {
         public static Menu Config;
         public static Champion CClass;
-
+        public static Activator AActivator;
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -23,6 +23,7 @@ namespace Marksman
         {
             Config = new Menu("Marksman", "Marksman", true);
             CClass = new Champion();
+            AActivator = new Activator();
             var BaseType = CClass.GetType();
 
             /* Update this with Activator.CreateInstance or Invoke
@@ -102,6 +103,7 @@ namespace Marksman
             items.AddItem(new MenuItem("GHOSTBLADE", "Ghostblade").SetValue(true));
             var quickSilverMenu = new Menu("Quick Silver Sash", "QuickSilverSash");
             items.AddSubMenu(quickSilverMenu);
+           
             foreach (var t in AActivator.BuffList)
             {
                 foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy))
