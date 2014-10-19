@@ -75,7 +75,7 @@ namespace Marksman
                     {
                         t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
                         if (Q.IsReady() && t.IsValidTarget())
-                            Q.CastOnUnit(t);
+                            Q.Cast(t);
                     }
 
                     if (Dfg.IsReady())
