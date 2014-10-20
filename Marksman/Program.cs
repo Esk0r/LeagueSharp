@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 using System.Linq;
@@ -12,6 +12,7 @@ namespace Marksman
     internal class Program
     {
         public static Menu Config;
+        public static Menu QuickSilverMenu;
         public static Champion CClass;
         public static Activator AActivator;
         private static void Main(string[] args)
@@ -101,15 +102,17 @@ namespace Marksman
             var items = Config.AddSubMenu(new Menu("Items", "Items"));
             items.AddItem(new MenuItem("BOTRK", "BOTRK").SetValue(true));
             items.AddItem(new MenuItem("GHOSTBLADE", "Ghostblade").SetValue(true));
-            var quickSilverMenu = new Menu("Quick Silver Sash", "QuickSilverSash");
-            items.AddSubMenu(quickSilverMenu);
-           
+            QuickSilverMenu = new Menu("Quick Silver Sash", "QuickSilverSash");
+            items.AddSubMenu(QuickSilverMenu);
+            QuickSilverMenu.AddItem(new MenuItem("AnyStun", "Any Stun").SetValue(true));
+            QuickSilverMenu.AddItem(new MenuItem("AnySnare", "Any Snare").SetValue(true));
+            QuickSilverMenu.AddItem(new MenuItem("AnyTaunt", "Any Taunt").SetValue(true));
             foreach (var t in AActivator.BuffList)
             {
                 foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy))
                 {
                     if (t.ChampionName == enemy.ChampionName)
-                        quickSilverMenu.AddItem(new MenuItem(t.BuffName, t.DisplayName).SetValue(true));
+                        QuickSilverMenu.AddItem(new MenuItem(t.BuffName, t.DisplayName).SetValue(t.DefaultValue));
                 }
             }
             items.AddItem(
@@ -235,15 +238,38 @@ namespace Marksman
         {
             foreach (var t1 in ObjectManager.Player.Buffs)
             {
-                foreach (var t in Config.SubMenu("Items").SubMenu("QuickSilverSash").Items)
+                foreach (var t in QuickSilverMenu.Items)
                 {
-                    if (t1.Name.ToLower().Contains(t.Name.ToLower()))
+                    if (QuickSilverMenu.Item(t.Name).GetValue<bool>())
                     {
-                        if (Items.HasItem(3140))
-                        { 
-                            Items.UseItem(3140);
+                        {
+                            if (t1.Name.ToLower().Contains(t.Name.ToLower()))
+                            {
+                                if (Items.HasItem(3139)) Items.UseItem(3139); 
+                                if (Items.HasItem(3140)) Items.UseItem(3140);
+                            }
                         }
                     }
+
+                    if (QuickSilverMenu.Item("AnySnare").GetValue<bool>() &&
+                        ObjectManager.Player.HasBuffOfType(BuffType.Snare))
+                    {
+                        if (Items.HasItem(3139)) Items.UseItem(3139);
+                        if (Items.HasItem(3140)) Items.UseItem(3140);
+                    }
+                    if (QuickSilverMenu.Item("AnyStun").GetValue<bool>() &&
+                        ObjectManager.Player.HasBuffOfType(BuffType.Stun))
+                    {
+                        if (Items.HasItem(3139)) Items.UseItem(3139);
+                        if (Items.HasItem(3140)) Items.UseItem(3140);
+                    }
+                    if (QuickSilverMenu.Item("AnyTaunt").GetValue<bool>() &&
+                        ObjectManager.Player.HasBuffOfType(BuffType.Taunt))
+                    {
+                        if (Items.HasItem(3139)) Items.UseItem(3139);
+                        if (Items.HasItem(3140)) Items.UseItem(3140);
+                    }
+
                 }
             }
         }
