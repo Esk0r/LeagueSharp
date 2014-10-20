@@ -27,8 +27,8 @@ namespace Evade
 {
     internal static class Config
     {
-        public const bool PrintSpellData = false;
-        public const bool TestOnAllies = false;
+        public const bool PrintSpellData = true;
+        public const bool TestOnAllies = true;
         public const int SkillShotsExtraRadius = 9;
         public const int SkillShotsExtraRange = 20;
         public const int GridSize = 10;
@@ -82,7 +82,7 @@ namespace Evade
                 {
                     foreach (var spell in SpellDatabase.Spells)
                     {
-                        if (spell.ChampionName == hero.ChampionName)
+                        if (spell.ChampionName.ToLower() == hero.ChampionName.ToLower())
                         {
                             var subMenu = new Menu(spell.MenuItemName, spell.MenuItemName);
 

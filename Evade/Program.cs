@@ -49,7 +49,10 @@ namespace Evade
         public static Vector2 PreviousTickPosition = new Vector2();
         private static readonly Random RandomN = new Random();
         private static int LastSentMovePacketT = 0;
+        private static int LastSentMovePacketT2 = 0;
+
         private static int LastSMovePacketT = 0;
+
         public static bool Evading
         {
             get { return _evading; } //
@@ -148,6 +151,7 @@ namespace Evade
 
             Game.PrintChat("<font color=\"#00BFFF\">Evade# -</font> <font color=\"#FFFFFF\">Loaded</font>");
 
+
             if (Config.PrintSpellData)
             {
                 foreach (var hero in ObjectManager.Get<Obj_AI_Hero>())
@@ -155,7 +159,7 @@ namespace Evade
                     foreach (var spell in hero.Spellbook.Spells)
                     {
                         Console.WriteLine(
-                            spell.SData.Name + " w:" + spell.SData.LineWidth + " s:" + spell.SData.MissileSpeed + " r: " +
+                             "Slot  " + spell.Slot + " " + spell.SData.Name + " w:" + spell.SData.LineWidth + " s:" + spell.SData.MissileSpeed + " r: " +
                             spell.SData.CastRange[0]);
                     }
                 }
@@ -416,7 +420,7 @@ namespace Evade
             {
                 Evading = false;
             }
-
+            
             PreviousTickPosition = ObjectManager.Player.ServerPosition.To2D();
 
             //Remove the detected skillshots that have expired.
@@ -456,10 +460,10 @@ namespace Evade
             /**/
             if (EvadeToPoint.IsValid() && DetectedSkillshots.Count > 0)
             {
-                if (Environment.TickCount - LastSentMovePacketT > 1000 / 10)
+                if (Environment.TickCount - LastSentMovePacketT2 > 1000 / 10)
                 {
                     ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, EvadeToPoint.To3D());
-                    LastSentMovePacketT = Environment.TickCount;
+                    LastSentMovePacketT2 = Environment.TickCount;
                 }
             }
 
@@ -662,18 +666,21 @@ namespace Evade
                                             .Normalized();
                                     var direction = perpendicular.Perpendicular();
 
-                                    var p = ObjectManager.Player.ServerPosition.To2D() + 5 * perpendicular + 150 * direction;
-                                    var p2 = ObjectManager.Player.ServerPosition.To2D() + 5 * perpendicular - 150 * direction;
+                                    var p = ObjectManager.Player.ServerPosition.To2D() + 1 * perpendicular + 150 * direction;
+                                    var p2 = ObjectManager.Player.ServerPosition.To2D() + 1 * perpendicular - 150 * direction;
 
                                     if (!IsSafePath(ObjectManager.Player.GetPath(p.To3D()).To2DList(), 100).IsSafe)
                                     {
                                         p = new Vector2();
                                     }
+
                                     if (!IsSafePath(ObjectManager.Player.GetPath(p2.To3D()).To2DList(), 100).IsSafe)
                                     {
                                         p2 = new Vector2();
                                     }
-                                    EvadeToPoint2 = p.Distance(EvadeToPoint2) < p2.Distance(EvadeToPoint) ? p : p2;
+
+                                    EvadeToPoint2 = (p.IsValid() && (p.Distance(EvadeToPoint) < p2.Distance(EvadeToPoint))) ? p : p2;
+
                                     if (EvadeToPoint2.IsValid())
                                     {
                                         ObjectManager.Player.SendMovePacket(EvadeToPoint2);
