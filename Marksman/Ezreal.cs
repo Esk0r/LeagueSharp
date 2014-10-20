@@ -66,6 +66,8 @@ namespace Marksman
 
             if (Q.IsReady() &&  GetValue<KeyBind>("UseQTH").Active)
             {
+                if(Player.HasBuff("Recall") || Utility.InFountain())
+                    return;
                 t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
                 if (t != null)
                     Q.Cast(t);
