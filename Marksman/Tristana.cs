@@ -78,6 +78,8 @@ namespace Marksman
 
             if (GetValue<KeyBind>("UseETH").Active)
             {
+                 if(ObjectManager.Player.HasBuff("Recall") || Utility.InFountain())
+                    return;
                 var eTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
                 if (E.IsReady() && eTarget.IsValidTarget())
                     E.CastOnUnit(eTarget);
