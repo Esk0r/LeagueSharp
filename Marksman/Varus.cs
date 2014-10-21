@@ -166,7 +166,7 @@ namespace Marksman
                     return;
                 var t = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
                 if (t != null)
-                    E.Cast(eTarget, false, true);
+                    E.Cast(t, false, true);
             }           
 
             if (!ComboActive && !HarassActive) return;
