@@ -140,6 +140,7 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
+            
             if (GetValue<KeyBind>("CastR").Active)
             {
                 Vector3 searchPos;
@@ -159,6 +160,15 @@ namespace Marksman
                 if (rTarget != null && R.IsReady())
                     R.Cast(rTarget);
             }
+
+            if (E.IsReady() && GetValue<KeyBind>("UseETH").Active)
+            {
+                if(ObjectManager.Player.HasBuff("Recall"))
+                    return;
+                var t = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                if (t != null)
+                    E.Cast(t, false, true);
+            }           
 
             if (!ComboActive && !HarassActive) return;
 
@@ -207,8 +217,6 @@ namespace Marksman
             args.Process = !Q.IsCharging;
         }
 
-        #region Menus
-
         public override bool ComboMenu(Menu config)
         {
             config.AddItem(
@@ -229,6 +237,9 @@ namespace Marksman
                     new StringList(new[] {"Off", "Everytime", "W Stack Value", "Max W Stack"}, 3)));
             config.AddItem(new MenuItem("UseWH" + Id, "W").SetValue(new Slider(3, 1, 3)));
             config.AddItem(new MenuItem("UseEH" + Id, "E").SetValue(true));
+            config.AddItem(
+                new MenuItem("UseETH" + Id, "Use E (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
+                    KeyBindType.Toggle)));             
 
             return true;
         }
@@ -253,6 +264,11 @@ namespace Marksman
             return true;
         }
 
-        #endregion
+        public override bool ExtrasMenu(Menu config)
+        {
+
+            return true;
+        }
+
     }
 }

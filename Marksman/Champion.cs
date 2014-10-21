@@ -42,6 +42,11 @@ namespace Marksman
             return false;
         }
 
+        public virtual bool ExtrasMenu(Menu config)
+        {
+            return false;
+        }
+        
         public virtual bool DrawingMenu(Menu config)
         {
             return false;

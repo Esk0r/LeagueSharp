@@ -1,42 +1,36 @@
 ﻿#region
-
 using System;
 using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-
 #endregion
 
 namespace Marksman
 {
-    internal class Sivir : Champion
+    internal class Gnar : Champion
     {
+        private static readonly Obj_AI_Hero vGnar = ObjectManager.Player;
         public Spell Q;
         public Spell W;
+        public Spell E;
 
-
-        public Sivir()
+        public Gnar()
         {
-            Utils.PrintMessage("Sivir loaded.");
+            Console.Clear();
+            Utils.PrintMessage("Gnar loaded.");
 
-            Q = new Spell(SpellSlot.Q, 1250);
-            Q.SetSkillshot(0.25f, 90f, 1350f, false, SkillshotType.SkillshotLine);
+            Q = new Spell(SpellSlot.Q, 1100);
+            Q.SetSkillshot(0.5f, 50f, 1200f, false, SkillshotType.SkillshotLine);
 
-            W = new Spell(SpellSlot.W, 1050);
+            W = new Spell(SpellSlot.W, 600);
+            E = new Spell(SpellSlot.E, 500);
+            E.SetSkillshot(0.5f, 50f, 1200f, false, SkillshotType.SkillshotCircle);
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            if (GetValue<bool>("AutoQ"))
-            {
-                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsValidTarget(Q.Range)))
-                {
-                    Q.CastIfHitchanceEquals(enemy, HitChance.Immobile);
-                }
-            }
-
-
+            if (vGnar.Spellbook.GetSpell(SpellSlot.Q).Level > 0)
             if (ComboActive || HarassActive)
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
@@ -75,7 +69,7 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { Q };
+            Spell[] spellList = { Q, W, E };
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -84,38 +78,28 @@ namespace Marksman
             }
         }
 
-        public override bool ComboMenu(Menu config)
+        public override void ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
-            return true;
         }
 
-        public override bool HarassMenu(Menu config)
+        public override void HarassMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(false));
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(false));
-            return true;
         }
 
-        public override bool MiscMenu(Menu config)
-        {
-            config.AddItem(new MenuItem("AutoQ" + Id, "Auto Q on stunned targets").SetValue(true));
-            return true;
-        }
-
-        public override bool DrawingMenu(Menu config)
+        public override void DrawingMenu(Menu config)
         {
             config.AddItem(
                 new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
-            return true;
+
+            config.AddItem(
+                new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
+ 
+            config.AddItem(
+                new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
         }
-
-        public override bool ExtrasMenu(Menu config)
-        {
-
-            return true;
-        }
-
     }
 }

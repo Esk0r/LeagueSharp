@@ -3,6 +3,7 @@
 using System;
 using LeagueSharp;
 using LeagueSharp.Common;
+using SharpDX;
 using Color = System.Drawing.Color;
 
 #endregion
@@ -75,10 +76,20 @@ namespace Marksman
             {
                 Utility.DrawCircle(ObjectManager.Player.Position, E.Range, drawE.Color);
             }
+
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
+            
+            if (W.IsReady() && GetValue<KeyBind>("UseWTH").Active)
+            {
+                if(ObjectManager.Player.HasBuff("Recall"))
+                    return;
+                var t = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
+                if (t != null)
+                    W.Cast(t);
+            }
             //Combo
             if (ComboActive)
             {
@@ -106,10 +117,7 @@ namespace Marksman
             if (HarassActive)
             {
                 var target = SimpleTs.GetTarget(1200, SimpleTs.DamageType.Physical);
-                var mana = ObjectManager.Player.MaxMana * (Config.Item("ManaH" + Id).GetValue<Slider>().Value / 100.0);
-
                 if (target == null) return;
-                if (!(ObjectManager.Player.Mana > mana)) return;
 
                 if (!Config.Item("QExploit" + Id).GetValue<bool>() && !IsQActive() && Config.Item("UseQH" + Id).GetValue<bool>())
                     Q.Cast();
@@ -150,7 +158,9 @@ namespace Marksman
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
-            config.AddItem(new MenuItem("ManaH" + Id, "Min Mana").SetValue(new Slider(50)));
+            config.AddItem(
+                new MenuItem("UseWTH" + Id, "Use W (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
+                    KeyBindType.Toggle)));
             return true;
         }
 
@@ -186,5 +196,12 @@ namespace Marksman
 
             return QActive;
         }
+
+        public override bool ExtrasMenu(Menu config)
+        {
+
+            return true;
+        }
+
     }
 }

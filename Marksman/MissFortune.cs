@@ -55,6 +55,25 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
+            if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active)
+            {
+                if(ObjectManager.Player.HasBuff("Recall"))
+                    return;
+                var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                if (t != null)
+                    Q.Cast(t);
+            }
+                
+            if (E.IsReady() && GetValue<KeyBind>("UseETH").Active)
+            {
+                if(ObjectManager.Player.HasBuff("Recall"))
+                    return;
+                var t = Orbwalker.GetTarget() ??
+                        SimpleTs.GetTarget(E.Range + E.Range / 2, SimpleTs.DamageType.Physical);
+                if (t != null)
+                    E.CastIfHitchanceEquals(t, HitChance.High);
+            }
+
             if (ComboActive || HarassActive)
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
@@ -98,7 +117,13 @@ namespace Marksman
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
             config.AddItem(new MenuItem("UseEH" + Id, "Use E").SetValue(true));
-
+            config.AddItem(
+                new MenuItem("UseQTH" + Id, "Use Q (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
+                    KeyBindType.Toggle))); 
+            config.AddItem(
+                new MenuItem("UseETH" + Id, "Use E (Toggle)").SetValue(new KeyBind("T".ToCharArray()[0],
+                    KeyBindType.Toggle))); 
+                    
             return true;
         }
 
@@ -114,5 +139,12 @@ namespace Marksman
 
             return true;
         }
+
+        public override bool ExtrasMenu(Menu config)
+        {
+
+            return true;
+        }
+
     }
 }

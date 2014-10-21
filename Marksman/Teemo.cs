@@ -48,6 +48,15 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
+            if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active)
+            {
+                if(ObjectManager.Player.HasBuff("Recall"))
+                    return;
+                var qTarget = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                if (Q.IsReady() && qTarget.IsValidTarget())
+                    Q.CastOnUnit(qTarget);
+            }           
+                        
             if (Orbwalking.CanMove(100) && (ComboActive || HarassActive))
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
@@ -58,7 +67,6 @@ namespace Marksman
                         Q.CastOnUnit(qTarget);
                 }
             }
-
 
             if (GetValue<bool>("UseQM") && Q.IsReady())
             {
@@ -94,6 +102,9 @@ namespace Marksman
         public override bool HarassMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(false));
+            config.AddItem(
+                new MenuItem("UseQTH" + Id, "Use Q (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
+                    KeyBindType.Toggle)));             
             return true;
         }
 
@@ -109,5 +120,12 @@ namespace Marksman
             config.AddItem(new MenuItem("UseQM" + Id, "Use Q KS").SetValue(true));
             return true;
         }
+
+        public override bool ExtrasMenu(Menu config)
+        {
+
+            return true;
+        }
+
     }
 }

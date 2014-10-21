@@ -146,5 +146,12 @@ namespace Marksman
             config.AddItem(new MenuItem("UseRMI" + Id, "Use R Interrupt").SetValue(true));
             return true;
         }
+
+        public override bool ExtrasMenu(Menu config)
+        {
+
+            return true;
+        }
+
     }
 }
