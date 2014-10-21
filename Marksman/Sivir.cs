@@ -14,10 +14,6 @@ namespace Marksman
     {
         public Spell Q;
         public Spell W;
-        public Spell E;
-
-        public Menu MenuSuppSpells;
-
 
         public Sivir()
         {
@@ -27,9 +23,6 @@ namespace Marksman
             Q.SetSkillshot(0.25f, 90f, 1350f, false, SkillshotType.SkillshotLine);
 
             W = new Spell(SpellSlot.W, 1050);
-            E = new Spell(SpellSlot.E);
-            
-            Obj_AI_Base.OnProcessSpellCast += Game_OnProcessSpellCast;
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
@@ -108,16 +101,6 @@ namespace Marksman
         {
             config.AddItem(new MenuItem("AutoQ" + Id, "Auto Q on stunned targets").SetValue(true));
 
-            MenuSuppSpells = new Menu("Can be blocked spells", "menuSuppSpells");
-            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy))
-            {
-                foreach (var ccList in SpellList.CCList.Where(ccList => ccList.HeroName == enemy.SkinName))
-                {
-                    MenuSuppSpells.AddItem(new MenuItem(ccList.SDataName,
-                        enemy.SkinName + " " + ccList.SpellMenuName)).SetValue(true);
-                }
-            }
-            Config.AddSubMenu(MenuSuppSpells);
             return true;
         }
 
@@ -132,44 +115,6 @@ namespace Marksman
         {
 
             return true;
-        }
-
-        private void Game_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
-        {
-            if (sender.Type != GameObjectType.obj_AI_Hero || !sender.IsEnemy) 
-                return;
-            
-            foreach (var spell in from t in MenuSuppSpells.Items
-                from spell in SpellList.CCList
-                    where t.Name == args.SData.Name && t.Name == spell.SDataName && t.GetValue<bool>()
-                select spell) 
-            {
-                switch (spell.Type)
-                {
-                    case Skilltype.Circle:
-                        if (ObjectManager.Player.Distance(args.End) <= 250f)
-                        {
-                            if (E.IsReady())
-                                E.Cast();
-                        }
-                        break;
-                    case Skilltype.Line:
-                        if (ObjectManager.Player.Distance(args.End) <= 100f)
-                        {
-                            if (E.IsReady())
-                                E.Cast();
-                        }
-                        break;
-                    case Skilltype.Unknown:
-                        if (ObjectManager.Player.Distance(args.End) <= 500f ||
-                            ObjectManager.Player.Distance(sender.Position) <= 500)
-                        {
-                            if (E.IsReady())
-                                E.Cast();
-                        }
-                        break;
-                }
-            }
         }
     }
 }
