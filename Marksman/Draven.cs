@@ -304,5 +304,12 @@ namespace Marksman
                    Vector3.DistanceSquared(ObjectManager.Player.Position, position.CastPosition) >
                    Vector3.DistanceSquared(hero.Position, position.CastPosition);
         }
+
+        public override bool ExtrasMenu(Menu config)
+        {
+
+            return true;
+        }
+
     }
 }

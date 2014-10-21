@@ -1,10 +1,8 @@
 #region
-
 using System;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-
 #endregion
 
 namespace Marksman
@@ -25,6 +23,7 @@ namespace Marksman
             Config = new Menu("Marksman", "Marksman", true);
             CClass = new Champion();
             AActivator = new Activator();
+            
             var BaseType = CClass.GetType();
 
             /* Update this with Activator.CreateInstance or Invoke
@@ -119,6 +118,10 @@ namespace Marksman
                 new MenuItem("UseItemsMode", "Use items on").SetValue(
                     new StringList(new[] {"No", "Mixed mode", "Combo mode", "Both"}, 2)));
 
+            
+            //var Extras = Config.AddSubMenu(new Menu("Extras", "Extras"));
+            //new PotionManager(Extras);
+
             // If Champion is supported draw the extra menus
             if (BaseType != CClass.GetType())
             {
@@ -145,6 +148,13 @@ namespace Marksman
                 if (CClass.MiscMenu(misc))
                 {
                     Config.AddSubMenu(misc);
+                }
+
+                var extras = new Menu("Extras", "Extras");
+                if (CClass.ExtrasMenu(extras))
+                {
+                    new PotionManager(extras);
+                    Config.AddSubMenu(extras);
                 }
 
                 var drawing = new Menu("Drawings", "Drawings");

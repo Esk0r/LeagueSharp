@@ -140,6 +140,7 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
+            
             if (GetValue<KeyBind>("CastR").Active)
             {
                 Vector3 searchPos;
@@ -216,8 +217,6 @@ namespace Marksman
             args.Process = !Q.IsCharging;
         }
 
-        #region Menus
-
         public override bool ComboMenu(Menu config)
         {
             config.AddItem(
@@ -265,6 +264,11 @@ namespace Marksman
             return true;
         }
 
-        #endregion
+        public override bool ExtrasMenu(Menu config)
+        {
+
+            return true;
+        }
+
     }
 }

@@ -139,5 +139,12 @@ namespace Marksman
 
             return true;
         }
+
+        public override bool ExtrasMenu(Menu config)
+        {
+
+            return true;
+        }
+
     }
 }

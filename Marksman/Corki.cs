@@ -163,5 +163,12 @@ namespace Marksman
             config.AddItem(new MenuItem("UseRM" + Id, "Use R To Killsteal").SetValue(true));
             return true;
         }
+
+        public override bool ExtrasMenu(Menu config)
+        {
+
+            return true;
+        }
+
     }
 }

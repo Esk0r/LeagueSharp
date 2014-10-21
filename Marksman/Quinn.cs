@@ -194,5 +194,12 @@ namespace Marksman
                     Color.FromArgb(100, 255, 255, 255))));
             return true;
         }
+
+        public override bool ExtrasMenu(Menu config)
+        {
+
+            return true;
+        }
+
     }
 }

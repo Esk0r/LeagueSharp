@@ -3,6 +3,7 @@
 using System;
 using LeagueSharp;
 using LeagueSharp.Common;
+using SharpDX;
 using Color = System.Drawing.Color;
 
 #endregion
@@ -75,6 +76,7 @@ namespace Marksman
             {
                 Utility.DrawCircle(ObjectManager.Player.Position, E.Range, drawE.Color);
             }
+
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
@@ -194,5 +196,12 @@ namespace Marksman
 
             return QActive;
         }
+
+        public override bool ExtrasMenu(Menu config)
+        {
+
+            return true;
+        }
+
     }
 }

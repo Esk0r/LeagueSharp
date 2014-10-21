@@ -120,5 +120,12 @@ namespace Marksman
             config.AddItem(new MenuItem("UseQM" + Id, "Use Q KS").SetValue(true));
             return true;
         }
+
+        public override bool ExtrasMenu(Menu config)
+        {
+
+            return true;
+        }
+
     }
 }
