@@ -71,7 +71,7 @@ namespace Marksman
                 var t = Orbwalker.GetTarget() ??
                         SimpleTs.GetTarget(E.Range + E.Range / 2, SimpleTs.DamageType.Physical);
                 if (t != null)
-                    E.CastIfHitchanceEquals(vTarget, HitChance.High);
+                    E.CastIfHitchanceEquals(t, HitChance.High);
             }
 
             if (ComboActive || HarassActive)
