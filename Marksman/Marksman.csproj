@@ -95,6 +95,7 @@
     <Compile Include="MissFortune.cs" />
     <Compile Include="Quinn.cs" />
     <Compile Include="Sivir.cs" />
+    <Compile Include="SpellList.cs" />
     <Compile Include="Teemo.cs" />
     <Compile Include="Tristana.cs" />
     <Compile Include="Twitch.cs" />
