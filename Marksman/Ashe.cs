@@ -79,11 +79,12 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
+            
             if (W.IsReady() && GetValue<KeyBind>("UseWTH").Active)
             {
                 if(ObjectManager.Player.HasBuff("Recall"))
                     return;
-                t = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
+                var t = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
                 if (t != null)
                     W.Cast(t);
             }
