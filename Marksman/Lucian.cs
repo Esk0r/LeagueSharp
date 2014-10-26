@@ -1,12 +1,10 @@
 #region
-
 using System;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
-
 #endregion
 
 namespace Marksman
@@ -214,7 +212,6 @@ namespace Marksman
             config.AddItem(
                 new MenuItem("UseQExtendedTH" + Id, "Use Ext. Q (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
                     KeyBindType.Toggle)));
-            config.AddItem(new MenuItem("ManaH" + Id, "Min Mana").SetValue(new Slider(50)));
             return true;
         }
 
