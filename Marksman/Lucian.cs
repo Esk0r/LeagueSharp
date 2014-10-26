@@ -121,9 +121,31 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            var mana = ObjectManager.Player.MaxMana * (Config.Item("ManaH" + Id).GetValue<Slider>().Value / 100.0);
 
-            if ((!ComboActive && !HarassActive) || (HarassActive && !(ObjectManager.Player.Mana > mana))) return;
+            if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active)
+            {
+                if (ObjectManager.Player.HasBuff("Recall"))
+                    return;
+
+                var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                if (t != null && !LucianHasPassive())
+                    Q.CastOnUnit(t);
+            }
+
+            if (Q.IsReady() && GetValue<KeyBind>("UseQExtendedTH").Active)
+            {
+                if (ObjectManager.Player.HasBuff("Recall"))
+                    return;
+
+                var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                if (t.IsValidTarget() && QMinion.IsValidTarget())
+                {
+                    if (ObjectManager.Player.Distance(t) > ObjectManager.Player.AttackRange)
+                        Q.CastOnUnit(QMinion);
+                }
+            }
+
+            if ((!ComboActive && !HarassActive)) return;
 
             var useQ = Config.Item("UseQ" + (ComboActive ? "C" : "H") + Id).GetValue<bool>();
             var useW = Config.Item("UseW" + (ComboActive ? "C" : "H") + Id).GetValue<bool>();
@@ -183,8 +205,15 @@ namespace Marksman
         public override bool HarassMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
+            config.AddItem(
+                new MenuItem("UseQTH" + Id, "Use Q (Toggle)").SetValue(new KeyBind("T".ToCharArray()[0],
+                    KeyBindType.Toggle)));
+
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
             config.AddItem(new MenuItem("UseQExtendedH" + Id, "Use Extended Q").SetValue(true));
+            config.AddItem(
+                new MenuItem("UseQExtendedTH" + Id, "Use Ext. Q (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
+                    KeyBindType.Toggle)));
             config.AddItem(new MenuItem("ManaH" + Id, "Min Mana").SetValue(new Slider(50)));
             return true;
         }
@@ -194,11 +223,12 @@ namespace Marksman
             config.AddItem(new MenuItem("Passive" + Id, "Take in consideration Passive").SetValue(true));
             return true;
         }
-
+       
         public override bool DrawingMenu(Menu config)
         {
             config.AddItem(new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true, Color.CornflowerBlue)));
-            config.AddItem(new MenuItem("DrawQ2" + Id, "Extended Q range").SetValue(new Circle(true, Color.CornflowerBlue)));
+            config.AddItem(
+                new MenuItem("DrawQ2" + Id, "Extended Q range").SetValue(new Circle(true, Color.CornflowerBlue)));
             config.AddItem(new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(false, Color.CornflowerBlue)));
             return true;
         }
