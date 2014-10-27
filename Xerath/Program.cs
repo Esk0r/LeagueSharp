@@ -452,7 +452,7 @@ namespace Xerath
 
         private static void SimplePing()
         {
-            Packet.S2C.Ping.Encoded(new Packet.S2C.Ping.Struct(PingLocation.X, PingLocation.Y, 0, 0, Packet.PingType.FallbackSound)).Process();
+            Packet.S2C.Ping.Encoded(new Packet.S2C.Ping.Struct(PingLocation.X, PingLocation.Y, 0, 0, Packet.PingType.Fallback)).Process();
         }
 
         private static void Game_OnGameUpdate(EventArgs args)
