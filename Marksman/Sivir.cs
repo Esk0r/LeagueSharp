@@ -22,7 +22,7 @@ namespace Marksman
             Q = new Spell(SpellSlot.Q, 1250);
             Q.SetSkillshot(0.25f, 90f, 1350f, false, SkillshotType.SkillshotLine);
 
-            W = new Spell(SpellSlot.W, 1050);
+            W = new Spell(SpellSlot.W, 593);
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
@@ -63,7 +63,7 @@ namespace Marksman
 
                 if (W.IsReady() && useW)
                 {
-                    ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W);
+                    W.Cast();
                 }
                 else if (Q.IsReady() && useQ)
                 {
