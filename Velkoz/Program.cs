@@ -469,7 +469,7 @@ namespace Velkoz
                 }
             }
 
-            Orbwalker.SetAttacks(true);
+            Orbwalker.SetAttack(true);
             if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
             {
                 Combo();
