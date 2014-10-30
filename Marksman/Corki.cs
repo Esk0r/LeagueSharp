@@ -71,7 +71,7 @@ namespace Marksman
 
             if (useQ && Q.IsReady())
             {
-                var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Magical);
                 if (t != null)
                     if (Q.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted)
                         return;
@@ -88,7 +88,7 @@ namespace Marksman
             if (useR && R1.IsReady() && ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Ammo > rLim)
             {
                 var bigRocket = HasBigRocket();
-                var t = SimpleTs.GetTarget(bigRocket ? R2.Range : R1.Range, SimpleTs.DamageType.Physical);
+                var t = SimpleTs.GetTarget(bigRocket ? R2.Range : R1.Range, SimpleTs.DamageType.Magical);
                 if (t != null)
                     if (bigRocket)
                         R2.Cast(t, false, true);
