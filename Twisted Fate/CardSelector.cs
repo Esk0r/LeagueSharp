@@ -44,7 +44,7 @@ namespace TwistedFate
 
         private static void SendWPacket()
         {
-            var packet = Packet.C2S.Cast.Encoded(new Packet.C2S.Cast.Struct(0, SpellSlot.W));
+            var packet = Packet.C2S.Cast.Encoded(new Packet.C2S.Cast.Struct(ObjectManager.Player.NetworkId, SpellSlot.W));
             packet.Send();
             LastSendWSent = Environment.TickCount;
         }
