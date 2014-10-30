@@ -165,8 +165,6 @@ namespace Evade
                 }
                 Console.WriteLine(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name);
             }
-
-            //
         }
 
         private static void DetectedSkillshots_OnAdd(object sender, EventArgs e)
@@ -851,7 +849,7 @@ namespace Evade
                     {
                         if (IsAboutToHit(ObjectManager.Player, evadeSpell.Delay))
                         {
-                            ObjectManager.Player.Spellbook.CastSpell(evadeSpell.Slot, EvadePoint.To3D());
+                            ObjectManager.Player.Spellbook.CastSpell(evadeSpell.Slot, ObjectManager.Player);
                         }
 
                         //Let the user move freely inside the skillshot.
