@@ -220,7 +220,7 @@ namespace Velkoz
 
         private static void Combo()
         {
-            Orbwalker.SetAttacks(!(Q.IsReady() || W.IsReady() || E.IsReady()));
+            Orbwalker.SetAttack(!(Q.IsReady() || W.IsReady() || E.IsReady()));
             UseSpells(Config.Item("UseQCombo").GetValue<bool>(), Config.Item("UseWCombo").GetValue<bool>(),
                 Config.Item("UseECombo").GetValue<bool>(), Config.Item("UseRCombo").GetValue<bool>(),
                 Config.Item("UseIgniteCombo").GetValue<bool>());
