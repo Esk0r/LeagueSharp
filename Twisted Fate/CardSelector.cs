@@ -109,7 +109,7 @@ namespace TwistedFate
                                 SendWPacket();
                             }
                             break;
-                        case "RedCardlock":
+                        case "RedCardLock":
                             if (Select == Cards.Red)
                             {
                                 SendWPacket();
