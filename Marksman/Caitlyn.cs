@@ -1,9 +1,10 @@
-﻿#region
+#region
 
 using System;
-using System.Drawing;
 using LeagueSharp;
 using LeagueSharp.Common;
+using SharpDX;
+using Color = System.Drawing.Color;
 
 #endregion
 
@@ -82,6 +83,12 @@ namespace Marksman
             else
             {
                 ShowUlt = false;
+            }
+
+            if (GetValue<KeyBind>("Dash").Active && E.IsReady())
+            {
+                var pos = ObjectManager.Player.ServerPosition.To2D().Extend(Game.CursorPos.To2D(), - 300).To3D();
+                E.Cast(pos, true);
             }
 
             if (GetValue<KeyBind>("UseEQC").Active && E.IsReady() && Q.IsReady())
@@ -168,6 +175,8 @@ namespace Marksman
             config.AddItem(
                 new MenuItem("UseEQC" + Id, "Use E-Q Combo").SetValue(new KeyBind("T".ToCharArray()[0],
                     KeyBindType.Press)));
+            config.AddItem(
+                new MenuItem("Dash" + Id, "Dash to Mouse").SetValue(new KeyBind("Z".ToCharArray()[0], KeyBindType.Press)));
             return true;
         }
 
