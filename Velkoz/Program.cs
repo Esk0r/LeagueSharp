@@ -317,7 +317,7 @@ namespace Velkoz
             }
 
             if (useR && rTarget != null && R.IsReady() &&
-                Player.GetSpellDamage(enemy, SpellSlot.R) / 10 * (Player.Distance(rTarget) < (R.Range - 500) ? 10 : 6) > rTarget.Health &&
+                Player.GetSpellDamage(rTarget, SpellSlot.R) / 10 * (Player.Distance(rTarget) < (R.Range - 500) ? 10 : 6) > rTarget.Health &&
                 (LastCastedSpell.LastCastPacketSent.Slot != SpellSlot.R ||
                  Environment.TickCount - LastCastedSpell.LastCastPacketSent.Tick > 350))
             {
