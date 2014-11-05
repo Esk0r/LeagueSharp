@@ -712,7 +712,7 @@ namespace Evade
 
             if (args.PacketData[0] == Packet.C2S.Cast.Header)
             {
-                if (Packet.C2S.Cast.Decoded(args.PacketData).Slot == SpellSlot.Recall || ((byte)Packet.C2S.Cast.Decoded(args.PacketData).Slot) == 0x0D)
+                if (Packet.C2S.Cast.Decoded(args.PacketData).Slot == SpellSlot.Recall)
                 {
                     EvadeToPoint = new Vector2();
                 }
