@@ -24,6 +24,7 @@ namespace TwistedFate
         private static Vector2 PingLocation;
         private static int LastPingT = 0;
         private static Obj_AI_Hero Player;
+        private static int CastQTick;
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -68,6 +69,7 @@ namespace TwistedFate
             var q = new Menu("Q - Wildcards", "Q");
             q.AddItem(new MenuItem("AutoQI", "Auto-Q immobile").SetValue(true));
             q.AddItem(new MenuItem("AutoQD", "Auto-Q dashing").SetValue(true));
+            q.AddItem(new MenuItem("CastQ", "Cast Q (tap)").SetValue(new KeyBind("U".ToCharArray()[0], KeyBindType.Press)));
             Config.AddSubMenu(q);
 
             /* W */
@@ -280,6 +282,20 @@ namespace TwistedFate
                 {
                     Ping(enemy.Position.To2D());
                 }
+
+            if (Config.Item("CastQ").GetValue<KeyBind>().Active)
+            {
+                CastQTick = Environment.TickCount;
+            }
+
+            if (Environment.TickCount - CastQTick < 500)
+            {
+                var qTarget = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Magical);
+                if (qTarget != null)
+                {
+                    Q.Cast(qTarget);
+                }
+            }
 
             var combo = Config.Item("Combo").GetValue<KeyBind>().Active;
 
