@@ -131,7 +131,7 @@ namespace Xerath
             //Misc
             Config.AddSubMenu(new Menu("R", "R"));
             Config.SubMenu("R").AddItem(new MenuItem("EnableRUsage", "Auto use charges").SetValue(true));
-            Config.SubMenu("R").AddItem(new MenuItem("rMode", "Mode").SetValue(new StringList(new[] { "Normal", "Custom delays", "On Tap", "On Tap&Hover" })));
+            Config.SubMenu("R").AddItem(new MenuItem("rMode", "Mode  ").SetValue(new StringList(new[] { "Normal", "Custom delays", "On Tap", "On Tap&Hover" })));
             Config.SubMenu("R").AddItem(new MenuItem("rModeKey", "OnTap key").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
             Config.SubMenu("R").AddSubMenu(new Menu("Custom delays", "Custom delays"));
             for (int i = 1; i <= 3; i++)
