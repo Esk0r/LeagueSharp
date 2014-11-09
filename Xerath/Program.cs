@@ -131,7 +131,7 @@ namespace Xerath
             //Misc
             Config.AddSubMenu(new Menu("R", "R"));
             Config.SubMenu("R").AddItem(new MenuItem("EnableRUsage", "Auto use charges").SetValue(true));
-            Config.SubMenu("R").AddItem(new MenuItem("rMode", "Mode").SetValue(new StringList(new[] { "Normal", "Custom delays", "OnTap"})));
+            Config.SubMenu("R").AddItem(new MenuItem("rMode", "Mode").SetValue(new StringList(new[] { "Normal", "Custom delays", "On Tap", "On Tap&Hover" })));
             Config.SubMenu("R").AddItem(new MenuItem("rModeKey", "OnTap key").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
             Config.SubMenu("R").AddSubMenu(new Menu("Custom delays", "Custom delays"));
             for (int i = 1; i <= 3; i++)
@@ -293,7 +293,6 @@ namespace Xerath
 
         private static void Combo()
         {
-
             UseSpells(Config.Item("UseQCombo").GetValue<bool>(), Config.Item("UseWCombo").GetValue<bool>(),
                 Config.Item("UseECombo").GetValue<bool>());
         }
@@ -342,6 +341,16 @@ namespace Xerath
             var rTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Magical);
             if (rTarget != null)
             {
+                Obj_AI_Hero hoverTarget = null;
+                foreach (var enemy in
+                         ObjectManager.Get<Obj_AI_Hero>()
+                          .Where(hero => hero.IsValidTarget())
+                          .OrderByDescending(h => h.Distance(Game.CursorPos))
+                          .Where(enemy => enemy.Distance(Game.CursorPos) < 200))
+                {
+                    hoverTarget = enemy;
+                }
+
                 //Wait at least 0.6f if the target is going to die or if the target is to far away
                 if(rTarget.Health - R.GetDamage(rTarget) < 0)
                     if (Environment.TickCount - RCharge.CastT <= 700) return;
@@ -364,6 +373,11 @@ namespace Xerath
                     case 2://On tap
                         if (RCharge.TapKeyPressed)
                             R.Cast(rTarget, true);
+                        break;
+
+                    case 3://On hover and hover
+                        if (RCharge.TapKeyPressed && hoverTarget != null)
+                            R.Cast(hoverTarget, true);
                         break;
                 }
             }
