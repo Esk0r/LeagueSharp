@@ -79,9 +79,9 @@ namespace Marksman
                             .Extend(ObjectManager.Player.ServerPosition.To2D(), -Q2.Range)
                             .To3D()
                     where
-                        Intersection(
-                            ObjectManager.Player.ServerPosition.To2D(), endPoint.To2D(), vTarget.ServerPosition.To2D(),
-                            vTarget.BoundingRadius + Q.Width / 2)
+                        vMinion.Distance(vTarget) <= vTarget.Distance(ObjectManager.Player) &&
+                        Intersection(ObjectManager.Player.ServerPosition.To2D(), endPoint.To2D(),
+                            vTarget.ServerPosition.To2D(), vTarget.BoundingRadius + Q.Width / 4)
                     select vMinion).FirstOrDefault();
             }
         }
@@ -103,7 +103,6 @@ namespace Marksman
         }
 
         public static bool Intersection(Vector2 p1, Vector2 p2, Vector2 pC, float radius)
-            /* Credits to DETUKS https://github.com/detuks/LeagueSharp/blob/master/YasuoSharp/YasMath.cs */
         {
             var p3 = new Vector2(pC.X + radius, pC.Y + radius);
 
