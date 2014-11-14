@@ -79,6 +79,9 @@ namespace Marksman
                 case "twitch":
                     CClass = new Twitch();
                     break;
+                case "urgot":
+                    CClass = new Urgot();
+                    break;
                 case "vayne":
                     CClass = new Vayne();
                     break;
