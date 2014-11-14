@@ -1,37 +1,31 @@
-﻿#region
-
+#region
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Net.Sockets;
 using LeagueSharp;
 using LeagueSharp.Common;
-
 #endregion
 
 namespace Marksman
 {
     internal class Urgot : Champion
     {
-        public Spell Q;
-        public Spell QEx;
-        public Spell E;
-        public Spell R;
-
-        public bool ShowUlt;
-        public string UltTarget;
+        public static Spell Q, QEx, W, E, R;
 
         public Urgot()
         {
             Utils.PrintMessage("Urgot loaded.");
 
             Q = new Spell(SpellSlot.Q, 1000);
-            QEx = new Spell(SpellSlot.Q, 1750);
+            QEx = new Spell(SpellSlot.Q, 1600) {MinHitChance = HitChance.Collision};
+            W = new Spell(SpellSlot.W);
             E = new Spell(SpellSlot.E, 900);
             R = new Spell(SpellSlot.R, 700);
 
             Q.SetSkillshot(0.10f, 100f, 1600f, true, SkillshotType.SkillshotLine);
-            QEx.SetSkillshot(0.10f, 100f, 1600f, false, SkillshotType.SkillshotLine);
+            QEx.SetSkillshot(0.10f, 60f, 1600f, false, SkillshotType.SkillshotLine);
+            
             E.SetSkillshot(0.283f, 0f, 1750f, false, SkillshotType.SkillshotCircle);
             R.SetTargetted(1f, 100f);
         }
@@ -42,23 +36,23 @@ namespace Marksman
                 E.CastOnUnit(gapcloser.Sender);
         }
 
-        public static bool UnderAllyTurret(Obj_AI_Base vTarget)
+        public static bool UnderAllyTurret(Obj_AI_Base unit)
         {
-            using (var enumerator = ObjectManager.Get<Obj_AI_Turret>().GetEnumerator())
+            return ObjectManager.Get<Obj_AI_Turret>().Where<Obj_AI_Turret>((turret) =>
             {
-                while (enumerator.MoveNext())
+                if (turret == null || !turret.IsValid || turret.Health <= 0f)
                 {
-                    Obj_AI_Turret current = enumerator.Current;
-                    if (current == null || !current.IsValid || current.Health <= 0f ||
-                        SharpDX.Vector2.Distance(vTarget.Position.To2D(), current.Position.To2D()) >= 950f &&
-                        current.Name.Contains("TurretShrine")) 
-                    {
-                        continue;
-                    }
+                    return false;
+                }
+                if (!turret.IsEnemy)
+                {
                     return true;
                 }
                 return false;
-            }
+            })
+                .Any<Obj_AI_Turret>(
+                    (turret) =>
+                        SharpDX.Vector2.Distance(unit.Position.To2D(), turret.Position.To2D()) < 900f && turret.IsAlly);
         }
 
         public static bool TeleportTurret(Obj_AI_Hero vTarget)
@@ -70,7 +64,10 @@ namespace Marksman
 
         public static int UnderTurretEnemyMinion
         {
-            get { return ObjectManager.Get<Obj_AI_Minion>().Count(xMinion => xMinion.IsEnemy && UnderAllyTurret(xMinion)); }
+            get
+            {
+                return ObjectManager.Get<Obj_AI_Minion>().Count(xMinion => xMinion.IsEnemy && UnderAllyTurret(xMinion));
+            }
         }
 
         public override void Drawing_OnDraw(EventArgs args)
@@ -83,49 +80,130 @@ namespace Marksman
                     Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
             }
 
-            var drawUlt = GetValue<Circle>("DrawUlt");
-            if (drawUlt.Active && ShowUlt)
+            var drawQEx = GetValue<Circle>("DrawQEx");
+            if (drawQEx.Active)
             {
-                //var playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
-                //Drawing.DrawText(playerPos.X - 65, playerPos.Y + 20, drawUlt.Color, "Hit R To kill " + UltTarget + "!");
+                foreach (
+                    var enemy in
+                        from enemy in
+                            ObjectManager.Get<Obj_AI_Hero>()
+                                .Where(
+                                    enemy =>
+                                        enemy.IsEnemy && ObjectManager.Player.Distance(enemy) <= QEx.Range &&
+                                        enemy.HasBuff("urgotcorrosivedebuff", true))
+                        select enemy) 
+                {
+                    Utility.DrawCircle(enemy.Position, 75f, drawQEx.Color);
+                }
             }
+        }
+
+        private static void UseSpells(bool useQ, bool useW, bool useE)
+        {
+            Obj_AI_Hero t;
+
+            if (Q.IsReady() && useQ)
+            {
+                t = SimpleTs.GetTarget(QEx.Range, SimpleTs.DamageType.Physical);
+                if (t != null && t.HasBuff("urgotcorrosivedebuff", true))
+                {
+                    W.Cast();
+                    QEx.Cast(t);
+                }
+                else
+                {
+                    t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                    if (t != null)
+                    {
+                        if (Q.GetPrediction(t).Hitchance >= HitChance.High)
+                            W.Cast();
+                        Q.Cast(t);
+                    }
+                }
+            }
+
+            if (W.IsReady() && useW)
+            {
+                t = SimpleTs.GetTarget(ObjectManager.Player.AttackRange - 30, SimpleTs.DamageType.Physical);
+                if (t != null)
+                    W.Cast();
+            }
+
+            if (E.IsReady() && useE)
+            {
+                t = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                if (t != null)
+                    E.Cast(t);
+            }
+        }
+
+        private static void UltUnderTurret()
+        {
+            ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
+
+            Drawing.DrawText(Drawing.Width*0.41f, Drawing.Height*0.80f, Color.GreenYellow,
+                "Teleport enemy to under ally turret active!");
+
+            if (R.IsReady() && Program.CClass.GetValue<bool>("UseRC"))
+            {
+                var t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+                if (t != null && UnderAllyTurret(ObjectManager.Player) && !UnderAllyTurret(t) &&
+                    ObjectManager.Player.Distance(t) > 200) 
+                {
+                    R.CastOnUnit(t);
+                }
+            }
+
+            UseSpells(Program.CClass.GetValue<bool>("UseQC"), Program.CClass.GetValue<bool>("UseWC"),
+                Program.CClass.GetValue<bool>("UseEC"));
+        }
+        private static void UltInMyTeam()
+        {
+            ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
+
+            Drawing.DrawText(Drawing.Width * 0.42f, Drawing.Height * 0.80f, Color.GreenYellow,
+            "Teleport enemy to my team active!");
+
+            var t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+            if (R.IsReady() && t != null)
+            {
+            IEnumerable<Obj_AI_Hero> Ally =
+                ObjectManager.Get<Obj_AI_Hero>()
+                    .Where(
+                        ally =>
+                            ally.IsAlly && !ally.IsDead && ObjectManager.Player.Distance(ally) <= R.Range &&
+                            t.Distance(ally) > t.Distance(ObjectManager.Player));
+            
+            if (Ally.Count() >= Program.CClass.GetValue<Slider>("UltOp2Count").Value)    
+                R.CastOnUnit(t);
+
+            }
+                
+            UseSpells(Program.CClass.GetValue<bool>("UseQC"), Program.CClass.GetValue<bool>("UseWC"),
+                Program.CClass.GetValue<bool>("UseEC"));
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
             R.Range = 150 * R.Level + 400;
 
-            Obj_AI_Hero vTarget;
+            if (GetValue<KeyBind>("UltOp1").Active)
+            {
+                UltUnderTurret();
+            }
+
+            if (GetValue<KeyBind>("UltOp2").Active)
+            {
+                UltInMyTeam();
+            }
 
             if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100)) return;
 
             var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
+            var useW = GetValue<bool>("UseWC");
             var useE = GetValue<bool>("UseEC");
-            var useR = GetValue<bool>("UseRC");
 
-            if (Q.IsReady() && useQ)
-            {
-                vTarget = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
-                if (vTarget != null)
-                    Q.Cast(vTarget, false, true);
-            }
-
-            if (E.IsReady() && useE)
-            {
-                vTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
-                if (vTarget != null)
-                    E.Cast(vTarget);
-            }
-
-            if (R.IsReady() && useR)
-            {
-                vTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
-                if (vTarget != null && vTarget.Health <= R.GetDamage(vTarget) &&
-                    !Orbwalking.InAutoAttackRange(vTarget))
-                {
-                    R.CastOnUnit(vTarget);
-                }
-            }
+            UseSpells(useQ, useW, useE);
         }
 
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
@@ -140,22 +218,45 @@ namespace Marksman
         public override bool ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
+            config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
             config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(true));
+
+            
+            config.AddSubMenu(new Menu("Ult Option 1", "UltOpt1"));
+
+            config.SubMenu("UltOpt1")
+                .AddItem(
+                    new MenuItem("UltOp1" + Id, "Teleport Ally Turrent").SetValue(new KeyBind("T".ToCharArray()[0],
+                        KeyBindType.Press)));
+
+            config.AddSubMenu(new Menu("Ult Option 2", "UltOpt2"));
+            config.SubMenu("UltOpt2")
+                .AddItem(
+                    new MenuItem("UltOp2" + Id, "Teleport My Team").SetValue(new KeyBind("G".ToCharArray()[0],
+                        KeyBindType.Press)));
+            config.SubMenu("UltOpt2")
+                .AddItem(new MenuItem("UltOp2Count" + Id, "Min. Ally Count").SetValue(new Slider(1, 1, 5)));
+
+
             config.AddSubMenu(new Menu("Don't Use Ult on", "DontUlt"));
-           /* foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != ObjectManager.Player.Team))
+            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != ObjectManager.Player.Team))
             {
-                Config.SubMenu("Combo")
+                config.SubMenu("DontUlt")
                     .AddItem(
                         new MenuItem(string.Format("DontUlt{0}", enemy.BaseSkinName), enemy.BaseSkinName).SetValue(false));
             }
-            * */
+            
             return true;
         }
 
         public override bool HarassMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
+            config.AddItem(
+                new MenuItem("UseQTH" + Id, "Use Q (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
+                    KeyBindType.Toggle)));
+
             return true;
         }
 
@@ -169,13 +270,12 @@ namespace Marksman
                 new MenuItem("DrawR" + Id, "R range").SetValue(new Circle(false, Color.LightGray)));
             config.AddItem(
                 new MenuItem("DrawQEx" + Id, "Corrosive Charge").SetValue(new Circle(true, Color.LightGray)));
+
             return true;
         }
 
         public override bool MiscMenu(Menu config)
         {
-            config.AddItem(new MenuItem("UltOption1" + Id, "Move Target Under Turret").SetValue(true));
-            config.AddItem(new MenuItem("UltOption2" + Id, "Move Target My Team").SetValue(true));
             return true;
         }
     }
