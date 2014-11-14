@@ -77,7 +77,7 @@ namespace Marksman
                 Utility.DrawCircle(ObjectManager.Player.Position, E.Range, drawE.Color, 1, 5);
 
             if (drawQC.Active)
-                Utility.DrawCircle(ObjectManager.Player.Position, GetValue<Slider>("UseQMinChargeC").Value, drawR.Color, 1, 5);
+                Utility.DrawCircle(ObjectManager.Player.Position, GetValue<Slider>("UseQMinChargeC").Value, drawQC.Color, 1, 5);
 
             if (drawR.Active)
                 Utility.DrawCircle(ObjectManager.Player.Position, R.Range, drawR.Color, 1, 5);
@@ -105,15 +105,29 @@ namespace Marksman
             return fxWDamage;
         }
 
-        private static float CalcQDamage(Obj_AI_Hero vTarget)
+        public static float CalcQDamage(Obj_AI_Hero vTarget)
         {
+            if (Q.Level == 0)
+                return 0;
+
+
+
+            var xQMin = Program.CClass.GetValue<Slider>("UseQMinChargeC").Value;
+            var qMinRange = xQMin < Orbwalking.GetRealAutoAttackRange(vTarget)
+                ? Orbwalking.GetRealAutoAttackRange(vTarget)
+                : xQMin;
+            var qMaxRange = Q.ChargedMaxRange;
+            
+            var qCalcRange = qMaxRange/qMinRange;
+
             var qDamageMinPerLevel = new[] {10f, 47f, 83f, 120f, 157f};
             var qDamageMaxPerLevel = new[] {15f, 70f, 125f, 180f, 235f};
-            float xDistance = ObjectManager.Player.Distance(vTarget);
 
-            double fxQDamage = xDistance < Q.ChargedMaxRange/2
-                ? qDamageMinPerLevel[Q.Level - 1] + ObjectManager.Player.GetAutoAttackDamage(vTarget)
-                : qDamageMaxPerLevel[Q.Level - 1] + ObjectManager.Player.GetAutoAttackDamage(vTarget)*1.6;
+
+            Game.PrintChat(qDamageMinPerLevel[Q.Level - 1].ToString() + " : " + qDamageMaxPerLevel[Q.Level - 1].ToString());
+            double fxQDamage = qDamageMinPerLevel[Q.Level - 1] + qDamageMaxPerLevel[Q.Level - 1]* 1.6; 
+            fxQDamage = fxQDamage/ qCalcRange;
+
             return (float) fxQDamage;
         }
 
@@ -178,17 +192,40 @@ namespace Marksman
 
             QMinCharge = GetValue<Slider>("UseQMinChargeC").Value;
 
-            var qTarget = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+            var qTarget = SimpleTs.GetTarget(Q.ChargedMaxRange, SimpleTs.DamageType.Physical);
             var eTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
 
-            // if (WBuff.Count < useW.Value && !Q.IsCharging)
-            //     return;
-            //var wBuff = qTarget.Buffs.Count(buff => buff.Name == "varuswdebuff");
+            if (qTarget != null)
+                Game.PrintChat("Q Damage: " + CalcQDamage(qTarget));
 
-            //if (qTarget.Health < CalcQDamage(qTarget) + CalcWExplodeDamage(qTarget) && W.Level > 0) /* I'll fix */
             if (qTarget.Health < CalcQDamage(qTarget))
                 CastQEnemy(qTarget);
-                
+
+            if (useE && E.IsReady() && eTarget != null)
+                E.Cast(eTarget, false, true);
+
+
+            if (ObjectManager.Player.Distance(qTarget) > QMinCharge ||
+                ObjectManager.Player.Distance(qTarget) > Orbwalking.GetRealAutoAttackRange(qTarget)) 
+                CastQEnemy(qTarget);
+            else
+            {
+                switch (useQ.SelectedIndex)
+                {
+                    case 2:
+                        {
+                            CastQEnemy(EnemyWStackCount(useW.Value));
+                            break;
+                        }
+
+                    case 3:
+                        {
+                            CastQEnemy(EnemyWStackCount(3));
+                            break;
+                        }
+                }
+            }
+
             switch (useQ.SelectedIndex)
             {
                 case 1:
@@ -208,8 +245,7 @@ namespace Marksman
                     break;
                 }
             }
-            if (useE && E.IsReady() && eTarget != null)
-                E.Cast(eTarget, false, true);
+
         }
 
         public override void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
@@ -223,7 +259,7 @@ namespace Marksman
                 new MenuItem("UseQC" + Id, "Q").SetValue(
                     new StringList(new[] {"Off", "Everytime", "W Stack Value", "Max W Stack"}, 3)));
             config.AddItem(
-                new MenuItem("UseQMinChargeC" + Id, "Min. Q Charge").SetValue(new Slider(1000, 250, 1500)));
+                new MenuItem("UseQMinChargeC" + Id, "Min. Q Charge").SetValue(new Slider(1000, 250, 1400)));
             config.AddItem(new MenuItem("UseWC" + Id, "W").SetValue(new Slider(3, 1, 3)));
             config.AddItem(new MenuItem("UseEC" + Id, "E").SetValue(true));
 
