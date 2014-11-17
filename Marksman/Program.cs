@@ -13,6 +13,8 @@ namespace Marksman
         public static Menu QuickSilverMenu;
         public static Champion CClass;
         public static Activator AActivator;
+        public static double ActivatorTime;
+        
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -104,7 +106,7 @@ namespace Marksman
             var items = Config.AddSubMenu(new Menu("Items", "Items"));
             items.AddItem(new MenuItem("BOTRK", "BOTRK").SetValue(true));
             items.AddItem(new MenuItem("GHOSTBLADE", "Ghostblade").SetValue(true));
-            QuickSilverMenu = new Menu("Quick Silver Sash", "QuickSilverSash");
+            QuickSilverMenu = new Menu("QSS", "QuickSilverSash");
             items.AddSubMenu(QuickSilverMenu);
             QuickSilverMenu.AddItem(new MenuItem("AnyStun", "Any Stun").SetValue(true));
             QuickSilverMenu.AddItem(new MenuItem("AnySnare", "Any Snare").SetValue(true));
@@ -255,11 +257,20 @@ namespace Marksman
                 {
                     if (QuickSilverMenu.Item(t.Name).GetValue<bool>())
                     {
+                        if (t1.Name.ToLower().Contains(t.Name.ToLower()))
                         {
-                            if (t1.Name.ToLower().Contains(t.Name.ToLower()))
+                            foreach (var bx in AActivator.BuffList.Where(bx => bx.BuffName == t1.Name))
                             {
-                                if (Items.HasItem(3139)) Items.UseItem(3139); 
-                                if (Items.HasItem(3140)) Items.UseItem(3140);
+                                if (ActivatorTime + bx.Delay < (int) Game.Time)
+                                    ActivatorTime = (int) Game.Time;
+
+                                if (ActivatorTime + bx.Delay <= (int)Game.Time)
+                                {
+                                    if (Items.HasItem(3139)) Items.UseItem(3139);
+                                    if (Items.HasItem(3140)) Items.UseItem(3140);
+                                    ActivatorTime = (int)Game.Time;
+                                }
+                                
                             }
                         }
                     }
@@ -282,9 +293,8 @@ namespace Marksman
                         if (Items.HasItem(3139)) Items.UseItem(3139);
                         if (Items.HasItem(3140)) Items.UseItem(3140);
                     }
-
                 }
-            }
+            }           
         }
 
         private static void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
