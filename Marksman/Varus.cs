@@ -124,7 +124,7 @@ namespace Marksman
             var qDamageMaxPerLevel = new[] {15f, 70f, 125f, 180f, 235f};
 
 
-            Game.PrintChat(qDamageMinPerLevel[Q.Level - 1].ToString() + " : " + qDamageMaxPerLevel[Q.Level - 1].ToString());
+            //Game.PrintChat(qDamageMinPerLevel[Q.Level - 1].ToString() + " : " + qDamageMaxPerLevel[Q.Level - 1].ToString());
             double fxQDamage = qDamageMinPerLevel[Q.Level - 1] + qDamageMaxPerLevel[Q.Level - 1]* 1.6; 
             fxQDamage = fxQDamage/ qCalcRange;
 
@@ -195,8 +195,8 @@ namespace Marksman
             var qTarget = SimpleTs.GetTarget(Q.ChargedMaxRange, SimpleTs.DamageType.Physical);
             var eTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
 
-            if (qTarget != null)
-                Game.PrintChat("Q Damage: " + CalcQDamage(qTarget));
+            //if (qTarget != null)
+            //    Game.PrintChat("Q Damage: " + CalcQDamage(qTarget));
 
             if (qTarget.Health < CalcQDamage(qTarget))
                 CastQEnemy(qTarget);
