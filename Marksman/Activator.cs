@@ -18,7 +18,6 @@ namespace Marksman
     internal class Activator
     {
         public readonly List<BuffList> BuffList = new List<BuffList>();
-
         public Activator()
         {
             BuffList.Add(new BuffList
