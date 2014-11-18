@@ -224,6 +224,7 @@ namespace Marksman
 
             var botrk = Config.Item("BOTRK").GetValue<bool>();
             var ghostblade = Config.Item("GHOSTBLADE").GetValue<bool>();
+            var igniteSlot = ObjectManager.Player.GetSpellSlot("SummonerDot");
             var target = CClass.Orbwalker.GetTarget();
 
             if (botrk)
@@ -247,6 +248,16 @@ namespace Marksman
             if (ghostblade && target != null && target.Type == ObjectManager.Player.Type &&
                 Orbwalking.InAutoAttackRange(target))
                 Items.UseItem(3142);
+                
+            if (target != null && igniteSlot != SpellSlot.Unknown &&
+                ObjectManager.Player.SummonerSpellbook.CanUseSpell(igniteSlot) == SpellState.Ready)
+            {
+                if (ObjectManager.Player.Distance(target) < 650 &&
+                    ObjectManager.Player.GetSummonerSpellDamage(target, Damage.SummonerSpell.Ignite) >= target.Health)
+                {
+                    ObjectManager.Player.SummonerSpellbook.CastSpell(igniteSlot, target);
+                }
+            }    
         }
         
         private static void CheckChampionBuff()
