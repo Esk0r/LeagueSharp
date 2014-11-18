@@ -137,7 +137,6 @@ namespace Marksman
         }
 
         public static bool IsPositionSafeForE(Obj_AI_Hero target, Spell spell)
-        // use underTurret and .Extend for this please
         {
             var predPos = spell.GetPrediction(target).UnitPosition.To2D();
             var myPos = ObjectManager.Player.Position.To2D();
@@ -189,27 +188,12 @@ namespace Marksman
             var y = objAiHeroes.Sum(xxx => xxx.BaseAttackDamage);
             var y1 = objAiHeroes.Sum(xxx => xxx.Armor);
 
-            ///Game.PrintChat(i.ToString() + ": " + x.ToString() + " : " + y.ToString() + " Armor: " + y1.ToString());
-
         }
         public override void Game_OnGameUpdate(EventArgs args)
         {
             if (ObjectManager.Player.IsDead)
                 return;
 
-           // WriteLowEnemy();
-            /*
-            var enemy2 = ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy && enemy.IsVisible && !enemy.IsDead && ObjectManager.Player.Distance(enemy) < 1500);
-            var objAiHeroes = enemy2 as Obj_AI_Hero[] ?? enemy2.ToArray();
-           
-            var i = objAiHeroes.Sum(xxx => xxx.Level);
-            var x = objAiHeroes.Average(xxx => xxx.Level);
-            var y = objAiHeroes.Sum(xxx => xxx.BaseAttackDamage);
-            var y1 = objAiHeroes.Sum(xxx => xxx.Armor);
-
-            Game.PrintChat(i.ToString() + ": " + x.ToString() + " : " + y.ToString() + " Armor: " + y1.ToString());
-
-            */
             if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active)
             {
                 if (ObjectManager.Player.HasBuff("Recall"))
