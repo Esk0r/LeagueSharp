@@ -19,7 +19,7 @@ namespace Marksman
 
         public static bool DoubleHit = false;
 
-        private static readonly string[] BeCareful =
+        private static readonly string[] BeCarefulWhenTheyUltIsReady =
         {
             "Amumu", "Annie", "Cassiopeia", "Darius", "Diana", "Draven", "Fiddlestick", "Fizz", "Gragas", "Irelia", "JarvanIV", "Jax", "Jayce", "Kassadin", "Katarina", "Khazix", "LeeSin", "Leona", "Lissandra"
             , "Malphite", "Malzahar", "Maokai", "MasterYi", "Morgana", "Nocturne", "Nunu", "Olaf", "Orianna", "Pantheon"
