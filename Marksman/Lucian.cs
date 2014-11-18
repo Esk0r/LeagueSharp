@@ -164,29 +164,7 @@ namespace Marksman
 
         public static void WriteLowEnemy()
         {
-            var vPlayer = ObjectManager.Player;
-
-            var c =
-                (from enemy in ObjectManager.Get<Obj_AI_Hero>()
-                 where enemy.IsValidTarget()
-                 select vPlayer.Distance(enemy)).Count(dist => dist > E.Range && dist <= Q.Range);
-
-
-            var enemy2 =
-                ObjectManager.Get<Obj_AI_Hero>()
-                    .Where(
-                        enemy =>
-                            enemy.IsEnemy && enemy.IsVisible && !enemy.IsDead &&
-                            enemy.Level <= vPlayer.Level && enemy.BaseAttackDamage < vPlayer.BaseAttackDamage);
-            var objAiHeroes = enemy2 as Obj_AI_Hero[] ?? enemy2.ToArray();
-            var xTarget2 = objAiHeroes.Count(xxx => !xxx.IsDead);//xxx => xxx.Level);
-
-            Game.PrintChat(xTarget2.ToString());
-
-            var i = objAiHeroes.Sum(xxx => xxx.Level);
-            var x = objAiHeroes.Average(xxx => xxx.Level);
-            var y = objAiHeroes.Sum(xxx => xxx.BaseAttackDamage);
-            var y1 = objAiHeroes.Sum(xxx => xxx.Armor);
+            
 
         }
         public override void Game_OnGameUpdate(EventArgs args)
