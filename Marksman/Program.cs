@@ -106,6 +106,7 @@ namespace Marksman
             var items = Config.AddSubMenu(new Menu("Items", "Items"));
             items.AddItem(new MenuItem("BOTRK", "BOTRK").SetValue(true));
             items.AddItem(new MenuItem("GHOSTBLADE", "Ghostblade").SetValue(true));
+            items.AddItem(new MenuItem("SWORD", "Sword of the Divine").SetValue(true));
             QuickSilverMenu = new Menu("QSS", "QuickSilverSash");
             items.AddSubMenu(QuickSilverMenu);
             QuickSilverMenu.AddItem(new MenuItem("AnyStun", "Any Stun").SetValue(true));
@@ -224,6 +225,7 @@ namespace Marksman
 
             var botrk = Config.Item("BOTRK").GetValue<bool>();
             var ghostblade = Config.Item("GHOSTBLADE").GetValue<bool>();
+            var sword = Config.Item("SWORD").GetValue<bool>();
             var igniteSlot = ObjectManager.Player.GetSpellSlot("SummonerDot");
             var target = CClass.Orbwalker.GetTarget();
 
@@ -246,8 +248,14 @@ namespace Marksman
             }
 
             if (ghostblade && target != null && target.Type == ObjectManager.Player.Type &&
-                Orbwalking.InAutoAttackRange(target))
+                 !ObjectManager.Player.HasBuff("ItemSoTD", true) /*if Sword of the divine is not active */ 
+                 && Orbwalking.InAutoAttackRange(target)) 
                 Items.UseItem(3142);
+
+            if (sword && target != null && target.Type == ObjectManager.Player.Type &&
+                !ObjectManager.Player.HasBuff("spectralfury", true) /*if ghostblade is not active*/ 
+                && Orbwalking.InAutoAttackRange(target)) 
+                Items.UseItem(3131);
                 
             if (target != null && igniteSlot != SpellSlot.Unknown &&
                 ObjectManager.Player.SummonerSpellbook.CanUseSpell(igniteSlot) == SpellState.Ready)
