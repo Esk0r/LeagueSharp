@@ -20,8 +20,9 @@ namespace Marksman
             Utils.PrintMessage("Vayne loaded");
             
             Q = new Spell(SpellSlot.Q);
+            Q.Range = 300f;            
+            
             E = new Spell(SpellSlot.E);
-
             E.SetTargetted(0.25f, 2200f);
 
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
