@@ -1,6 +1,7 @@
 #region
 
 using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
@@ -39,16 +40,27 @@ namespace Marksman
                 E.Cast(unit);
         }
 
+        private static Obj_AI_Hero GetSilverBuffCountX(Obj_AI_Hero t)
+        {
+            return (from enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy && enemy == t)
+                from buff in enemy.Buffs
+                where buff.Name.Contains("vaynesilvereddebuf")
+                select buff).Select(buff => buff.Count == 2 ? t : null).FirstOrDefault();
+        }
+
         static int GetSilverBuffCount
         {
             get
             {
                 var xBuffCount = 0;
-                foreach (var buff in from enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy) from buff in enemy.Buffs where buff.Name.Contains("vaynesilvereddebuf") select buff)
+                foreach (var buff in from enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy)
+                    from buff in enemy.Buffs
+                    where buff.Name.Contains("vaynesilvereddebuf")
+                    select buff) 
                 {
                     xBuffCount = buff.Count;
                 }
-                return xBuffCount;
+                 return xBuffCount;
             }
         }
         public override void Game_OnGameUpdate(EventArgs args)
@@ -56,6 +68,15 @@ namespace Marksman
             if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100)) return;
 
             var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
+
+            if (Q.IsReady() && GetValue<bool>("CompleteSilverBuff"))
+            {
+                var t =
+                    GetSilverBuffCountX(SimpleTs.GetTarget(Q.Range + ObjectManager.Player.AttackRange,
+                        SimpleTs.DamageType.Physical));
+                if (t != null)
+                    Q.Cast(t.Position);
+            }
 
             if (E.IsReady() && useE)
             {
@@ -114,6 +135,7 @@ namespace Marksman
             config.AddItem(new MenuItem("UseEInterrupt" + Id, "Use E To Interrupt").SetValue(true));
             config.AddItem(
                 new MenuItem("PushDistance" + Id, "E Push Distance").SetValue(new Slider(425, 475, 300)));
+            config.AddItem(new MenuItem("CompleteSilverBuff" + Id, "Complete Silver Buff With Q").SetValue(true));
             return true;
         }
 
