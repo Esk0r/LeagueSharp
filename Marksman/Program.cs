@@ -280,16 +280,23 @@ namespace Marksman
                         {
                             foreach (var bx in AActivator.BuffList.Where(bx => bx.BuffName == t1.Name))
                             {
-                                if (ActivatorTime + bx.Delay < (int) Game.Time)
-                                    ActivatorTime = (int) Game.Time;
+                                if (bx.Delay > 0)
+                                {
+                                    if (ActivatorTime + bx.Delay < (int) Game.Time)
+                                        ActivatorTime = (int) Game.Time;
 
-                                if (ActivatorTime + bx.Delay <= (int)Game.Time)
+                                    if (ActivatorTime + bx.Delay <= (int) Game.Time)
+                                    {
+                                        if (Items.HasItem(3139)) Items.UseItem(3139);
+                                        if (Items.HasItem(3140)) Items.UseItem(3140);
+                                        ActivatorTime = (int) Game.Time;
+                                    }
+                                }
+                                else
                                 {
                                     if (Items.HasItem(3139)) Items.UseItem(3139);
                                     if (Items.HasItem(3140)) Items.UseItem(3140);
-                                    ActivatorTime = (int)Game.Time;
                                 }
-                                
                             }
                         }
                     }
