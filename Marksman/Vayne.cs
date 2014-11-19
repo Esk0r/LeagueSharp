@@ -76,7 +76,8 @@ namespace Marksman
                     GetSilverBuffCountX(SimpleTs.GetTarget(Q.Range + ObjectManager.Player.AttackRange,
                         SimpleTs.DamageType.Physical));
                 if (t != null)
-                    Q.Cast(t.Position);
+                    //Q.Cast(t.Position);
+                    Q.Cast(Game.CursorPos);
             }
 
             if (E.IsReady() && useE)
