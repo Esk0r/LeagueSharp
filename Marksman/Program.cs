@@ -57,6 +57,9 @@ namespace Marksman
                 case "jinx":
                     CClass = new Jinx();
                     break;
+                case "kalista":
+                    CClass = new Kalista();
+                    break;
                 case "kogmaw":
                     CClass = new Kogmaw();
                     break;
