@@ -76,6 +76,19 @@ namespace Marksman
             }
         }
 
+        public static double GetEDamage(Obj_AI_Base t)
+        {
+            var buff = t.Buffs.FirstOrDefault(xBuff => xBuff.DisplayName.ToLower() == "kalistaexpungemarker");
+            if (buff != null)
+            {
+                double damage = ObjectManager.Player.FlatPhysicalDamageMod + ObjectManager.Player.BaseAttackDamage;
+                double eDmg = damage * 0.60 + new double[] { 0, 20, 30, 40, 50, 60 }[E.Level];
+                damage += buff.Count * (0.004* damage) + eDmg;
+                return ObjectManager.Player.CalcDamage(t, Damage.DamageType.Physical, damage);
+            }
+            return 0;
+        }
+        
         public override void Game_OnGameUpdate(EventArgs args)
         {
             if (CoopStrikeAlly == null)
@@ -188,13 +201,12 @@ namespace Marksman
                         t = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
                         if (t != null)
                         {
-                            var x = KalistaMarkerCount;
-                            if (x >= 3)
-                                E.Cast(t);
+                            if (t.Health <= GetEDamage(t))
+                            {
+                                E.Cast();
+                            }
                         }
-                            
                     }
-                    
                 }
             }
 
