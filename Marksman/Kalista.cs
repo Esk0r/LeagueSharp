@@ -15,7 +15,7 @@ namespace Marksman
     {
         public Spell Q;
         public Spell W;
-        public Spell E;
+        public static Spell E;
         public Spell R;
 
         private static int kalistaMarkerCD;
