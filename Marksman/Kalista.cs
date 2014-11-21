@@ -125,6 +125,37 @@ namespace Marksman
                     }
                 }
             }
+            
+            var drawEStackCount = GetValue<Circle>("DrawEStackCount");
+            if (drawEStackCount.Active)
+            {
+
+                MarkedChampions.Clear();
+                foreach (
+                    var enemy in
+                        ObjectManager.Get<Obj_AI_Hero>()
+                            .Where(tx => tx.IsEnemy && !tx.IsDead && ObjectManager.Player.Distance(tx) <= E.Range))
+                {
+                    foreach (var buff in enemy.Buffs.Where(buff => buff.Name.Contains("kalistaexpungemarker")))
+                    {
+                        MarkedChampions.Add(enemy.ChampionName, buff.Count);
+                    }
+                }
+
+                foreach (var markedEnemies in MarkedChampions)
+                {
+                    foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
+                    {
+                        if (enemy.IsEnemy && !enemy.IsDead && ObjectManager.Player.Distance(enemy) <= E.Range &&
+                            enemy.ChampionName == markedEnemies.Key)
+                        {
+                            var display = string.Format("E:{0}", markedEnemies.Value);
+                            Drawing.DrawText(enemy.HPBarPosition.X + 145, enemy.HPBarPosition.Y + 20, drawEStackCount.Color,
+                                display);
+                        }
+                    }
+                }
+            }
     
             Obj_AI_Hero t;
 
@@ -193,9 +224,7 @@ namespace Marksman
 
         public override bool MiscMenu(Menu config)
         {
-            config.AddItem(
-                new MenuItem("CastR" + Id, "Cast R (2000 Range)").SetValue(new KeyBind("T".ToCharArray()[0],
-                    KeyBindType.Press)));
+
             return true;
         }
 
@@ -209,6 +238,7 @@ namespace Marksman
                 new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(false, Color.FromArgb(100, 255, 255, 255))));
             config.AddItem(
                 new MenuItem("DrawR" + Id, "R range").SetValue(new Circle(false, Color.FromArgb(100, 255, 255, 255))));
+            config.AddItem(new MenuItem("Dx" + Id, ""));
             config.AddItem(
                 new MenuItem("DrawConnMax" + Id, "Connection range").SetValue(new Circle(false,
                     Color.FromArgb(100, 255, 255, 255))));
@@ -216,6 +246,9 @@ namespace Marksman
                 new MenuItem("DrawConnText" + Id, "Connection Text").SetValue(new Circle(false, Color.GreenYellow)));
             config.AddItem(
                 new MenuItem("DrawConnSignal" + Id, "Connection Signal").SetValue(true));
+            config.AddItem(new MenuItem("Dx" + Id, ""));
+            config.AddItem(
+                new MenuItem("DrawEStackCount" + Id, "E Stack Count").SetValue(new Circle(false, Color.Firebrick)));
             return true;
         }
 
