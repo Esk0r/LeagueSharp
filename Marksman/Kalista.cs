@@ -89,12 +89,10 @@ namespace Marksman
                 {
                     CoopStrikeAlly = ally;
                 }
-            }
-
-            if (CoopStrikeAlly == null)
-            {
-                Drawing.DrawText(Drawing.Width*0.44f, Drawing.Height*0.80f, Color.Red,
-                    "Searching Your Friend...");
+                if (W.Level != 0)
+                {
+                    Drawing.DrawText(Drawing.Width*0.44f, Drawing.Height*0.80f, Color.Red, "Searching Your Friend...");
+                }
             }
             else
             {
