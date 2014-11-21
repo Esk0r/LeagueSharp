@@ -64,7 +64,7 @@ namespace Marksman
         {
             Obj_AI_Hero t;
 
-            if (Q.IsReady() &&  GetValue<KeyBind>("UseQTH").Active)
+            if (Q.IsReady() &&  GetValue<KeyBind>("UseQTH").Active && ToggleActive)
             {
                 if(ObjectManager.Player.HasBuff("Recall"))
                     return;
