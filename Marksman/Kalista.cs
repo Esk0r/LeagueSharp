@@ -22,6 +22,7 @@ namespace Marksman
         
         public Obj_AI_Hero CoopStrikeAlly;
         public float CoopStrikeAllyRange = 1250f;
+        public Dictionary<String, int> MarkedChampions = new Dictionary<String, int>();
 
         public static Items.Item Dfg = new Items.Item(3128, 750);
         public Kalista()
