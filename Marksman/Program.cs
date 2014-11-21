@@ -213,6 +213,7 @@ namespace Marksman
                                   ObjectManager.Player.Mana >= existsMana;
                                   
             CClass.LaneClearActive = CClass.Config.Item("LaneClear").GetValue<KeyBind>().Active;
+            CClass.ToggleActive = ObjectManager.Player.Mana >= existsMana;
             CClass.Game_OnGameUpdate(args);
 
             var useItemModes = Config.Item("UseItemsMode").GetValue<StringList>().SelectedIndex;
