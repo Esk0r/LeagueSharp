@@ -42,7 +42,7 @@ namespace Marksman
         {
             Utils.PrintMessage("Kalista loaded.");
 
-            Q = new Spell(SpellSlot.Q, 1400);
+            Q = new Spell(SpellSlot.Q, 1350);
             W = new Spell(SpellSlot.W, 5500);
             E = new Spell(SpellSlot.E, 950);
             R = new Spell(SpellSlot.R, 1250);
