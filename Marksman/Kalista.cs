@@ -1,16 +1,26 @@
 #region
 
 using System;
+using System.IO;
+using System.Xml;
 using LeagueSharp;
 using LeagueSharp.Common;
 using System.Collections.Generic;
 using System.Linq;
 using SharpDX;
 using Color = System.Drawing.Color;
+
 #endregion
 
 namespace Marksman
 {
+    internal class EnemyMarker
+    {
+        public string ChampionName { get; set; }
+        public double ExpireTime { get; set; }
+        public int BuffCount { get; set; }
+    }
+
     internal class Kalista : Champion
     {
         public Spell Q;
@@ -20,17 +30,19 @@ namespace Marksman
 
         private static int kalistaMarkerCD;
         public static Dictionary<Vector3, Vector3> jumpPos;
-        
+
         public Obj_AI_Hero CoopStrikeAlly;
         public float CoopStrikeAllyRange = 1250f;
         public Dictionary<String, int> MarkedChampions = new Dictionary<String, int>();
+        private static readonly List<EnemyMarker> xEnemyMarker = new List<EnemyMarker>();
 
         public static Items.Item Dfg = new Items.Item(3128, 750);
+
         public Kalista()
         {
             Utils.PrintMessage("Kalista loaded.");
 
-            Q = new Spell(SpellSlot.Q, 1450);
+            Q = new Spell(SpellSlot.Q, 1400);
             W = new Spell(SpellSlot.W, 5500);
             E = new Spell(SpellSlot.E, 950);
             R = new Spell(SpellSlot.R, 1250);
@@ -46,7 +58,7 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { Q, W, E, R };
+            Spell[] spellList = {Q, W, E, R};
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -57,7 +69,7 @@ namespace Marksman
             var drawConn = GetValue<Circle>("DrawConnMax");
             if (drawConn.Active)
                 Utility.DrawCircle(ObjectManager.Player.Position, CoopStrikeAllyRange, drawConn.Color);
-                
+
             var drawJumpPos = GetValue<Circle>("DrawJumpPos");
             if (drawJumpPos.Active)
             {
@@ -77,7 +89,7 @@ namespace Marksman
                         Utility.DrawCircle(pos.Value, 70f, Color.GreenYellow);
                     }
                 }
-            }                
+            }
         }
 
         public void JumpTo()
@@ -104,6 +116,7 @@ namespace Marksman
                 Packet.C2S.Move.Encoded(new Packet.C2S.Move.Struct(xTo.X, xTo.Y)).Send();
             }
         }
+
         public int KalistaMarkerCount
         {
             get
@@ -114,7 +127,7 @@ namespace Marksman
                         where ObjectManager.Player.Distance(enemy) < E.Range
                         from buff in enemy.Buffs
                         where buff.Name.Contains("kalistaexpungemarker")
-                        select buff) 
+                        select buff)
                 {
                     xbuffCount = buff.Count;
                 }
@@ -128,13 +141,13 @@ namespace Marksman
             if (buff != null)
             {
                 double damage = ObjectManager.Player.FlatPhysicalDamageMod + ObjectManager.Player.BaseAttackDamage;
-                double eDmg = damage * 0.60 + new double[] { 0, 20, 30, 40, 50, 60 }[E.Level];
-                damage += buff.Count * (0.004* damage) + eDmg;
+                double eDmg = damage*0.60 + new double[] {0, 20, 30, 40, 50, 60}[E.Level];
+                damage += buff.Count*(0.004*damage) + eDmg;
                 return ObjectManager.Player.CalcDamage(t, Damage.DamageType.Physical, damage);
             }
             return 0;
         }
-        
+
         public override void Game_OnGameUpdate(EventArgs args)
         {
             if (GetValue<Circle>("DrawJumpPos").Active)
@@ -144,7 +157,17 @@ namespace Marksman
             {
                 JumpTo();
             }
-            
+
+            foreach (
+                var myBoddy in
+                    ObjectManager.Get<Obj_AI_Minion>()
+                        .Where(
+                            obj => obj.Name == "RobotBuddy" &&
+                                   obj.IsAlly && ObjectManager.Player.Distance(obj) < 1500))
+
+            {
+                Utility.DrawCircle(myBoddy.Position, 75f, Color.Red);
+            }
             if (CoopStrikeAlly == null)
             {
                 foreach (
@@ -153,14 +176,12 @@ namespace Marksman
                         where ObjectManager.Player.Distance(ally) <= CoopStrikeAllyRange
                         from buff in ally.Buffs
                         where buff.Name.Contains("kalistacoopstrikeally")
-                        select ally) 
+                        select ally)
                 {
                     CoopStrikeAlly = ally;
                 }
                 if (W.Level != 0)
-                {
                     Drawing.DrawText(Drawing.Width*0.44f, Drawing.Height*0.80f, Color.Red, "Searching Your Friend...");
-                }
             }
             else
             {
@@ -184,7 +205,6 @@ namespace Marksman
                     {
                         Drawing.DrawText(Drawing.Width*0.45f, Drawing.Height*0.82f, Color.GreenYellow,
                             "Connection Signal: Good");
-
                     }
                     else if (ObjectManager.Player.Distance(CoopStrikeAlly) > CoopStrikeAllyRange)
                     {
@@ -193,38 +213,44 @@ namespace Marksman
                     }
                 }
             }
-            
             var drawEStackCount = GetValue<Circle>("DrawEStackCount");
             if (drawEStackCount.Active)
             {
-
-                MarkedChampions.Clear();
+                xEnemyMarker.Clear();
                 foreach (
-                    var enemy in
+                    var xEnemy in
                         ObjectManager.Get<Obj_AI_Hero>()
-                            .Where(tx => tx.IsEnemy && !tx.IsDead && ObjectManager.Player.Distance(tx) <= E.Range))
+                            .Where(tx => tx.IsEnemy && !tx.IsDead && ObjectManager.Player.Distance(tx) < E.Range))
                 {
-                    foreach (var buff in enemy.Buffs.Where(buff => buff.Name.Contains("kalistaexpungemarker")))
+                    foreach (var buff in xEnemy.Buffs.Where(buff => buff.Name.Contains("kalistaexpungemarker")))
                     {
-                        MarkedChampions.Add(enemy.ChampionName, buff.Count);
+                        xEnemyMarker.Add(new EnemyMarker
+                        {
+                            ChampionName = xEnemy.ChampionName,
+                            ExpireTime = Game.Time + 4,
+                            BuffCount = buff.Count
+                        });
                     }
                 }
 
-                foreach (var markedEnemies in MarkedChampions)
+                foreach (var markedEnemies in xEnemyMarker)
                 {
                     foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
                     {
                         if (enemy.IsEnemy && !enemy.IsDead && ObjectManager.Player.Distance(enemy) <= E.Range &&
-                            enemy.ChampionName == markedEnemies.Key)
+                            enemy.ChampionName == markedEnemies.ChampionName)
                         {
-                            var display = string.Format("E:{0}", markedEnemies.Value);
-                            Drawing.DrawText(enemy.HPBarPosition.X + 145, enemy.HPBarPosition.Y + 20, drawEStackCount.Color,
+                            if (!(markedEnemies.ExpireTime > Game.Time)) continue;
+                            var xCoolDown = TimeSpan.FromSeconds(markedEnemies.ExpireTime - Game.Time);
+                            var display = string.Format("E:{0}", markedEnemies.BuffCount );
+                            Drawing.DrawText(enemy.HPBarPosition.X + 145, enemy.HPBarPosition.Y + 20,
+                                drawEStackCount.Color,
                                 display);
                         }
                     }
                 }
             }
-    
+
             Obj_AI_Hero t;
 
             if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active)
@@ -249,7 +275,7 @@ namespace Marksman
                         if (t != null)
                             Q.Cast(t);
                     }
-                    
+
                     if (E.IsReady() && useE)
                     {
                         t = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
@@ -291,7 +317,8 @@ namespace Marksman
 
         public override bool MiscMenu(Menu config)
         {
-
+            config.AddItem(
+                new MenuItem("JumpTo" + Id, "JumpTo").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
             return true;
         }
 
@@ -325,7 +352,12 @@ namespace Marksman
 
         public override bool ExtrasMenu(Menu config)
         {
+            return true;
+        }
 
+
+        public override bool LaneClearMenu(Menu config)
+        {
             return true;
         }
 
