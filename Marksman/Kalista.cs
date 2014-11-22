@@ -135,18 +135,20 @@ namespace Marksman
             }
         }
 
-        private static float GetEDamage(Obj_AI_Base enemy)
+        private static float GetEDamage(Obj_AI_Base t)
         {
             if (!E.IsReady())
                 return 0f;
             
-            var buff = enemy.Buffs.FirstOrDefault(xBuff => xBuff.DisplayName.ToLower() == "kalistaexpungemarker");
+            return (float)Math.Floor(ObjectManager.Player.GetSpellDamage(t, SpellSlot.E));
+            
+            var buff = t.Buffs.FirstOrDefault(xBuff => xBuff.DisplayName.ToLower() == "kalistaexpungemarker");
             if (buff != null)
             {
                 double damage = ObjectManager.Player.FlatPhysicalDamageMod + ObjectManager.Player.BaseAttackDamage;
                 double eDmg = damage*0.60 + new double[] {0, 20, 30, 40, 50, 60}[E.Level];
                 damage += buff.Count*(0.004*damage) + eDmg;
-                return (float)ObjectManager.Player.CalcDamage(enemy, Damage.DamageType.Physical, damage);
+                return (float)ObjectManager.Player.CalcDamage(t, Damage.DamageType.Physical, damage);
             }
             return 0f;
         }
