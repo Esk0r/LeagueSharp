@@ -135,19 +135,21 @@ namespace Marksman
             }
         }
 
-        public static double GetEDamage(Obj_AI_Base t)
+        private static float GetEDamage(Obj_AI_Base enemy)
         {
-            var buff = t.Buffs.FirstOrDefault(xBuff => xBuff.DisplayName.ToLower() == "kalistaexpungemarker");
+            if (!E.IsReady())
+                return 0f;
+
+            var buff = enemy.Buffs.FirstOrDefault(xBuff => xBuff.DisplayName.ToLower() == "kalistaexpungemarker");
             if (buff != null)
             {
                 double damage = ObjectManager.Player.FlatPhysicalDamageMod + ObjectManager.Player.BaseAttackDamage;
                 double eDmg = damage*0.60 + new double[] {0, 20, 30, 40, 50, 60}[E.Level];
                 damage += buff.Count*(0.004*damage) + eDmg;
-                return ObjectManager.Player.CalcDamage(t, Damage.DamageType.Physical, damage);
+                return (float)ObjectManager.Player.CalcDamage(enemy, Damage.DamageType.Physical, damage);
             }
-            return 0;
+            return 0f;
         }
-
         public override void Game_OnGameUpdate(EventArgs args)
         {
             if (GetValue<Circle>("DrawJumpPos").Active)
@@ -347,6 +349,16 @@ namespace Marksman
             config.AddItem(
                 new MenuItem("DrawJumpPos" + Id, "Jump Positions").SetValue(new Circle(false, Color.HotPink)));
 
+            var damageAfterE = new MenuItem("DamageAfterE", "Damage After E").SetValue(true);
+            config.AddItem(damageAfterE);
+
+            Utility.HpBarDamageIndicator.DamageToUnit = GetEDamage;
+            Utility.HpBarDamageIndicator.Enabled = damageAfterE.GetValue<bool>();
+            damageAfterE.ValueChanged += delegate(object sender, OnValueChangeEventArgs eventArgs)
+            {
+                Utility.HpBarDamageIndicator.Enabled = eventArgs.GetNewValue<bool>();
+            };
+            
             return true;
         }
 
