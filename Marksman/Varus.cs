@@ -302,7 +302,11 @@ namespace Marksman
 
         public override bool ExtrasMenu(Menu config)
         {
+            return true;
+        }
 
+        public override bool LaneClearMenu(Menu config)
+        {
             return true;
         }
 
