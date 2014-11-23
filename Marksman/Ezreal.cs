@@ -1,7 +1,9 @@
 #region
 
 using System;
+using System.Configuration;
 using System.Drawing;
+using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 
@@ -23,7 +25,7 @@ namespace Marksman
             Q = new Spell(SpellSlot.Q, 1200);
             Q.SetSkillshot(0.25f, 60f, 2000f, true, SkillshotType.SkillshotLine);
 
-            W = new Spell(SpellSlot.W, 1050);
+            W = new Spell(SpellSlot.W, 950);
             W.SetSkillshot(0.25f, 80f, 1600f, false, SkillshotType.SkillshotLine);
 
             R = new Spell(SpellSlot.R, 2500);
@@ -102,6 +104,22 @@ namespace Marksman
                 }
             }
 
+            if (LaneClearActive)
+            {
+                bool useQ = GetValue<bool>("UseQL");
+
+                if (Q.IsReady() && useQ)
+                {
+                    var vMinions = MinionManager.GetMinions(ObjectManager.Player.Position, Q.Range);
+                    foreach (
+                        Obj_AI_Base minions in
+                            vMinions.Where(
+                                minions => minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q)))
+                        Q.Cast(minions);
+                }
+            }
+
+
             if (!R.IsReady() || !GetValue<KeyBind>("CastR").Active) return;
             t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
             if (t != null)
@@ -145,6 +163,11 @@ namespace Marksman
         public override bool ExtrasMenu(Menu config)
         {
 
+            return true;
+        }
+        public override bool LaneClearMenu(Menu config)
+        {
+            config.AddItem(new MenuItem("UseQL" + Id, "Use Q").SetValue(true));
             return true;
         }
 
