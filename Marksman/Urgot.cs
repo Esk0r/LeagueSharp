@@ -18,14 +18,14 @@ namespace Marksman
             Utils.PrintMessage("Urgot loaded.");
 
             Q = new Spell(SpellSlot.Q, 1000);
-            QEx = new Spell(SpellSlot.Q, 1600) {MinHitChance = HitChance.Collision};
+            QEx = new Spell(SpellSlot.Q, 1600) { MinHitChance = HitChance.Collision };
             W = new Spell(SpellSlot.W);
             E = new Spell(SpellSlot.E, 900);
             R = new Spell(SpellSlot.R, 700);
 
             Q.SetSkillshot(0.10f, 100f, 1600f, true, SkillshotType.SkillshotLine);
             QEx.SetSkillshot(0.10f, 60f, 1600f, false, SkillshotType.SkillshotLine);
-            
+
             E.SetSkillshot(0.283f, 0f, 1750f, false, SkillshotType.SkillshotCircle);
             R.SetTargetted(1f, 100f);
         }
@@ -91,7 +91,7 @@ namespace Marksman
                                     enemy =>
                                         enemy.IsEnemy && ObjectManager.Player.Distance(enemy) <= QEx.Range &&
                                         enemy.HasBuff("urgotcorrosivedebuff", true))
-                        select enemy) 
+                        select enemy)
                 {
                     Utility.DrawCircle(enemy.Position, 75f, drawQEx.Color);
                 }
@@ -141,14 +141,14 @@ namespace Marksman
         {
             ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
 
-            Drawing.DrawText(Drawing.Width*0.41f, Drawing.Height*0.80f, Color.GreenYellow,
+            Drawing.DrawText(Drawing.Width * 0.41f, Drawing.Height * 0.80f, Color.GreenYellow,
                 "Teleport enemy to under ally turret active!");
 
             if (R.IsReady() && Program.CClass.GetValue<bool>("UseRC"))
             {
                 var t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
                 if (t != null && UnderAllyTurret(ObjectManager.Player) && !UnderAllyTurret(t) &&
-                    ObjectManager.Player.Distance(t) > 200) 
+                    ObjectManager.Player.Distance(t) > 200)
                 {
                     R.CastOnUnit(t);
                 }
@@ -167,18 +167,18 @@ namespace Marksman
             var t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
             if (R.IsReady() && t != null)
             {
-            IEnumerable<Obj_AI_Hero> Ally =
-                ObjectManager.Get<Obj_AI_Hero>()
-                    .Where(
-                        ally =>
-                            ally.IsAlly && !ally.IsDead && ObjectManager.Player.Distance(ally) <= R.Range &&
-                            t.Distance(ally) > t.Distance(ObjectManager.Player));
-            
-            if (Ally.Count() >= Program.CClass.GetValue<Slider>("UltOp2Count").Value)    
-                R.CastOnUnit(t);
+                IEnumerable<Obj_AI_Hero> Ally =
+                    ObjectManager.Get<Obj_AI_Hero>()
+                        .Where(
+                            ally =>
+                                ally.IsAlly && !ally.IsDead && ObjectManager.Player.Distance(ally) <= R.Range &&
+                                t.Distance(ally) > t.Distance(ObjectManager.Player));
+
+                if (Ally.Count() >= Program.CClass.GetValue<Slider>("UltOp2Count").Value)
+                    R.CastOnUnit(t);
 
             }
-                
+
             UseSpells(Program.CClass.GetValue<bool>("UseQC"), Program.CClass.GetValue<bool>("UseWC"),
                 Program.CClass.GetValue<bool>("UseEC"));
         }
@@ -197,13 +197,30 @@ namespace Marksman
                 UltInMyTeam();
             }
 
-            if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100)) return;
+            if ((ComboActive && !HarassActive) || Orbwalking.CanMove(100))
+            {
+                var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
+                var useW = GetValue<bool>("UseWC");
+                var useE = GetValue<bool>("UseEC");
 
-            var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-            var useW = GetValue<bool>("UseWC");
-            var useE = GetValue<bool>("UseEC");
+                UseSpells(useQ, useW, useE);
+            }
 
-            UseSpells(useQ, useW, useE);
+            if (LaneClearActive)
+            {
+                bool useQ = GetValue<bool>("UseQL");
+
+                if (Q.IsReady() && useQ)
+                {
+                    var vMinions = MinionManager.GetMinions(ObjectManager.Player.Position, Q.Range);
+                    foreach (
+                        Obj_AI_Base minions in
+                            vMinions.Where(
+                                minions => minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q)))
+                        Q.Cast(minions);
+                }
+            }
+
         }
 
         public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
@@ -222,7 +239,7 @@ namespace Marksman
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
             config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(true));
 
-            
+
             config.AddSubMenu(new Menu("Ult Option 1", "UltOpt1"));
 
             config.SubMenu("UltOpt1")
@@ -246,7 +263,7 @@ namespace Marksman
                     .AddItem(
                         new MenuItem(string.Format("DontUlt{0}", enemy.BaseSkinName), enemy.BaseSkinName).SetValue(false));
             }
-            
+
             return true;
         }
 
@@ -278,5 +295,12 @@ namespace Marksman
         {
             return true;
         }
+
+        public override bool LaneClearMenu(Menu config)
+        {
+            config.AddItem(new MenuItem("UseQL" + Id, "Use Q").SetValue(true));
+            return true;
+        }
+
     }
 }
