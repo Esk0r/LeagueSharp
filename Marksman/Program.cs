@@ -150,6 +150,8 @@ namespace Marksman
                 var laneclear = new Menu("LaneClear", "LaneClear");
                 if (CClass.LaneClearMenu(laneclear))
                 {
+                    laneclear.AddItem(
+                        new MenuItem("LaneClearMana", "Min. Mana Percent").SetValue(new Slider(50, 100, 0)));
                     Config.AddSubMenu(laneclear);
                 }
 
@@ -208,12 +210,16 @@ namespace Marksman
             //Update the combo and harass values.
             CClass.ComboActive = CClass.Config.Item("Orbwalk").GetValue<KeyBind>().Active;
             
-            var existsMana = ObjectManager.Player.MaxMana/100*Config.Item("HarassMana").GetValue<Slider>().Value;
+            var harassExistsMana = ObjectManager.Player.MaxMana/100*Config.Item("HarassMana").GetValue<Slider>().Value;
             CClass.HarassActive = CClass.Config.Item("Farm").GetValue<KeyBind>().Active &&
-                                  ObjectManager.Player.Mana >= existsMana;
-                                  
-            CClass.LaneClearActive = CClass.Config.Item("LaneClear").GetValue<KeyBind>().Active;
-            CClass.ToggleActive = ObjectManager.Player.Mana >= existsMana;
+                                  ObjectManager.Player.Mana >= harassExistsMana;
+
+            CClass.ToggleActive = ObjectManager.Player.Mana >= harassExistsMana;
+
+            var laneExistsMana = ObjectManager.Player.MaxMana/100*Config.Item("LaneClearMana").GetValue<Slider>().Value;
+            CClass.LaneClearActive = CClass.Config.Item("LaneClear").GetValue<KeyBind>().Active &
+                                     ObjectManager.Player.Mana >= laneExistsMana;
+
             CClass.Game_OnGameUpdate(args);
 
             var useItemModes = Config.Item("UseItemsMode").GetValue<StringList>().SelectedIndex;
