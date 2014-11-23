@@ -124,6 +124,21 @@ namespace Marksman
                     }
                 }
             }
+            if (LaneClearActive)
+            {
+                bool useQ = GetValue<bool>("UseQL");
+
+                if (Q.IsReady() && useQ)
+                {
+                    var vMinions = MinionManager.GetMinions(ObjectManager.Player.Position, Q.Range);
+                    foreach (
+                        Obj_AI_Base minions in
+                            vMinions.Where(
+                                minions => minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q)))
+                        Q.Cast(minions);
+                }
+            }
+            
         }
 
         public override bool ComboMenu(Menu config)
@@ -166,6 +181,11 @@ namespace Marksman
         public override bool ExtrasMenu(Menu config)
         {
 
+            return true;
+        }
+        public override bool LaneClearMenu(Menu config)
+        {
+            config.AddItem(new MenuItem("UseQL" + Id, "Use Q").SetValue(true));
             return true;
         }
 
