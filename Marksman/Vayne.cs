@@ -20,9 +20,9 @@ namespace Marksman
             Utils.PrintMessage("Vayne loaded");
             
             Q = new Spell(SpellSlot.Q);
-            Q.Range = 300f;            
-            
             E = new Spell(SpellSlot.E);
+
+            Q.Range = 300f;
             E.SetTargetted(0.25f, 2200f);
 
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
@@ -43,7 +43,18 @@ namespace Marksman
 
         private static Obj_AI_Hero GetSilverBuffCountX(Obj_AI_Hero t)
         {
-            return (from enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy && enemy == t)
+
+            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy && enemy.IsValidTarget(800)))
+            {
+                var buff = enemy.Buffs.Where(bx => bx.Name.Contains("vaynesilvereddebuf"));
+                if (buff.Count()>1)
+                {
+                 return enemy;      
+                }
+
+            }
+            
+            return (from enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy && enemy.ChampionName == t.ChampionName)
                 from buff in enemy.Buffs
                 where buff.Name.Contains("vaynesilvereddebuf")
                 select buff).Select(buff => buff.Count == 2 ? t : null).FirstOrDefault();
@@ -61,44 +72,64 @@ namespace Marksman
                 {
                     xBuffCount = buff.Count;
                 }
+                
                  return xBuffCount;
             }
         }
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100)) return;
-
-            var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
-
-            if (Q.IsReady() && GetValue<bool>("CompleteSilverBuff"))
+            if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100))
             {
-                var t =
-                    GetSilverBuffCountX(SimpleTs.GetTarget(Q.Range + ObjectManager.Player.AttackRange,
-                        SimpleTs.DamageType.Physical));
-                if (t != null)
-                    //Q.Cast(t.Position);
-                    Q.Cast(Game.CursorPos);
-            }
 
-            if (E.IsReady() && useE)
-            {
-                foreach (
-                    var hero in from hero in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsValidTarget(550f))
-                        let prediction = E.GetPrediction(hero)
-                        where NavMesh.GetCollisionFlags(
-                            prediction.UnitPosition.To2D()
-                                .Extend(ObjectManager.Player.ServerPosition.To2D(),
-                                    -GetValue<Slider>("PushDistance").Value)
-                                .To3D())
-                            .HasFlag(CollisionFlags.Wall) || NavMesh.GetCollisionFlags(
+                var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
+
+                if (Q.IsReady() && GetValue<bool>("CompleteSilverBuff"))
+                {
+                    var t =
+                        GetSilverBuffCountX(SimpleTs.GetTarget(Q.Range + ObjectManager.Player.AttackRange,
+                            SimpleTs.DamageType.Physical));
+                    if (t != null)
+                    {
+                        Q.Cast(Game.CursorPos);
+                    }
+                }
+
+                if (E.IsReady() && useE)
+                {
+                    foreach (
+                        var hero in
+                            from hero in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsValidTarget(550f))
+                            let prediction = E.GetPrediction(hero)
+                            where NavMesh.GetCollisionFlags(
                                 prediction.UnitPosition.To2D()
                                     .Extend(ObjectManager.Player.ServerPosition.To2D(),
-                                        -(GetValue<Slider>("PushDistance").Value/2))
+                                        -GetValue<Slider>("PushDistance").Value)
                                     .To3D())
-                                .HasFlag(CollisionFlags.Wall)
-                        select hero)
+                                .HasFlag(CollisionFlags.Wall) || NavMesh.GetCollisionFlags(
+                                    prediction.UnitPosition.To2D()
+                                        .Extend(ObjectManager.Player.ServerPosition.To2D(),
+                                            -(GetValue<Slider>("PushDistance").Value/2))
+                                        .To3D())
+                                    .HasFlag(CollisionFlags.Wall)
+                            select hero)
+                    {
+                        E.Cast(hero);
+                    }
+                }
+            }
+
+            if (LaneClearActive)
+            {
+                bool useQ = GetValue<bool>("UseQL");
+
+                if (Q.IsReady() && useQ)
                 {
-                    E.Cast(hero);
+                    var vMinions = MinionManager.GetMinions(ObjectManager.Player.Position, Q.Range);
+                    foreach (
+                        Obj_AI_Base minions in
+                            vMinions.Where(
+                                minions => minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q)))
+                        Q.Cast(minions);
                 }
             }
         }
@@ -144,6 +175,11 @@ namespace Marksman
         public override bool ExtrasMenu(Menu config)
         {
 
+            return true;
+        }
+        public override bool LaneClearMenu(Menu config)
+        {
+            config.AddItem(new MenuItem("UseQL" + Id, "Use Q").SetValue(true));
             return true;
         }
 
