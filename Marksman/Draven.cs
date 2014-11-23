@@ -310,6 +310,11 @@ namespace Marksman
 
             return true;
         }
+        public override bool LaneClearMenu(Menu config)
+        {
+
+             return true;
+        }
 
     }
 }
