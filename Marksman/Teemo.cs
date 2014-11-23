@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 using System.Drawing;
@@ -19,8 +19,9 @@ namespace Marksman
         {
             Utils.PrintMessage("Teemo loaded.");
 
-            Q = new Spell(SpellSlot.Q, 580);
+            Q = new Spell(SpellSlot.Q, 680);
             R = new Spell(SpellSlot.R, 230);
+            Q.SetTargetted(0f, 2000f);
             R.SetSkillshot(0.1f, 75f, float.MaxValue, false, SkillshotType.SkillshotCircle);
         }
 
@@ -48,7 +49,7 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active)
+            if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active && ToggleActive)
             {
                 if(ObjectManager.Player.HasBuff("Recall"))
                     return;
@@ -90,6 +91,21 @@ namespace Marksman
                                 hero.IsValidTarget(R.Range)))
                     R.Cast(hero, false, true);
             }
+
+            if (LaneClearActive)
+            {
+                bool useQ = GetValue<bool>("UseQL");
+
+                if (Q.IsReady() && useQ)
+                {
+                    var vMinions = MinionManager.GetMinions(ObjectManager.Player.Position, Q.Range);
+                    foreach (
+                        Obj_AI_Base minions in
+                            vMinions.Where(
+                                minions => minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q)))
+                        Q.Cast(minions);
+                }
+            }
         }
 
         public override bool ComboMenu(Menu config)
@@ -127,5 +143,10 @@ namespace Marksman
             return true;
         }
 
+        public override bool LaneClearMenu(Menu config)
+        {
+            config.AddItem(new MenuItem("UseQL" + Id, "Use Q").SetValue(true));
+            return true;
+        }
     }
 }
