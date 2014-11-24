@@ -1,12 +1,9 @@
 #region
 using System;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
-
 using Color = System.Drawing.Color;
 #endregion
 
@@ -20,7 +17,7 @@ namespace Marksman
         public static Spell E;
 
         public static bool DoubleHit = false;
-        private static int xMustAttackCount = 0;
+        private static int xAttackLeft = 0;
 
         public Lucian()
         {
@@ -38,44 +35,16 @@ namespace Marksman
             GameObject.OnDelete += GameObject_OnDelete;
         }
 
-        public void Game_OnProcessSpell(Obj_AI_Base unit, GameObjectProcessSpellCastEventArgs spell)
-        {
-            if (!unit.IsMe) return;
-            if (spell.SData.Name.Contains("summoner")) return;
-            
-            if (spell.SData.Name.Contains("LucianQ"))
-            {
-                xMustAttackCount = 4;
-                return;
-            }
-
-            if (spell.SData.Name.Contains("LucianW"))
-            {
-                xMustAttackCount = 4;
-                return;
-            }
-
-            if (spell.SData.Name.Contains("LucianE"))
-            {
-                xMustAttackCount = 4;
-                return;
-            }
-            if (spell.SData.Name.Contains("LucianR"))
-            {
-                xMustAttackCount = 4;
-                return;
-            }
-            
-
-        }
-
         public static void GameObject_OnDelete(GameObject sender, EventArgs args)
         {
             /* so ugly code. I'll change later :( */
+            /*
+            return;
             if (xMustAttackCount > 0 && (sender.Name.Contains("Lucian_P_buf") || sender.Name.Contains("Lucian_AA_mis")))
             { 
                 xMustAttackCount -= 1;
             }
+            */
         }
 
         public bool LucianHasPassiveX
@@ -135,7 +104,6 @@ namespace Marksman
             }
         }
 
-
         public override void Drawing_OnDraw(EventArgs args)
         {
             Spell[] spellList = { Q, Q2, W, E };
@@ -162,12 +130,32 @@ namespace Marksman
             return d > 0;
         }
 
+        public void Game_OnProcessSpell(Obj_AI_Base unit, GameObjectProcessSpellCastEventArgs spell)
+        {
+            if (!unit.IsMe) return;
+            if (spell.SData.Name.Contains("summoner")) return;
+            if (!Config.Item("Passive" + Id).GetValue<bool>()) return;
+            
+            if (spell.SData.Name.ToLower().Contains("lucianq") || spell.SData.Name.ToLower().Contains("lucianw") ||
+                spell.SData.Name.ToLower().Contains("luciane") || spell.SData.Name.ToLower().Contains("lucianr")) 
+            {
+                xAttackLeft = 2;
+                return;
+            }
+
+            if (spell.SData.Name.ToLower().Contains("lucian") && spell.SData.Name.ToLower().Contains("attack"))
+            {
+                xAttackLeft -= 1;
+                return;
+            }
+        }
+
         public override void Game_OnGameUpdate(EventArgs args)
         {
             if (ObjectManager.Player.IsDead)
                 return;
 
-            if (Config.Item("Passive" + Id).GetValue<bool>() && xMustAttackCount > 0)
+            if (Config.Item("Passive" + Id).GetValue<bool>() && xAttackLeft > 0)
                 return;
 
             if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active && ToggleActive)
@@ -217,8 +205,10 @@ namespace Marksman
             if (useQ && Q.IsReady())
             {
                 var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
-                if (t != null)
+                if (t.IsValidTarget())
+                {
                     Q.CastOnUnit(t);
+                }
             }
 
             if (useW && W.IsReady())
