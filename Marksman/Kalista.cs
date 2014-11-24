@@ -141,6 +141,7 @@ namespace Marksman
                 return 0f;
             return (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.E);
             
+            /* I think this calculation working good but i cant check now. after I'll do */ 
             var buff = t.Buffs.FirstOrDefault(xBuff => xBuff.DisplayName.ToLower() == "kalistaexpungemarker");
             if (buff.Count == 0) 
                 return 0f;
