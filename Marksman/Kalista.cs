@@ -139,19 +139,21 @@ namespace Marksman
         {
             if (!E.IsReady())
                 return 0f;
-            
-            return (float)Math.Floor(ObjectManager.Player.GetSpellDamage(t, SpellSlot.E));
-            
+
             var buff = t.Buffs.FirstOrDefault(xBuff => xBuff.DisplayName.ToLower() == "kalistaexpungemarker");
-            if (buff != null)
-            {
-                double damage = ObjectManager.Player.FlatPhysicalDamageMod + ObjectManager.Player.BaseAttackDamage;
-                double eDmg = damage*0.60 + new double[] {0, 20, 30, 40, 50, 60}[E.Level];
-                damage += buff.Count*(0.004*damage) + eDmg;
-                return (float)ObjectManager.Player.CalcDamage(t, Damage.DamageType.Physical, damage);
-            }
-            return 0f;
+            if (buff.Count == 0) 
+                return 0f;
+
+            double damage = ObjectManager.Player.FlatPhysicalDamageMod + ObjectManager.Player.BaseAttackDamage;
+            double eDmg = damage * 0.60 + new double[] {0, 20, 30, 40, 50, 60}[E.Level];
+            
+            if (buff.Count == 1) 
+                return (float)eDmg;
+            
+            damage += buff.Count * 0.003 * damage + eDmg;
+            return (float) ObjectManager.Player.CalcDamage(t, Damage.DamageType.Physical, damage);
         }
+        
         public override void Game_OnGameUpdate(EventArgs args)
         {
             if (GetValue<Circle>("DrawJumpPos").Active)
@@ -285,7 +287,7 @@ namespace Marksman
                         t = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
                         if (t != null)
                         {
-                            if (t.Health <= GetEDamage(t))
+                            if (t.Health < ObjectManager.Player.GetSpellDamage(t, SpellSlot.E))
                             {
                                 E.Cast();
                             }
