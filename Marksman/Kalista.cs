@@ -139,7 +139,8 @@ namespace Marksman
         {
             if (!E.IsReady())
                 return 0f;
-
+            return (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.E);
+            
             var buff = t.Buffs.FirstOrDefault(xBuff => xBuff.DisplayName.ToLower() == "kalistaexpungemarker");
             if (buff.Count == 0) 
                 return 0f;
