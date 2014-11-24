@@ -217,10 +217,8 @@ namespace Marksman
             if (useQ && Q.IsReady())
             {
                 var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
-                if (t.IsValidTarget())
-                {
-                        Q.CastOnUnit(t);
-                }
+                if (t != null)
+                    Q.CastOnUnit(t);
             }
 
             if (useW && W.IsReady())
