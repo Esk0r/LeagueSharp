@@ -307,6 +307,7 @@ namespace Marksman
                                     if (Items.HasItem(3139)) Items.UseItem(3139);
                                     if (Items.HasItem(3140)) Items.UseItem(3140);
                                 }
+
                             }
                         }
                     }
@@ -332,7 +333,6 @@ namespace Marksman
                 }
             }           
         }
-
         private static void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
         {
             CClass.Orbwalking_AfterAttack(unit, target);
