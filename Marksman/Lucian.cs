@@ -176,7 +176,7 @@ namespace Marksman
                 var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
                 if (t.IsValidTarget() && QMinion.IsValidTarget())
                 {
-                    if (!Orbwalking.InAutoAttackRange(t))
+                    if (ObjectManager.Player.Distance(t) > Q.Range)
                         Q.CastOnUnit(QMinion);
                 }
             }
