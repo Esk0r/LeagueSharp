@@ -136,6 +136,25 @@ namespace Marksman
             if (spell.SData.Name.Contains("summoner")) return;
             if (!Config.Item("Passive" + Id).GetValue<bool>()) return;
             
+
+            if (spell.SData.Name.ToLower().Contains("lucianq") || spell.SData.Name.ToLower().Contains("lucianw") ||
+                spell.SData.Name.ToLower().Contains("luciane") || spell.SData.Name.ToLower().Contains("lucianr")) 
+            {
+                xAttackLeft = 2;
+                return;
+            }
+
+            if (spell.SData.Name.ToLower().Contains("lucian") && spell.SData.Name.ToLower().Contains("attack") && !spell.SData.Name.ToLower().Contains("passiveattack"))
+            {
+                Game.PrintChat(spell.SData.Name);
+                xAttackLeft -= 1;
+                return;
+            }
+            /*
+            if (!unit.IsMe) return;
+            if (spell.SData.Name.Contains("summoner")) return;
+            if (!Config.Item("Passive" + Id).GetValue<bool>()) return;
+            
             if (spell.SData.Name.ToLower().Contains("lucianq") || spell.SData.Name.ToLower().Contains("lucianw") ||
                 spell.SData.Name.ToLower().Contains("luciane") || spell.SData.Name.ToLower().Contains("lucianr")) 
             {
@@ -148,6 +167,7 @@ namespace Marksman
                 xAttackLeft -= 1;
                 return;
             }
+            */
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
