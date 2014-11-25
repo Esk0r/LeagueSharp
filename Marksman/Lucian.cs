@@ -253,6 +253,7 @@ namespace Marksman
                     KeyBindType.Toggle)));
             config.AddItem(new MenuItem("Cx", ""));
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
+            config.AddItem(new MenuItem("UseEH" + Id, "Use E").SetValue(true));
             return true;
         }
 
