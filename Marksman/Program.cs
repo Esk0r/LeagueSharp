@@ -54,6 +54,9 @@ namespace Marksman
                 case "graves":
                     CClass = new Graves();
                     break;
+                case "gnar":
+                    CClass = new Gnar();
+                    break;
                 case "jinx":
                     CClass = new Jinx();
                     break;
