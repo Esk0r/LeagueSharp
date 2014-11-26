@@ -146,7 +146,6 @@ namespace Marksman
 
             if (spell.SData.Name.ToLower().Contains("lucian") && spell.SData.Name.ToLower().Contains("attack") && !spell.SData.Name.ToLower().Contains("passiveattack"))
             {
-                Game.PrintChat(spell.SData.Name);
                 xAttackLeft -= 1;
                 return;
             }
