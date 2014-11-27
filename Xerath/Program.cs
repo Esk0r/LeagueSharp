@@ -138,7 +138,8 @@ namespace Xerath
                 Config.SubMenu("R").SubMenu("Custom delays").AddItem(new MenuItem("Delay"+i, "Delay"+i).SetValue(new Slider(0, 1500, 0)));
             Config.SubMenu("R").AddItem(new MenuItem("PingRKillable", "Ping on killable targets (only local)").SetValue(true));
             Config.SubMenu("R").AddItem(new MenuItem("BlockMovement", "Block right click while casting R").SetValue(false));
-            
+            Config.SubMenu("R").AddItem(new MenuItem("OnlyNearMouse", "Focus only targets near mouse").SetValue(false));
+            Config.SubMenu("R").AddItem(new MenuItem("MRadius", "Radius").SetValue(new Slider(700, 1500, 300)));
 
             //Harass menu:
             Config.AddSubMenu(new Menu("Harass", "Harass"));
@@ -334,12 +335,44 @@ namespace Xerath
                 W.Cast(wTarget, false, true);
         }
 
+        private static Obj_AI_Hero GetTargetNearMouse(float distance)
+        {
+            Obj_AI_Hero bestTarget = null;
+            var bestRatio = 0f;
+
+            if (SimpleTs.SelectedTarget.IsValidTarget() && !SimpleTs.IsInvulnerable(SimpleTs.SelectedTarget) &&
+                (Game.CursorPos.Distance(SimpleTs.SelectedTarget.ServerPosition) < distance && ObjectManager.Player.Distance(SimpleTs.SelectedTarget) < R.Range))
+            {
+                return SimpleTs.SelectedTarget;
+            }
+
+            foreach (var hero in ObjectManager.Get<Obj_AI_Hero>())
+            {
+                if (!hero.IsValidTarget(R.Range) || SimpleTs.IsInvulnerable(hero) || Game.CursorPos.Distance(hero.ServerPosition) > distance)
+                {
+                    continue;
+                }
+
+                var damage = (float)ObjectManager.Player.CalcDamage(hero, Damage.DamageType.Magical, 100);
+                var ratio = damage / (1 + hero.Health) * SimpleTs.GetPriority(hero);
+
+                if (ratio > bestRatio)
+                {
+                    bestRatio = ratio;
+                    bestTarget = hero;
+                }
+            }
+
+            return bestTarget;
+        }
+
         private static void WhileCastingR()
         {
             if (!Config.Item("EnableRUsage").GetValue<bool>()) return;
             var rMode = Config.Item("rMode").GetValue<StringList>().SelectedIndex;
 
-            var rTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Magical);
+            var rTarget = Config.Item("OnlyNearMouse").GetValue<bool>() ? GetTargetNearMouse(Config.Item("MRadius").GetValue<Slider>().Value) : SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Magical);
+
             if (rTarget != null)
             {
                 //Wait at least 0.6f if the target is going to die or if the target is to far away
@@ -508,6 +541,14 @@ namespace Xerath
 
         private static void Drawing_OnDraw(EventArgs args)
         {
+            if (IsCastingR)
+            {
+                if (Config.Item("OnlyNearMouse").GetValue<bool>())
+                {
+                    Utility.DrawCircle(Game.CursorPos, Config.Item("MRadius").GetValue<Slider>().Value, Color.White);
+                }
+            }
+
             //Draw the ranges of the spells.
             foreach (var spell in SpellList)
             {
