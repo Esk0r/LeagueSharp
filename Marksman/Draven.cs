@@ -42,7 +42,7 @@ namespace Marksman
             GameObject.OnCreate += OnCreateObject;
             GameObject.OnDelete += OnDeleteObject;
             AntiGapcloser.OnEnemyGapcloser += OnEnemyGapcloser;
-            Interrupter.OnPosibleToInterrupt += OnPosibleToInterrupt;
+            Interrupter.OnPossibleToInterrupt += OnPossibleToInterrupt;
             Utils.PrintMessage("Draven loaded.");
         }
 
@@ -54,7 +54,7 @@ namespace Marksman
             }
         }
 
-        public void OnPosibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
+        public void OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
         {
             if (E.IsReady() && Config.Item("EInterruptable").GetValue<bool>() && unit.IsValidTarget(E.Range))
             {
