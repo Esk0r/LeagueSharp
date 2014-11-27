@@ -136,37 +136,19 @@ namespace Marksman
             if (spell.SData.Name.Contains("summoner")) return;
             if (!Config.Item("Passive" + Id).GetValue<bool>()) return;
             
-
             if (spell.SData.Name.ToLower().Contains("lucianq") || spell.SData.Name.ToLower().Contains("lucianw") ||
-                spell.SData.Name.ToLower().Contains("luciane") || spell.SData.Name.ToLower().Contains("lucianr")) 
+                spell.SData.Name.ToLower().Contains("luciane") || spell.SData.Name.ToLower().Contains("lucianr"))
             {
-                xAttackLeft = 2;
-                return;
+                xAttackLeft = 1;
             }
 
-            if (spell.SData.Name.ToLower().Contains("lucian") && spell.SData.Name.ToLower().Contains("attack") && !spell.SData.Name.ToLower().Contains("passiveattack"))
+            if (spell.SData.Name.ToLower().Contains("lucianpassiveattack"))
             {
-                xAttackLeft -= 1;
-                return;
+                Utility.DelayAction.Add(500, () =>
+                {
+                    xAttackLeft -= 1;
+                });
             }
-            /*
-            if (!unit.IsMe) return;
-            if (spell.SData.Name.Contains("summoner")) return;
-            if (!Config.Item("Passive" + Id).GetValue<bool>()) return;
-            
-            if (spell.SData.Name.ToLower().Contains("lucianq") || spell.SData.Name.ToLower().Contains("lucianw") ||
-                spell.SData.Name.ToLower().Contains("luciane") || spell.SData.Name.ToLower().Contains("lucianr")) 
-            {
-                xAttackLeft = 2;
-                return;
-            }
-
-            if (spell.SData.Name.ToLower().Contains("lucian") && spell.SData.Name.ToLower().Contains("attack"))
-            {
-                xAttackLeft -= 1;
-                return;
-            }
-            */
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
