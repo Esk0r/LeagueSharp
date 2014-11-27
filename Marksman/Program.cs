@@ -174,8 +174,16 @@ namespace Marksman
                 var drawing = new Menu("Drawings", "Drawings");
                 if (CClass.DrawingMenu(drawing))
                 {
+                    drawing.AddItem(
+                        new MenuItem("drawMinionLastHit", "Minion Last Hit").SetValue(new Circle(true,
+                            System.Drawing.Color.GreenYellow)));
+                    drawing.AddItem(
+                        new MenuItem("drawMinionNearKill", "Minion Near Kill").SetValue(new Circle(true,
+                            System.Drawing.Color.Gray)));
+
                     Config.AddSubMenu(drawing);
                 }
+
             }
 
 
@@ -191,7 +199,31 @@ namespace Marksman
 
         private static void Drawing_OnDraw(EventArgs args)
         {
-            CClass.Drawing_OnDraw(args);
+            var drawMinionLastHit = CClass.Config.SubMenu("Drawings").Item("drawMinionLastHit").GetValue<Circle>();
+            var drawMinionNearKill = CClass.Config.SubMenu("Drawings").Item("drawMinionNearKill").GetValue<Circle>();
+            if (drawMinionLastHit.Active || drawMinionNearKill.Active)
+            {
+                var xMinions =
+                    MinionManager.GetMinions(ObjectManager.Player.Position,
+                        ObjectManager.Player.AttackRange + ObjectManager.Player.BoundingRadius + 300, MinionTypes.All,
+                        MinionTeam.Enemy, MinionOrderTypes.MaxHealth);
+
+                foreach (var xMinion in xMinions)
+                {
+                    if (drawMinionLastHit.Active && ObjectManager.Player.GetAutoAttackDamage(xMinion, true) >=
+                        xMinion.Health)
+                    {
+                        Utility.DrawCircle(xMinion.Position, xMinion.BoundingRadius, drawMinionLastHit.Color);
+                    }
+                    else if (drawMinionNearKill.Active &&
+                             ObjectManager.Player.GetAutoAttackDamage(xMinion, true) * 2 >= xMinion.Health) 
+                    {
+                        Utility.DrawCircle(xMinion.Position, xMinion.BoundingRadius, drawMinionNearKill.Color);
+                    }
+                }
+            }
+
+            CClass.Drawing_OnDraw(args); 
             return;
 
             var y = 10;
@@ -281,6 +313,16 @@ namespace Marksman
             }    
         }
         
+        private static void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        {
+            CClass.Orbwalking_AfterAttack(unit, target);
+        }
+
+        private static void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+            CClass.Orbwalking_BeforeAttack(args);
+        }
+
         private static void CheckChampionBuff()
         {
             foreach (var t1 in ObjectManager.Player.Buffs)
@@ -335,15 +377,6 @@ namespace Marksman
                     }
                 }
             }           
-        }
-        private static void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
-        {
-            CClass.Orbwalking_AfterAttack(unit, target);
-        }
-
-        private static void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
-        {
-            CClass.Orbwalking_BeforeAttack(args);
         }
     }
 }
