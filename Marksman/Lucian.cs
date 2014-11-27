@@ -18,6 +18,7 @@ namespace Marksman
 
         public static bool DoubleHit = false;
         private static int xAttackLeft = 0;
+        private static float xPassiveUsedTime;
 
         public Lucian()
         {
@@ -30,6 +31,8 @@ namespace Marksman
             Q.SetSkillshot(0.25f, 65f, 1100f, false, SkillshotType.SkillshotLine);
             W.SetSkillshot(0.30f, 80f, 1600f, true, SkillshotType.SkillshotLine);
             E = new Spell(SpellSlot.E, 475);
+            
+            xPassiveUsedTime = Game.Time;
 
             Obj_AI_Base.OnProcessSpellCast += Game_OnProcessSpell;
             GameObject.OnDelete += GameObject_OnDelete;
@@ -140,6 +143,7 @@ namespace Marksman
                 spell.SData.Name.ToLower().Contains("luciane") || spell.SData.Name.ToLower().Contains("lucianr"))
             {
                 xAttackLeft = 1;
+                xPassiveUsedTime = Game.Time;
             }
 
             if (spell.SData.Name.ToLower().Contains("lucianpassiveattack"))
@@ -154,8 +158,15 @@ namespace Marksman
         public override void Game_OnGameUpdate(EventArgs args)
         {
             if (ObjectManager.Player.IsDead)
+            {
+                xAttackLeft = 0;
                 return;
-
+            }
+            
+            if (Game.Time > xPassiveUsedTime + 7 && xAttackLeft == 1)
+            {
+                xAttackLeft = 0;
+            }
             if (Config.Item("Passive" + Id).GetValue<bool>() && xAttackLeft > 0)
                 return;
 
