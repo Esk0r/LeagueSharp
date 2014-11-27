@@ -175,10 +175,10 @@ namespace Marksman
                 if (CClass.DrawingMenu(drawing))
                 {
                     drawing.AddItem(
-                        new MenuItem("drawMinionLastHit", "Minion Last Hit").SetValue(new Circle(true,
+                        new MenuItem("drawMinionLastHit", "Minion Last Hit").SetValue(new Circle(false,
                             System.Drawing.Color.GreenYellow)));
                     drawing.AddItem(
-                        new MenuItem("drawMinionNearKill", "Minion Near Kill").SetValue(new Circle(true,
+                        new MenuItem("drawMinionNearKill", "Minion Near Kill").SetValue(new Circle(false,
                             System.Drawing.Color.Gray)));
 
                     Config.AddSubMenu(drawing);
