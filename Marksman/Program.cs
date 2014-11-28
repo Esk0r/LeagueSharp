@@ -197,7 +197,7 @@ namespace Marksman
             Game.OnGameUpdate += Game_OnGameUpdate;
             Orbwalking.AfterAttack += Orbwalking_AfterAttack;
             Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
-            Game.OnWndProc += Game_OnWndProc;
+            //Game.OnWndProc += Game_OnWndProc;
         }
 
          private static void Game_OnWndProc(WndEventArgs args)
