@@ -14,6 +14,7 @@ namespace Marksman
         public static Champion CClass;
         public static Activator AActivator;
         public static double ActivatorTime;
+        private static Obj_AI_Hero xSelectedTarget;        
         
         private static void Main(string[] args)
         {
@@ -196,10 +197,41 @@ namespace Marksman
             Game.OnGameUpdate += Game_OnGameUpdate;
             Orbwalking.AfterAttack += Orbwalking_AfterAttack;
             Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
+            Game.OnWndProc += Game_OnWndProc;
+        }
+
+         private static void Game_OnWndProc(WndEventArgs args)
+        {
+            
+            if (args.Msg != 0x201)
+                return;
+
+                foreach (var objAiHero in from hero in ObjectManager.Get<Obj_AI_Hero>()
+                                          where hero.IsValidTarget()
+                                          select hero
+                                              into h
+                                              orderby h.Distance(Game.CursorPos) descending
+                                              select h
+                                                  into enemy
+                                                  where enemy.Distance(Game.CursorPos) < 150f
+                                                  select enemy)
+                {
+                    if (objAiHero != null && objAiHero != xSelectedTarget)
+                    {
+                        xSelectedTarget = objAiHero;
+                        SimpleTs.SetTarget(objAiHero);
+                        Utils.PrintMessage(string.Format("{0} selected.", objAiHero.BaseSkinName));
+                    }
+                }
+          
         }
 
         private static void Drawing_OnDraw(EventArgs args)
         {
+            if (xSelectedTarget != null && xSelectedTarget.IsValidTarget())
+            {
+                Utility.DrawCircle(xSelectedTarget.Position, xSelectedTarget.BoundingRadius * 1.5f, System.Drawing.Color.Red);
+            }            
             var drawMinionLastHit = CClass.Config.SubMenu("Drawings").Item("drawMinionLastHit").GetValue<Circle>();
             var drawMinionNearKill = CClass.Config.SubMenu("Drawings").Item("drawMinionNearKill").GetValue<Circle>();
             if (drawMinionLastHit.Active || drawMinionNearKill.Active)
