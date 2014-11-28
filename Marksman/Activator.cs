@@ -125,15 +125,28 @@ namespace Marksman
                 DefaultValue = true,
                 Delay = 0
             });
-            BuffList.Add(new BuffList
+         BuffList.Add(new BuffList
             {
                 ChampionName = "Warwick",
                 DisplayName = "Warwick (R)",
-                BuffName = "InfiniteDuress",
+                BuffName = "suppression",
                 DefaultValue = true,
                 Delay = 0
             });
-            //BuffList.Add(new BuffList { ChampionName = "Morgana", DisplayName = "Morgana (Q)", BuffName = "DarkBindingMissile", DefaultValue = true });
+            BuffList.Add(new BuffList
+            {
+                ChampionName = "Morgana",
+                DisplayName = "Morgana (Q)",
+                BuffName = "DarkBindingMissile",
+                DefaultValue = true
+            });
+            BuffList.Add(new BuffList
+            {
+                ChampionName = "Morgana",
+                DisplayName = "Morgana (R)",
+                BuffName = "SoulShackless",
+                DefaultValue = true
+            });
             BuffList.Add(new BuffList
             {
                 ChampionName = "Zilean",
