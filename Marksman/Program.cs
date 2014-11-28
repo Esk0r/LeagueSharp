@@ -116,6 +116,7 @@ namespace Marksman
             QuickSilverMenu = new Menu("QSS", "QuickSilverSash");
             items.AddSubMenu(QuickSilverMenu);
             QuickSilverMenu.AddItem(new MenuItem("AnyStun", "Any Stun").SetValue(true));
+            QuickSilverMenu.AddItem(new MenuItem("AnySlow", "Any Slow").SetValue(true));
             QuickSilverMenu.AddItem(new MenuItem("AnySnare", "Any Snare").SetValue(true));
             QuickSilverMenu.AddItem(new MenuItem("AnyTaunt", "Any Taunt").SetValue(true));
             foreach (var t in AActivator.BuffList)
@@ -357,6 +358,12 @@ namespace Marksman
                         }
                     }
 
+                    if (QuickSilverMenu.Item("AnySlow").GetValue<bool>() &&
+                        ObjectManager.Player.HasBuffOfType(BuffType.Slow))
+                    {
+                        if (Items.HasItem(3139)) Items.UseItem(3139);
+                        if (Items.HasItem(3140)) Items.UseItem(3140);
+                    }
                     if (QuickSilverMenu.Item("AnySnare").GetValue<bool>() &&
                         ObjectManager.Player.HasBuffOfType(BuffType.Snare))
                     {
