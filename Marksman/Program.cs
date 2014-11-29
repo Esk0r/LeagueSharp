@@ -228,10 +228,12 @@ namespace Marksman
 
         private static void Drawing_OnDraw(EventArgs args)
         {
-            if (xSelectedTarget != null && xSelectedTarget.IsValidTarget())
+           /* 
+           if (xSelectedTarget != null && xSelectedTarget.IsValidTarget())
             {
                 Utility.DrawCircle(xSelectedTarget.Position, xSelectedTarget.BoundingRadius * 1.5f, System.Drawing.Color.Red);
-            }            
+            }
+            */
             var drawMinionLastHit = CClass.Config.SubMenu("Drawings").Item("drawMinionLastHit").GetValue<Circle>();
             var drawMinionNearKill = CClass.Config.SubMenu("Drawings").Item("drawMinionNearKill").GetValue<Circle>();
             if (drawMinionLastHit.Active || drawMinionNearKill.Active)
