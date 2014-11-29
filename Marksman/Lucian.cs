@@ -200,9 +200,9 @@ namespace Marksman
             var useE = Config.Item("UseE" + (ComboActive ? "C" : "H") + Id).GetValue<bool>();
             var useQExtended = Config.Item("UseQExtended" + (ComboActive ? "C" : "H") + Id).GetValue<bool>();
 
-            if (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Level > 0)
-                Config.Item("GHOSTBLADE")
-                    .SetValue(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Name == "LucianR");
+//            if (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Level > 0)
+//                Config.Item("GHOSTBLADE")
+//                    .SetValue(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Name == "LucianR");
 
             if (useQExtended && Q.IsReady())
             {
