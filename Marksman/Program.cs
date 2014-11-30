@@ -114,6 +114,7 @@ namespace Marksman
             items.AddItem(new MenuItem("BOTRK", "BOTRK").SetValue(true));
             items.AddItem(new MenuItem("GHOSTBLADE", "Ghostblade").SetValue(true));
             items.AddItem(new MenuItem("SWORD", "Sword of the Divine").SetValue(true));
+            items.AddItem(new MenuItem("MURAMANA", "Muramana").SetValue(true));
             QuickSilverMenu = new Menu("QSS", "QuickSilverSash");
             items.AddSubMenu(QuickSilverMenu);
             QuickSilverMenu.AddItem(new MenuItem("AnyStun", "Any Stun").SetValue(true));
@@ -306,6 +307,7 @@ namespace Marksman
             var botrk = Config.Item("BOTRK").GetValue<bool>();
             var ghostblade = Config.Item("GHOSTBLADE").GetValue<bool>();
             var sword = Config.Item("SWORD").GetValue<bool>();
+            var muramana = Config.Item("MURAMANA").GetValue<bool>();
             var igniteSlot = ObjectManager.Player.GetSpellSlot("SummonerDot");
             var target = CClass.Orbwalker.GetTarget();
 
@@ -336,6 +338,25 @@ namespace Marksman
                 !ObjectManager.Player.HasBuff("spectralfury", true) /*if ghostblade is not active*/ 
                 && Orbwalking.InAutoAttackRange(target)) 
                 Items.UseItem(3131);
+
+            if (muramana && Items.HasItem(3042))
+            {
+                if (target != null && CClass.ComboActive &&
+                    target.Position.Distance(ObjectManager.Player.Position) < 1200) 
+                {
+                    if (!ObjectManager.Player.HasBuff("Muramana", true))
+                    {
+                        Items.UseItem(3042);
+                    }
+                }
+                else
+                {
+                    if (ObjectManager.Player.HasBuff("Muramana", true))
+                    {
+                        Items.UseItem(3042);
+                    }
+                }
+            }
                 
             if (target != null && igniteSlot != SpellSlot.Unknown &&
                 ObjectManager.Player.SummonerSpellbook.CanUseSpell(igniteSlot) == SpellState.Ready)
