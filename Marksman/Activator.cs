@@ -40,7 +40,7 @@ namespace Marksman
             {
                 ChampionName = "Fizz",
                 DisplayName = "Fizz (R)",
-                BuffName = "FizzMarinerDoom",
+                BuffName = "fizzmarinerdoombomb",
                 DefaultValue = true,
                 Delay = 0
             });
