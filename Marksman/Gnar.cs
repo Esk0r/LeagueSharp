@@ -1,7 +1,6 @@
 #region
 using System;
 using System.Drawing;
-using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 #endregion
@@ -17,33 +16,31 @@ namespace Marksman
 
         public Gnar()
         {
-            Console.Clear();
             Utils.PrintMessage("Gnar loaded.");
 
             Q = new Spell(SpellSlot.Q, 1100);
             Q.SetSkillshot(0.5f, 50f, 1200f, false, SkillshotType.SkillshotLine);
 
             W = new Spell(SpellSlot.W, 600);
+
             E = new Spell(SpellSlot.E, 500);
             E.SetSkillshot(0.5f, 50f, 1200f, false, SkillshotType.SkillshotCircle);
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            if (vGnar.Spellbook.GetSpell(SpellSlot.Q).Level > 0)
+            if (!Orbwalking.CanMove(100))
+                return;
+
+            var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
             if (ComboActive || HarassActive)
             {
-                var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-
-                if (Orbwalking.CanMove(100))
+                if (Q.IsReady() && useQ)
                 {
-                    if (Q.IsReady() && useQ)
+                    var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                    if (t != null)
                     {
-                        var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
-                        if (t != null)
-                        {
-                            Q.Cast(t, false, true);
-                        }
+                        Q.Cast(t, false, true);
                     }
                 }
             }
