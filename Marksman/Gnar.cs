@@ -10,14 +10,13 @@ namespace Marksman
 {
     internal class Gnar : Champion
     {
-        private static readonly Obj_AI_Hero vGnar = ObjectManager.Player;
         public Spell Q;
         public Spell W;
         public Spell E;
 
         public Gnar()
         {
-            Console.Clear();
+            
             Utils.PrintMessage("Gnar loaded.");
 
             Q = new Spell(SpellSlot.Q, 1100);
@@ -30,7 +29,7 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            if (vGnar.Spellbook.GetSpell(SpellSlot.Q).Level > 0)
+            if (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.Q).Level > 0)
             if (ComboActive || HarassActive)
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
