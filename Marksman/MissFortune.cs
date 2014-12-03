@@ -53,7 +53,7 @@ namespace Marksman
             }
         }
 
-        private static void CastQ()
+        private static void CastQ(bool useMinions = false)
         {
             if (!Q.IsReady())
                 return;
@@ -65,22 +65,26 @@ namespace Marksman
                 return;
             }
 
-            var vMinions = MinionManager.GetMinions(t.Position, Q.Range, MinionTypes.All, MinionTeam.NotAlly);
-            Obj_AI_Base[] nearstMinion = { null };
-            foreach (
-                var vMinion in
-                    vMinions.Where(
-                        minion =>
-                            minion.Distance(ObjectManager.Player) <= t.Distance(ObjectManager.Player) &&
-                            t.Distance(minion) < 400)
-                        .Where(
+            if (useMinions)
+            {
+                var vMinions = MinionManager.GetMinions(t.Position, Q.Range, MinionTypes.All, MinionTeam.NotAlly);
+                Obj_AI_Base[] nearstMinion = {null};
+                foreach (
+                    var vMinion in
+                        vMinions.Where(
                             minion =>
-                                nearstMinion[0] == null ||
-                                minion.Distance(ObjectManager.Player) < nearstMinion[0].Distance(ObjectManager.Player)))
-                
-                nearstMinion[0] = vMinion;
-            if (nearstMinion[0] != null && nearstMinion[0].IsValidTarget(Q.Range))
-                Q.CastOnUnit(nearstMinion[0]);
+                                minion.Distance(ObjectManager.Player) <= t.Distance(ObjectManager.Player) &&
+                                t.Distance(minion) < 400)
+                            .Where(
+                                minion =>
+                                    nearstMinion[0] == null ||
+                                    minion.Distance(ObjectManager.Player) <
+                                    nearstMinion[0].Distance(ObjectManager.Player)))
+
+                    nearstMinion[0] = vMinion;
+                if (nearstMinion[0] != null && nearstMinion[0].IsValidTarget(Q.Range))
+                    Q.CastOnUnit(nearstMinion[0]);
+            }
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
@@ -89,7 +93,7 @@ namespace Marksman
             {
                 if (ObjectManager.Player.HasBuff("Recall"))
                     return;
-                CastQ();
+                CastQ(GetValue<KeyBind>("UseQMC").Active);
             }
 
             if (E.IsReady() && GetValue<KeyBind>("UseETH").Active)
@@ -105,14 +109,13 @@ namespace Marksman
             if (ComboActive || HarassActive)
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-                var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
                 var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
 
                 if (Orbwalking.CanMove(100))
                 {
                     if (Q.IsReady() && useQ)
                     {
-                        CastQ();
+                        CastQ(GetValue<KeyBind>("UseQMC").Active);
                     }
 
                     if (E.IsReady() && useE)
@@ -144,6 +147,7 @@ namespace Marksman
         public override bool ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
+            config.AddItem(new MenuItem("UseQMC" + Id, "Use Q (minions to enemy)").SetValue(true));
             config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
 
