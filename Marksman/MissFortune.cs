@@ -53,7 +53,7 @@ namespace Marksman
             }
         }
 
-        private static void CastQ(bool useMinions = false)
+        private static void CastQ()
         {
             if (!Q.IsReady())
                 return;
@@ -65,7 +65,7 @@ namespace Marksman
                 return;
             }
 
-            if (useMinions)
+            if (Program.CClass.Config.Item("UseQMC").GetValue<bool>())
             {
                 var vMinions = MinionManager.GetMinions(t.Position, Q.Range, MinionTypes.All, MinionTeam.NotAlly);
                 Obj_AI_Base[] nearstMinion = {null};
@@ -93,7 +93,7 @@ namespace Marksman
             {
                 if (ObjectManager.Player.HasBuff("Recall"))
                     return;
-                CastQ(GetValue<KeyBind>("UseQMC").Active);
+                CastQ();
             }
 
             if (E.IsReady() && GetValue<KeyBind>("UseETH").Active)
@@ -115,7 +115,7 @@ namespace Marksman
                 {
                     if (Q.IsReady() && useQ)
                     {
-                        CastQ(GetValue<KeyBind>("UseQMC").Active);
+                        CastQ();
                     }
 
                     if (E.IsReady() && useE)
@@ -137,7 +137,7 @@ namespace Marksman
                     foreach (
                         Obj_AI_Base minions in
                             vMinions.Where(
-                                minions => minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q)))
+                                minions => minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q) - 20))
                         Q.Cast(minions);
                 }
             }
@@ -147,7 +147,7 @@ namespace Marksman
         public override bool ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
-            config.AddItem(new MenuItem("UseQMC" + Id, "Use Q (minions to enemy)").SetValue(true));
+            config.AddItem(new MenuItem("UseQMC", "Use Q (minions to enemy)").SetValue(true));
             config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
 
