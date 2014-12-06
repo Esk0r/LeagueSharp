@@ -185,6 +185,9 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
+            if (Orbwalking.CanMove(100))
+                return;
+            
             R.Range = 150 * R.Level + 400;
 
             if (GetValue<KeyBind>("UltOp1").Active)
@@ -197,13 +200,14 @@ namespace Marksman
                 UltInMyTeam();
             }
 
-            if ((ComboActive && !HarassActive) || Orbwalking.CanMove(100))
+            if (ComboActive || HarassActive)
             {
-                var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-                var useW = GetValue<bool>("UseWC");
-                var useE = GetValue<bool>("UseEC");
-
-                UseSpells(useQ, useW, useE);
+                UseSpells
+                (
+                    GetValue<bool>("UseQ" + (ComboActive ? "C" : "H")), 
+                    GetValue<bool>("UseWC"),
+                    GetValue<bool>("UseEC")
+                );
             }
 
             if (LaneClearActive)
@@ -220,16 +224,6 @@ namespace Marksman
                         Q.Cast(minions);
                 }
             }
-
-        }
-
-        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
-        {
-            if ((!ComboActive && !HarassActive) || unit.IsMe || (!(target is Obj_AI_Hero))) return;
-
-            var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-            if (useQ)
-                Q.Cast(target, false, true);
         }
 
         public override bool ComboMenu(Menu config)
