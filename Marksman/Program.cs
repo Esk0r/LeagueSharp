@@ -389,9 +389,9 @@ namespace Marksman
                 var xCanUse = ObjectManager.Player.Health <=
                               ObjectManager.Player.MaxHealth/100*Config.Item("SUMHEALSLIDER").GetValue<Slider>().Value;
 
-                if (xCanUse && 
+                if (xCanUse && !Utility.InShopRange() && 
                     (xSlot != SpellSlot.Unknown || ObjectManager.Player.SummonerSpellbook.CanUseSpell(xSlot) == SpellState.Ready) 
-                    && Utility.CountEnemysInRange(xDangerousRange) != 0) 
+                    && Utility.CountEnemysInRange(xDangerousRange) > 0) 
                 {
                     ObjectManager.Player.SummonerSpellbook.CastSpell(xSlot);
                 }
@@ -403,9 +403,9 @@ namespace Marksman
                 var xCanUse = ObjectManager.Player.Health <=
                               ObjectManager.Player.MaxHealth/100*Config.Item("SUMBARRIERSLIDER").GetValue<Slider>().Value;
 
-                if (xCanUse && 
+                if (xCanUse && !Utility.InShopRange() && 
                     (xSlot != SpellSlot.Unknown || ObjectManager.Player.SummonerSpellbook.CanUseSpell(xSlot) == SpellState.Ready) 
-                    && Utility.CountEnemysInRange(xDangerousRange) != 0) 
+                    && Utility.CountEnemysInRange(xDangerousRange) > 0) 
                 {
                     ObjectManager.Player.SummonerSpellbook.CastSpell(xSlot);
                 }
