@@ -20,7 +20,7 @@ namespace Marksman
         {
             Utils.PrintMessage("Corki loaded");
 
-            Q = new Spell(SpellSlot.Q, 825f);
+            Q = new Spell(SpellSlot.Q, 800f);
             E = new Spell(SpellSlot.E, 600f);
             R1 = new Spell(SpellSlot.R, 1300f);
             R2 = new Spell(SpellSlot.R, 1500f);
