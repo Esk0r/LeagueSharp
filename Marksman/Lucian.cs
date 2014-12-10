@@ -163,7 +163,7 @@ namespace Marksman
                 return;
             }
             
-            if (Game.Time > xPassiveUsedTime + 7 && xAttackLeft == 1)
+            if (Game.Time > xPassiveUsedTime + 3 && xAttackLeft == 1)
             {
                 xAttackLeft = 0;
             }
