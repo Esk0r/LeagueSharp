@@ -20,12 +20,12 @@ namespace Marksman
         {
             Utils.PrintMessage("Corki loaded");
 
-            Q = new Spell(SpellSlot.Q, 800f);
+            Q = new Spell(SpellSlot.Q, 825f);
             E = new Spell(SpellSlot.E, 600f);
             R1 = new Spell(SpellSlot.R, 1300f);
             R2 = new Spell(SpellSlot.R, 1500f);
 
-            Q.SetSkillshot(0.3f, 120f, 1225f, false, SkillshotType.SkillshotCircle);
+            Q.SetSkillshot(0.3f, 120f, 1000f, false, SkillshotType.SkillshotCircle);
             E.SetSkillshot(0f, (float)(45 * Math.PI / 180), 1500, false, SkillshotType.SkillshotCone);
             R1.SetSkillshot(0.2f, 40f, 2000f, true, SkillshotType.SkillshotLine);
             R2.SetSkillshot(0.2f, 40f, 2000f, true, SkillshotType.SkillshotLine);
