@@ -390,10 +390,10 @@ namespace Marksman
                               ObjectManager.Player.MaxHealth/100*Config.Item("SUMHEALSLIDER").GetValue<Slider>().Value;
 
                 if (xCanUse && !Utility.InShopRange() && 
-                    (xSlot != SpellSlot.Unknown || ObjectManager.Player.SummonerSpellbook.CanUseSpell(xSlot) == SpellState.Ready) 
+                    (xSlot != SpellSlot.Unknown || ObjectManager.Player.Spellbook.CanUseSpell(xSlot) == SpellState.Ready) 
                     && Utility.CountEnemysInRange(xDangerousRange) > 0) 
                 {
-                    ObjectManager.Player.SummonerSpellbook.CastSpell(xSlot);
+                    ObjectManager.Player.Spellbook.CastSpell(xSlot);
                 }
             }
             
@@ -404,10 +404,10 @@ namespace Marksman
                               ObjectManager.Player.MaxHealth/100*Config.Item("SUMBARRIERSLIDER").GetValue<Slider>().Value;
 
                 if (xCanUse && !Utility.InShopRange() && 
-                    (xSlot != SpellSlot.Unknown || ObjectManager.Player.SummonerSpellbook.CanUseSpell(xSlot) == SpellState.Ready) 
+                    (xSlot != SpellSlot.Unknown || ObjectManager.Player.Spellbook.CanUseSpell(xSlot) == SpellState.Ready) 
                     && Utility.CountEnemysInRange(xDangerousRange) > 0) 
                 {
-                    ObjectManager.Player.SummonerSpellbook.CastSpell(xSlot);
+                    ObjectManager.Player.Spellbook.CastSpell(xSlot);
                 }
             }
             
@@ -417,13 +417,13 @@ namespace Marksman
                 var t = CClass.Orbwalker.GetTarget();
                 
                 if (t != null && xSlot != SpellSlot.Unknown &&
-                    ObjectManager.Player.SummonerSpellbook.CanUseSpell(xSlot) == SpellState.Ready)
+                    ObjectManager.Player.Spellbook.CanUseSpell(xSlot) == SpellState.Ready)
                 {
                     if (ObjectManager.Player.Distance(t) < 650 &&
                         ObjectManager.Player.GetSummonerSpellDamage(t, Damage.SummonerSpell.Ignite) >=
                         t.Health)
                     {
-                        ObjectManager.Player.SummonerSpellbook.CastSpell(xSlot, t);
+                        ObjectManager.Player.Spellbook.CastSpell(xSlot, t);
                     }
                 }
             }
