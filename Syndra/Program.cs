@@ -290,7 +290,7 @@ namespace Syndra
             if (E.IsReady())
                 damage += Player.GetSpellDamage(enemy, SpellSlot.E);
 
-            if (IgniteSlot != SpellSlot.Unknown && Player.SummonerSpellbook.CanUseSpell(IgniteSlot) == SpellState.Ready)
+            if (IgniteSlot != SpellSlot.Unknown && Player.Spellbook.CanUseSpell(IgniteSlot) == SpellState.Ready)
                 damage += ObjectManager.Player.GetSummonerSpellDamage(enemy, Damage.SummonerSpell.Ignite);
 
             if (R.IsReady())
@@ -367,11 +367,11 @@ namespace Syndra
 
             //Ignite
             if (rTarget != null && useIgnite && IgniteSlot != SpellSlot.Unknown &&
-                Player.SummonerSpellbook.CanUseSpell(IgniteSlot) == SpellState.Ready)
+                Player.Spellbook.CanUseSpell(IgniteSlot) == SpellState.Ready)
             {
                 if (comboDamage > rTarget.Health)
                 {
-                    Player.SummonerSpellbook.CastSpell(IgniteSlot, rTarget);
+                    Player.Spellbook.CastSpell(IgniteSlot, rTarget);
                 }
             }
 

@@ -35,7 +35,6 @@ namespace TwistedFate
         static CardSelector()
         {
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
-            Game.OnGameProcessPacket += Game_OnGameProcessPacket;
             Game.OnGameUpdate += Game_OnGameUpdate;
         }
 
@@ -66,57 +65,42 @@ namespace TwistedFate
 
         private static void Game_OnGameUpdate(EventArgs args)
         {
-            if ((ObjectManager.Player.Spellbook.CanUseSpell(SpellSlot.W) == SpellState.Ready &&
-                 ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name == "PickACard" &&
+            var wName = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name;
+            var wState = ObjectManager.Player.Spellbook.CanUseSpell(SpellSlot.W);
+
+            if ((wState == SpellState.Ready &&
+                 wName == "PickACard" &&
                  (Status != SelectStatus.Selecting || Environment.TickCount - LastWSent > 500)) ||
                 ObjectManager.Player.IsDead)
             {
                 Status = SelectStatus.Ready;
-            }
-
-            if (ObjectManager.Player.Spellbook.CanUseSpell(SpellSlot.W) == SpellState.Cooldown &&
-                ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name == "PickACard")
+            } else
+            if (wState == SpellState.Cooldown &&
+                wName == "PickACard")
             {
                 Select = Cards.None;
                 Status = SelectStatus.Cooldown;
             }
-
-            if (ObjectManager.Player.Spellbook.CanUseSpell(SpellSlot.W) == SpellState.Surpressed &&
+            else
+            if (wState == SpellState.Surpressed &&
                 !ObjectManager.Player.IsDead)
             {
                 Status = SelectStatus.Selected;
             }
-        }
 
-        private static void Game_OnGameProcessPacket(GamePacketEventArgs args)
-        {
-            if (args.PacketData[0] == Packet.S2C.ChangeSpellSlot.Header)
+            if (Select == Cards.Blue && wName == "bluecardlock")
             {
-                var dp = Packet.S2C.ChangeSpellSlot.Decoded(args.PacketData);
-                if (dp.Unit.IsValid && dp.Unit.IsMe && dp.Slot == SpellSlot.W)
-                {
-                    switch (dp.SpellString)
-                    {
-                        case "BlueCardLock":
-                            if (Select == Cards.Blue)
-                            {
-                                SendWPacket();
-                            }
-                            break;
-                        case "GoldCardLock":
-                            if (Select == Cards.Yellow)
-                            {
-                                SendWPacket();
-                            }
-                            break;
-                        case "RedCardLock":
-                            if (Select == Cards.Red)
-                            {
-                                SendWPacket();
-                            }
-                            break;
-                    }
-                }
+                SendWPacket();
+            }
+            else
+            if (Select == Cards.Yellow && wName == "goldcardlock")
+            {
+                SendWPacket();
+            }
+            else
+            if (Select == Cards.Red && wName == "redcardlock")
+            {
+                SendWPacket();
             }
         }
 

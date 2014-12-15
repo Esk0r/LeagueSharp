@@ -891,7 +891,7 @@ namespace Evade
 
                                 if (evadeSpell.IsSummonerSpell)
                                 {
-                                    ObjectManager.Player.SummonerSpellbook.CastSpell(
+                                    ObjectManager.Player.Spellbook.CastSpell(
                                         evadeSpell.Slot, ObjectManager.Player);
                                 }
                                 else
@@ -921,7 +921,7 @@ namespace Evade
 
                                     if (evadeSpell.IsSummonerSpell)
                                     {
-                                        ObjectManager.Player.SummonerSpellbook.CastSpell(evadeSpell.Slot, closestTarget);
+                                        ObjectManager.Player.Spellbook.CastSpell(evadeSpell.Slot, closestTarget);
                                     }
                                     else
                                     {
@@ -1083,7 +1083,7 @@ namespace Evade
 
                                         if (evadeSpell.IsSummonerSpell)
                                         {
-                                            ObjectManager.Player.SummonerSpellbook.CastSpell(
+                                            ObjectManager.Player.Spellbook.CastSpell(
                                                 evadeSpell.Slot, closestTarget);
                                         }
                                         else
@@ -1185,7 +1185,7 @@ namespace Evade
                                         Evading = true;
                                         if (evadeSpell.IsSummonerSpell)
                                         {
-                                            ObjectManager.Player.SummonerSpellbook.CastSpell(
+                                            ObjectManager.Player.Spellbook.CastSpell(
                                                 evadeSpell.Slot, EvadePoint.To3D());
                                         }
                                         else

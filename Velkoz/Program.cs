@@ -246,7 +246,7 @@ namespace Velkoz
             if (E.IsReady())
                 damage += Player.GetSpellDamage(enemy, SpellSlot.E);
 
-            if (IgniteSlot != SpellSlot.Unknown && Player.SummonerSpellbook.CanUseSpell(IgniteSlot) == SpellState.Ready)
+            if (IgniteSlot != SpellSlot.Unknown && Player.Spellbook.CanUseSpell(IgniteSlot) == SpellState.Ready)
                 damage += Player.GetSummonerSpellDamage(enemy, Damage.SummonerSpell.Ignite);
 
             if (R.IsReady())
@@ -308,11 +308,11 @@ namespace Velkoz
             }
 
             if (qTarget != null && useIgnite && IgniteSlot != SpellSlot.Unknown &&
-                Player.SummonerSpellbook.CanUseSpell(IgniteSlot) == SpellState.Ready)
+                Player.Spellbook.CanUseSpell(IgniteSlot) == SpellState.Ready)
             {
                 if (Player.Distance(qTarget) < 650 && GetComboDamage(qTarget) > qTarget.Health)
                 {
-                    Player.SummonerSpellbook.CastSpell(IgniteSlot, qTarget);
+                    Player.Spellbook.CastSpell(IgniteSlot, qTarget);
                 }
             }
 

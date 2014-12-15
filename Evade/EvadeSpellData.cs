@@ -108,7 +108,7 @@ namespace Evade
         public bool IsReady()
         {
             return ((CheckSpellName == "" || ObjectManager.Player.Spellbook.GetSpell(Slot).Name == CheckSpellName) &&
-                    ((IsSummonerSpell && ObjectManager.Player.SummonerSpellbook.CanUseSpell(Slot) == SpellState.Ready) ||
+                    ((IsSummonerSpell && ObjectManager.Player.Spellbook.CanUseSpell(Slot) == SpellState.Ready) ||
                      (!IsSummonerSpell && ObjectManager.Player.Spellbook.CanUseSpell(Slot) == SpellState.Ready)));
         }
     }
