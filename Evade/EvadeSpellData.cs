@@ -1,5 +1,7 @@
 ﻿// Copyright 2014 - 2014 Esk0r
-// EvadeSpellData.cs is part of Evade.
+
+#region // EvadeSpellData.cs is part of Evade.
+
 // 
 // Evade is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,6 +15,8 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with Evade. If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
 
 #region
 
@@ -32,7 +36,7 @@ namespace Evade
         EnemyWards,
 
         AllyChampions,
-        EnemyChampions,
+        EnemyChampions
     }
 
     /// <summary>
@@ -42,12 +46,12 @@ namespace Evade
     {
         public delegate float MoveSpeedAmount();
 
+        public int _dangerLevel;
         public bool CanShieldAllies;
         public string CheckSpellName = "";
         public int Delay;
         public bool FixedRange;
         public bool Invert;
-
         public bool IsBlink;
         public bool IsDash;
         public bool IsInvulnerability;
@@ -55,19 +59,14 @@ namespace Evade
         public bool IsShield;
         public bool IsSpellShield;
         public bool IsSummonerSpell;
-
         public float MaxRange;
         public MoveSpeedAmount MoveSpeedTotalAmount;
         public string Name;
         public bool RequiresPreMove;
         public bool SelfCast;
         public SpellSlot Slot;
-
         public int Speed;
         public SpellValidTargets[] ValidTargets;
-
-        public int _dangerLevel;
-
         public EvadeSpellData() { }
 
         public EvadeSpellData(string name, int dangerLevel)
@@ -108,8 +107,7 @@ namespace Evade
         public bool IsReady()
         {
             return ((CheckSpellName == "" || ObjectManager.Player.Spellbook.GetSpell(Slot).Name == CheckSpellName) &&
-                    ((IsSummonerSpell && ObjectManager.Player.SummonerSpellbook.CanUseSpell(Slot) == SpellState.Ready) ||
-                     (!IsSummonerSpell && ObjectManager.Player.Spellbook.CanUseSpell(Slot) == SpellState.Ready)));
+                    (ObjectManager.Player.Spellbook.CanUseSpell(Slot) == SpellState.Ready));
         }
     }
 
