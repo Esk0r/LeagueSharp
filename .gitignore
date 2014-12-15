@@ -216,4 +216,5 @@ pip-log.txt
 Syndra/App.config
 Syndra/Syndra.csproj
 Marksman/Properties/Resources.Designer.cs
-Marksman/Marksman.csproj
+*.csproj
+*.sln
