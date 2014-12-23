@@ -104,7 +104,7 @@ namespace Marksman
             CClass.Config = Config;
 
             var targetSelectorMenu = new Menu("Target Selector", "Target Selector");
-            SimpleTs.AddToMenu(targetSelectorMenu);
+            TargetSelector.AddToMenu(targetSelectorMenu);
             Config.AddSubMenu(targetSelectorMenu);
 
             var orbwalking = Config.AddSubMenu(new Menu("Orbwalking", "Orbwalking"));
@@ -240,7 +240,7 @@ namespace Marksman
                     if (objAiHero != null && objAiHero != xSelectedTarget)
                     {
                         xSelectedTarget = objAiHero;
-                        SimpleTs.SetTarget(objAiHero);
+                        TargetSelector.SetTarget(objAiHero);
                         Utils.PrintMessage(string.Format("{0} selected.", objAiHero.BaseSkinName));
                     }
                 }
@@ -329,7 +329,7 @@ namespace Marksman
             var ghostblade = Config.Item("GHOSTBLADE").GetValue<bool>();
             var sword = Config.Item("SWORD").GetValue<bool>();
             var muramana = Config.Item("MURAMANA").GetValue<bool>();
-            var target = CClass.Orbwalker.GetTarget();
+            var target = CClass.Orbwalker.GetTarget() as Obj_AI_Base;
 
             if (botrk)
             {
@@ -414,7 +414,7 @@ namespace Marksman
             if (Config.Item("SUMIGNITEENABLE").GetValue<bool>())
             {
                 var xSlot = ObjectManager.Player.GetSpellSlot("summonerdot");
-                var t = CClass.Orbwalker.GetTarget();
+                var t = CClass.Orbwalker.GetTarget() as Obj_AI_Hero;
                 
                 if (t != null && xSlot != SpellSlot.Unknown &&
                     ObjectManager.Player.Spellbook.CanUseSpell(xSlot) == SpellState.Ready)
@@ -427,8 +427,8 @@ namespace Marksman
                     }
                 }
             }
-        }        
-        private static void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        }
+        private static void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
             CClass.Orbwalking_AfterAttack(unit, target);
         }

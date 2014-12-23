@@ -153,10 +153,10 @@ namespace Marksman
             }
 
             //Combo
-            var rtarget = SimpleTs.GetTarget(2000, SimpleTs.DamageType.Physical);
+            var rtarget = TargetSelector.GetTarget(2000, TargetSelector.DamageType.Physical);
             if (ComboActive)
             {
-                var target = SimpleTs.GetTarget(550, SimpleTs.DamageType.Physical);
+                var target = TargetSelector.GetTarget(550, TargetSelector.DamageType.Physical);
                 if (target == null)
                 {
                     return;
@@ -211,7 +211,7 @@ namespace Marksman
             }
         }
 
-        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
             if (!unit.IsMe)
             {

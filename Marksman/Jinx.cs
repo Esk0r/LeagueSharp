@@ -133,7 +133,7 @@ namespace Marksman
 
             if (GetValue<KeyBind>("CastR").Active && R.IsReady())
             {
-                var target = SimpleTs.GetTarget(1500, SimpleTs.DamageType.Physical);
+                var target = TargetSelector.GetTarget(1500, TargetSelector.DamageType.Physical);
 
                 if (target.IsValidTarget())
                 {
@@ -146,7 +146,7 @@ namespace Marksman
 
             if (GetValue<bool>("SwapQ") && FishBoneActive &&
                 (LaneClearActive ||
-                 (HarassActive && SimpleTs.GetTarget(675f + QAddRange, SimpleTs.DamageType.Physical) == null)))
+                 (HarassActive && TargetSelector.GetTarget(675f + QAddRange, TargetSelector.DamageType.Physical) == null)))
             {
                 Q.Cast();
             }
@@ -162,7 +162,7 @@ namespace Marksman
 
             if (useW && W.IsReady())
             {
-                var t = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
+                var t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
                 var minW = GetValue<Slider>("MinWRange").Value;
 
                 if (t.IsValidTarget() && GetRealDistance(t) >= minW)
@@ -221,7 +221,7 @@ namespace Marksman
                 var checkRok = GetValue<bool>("ROverKill");
                 var minR = GetValue<Slider>("MinRRange").Value;
                 var maxR = GetValue<Slider>("MaxRRange").Value;
-                var t = SimpleTs.GetTarget(maxR, SimpleTs.DamageType.Physical);
+                var t = TargetSelector.GetTarget(maxR, TargetSelector.DamageType.Physical);
 
                 if (t.IsValidTarget())
                 {
@@ -275,7 +275,7 @@ namespace Marksman
             }
         }
 
-        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
             if ((ComboActive || HarassActive) && unit.IsMe && (target is Obj_AI_Hero))
             {
@@ -284,7 +284,7 @@ namespace Marksman
 
                 if (useW && W.IsReady())
                 {
-                    var t = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
+                    var t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
                     var minW = GetValue<Slider>("MinWRange").Value;
 
                     if (t.IsValidTarget() && GetRealDistance(t) >= minW)

@@ -86,14 +86,14 @@ namespace Marksman
             {
                 if(ObjectManager.Player.HasBuff("Recall"))
                     return;
-                var t = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
+                var t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
                 if (t != null)
                     W.Cast(t);
             }
             //Combo
             if (ComboActive)
             {
-                var target = SimpleTs.GetTarget(1200, SimpleTs.DamageType.Physical);
+                var target = TargetSelector.GetTarget(1200, TargetSelector.DamageType.Physical);
                 if (target == null) return;
 
                 if (!Config.Item("QExploit" + Id).GetValue<bool>() && !IsQActive() && Config.Item("UseQC" + Id).GetValue<bool>())
@@ -104,7 +104,7 @@ namespace Marksman
 
                 if (Config.Item("UseRC" + Id).GetValue<bool>() && R.IsReady())
                 {
-                    var rTarget = SimpleTs.GetTarget(1500, SimpleTs.DamageType.Physical);
+                    var rTarget = TargetSelector.GetTarget(1500, TargetSelector.DamageType.Physical);
 
                     if (!rTarget.IsValidTarget() ||
                         !(ObjectManager.Player.GetSpellDamage(rTarget, SpellSlot.R) > rTarget.Health)) return;
@@ -116,7 +116,7 @@ namespace Marksman
             //Harass
             if (HarassActive)
             {
-                var target = SimpleTs.GetTarget(1200, SimpleTs.DamageType.Physical);
+                var target = TargetSelector.GetTarget(1200, TargetSelector.DamageType.Physical);
                 if (target == null) return;
 
                 if (!Config.Item("QExploit" + Id).GetValue<bool>() && !IsQActive() && Config.Item("UseQH" + Id).GetValue<bool>())
@@ -133,7 +133,7 @@ namespace Marksman
             //Manual cast R
             if (Config.Item("RManualCast" + Id).GetValue<KeyBind>().Active)
             {
-                var rTarget = SimpleTs.GetTarget(2000, SimpleTs.DamageType.Physical);
+                var rTarget = TargetSelector.GetTarget(2000, TargetSelector.DamageType.Physical);
                 R.Cast(rTarget);
             }
         }

@@ -168,7 +168,7 @@ namespace Marksman
                 var rTarget =
                     ObjectManager.Get<Obj_AI_Hero>()
                         .Where(hero => hero.IsValidTarget(R.Range) && hero.Distance(searchPos) < 300f)
-                        .OrderByDescending(SimpleTs.GetPriority)
+                        .OrderByDescending(TargetSelector.GetPriority)
                         .First();
 
                 if (rTarget != null && R.IsReady())
@@ -179,7 +179,7 @@ namespace Marksman
             {
                 if(ObjectManager.Player.HasBuff("Recall"))
                     return;
-                var t = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                var t = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
                 if (t != null)
                     E.Cast(t, false, true);
             }           
@@ -192,8 +192,8 @@ namespace Marksman
 
             QMinCharge = GetValue<Slider>("UseQMinChargeC").Value;
 
-            var qTarget = SimpleTs.GetTarget(Q.ChargedMaxRange, SimpleTs.DamageType.Physical);
-            var eTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+            var qTarget = TargetSelector.GetTarget(Q.ChargedMaxRange, TargetSelector.DamageType.Physical);
+            var eTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
 
             //if (qTarget != null)
             //    Game.PrintChat("Q Damage: " + CalcQDamage(qTarget));

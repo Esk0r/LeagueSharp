@@ -77,7 +77,7 @@ namespace Marksman
 
             if (useQ && Q.IsReady())
             {
-                var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Magical);
+                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Magical);
                 if (t != null)
                     if (Q.Cast(t) == Spell.CastStates.SuccessfullyCasted)
                         return;
@@ -85,7 +85,7 @@ namespace Marksman
 
             if (useE && E.IsReady())
             {
-                var t = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Magical);
+                var t = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Magical);
                 if (t != null)
                     if (E.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted)
                         return;
@@ -93,15 +93,17 @@ namespace Marksman
 
             if (useR && R.IsReady() && UltimateBuffStacks < rLim)
             {
-                var t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Magical);
+                var t = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Magical);
                 if (t != null)
                     R.Cast(t, false, true);
             }
         }
 
-        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
-            if ((!ComboActive && !HarassActive) || !unit.IsMe || (!(target is Obj_AI_Hero))) return;
+            var t = target as Obj_AI_Hero;
+            if (t != null && (!ComboActive && !HarassActive) || !unit.IsMe) 
+                return;
 
             var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
             var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
@@ -113,15 +115,15 @@ namespace Marksman
                 W.CastOnUnit(ObjectManager.Player);
 
             if (useQ && Q.IsReady())
-                if (Q.Cast(target) == Spell.CastStates.SuccessfullyCasted)
+                if (Q.Cast(t) == Spell.CastStates.SuccessfullyCasted)
                     return;
 
             if (useE && E.IsReady())
-                if (E.Cast(target, false, true) == Spell.CastStates.SuccessfullyCasted)
+                if (E.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted)
                     return;
 
             if (useR && R.IsReady() && UltimateBuffStacks < rLim)
-                R.Cast(target, false, true);
+                R.Cast(t, false, true);
         }
 
         private static int GetUltimateBuffStacks()

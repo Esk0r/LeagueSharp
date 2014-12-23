@@ -24,14 +24,16 @@ namespace Marksman
             E = new Spell(SpellSlot.E, 1200);
         }
 
-        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
-            if ((!ComboActive && !HarassActive) || !unit.IsMe || (!(target is Obj_AI_Hero))) return;
+            var t = target as Obj_AI_Hero;
+            if (t == null || (!ComboActive && !HarassActive) || !unit.IsMe)
+                return;
 
             var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
 
             if (useW && W.IsReady())
-                W.Cast(target, false, true);
+                W.Cast(t, false, true);
         }
 
         public override void Drawing_OnDraw(EventArgs args)
@@ -54,14 +56,14 @@ namespace Marksman
 
                 if (useW)
                 {
-                    var wTarget = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
+                    var wTarget = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
                     if (W.IsReady() && wTarget.IsValidTarget())
                         W.Cast(wTarget, false, true);
                 }
 
                 if (useE && E.IsReady())
                 {
-                    var eTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                    var eTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
                     if (eTarget.IsValidTarget(E.Range))
                     {
                         foreach (var buff in eTarget.Buffs.Where(buff => buff.DisplayName.ToLower() == "twitchdeadlyvenom").Where(buff => buff.Count == 6))

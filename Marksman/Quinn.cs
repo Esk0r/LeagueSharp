@@ -37,12 +37,13 @@ namespace Marksman
                 E.CastOnUnit(gapcloser.Sender);
         }
 
-        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
-            if ((!ComboActive && !HarassActive) || unit.IsMe || (!(target is Obj_AI_Hero))) return;
+            var t = target as Obj_AI_Hero;
+            if (t == null || (!ComboActive && !HarassActive) || unit.IsMe) return;
 
             if (Q.IsReady() && GetValue<bool>("UseQ" + (ComboActive ? "C" : "H")))
-                Q.Cast(target, false, true);
+                Q.Cast(t, false, true);
         }
 
         public override void Drawing_OnDraw(EventArgs args)
@@ -115,7 +116,7 @@ namespace Marksman
             {
                 if(ObjectManager.Player.HasBuff("Recall"))
                     return;
-                var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                 if (t != null)
                     Q.Cast(t, false, true);
             }           
@@ -130,7 +131,7 @@ namespace Marksman
                 {
                     if (E.IsReady() && useE)
                     {
-                        var vTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                        var vTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
                         if (vTarget != null && !isHePantheon(vTarget))
                         {
                             if (vTarget.Health <= E.GetDamage(vTarget) + Q.GetDamage(vTarget)*2)
@@ -144,14 +145,14 @@ namespace Marksman
 
                     if (Q.IsReady() && useQ)
                     {
-                        var vTarget = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                        var vTarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                         if (vTarget != null)
                             Q.Cast(vTarget);
                     }
 
                     if (IsValorMode() && !E.IsReady())
                     {
-                        var vTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+                        var vTarget = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
                         if (vTarget != null)
                         {
                             calculateValorDamage();

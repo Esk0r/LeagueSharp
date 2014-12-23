@@ -52,7 +52,7 @@ namespace Marksman
             R.SetSkillshot(1f, 160f, 2000f, false, SkillshotType.SkillshotLine);
         }
 
-        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
         }
 
@@ -265,7 +265,7 @@ namespace Marksman
             {
                 if (ObjectManager.Player.HasBuff("Recall"))
                     return;
-                t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                 if (t != null)
                     Q.Cast(t);
             }
@@ -279,14 +279,14 @@ namespace Marksman
                 {
                     if (Q.IsReady() && useQ)
                     {
-                        t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                        t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                         if (t != null)
                             Q.Cast(t);
                     }
 
                     if (E.IsReady() && useE)
                     {
-                        t = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                        t = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
                         if (t != null)
                         {
                             if (t.Health < ObjectManager.Player.GetSpellDamage(t, SpellSlot.E))
@@ -299,7 +299,7 @@ namespace Marksman
             }
 
             if (!R.IsReady() || !GetValue<KeyBind>("CastR").Active) return;
-            t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+            t = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
             if (t != null)
                 R.Cast(t);
         }

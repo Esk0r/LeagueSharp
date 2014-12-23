@@ -40,9 +40,10 @@ namespace Marksman
                 R.CastOnUnit(unit);
         }
 
-        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
-            if ((ComboActive || HarassActive) && unit.IsMe && (target is Obj_AI_Hero))
+            var t = target as Obj_AI_Hero;
+            if (t != null && (ComboActive || HarassActive) && unit.IsMe)
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
                 var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
@@ -51,7 +52,7 @@ namespace Marksman
                     Q.CastOnUnit(ObjectManager.Player);
 
                 if (useE && E.IsReady())
-                    E.CastOnUnit(target);
+                    E.CastOnUnit(t);
             }
         }
 
@@ -80,7 +81,7 @@ namespace Marksman
             {
                  if(ObjectManager.Player.HasBuff("Recall"))
                     return;
-                var eTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                var eTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
                 if (E.IsReady() && eTarget.IsValidTarget())
                     E.CastOnUnit(eTarget);
             }
@@ -91,14 +92,14 @@ namespace Marksman
 
                 if (useE)
                 {
-                    var eTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                    var eTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
                     if (E.IsReady() && eTarget.IsValidTarget())
                         E.CastOnUnit(eTarget);
                 }
 
                 if (Dfg.IsReady())
                 {
-                    var eTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Magical);
+                    var eTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Magical);
                     Dfg.Cast(eTarget);
                 }
             }

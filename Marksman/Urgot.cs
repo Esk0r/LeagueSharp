@@ -104,7 +104,7 @@ namespace Marksman
 
             if (Q.IsReady() && useQ)
             {
-                t = SimpleTs.GetTarget(QEx.Range, SimpleTs.DamageType.Physical);
+                t = TargetSelector.GetTarget(QEx.Range, TargetSelector.DamageType.Physical);
                 if (t != null && t.HasBuff("urgotcorrosivedebuff", true))
                 {
                     W.Cast();
@@ -112,7 +112,7 @@ namespace Marksman
                 }
                 else
                 {
-                    t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                    t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                     if (t != null)
                     {
                         if (Q.GetPrediction(t).Hitchance >= HitChance.High)
@@ -124,14 +124,14 @@ namespace Marksman
 
             if (W.IsReady() && useW)
             {
-                t = SimpleTs.GetTarget(ObjectManager.Player.AttackRange - 30, SimpleTs.DamageType.Physical);
+                t = TargetSelector.GetTarget(ObjectManager.Player.AttackRange - 30, TargetSelector.DamageType.Physical);
                 if (t != null)
                     W.Cast();
             }
 
             if (E.IsReady() && useE)
             {
-                t = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                t = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
                 if (t != null)
                     E.Cast(t);
             }
@@ -146,7 +146,7 @@ namespace Marksman
 
             if (R.IsReady() && Program.CClass.GetValue<bool>("UseRC"))
             {
-                var t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+                var t = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
                 if (t != null && UnderAllyTurret(ObjectManager.Player) && !UnderAllyTurret(t) &&
                     ObjectManager.Player.Distance(t) > 200)
                 {
@@ -164,7 +164,7 @@ namespace Marksman
             Drawing.DrawText(Drawing.Width * 0.42f, Drawing.Height * 0.80f, Color.GreenYellow,
             "Teleport enemy to my team active!");
 
-            var t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+            var t = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
             if (R.IsReady() && t != null)
             {
                 IEnumerable<Obj_AI_Hero> Ally =
