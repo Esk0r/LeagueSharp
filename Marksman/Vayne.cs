@@ -86,8 +86,8 @@ namespace Marksman
                 if (Q.IsReady() && GetValue<bool>("CompleteSilverBuff"))
                 {
                     var t =
-                        GetSilverBuffCountX(SimpleTs.GetTarget(Q.Range + ObjectManager.Player.AttackRange,
-                            SimpleTs.DamageType.Physical));
+                        GetSilverBuffCountX(TargetSelector.GetTarget(Q.Range + ObjectManager.Player.AttackRange,
+                            TargetSelector.DamageType.Physical));
                     if (t != null)
                     {
                         Q.Cast(Game.CursorPos);
@@ -134,7 +134,7 @@ namespace Marksman
             }
         }
 
-        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
             var useQ =
                 GetValue<bool>("UseQ" +

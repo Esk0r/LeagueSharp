@@ -71,7 +71,7 @@ namespace Marksman
 
             if (useQ && Q.IsReady())
             {
-                var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Magical);
+                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Magical);
                 if (t != null)
                     if (Q.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted)
                         return;
@@ -79,7 +79,7 @@ namespace Marksman
 
             if (useE && E.IsReady())
             {
-                var t = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                var t = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
                 if (t != null)
                     if (E.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted)
                         return;
@@ -88,7 +88,7 @@ namespace Marksman
             if (useR && R1.IsReady() && ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Ammo > rLim)
             {
                 var bigRocket = HasBigRocket();
-                var t = SimpleTs.GetTarget(bigRocket ? R2.Range : R1.Range, SimpleTs.DamageType.Magical);
+                var t = TargetSelector.GetTarget(bigRocket ? R2.Range : R1.Range, TargetSelector.DamageType.Magical);
                 if (t != null)
                     if (bigRocket)
                         R2.Cast(t, false, true);
@@ -97,9 +97,11 @@ namespace Marksman
             }
         }
 
-        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
-            if ((!ComboActive && !HarassActive) || !unit.IsMe || (!(target is Obj_AI_Hero))) return;
+            var t = target as Obj_AI_Hero;
+            if (t == null || (!ComboActive && !HarassActive) || !unit.IsMe) 
+                return;
 
             var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
             var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
@@ -107,18 +109,18 @@ namespace Marksman
             var rLim = GetValue<Slider>("Rlim" + (ComboActive ? "C" : "H")).Value;
 
             if (useQ && Q.IsReady())
-                if (Q.Cast(target, false, true) == Spell.CastStates.SuccessfullyCasted)
+                if (Q.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted)
                     return;
 
             if (useE && E.IsReady())
-                if (E.Cast(target, false, true) == Spell.CastStates.SuccessfullyCasted)
+                if (E.Cast(t, false, true) == Spell.CastStates.SuccessfullyCasted)
                     return;
 
             if (useR && R1.IsReady() && ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Ammo > rLim)
                 if (HasBigRocket())
-                    R2.Cast(target, false, true);
+                    R2.Cast(t, false, true);
                 else
-                    R1.Cast(target, false, true);
+                    R1.Cast(t, false, true);
         }
 
         public bool HasBigRocket()

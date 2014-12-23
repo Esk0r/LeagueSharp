@@ -66,7 +66,7 @@ namespace Marksman
 
             if (R.IsReady())
             {
-                vTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+                vTarget = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
                 if (vTarget.IsValidTarget(R.Range) && vTarget.Health <= R.GetDamage(vTarget))
                 {
                     if (GetValue<KeyBind>("UltHelp").Active)
@@ -93,7 +93,7 @@ namespace Marksman
 
             if (GetValue<KeyBind>("UseEQC").Active && E.IsReady() && Q.IsReady())
             {
-                vTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                vTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
                 if (vTarget.IsValidTarget(E.Range))
                 {
                     E.Cast(vTarget);
@@ -109,20 +109,20 @@ namespace Marksman
 
             if (Q.IsReady() && useQ)
             {
-                vTarget = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                vTarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                 if (vTarget != null)
                     Q.Cast(vTarget, false, true);
             }
             else if (E.IsReady() && useE)
             {
-                vTarget = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+                vTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
                 if (vTarget != null && vTarget.Health <= E.GetDamage(vTarget))
                     E.Cast(vTarget);
             }
 
             if (R.IsReady() && useR)
             {
-                vTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+                vTarget = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
                 if (vTarget != null && vTarget.Health <= R.GetDamage(vTarget) &&
                     !Orbwalking.InAutoAttackRange(vTarget))
                 {
@@ -131,13 +131,15 @@ namespace Marksman
             }
         }
 
-        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
-            if ((!ComboActive && !HarassActive) || unit.IsMe || (!(target is Obj_AI_Hero))) return;
+            var t = target as Obj_AI_Hero;
+            if (t != null || (!ComboActive && !HarassActive) || unit.IsMe) 
+                return;
 
             var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
             if (useQ)
-                Q.Cast(target, false, true);
+                Q.Cast(t, false, true);
         }
 
         public override bool ComboMenu(Menu config)

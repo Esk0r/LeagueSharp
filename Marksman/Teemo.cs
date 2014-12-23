@@ -25,14 +25,15 @@ namespace Marksman
             R.SetSkillshot(0.1f, 75f, float.MaxValue, false, SkillshotType.SkillshotCircle);
         }
 
-        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
-            if ((ComboActive || HarassActive) && unit.IsMe && (target is Obj_AI_Hero))
+            var t = target as Obj_AI_Hero;
+            if (t != null && (ComboActive || HarassActive) && unit.IsMe)
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
 
                 if (useQ && Q.IsReady())
-                    Q.CastOnUnit(target);
+                    Q.CastOnUnit(t);
             }
         }
 
@@ -53,7 +54,7 @@ namespace Marksman
             {
                 if(ObjectManager.Player.HasBuff("Recall"))
                     return;
-                var qTarget = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                var qTarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                 if (Q.IsReady() && qTarget.IsValidTarget())
                     Q.CastOnUnit(qTarget);
             }           
@@ -63,7 +64,7 @@ namespace Marksman
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
                 if (useQ)
                 {
-                    var qTarget = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                    var qTarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                     if (Q.IsReady() && qTarget.IsValidTarget())
                         Q.CastOnUnit(qTarget);
                 }

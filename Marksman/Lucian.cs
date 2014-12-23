@@ -89,7 +89,7 @@ namespace Marksman
         {
             get
             {
-                var vTarget = SimpleTs.GetTarget(Q2.Range, SimpleTs.DamageType.Physical);
+                var vTarget = TargetSelector.GetTarget(Q2.Range, TargetSelector.DamageType.Physical);
                 var vMinions = MinionManager.GetMinions(
                     ObjectManager.Player.ServerPosition, Q.Range, MinionTypes.All, MinionTeam.NotAlly,
                     MinionOrderTypes.None);
@@ -175,7 +175,7 @@ namespace Marksman
                 if (ObjectManager.Player.HasBuff("Recall"))
                     return;
 
-                var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                 if (t != null)
                     Q.CastOnUnit(t);
             }
@@ -185,7 +185,7 @@ namespace Marksman
                 if (ObjectManager.Player.HasBuff("Recall"))
                     return;
 
-                var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                 if (t.IsValidTarget() && QMinion.IsValidTarget())
                 {
                     if (ObjectManager.Player.Distance(t) > Q.Range)
@@ -206,7 +206,7 @@ namespace Marksman
 
             if (useQExtended && Q.IsReady())
             {
-                var t = SimpleTs.GetTarget(Q2.Range, SimpleTs.DamageType.Physical);
+                var t = TargetSelector.GetTarget(Q2.Range, TargetSelector.DamageType.Physical);
                 if (t.IsValidTarget() && QMinion.IsValidTarget())
                 {
                     if (!Orbwalking.InAutoAttackRange(t))
@@ -216,7 +216,7 @@ namespace Marksman
 
             if (useQ && Q.IsReady())
             {
-                var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                 if (t.IsValidTarget())
                 {
                     Q.CastOnUnit(t);
@@ -225,7 +225,7 @@ namespace Marksman
 
             if (useW && W.IsReady())
             {
-                var t = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
+                var t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
                 if (t.IsValidTarget())
                 {
                     W.Cast(t);
@@ -234,7 +234,7 @@ namespace Marksman
 
             if (useE && E.IsReady())
             {
-                var t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                 if (t != null)
                 {
                     E.Cast(Game.CursorPos);

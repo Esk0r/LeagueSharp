@@ -33,20 +33,21 @@ namespace Marksman
 
         }
 
-        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base target)
+        public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
-            if ((ComboActive || HarassActive) && unit.IsMe && (target is Obj_AI_Hero))
+            var t = target as Obj_AI_Hero;
+            if (t != null && (ComboActive || HarassActive) && unit.IsMe)
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
                 var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
 
                 if (Q.IsReady() && useQ)
                 {
-                    Q.Cast(target);
+                    Q.Cast(t);
                 }
                 else if (W.IsReady() && useW)
                 {
-                    W.Cast(target);
+                    W.Cast(t);
                 }
             }
         }
@@ -70,7 +71,7 @@ namespace Marksman
             {
                 if(ObjectManager.Player.HasBuff("Recall"))
                     return;
-                t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                 if (t != null)
                     Q.Cast(t);
             }
@@ -84,20 +85,20 @@ namespace Marksman
                 {
                     if (Dfg.IsReady())
                     {
-                        t = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Magical);
+                        t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Magical);
                         Dfg.Cast(t);
                     }
 
                     if (Q.IsReady() && useQ)
                     {
-                        t = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+                        t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                         if (t != null)
                             Q.Cast(t);
                     }
 
                     if (W.IsReady() && useW)
                     {
-                        t = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
+                        t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
                         if (t != null)
                             W.Cast(t);
                     }
@@ -121,7 +122,7 @@ namespace Marksman
 
 
             if (!R.IsReady() || !GetValue<KeyBind>("CastR").Active) return;
-            t = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Physical);
+            t = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
             if (t != null)
                 R.Cast(t);
         }

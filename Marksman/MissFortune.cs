@@ -24,16 +24,17 @@ namespace Marksman
             E.SetSkillshot(0.5f, 100f, float.MaxValue, false, SkillshotType.SkillshotCircle);
         }
 
-        public override void Orbwalking_AfterAttack(Obj_AI_Base unit, Obj_AI_Base vTarget)
+        public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit vTarget)
         {
-            if ((ComboActive || HarassActive) && unit.IsMe && (vTarget is Obj_AI_Hero))
+            var t = vTarget as Obj_AI_Hero;
+            if (t != null && (ComboActive || HarassActive) && unit.IsMe)
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
                 var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
 
                 if (useQ)
                 {
-                    Q.CastOnUnit(vTarget);
+                    Q.CastOnUnit(t);
                 }
                 if (useW && W.IsReady())
                     W.CastOnUnit(ObjectManager.Player);
@@ -58,7 +59,7 @@ namespace Marksman
             if (!Q.IsReady())
                 return;
 
-            var t = SimpleTs.GetTarget(Q.Range + 450, SimpleTs.DamageType.Physical);
+            var t = TargetSelector.GetTarget(Q.Range + 450, TargetSelector.DamageType.Physical);
             if (t.IsValidTarget(Q.Range))
             {
                 Q.CastOnUnit(t);
@@ -100,8 +101,9 @@ namespace Marksman
             {
                 if (ObjectManager.Player.HasBuff("Recall"))
                     return;
-                var t = Orbwalker.GetTarget() ??
-                        SimpleTs.GetTarget(E.Range + E.Range / 2, SimpleTs.DamageType.Physical);
+                var t = (Orbwalker.GetTarget() ??
+                        TargetSelector.GetTarget(E.Range + E.Range / 2, TargetSelector.DamageType.Physical)) as Obj_AI_Base;
+                
                 if (t != null)
                     E.CastIfHitchanceEquals(t, HitChance.High);
             }
@@ -120,8 +122,8 @@ namespace Marksman
 
                     if (E.IsReady() && useE)
                     {
-                        var vTarget = Orbwalker.GetTarget() ??
-                                      SimpleTs.GetTarget(E.Range + E.Range / 2, SimpleTs.DamageType.Physical);
+                        var vTarget = (Orbwalker.GetTarget() ??
+                                TargetSelector.GetTarget(E.Range + E.Range / 2, TargetSelector.DamageType.Physical)) as Obj_AI_Base;
                         if (vTarget != null)
                             E.CastIfHitchanceEquals(vTarget, HitChance.High);
                     }
