@@ -42,10 +42,8 @@ namespace TwistedFate
 
         private static void SendWPacket()
         {
-            var packet = Packet.C2S.Cast.Encoded(
-                new Packet.C2S.Cast.Struct(ObjectManager.Player.NetworkId, SpellSlot.W));
-            packet.Send();
             LastSendWSent = Environment.TickCount;
+            ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W, false);
         }
 
         public static void StartSelecting(Cards card)

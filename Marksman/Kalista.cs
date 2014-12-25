@@ -113,7 +113,8 @@ namespace Marksman
                     : pos.Key)
             {
                 Q.Cast(new Vector2(xTo.X, xTo.Y), true);
-                Packet.C2S.Move.Encoded(new Packet.C2S.Move.Struct(xTo.X, xTo.Y)).Send();
+                //Packet.C2S.Move.Encoded(new Packet.C2S.Move.Struct(xTo.X, xTo.Y)).Send();
+                ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, xTo);
             }
         }
 

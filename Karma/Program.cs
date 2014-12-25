@@ -60,7 +60,7 @@ namespace Karma
             _config = new Menu(ChampionName, ChampionName, true);
 
             var targetSelectorMenu = new Menu("Target Selector", "Target Selector");
-            SimpleTs.AddToMenu(targetSelectorMenu);
+            TargetSelector.AddToMenu(targetSelectorMenu);
             _config.AddSubMenu(targetSelectorMenu);
 
             _config.AddSubMenu(new Menu("Orbwalking", "Orbwalking"));
@@ -179,8 +179,8 @@ namespace Karma
                 return;
             }
 
-            var qTarget = SimpleTs.GetTarget(_q.Range, SimpleTs.DamageType.Magical);
-            var wTarget = SimpleTs.GetTarget(_w.Range, SimpleTs.DamageType.Magical);
+            var qTarget = TargetSelector.GetTarget(_q.Range, TargetSelector.DamageType.Magical);
+            var wTarget = TargetSelector.GetTarget(_w.Range, TargetSelector.DamageType.Magical);
 
             var qActive =
                 _config.Item("UseQ" + (_config.Item("ComboActive").GetValue<KeyBind>().Active ? "Combo" : "Harass"))

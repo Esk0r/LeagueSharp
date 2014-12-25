@@ -79,7 +79,7 @@ namespace Syndra
 
             //Add the target selector to the menu as submenu.
             var targetSelectorMenu = new Menu("Target Selector", "Target Selector");
-            SimpleTs.AddToMenu(targetSelectorMenu);
+            TargetSelector.AddToMenu(targetSelectorMenu);
             Config.AddSubMenu(targetSelectorMenu);
 
             //Load the orbwalker and add it to the menu as submenu.
@@ -301,10 +301,10 @@ namespace Syndra
 
         private static void UseSpells(bool useQ, bool useW, bool useE, bool useR, bool useQE, bool useIgnite, bool isHarass)
         {
-            var qTarget = SimpleTs.GetTarget(Q.Range + (isHarass ? Q.Width/3 : Q.Width), SimpleTs.DamageType.Magical);
-            var wTarget = SimpleTs.GetTarget(W.Range + W.Width, SimpleTs.DamageType.Magical);
-            var rTarget = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Magical);
-            var qeTarget = SimpleTs.GetTarget(EQ.Range, SimpleTs.DamageType.Magical);
+            var qTarget = TargetSelector.GetTarget(Q.Range + (isHarass ? Q.Width / 3 : Q.Width), TargetSelector.DamageType.Magical);
+            var wTarget = TargetSelector.GetTarget(W.Range + W.Width, TargetSelector.DamageType.Magical);
+            var rTarget = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Magical);
+            var qeTarget = TargetSelector.GetTarget(EQ.Range, TargetSelector.DamageType.Magical);
             var comboDamage = rTarget != null ? GetComboDamage(rTarget) : 0;
 
             //Q

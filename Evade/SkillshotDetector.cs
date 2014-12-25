@@ -100,7 +100,6 @@ namespace Evade
 
 #endif
 
-
             var unit = missile.SpellCaster;
             if (!unit.IsValid || (unit.Team == ObjectManager.Player.Team && !Config.TestOnAllies))
             {
