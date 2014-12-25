@@ -130,7 +130,7 @@ namespace Evade
             //Add the game events.
             Game.OnGameUpdate += Game_OnOnGameUpdate;
             Obj_AI_Hero.OnIssueOrder += ObjAiHeroOnOnIssueOrder;
-            
+            Spellbook.OnCastSpell += Spellbook_OnCastSpell;
             //Set up the OnDetectSkillshot Event.
             SkillshotDetector.OnDetectSkillshot += OnDetectSkillshot;
             SkillshotDetector.OnDeleteMissile += SkillshotDetectorOnOnDeleteMissile;
@@ -554,6 +554,17 @@ namespace Evade
             }
         }
 
+        static void Spellbook_OnCastSpell(GameObject sender, SpellbookCastSpellEventArgs args)
+        {
+            if (sender.IsValid && sender.IsMe)
+            {
+                if (args.Slot == SpellSlot.Recall)
+                {
+                    EvadeToPoint = new Vector2();
+                }
+            }
+        }
+
         /// <summary>
         /// Used to block the movement to avoid entering in dangerous areas.
         /// </summary>
@@ -703,18 +714,6 @@ namespace Evade
                         }
                         args.Process = false;
                     }
-                }
-            }
-        }
-
-        private static void Game_OnGameSendPacket(GamePacketEventArgs args)
-        {
-            return; // 4.21
-            if (args.PacketData[0] == Packet.C2S.Cast.Header)
-            {
-                if (Packet.C2S.Cast.Decoded(args.PacketData).Slot == SpellSlot.Recall)
-                {
-                    EvadeToPoint = new Vector2();
                 }
             }
         }
