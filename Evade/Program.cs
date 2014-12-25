@@ -972,7 +972,7 @@ namespace Evade
                                             }
 
                                             var ePoint = to.Closest(points);
-                                            wardSlot.UseItem(ePoint.To3D());
+                                            ObjectManager.Player.Spellbook.CastSpell(wardSlot.SpellSlot, ePoint.To3D());
                                             LastWardJumpAttempt = Environment.TickCount;
                                             //Let the user move freely inside the skillshot.
                                             NoSolutionFound = true;
@@ -1138,7 +1138,7 @@ namespace Evade
                                             }
 
                                             var ePoint = to.Closest(points);
-                                            wardSlot.UseItem(ePoint.To3D());
+                                            ObjectManager.Player.Spellbook.CastSpell(wardSlot.SpellSlot, ePoint.To3D());
                                             LastWardJumpAttempt = Environment.TickCount;
                                             //Let the user move freely inside the skillshot.
                                             NoSolutionFound = true;
