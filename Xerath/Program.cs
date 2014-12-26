@@ -229,12 +229,12 @@ namespace Xerath
             Game.OnWndProc += Game_OnWndProc;
             Game.PrintChat(ChampionName + " Loaded!");
             Orbwalking.BeforeAttack += OrbwalkingOnBeforeAttack;
-            Game.OnGameSendPacket += GameOnOnGameSendPacket;
+            Obj_AI_Hero.OnIssueOrder += Obj_AI_Hero_OnIssueOrder;
         }
 
-        private static void GameOnOnGameSendPacket(GamePacketEventArgs args)
+        static void Obj_AI_Hero_OnIssueOrder(Obj_AI_Base sender, GameObjectIssueOrderEventArgs args)
         {
-            if (args.PacketData[0] == Packet.C2S.Move.Header && IsCastingR && Config.Item("BlockMovement").GetValue<bool>())
+            if (IsCastingR && Config.Item("BlockMovement").GetValue<bool>())
             {
                 args.Process = false;
             }
