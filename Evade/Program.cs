@@ -64,6 +64,7 @@ namespace Evade
                     ObjectManager.Player.SendMovePacket(EvadePoint);
                 }
 
+                Global.IsEvading = value;
                 _evading = value;
             }
         }
@@ -129,8 +130,8 @@ namespace Evade
         {
             //Add the game events.
             Game.OnGameUpdate += Game_OnOnGameUpdate;
-            Game.OnGameSendPacket += Game_OnGameSendPacket;
-
+            Obj_AI_Hero.OnIssueOrder += ObjAiHeroOnOnIssueOrder;
+            Spellbook.OnCastSpell += Spellbook_OnCastSpell;
             //Set up the OnDetectSkillshot Event.
             SkillshotDetector.OnDetectSkillshot += OnDetectSkillshot;
             SkillshotDetector.OnDeleteMissile += SkillshotDetectorOnOnDeleteMissile;
@@ -166,7 +167,6 @@ namespace Evade
                 Console.WriteLine(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name);
             }
         }
-
         private static void DetectedSkillshots_OnAdd(object sender, EventArgs e)
         {
             Evading = false;
@@ -431,7 +431,7 @@ namespace Evade
             }
 
             //Evading disabled
-            if (!Config.Menu.Item("Enabled").GetValue<KeyBind>().Active)
+            if (!Global.Evade)
             {
                 return;
             }
@@ -507,7 +507,6 @@ namespace Evade
                 return;
             }
 
-           
             NoSolutionFound = false;
 
             var currentPath = ObjectManager.Player.GetWaypoints();
@@ -556,165 +555,166 @@ namespace Evade
             }
         }
 
+        static void Spellbook_OnCastSpell(GameObject sender, SpellbookCastSpellEventArgs args)
+        {
+            if (sender.IsValid && sender.IsMe)
+            {
+                if (args.Slot == SpellSlot.Recall)
+                {
+                    EvadeToPoint = new Vector2();
+                }
+            }
+        }
+
         /// <summary>
         /// Used to block the movement to avoid entering in dangerous areas.
         /// </summary>
-        private static void Game_OnGameSendPacket(GamePacketEventArgs args)
+        /// 
+        private static void ObjAiHeroOnOnIssueOrder(Obj_AI_Base sender, GameObjectIssueOrderEventArgs args)
         {
-            //Move Packet
-            if (args.PacketData[0] == Packet.C2S.Move.Header)
+            if (!sender.IsMe)
             {
-                //Don't block the movement packets if cant find an evade point.
-                if (NoSolutionFound)
+                return;
+            }
+
+            //Don't block the movement packets if cant find an evade point.
+            if (NoSolutionFound)
+            {
+                return;
+            }
+
+            //Evading disabled
+            if (!Global.Evade)
+            {
+                return;
+            }
+
+            if (EvadeSpellDatabase.Spells.Any(evadeSpell => evadeSpell.Name == "Walking" && !evadeSpell.Enabled))
+            {
+                return;
+            }
+
+            //Spell Shielded
+            if (IsSpellShielded(ObjectManager.Player))
+            {
+                return;
+            }
+
+            if (args.Order == GameObjectOrder.MoveTo)
+            {
+                EvadeToPoint.X = args.TargetPosition.X;
+                EvadeToPoint.Y = args.TargetPosition.Y;
+            }
+            else
+            {
+                EvadeToPoint.X = 0;
+                EvadeToPoint.Y = 0;
+            }
+            
+            var myPath =
+                ObjectManager.Player.GetPath(
+                    new Vector3(args.TargetPosition.X, args.TargetPosition.Y, ObjectManager.Player.ServerPosition.Z)).To2DList();
+            var safeResult = IsSafe(ObjectManager.Player.ServerPosition.To2D());
+
+
+            //If we are evading:
+            if (Evading || !safeResult.IsSafe)
+            {
+                var rcSafePath = IsSafePath(myPath, Config.EvadingRouteChangeTimeOffset);
+                if (args.Order == GameObjectOrder.MoveTo)
                 {
-                    return;
-                }
-
-                //Evading disabled
-                if (!Config.Menu.Item("Enabled").GetValue<KeyBind>().Active)
-                {
-                    return;
-                }
-
-                if (EvadeSpellDatabase.Spells.Any(evadeSpell => evadeSpell.Name == "Walking" && !evadeSpell.Enabled)) 
-                {
-                    return;
-                }
-
-                //Spell Shielded
-                if (IsSpellShielded(ObjectManager.Player))
-                {
-                    return;
-                }
-
-                var decodedPacket = Packet.C2S.Move.Decoded(args.PacketData);
-
-                if(decodedPacket.UnitNetworkId != ObjectManager.Player.NetworkId) return;
-
-                if (decodedPacket.MoveType == 2)
-                {
-                    EvadeToPoint.X = decodedPacket.X;
-                    EvadeToPoint.Y = decodedPacket.Y;
-                }
-                else
-                {
-                    EvadeToPoint.X = 0;
-                    EvadeToPoint.Y = 0;
-                }
-
-                var myPath =
-                    ObjectManager.Player.GetPath(
-                        new Vector3(decodedPacket.X, decodedPacket.Y, ObjectManager.Player.ServerPosition.Z)).To2DList();
-                var safeResult = IsSafe(ObjectManager.Player.ServerPosition.To2D());
-                
-
-                //If we are evading:
-                if (Evading || !safeResult.IsSafe)
-                {
-                    var rcSafePath = IsSafePath(myPath, Config.EvadingRouteChangeTimeOffset);
-                    if (decodedPacket.MoveType == 2)
+                    if (Evading &&
+                        Environment.TickCount - Config.LastEvadePointChangeT > Config.EvadePointChangeInterval)
                     {
-                        if (Evading &&
-                            Environment.TickCount - Config.LastEvadePointChangeT > Config.EvadePointChangeInterval)
+                        //Update the evade point to the closest one:
+                        var points = Evader.GetEvadePoints(-1, 0, false, true);
+                        if (points.Count > 0)
                         {
-                            //Update the evade point to the closest one:
-                            var points = Evader.GetEvadePoints(-1, 0, false, true);
-                            if (points.Count > 0)
-                            {
-                                var to = new Vector2(decodedPacket.X, decodedPacket.Y);
-                                EvadePoint = to.Closest(points);
-                                Evading = true;
-                                Config.LastEvadePointChangeT = Environment.TickCount;
-                            }
-                        }
-
-                        //If the path is safe let the user follow it.
-                        if (rcSafePath.IsSafe && IsSafe(myPath[myPath.Count - 1]).IsSafe && decodedPacket.MoveType == 2)
-                        {
-                            EvadePoint = myPath[myPath.Count - 1];
+                            var to = new Vector2(args.TargetPosition.X, args.TargetPosition.Y);
+                            EvadePoint = to.Closest(points);
                             Evading = true;
+                            Config.LastEvadePointChangeT = Environment.TickCount;
                         }
                     }
 
-                    //Block the packets if we are evading or not safe.
-                    args.Process = false;
-                    return;
+                    //If the path is safe let the user follow it.
+                    if (rcSafePath.IsSafe && IsSafe(myPath[myPath.Count - 1]).IsSafe && args.Order == GameObjectOrder.MoveTo)
+                    {
+                        EvadePoint = myPath[myPath.Count - 1];
+                        Evading = true;
+                    }
                 }
 
-                var safePath = IsSafePath(myPath, Config.CrossingTimeOffset);
+                //Block the packets if we are evading or not safe.
+                args.Process = false;
+                return;
+            }
 
-                //Not evading, outside the skillshots.
-                //The path is not safe, stop in the intersection point.
-                if (!safePath.IsSafe && decodedPacket.MoveType != 3)
+            var safePath = IsSafePath(myPath, Config.CrossingTimeOffset);
+
+            //Not evading, outside the skillshots.
+            //The path is not safe, stop in the intersection point.
+            if (!safePath.IsSafe && args.Order != GameObjectOrder.AttackUnit)
+            {
+                if (safePath.Intersection.Valid)
                 {
-                    if (safePath.Intersection.Valid)
+                    if (ObjectManager.Player.Distance(safePath.Intersection.Point) > 75)
                     {
-                        if (ObjectManager.Player.Distance(safePath.Intersection.Point) > 75)
+                        ObjectManager.Player.SendMovePacket(safePath.Intersection.Point);
+                    }
+                    else
+                    {
+                        if (/*DetectedSkillshots.Count == 1 &&*/ Environment.TickCount - LastSMovePacketT > 400)
+                        {
+                            LastSMovePacketT = Environment.TickCount;
+
+                            var perpendicular =
+                                (ObjectManager.Player.ServerPosition.To2D() - safePath.Intersection.Point)
+                                    .Normalized();
+                            var direction = perpendicular.Perpendicular();
+
+                            var p = ObjectManager.Player.ServerPosition.To2D() + 1 * perpendicular + 150 * direction;
+                            var p2 = ObjectManager.Player.ServerPosition.To2D() + 1 * perpendicular - 150 * direction;
+
+                            if (!IsSafePath(ObjectManager.Player.GetPath(p.To3D()).To2DList(), 100).IsSafe)
+                            {
+                                p = new Vector2();
+                            }
+
+                            if (!IsSafePath(ObjectManager.Player.GetPath(p2.To3D()).To2DList(), 100).IsSafe)
+                            {
+                                p2 = new Vector2();
+                            }
+
+                            EvadeToPoint2 = (p.IsValid() && (p.Distance(EvadeToPoint) < p2.Distance(EvadeToPoint))) ? p : p2;
+
+                            if (EvadeToPoint2.IsValid())
+                            {
+                                ObjectManager.Player.SendMovePacket(EvadeToPoint2);
+                            }
+                        }
+                    }
+                }
+                args.Process = false;
+            }
+
+            //AutoAttacks.
+            if (!safePath.IsSafe && args.Order == GameObjectOrder.AttackUnit)
+            {
+                var target = args.Target;
+                if (target != null && target.IsValid<Obj_AI_Base>() && target.IsVisible)
+                {
+                    //Out of attack range.
+                    if (ObjectManager.Player.ServerPosition.To2D().Distance(((Obj_AI_Base)target).ServerPosition) >
+                        ObjectManager.Player.AttackRange + ObjectManager.Player.BoundingRadius +
+                        target.BoundingRadius)
+                    {
+                        if (safePath.Intersection.Valid)
                         {
                             ObjectManager.Player.SendMovePacket(safePath.Intersection.Point);
                         }
-                        else
-                        {
-                            if (/*DetectedSkillshots.Count == 1 &&*/ Environment.TickCount - LastSMovePacketT > 400)
-                            {
-                                LastSMovePacketT = Environment.TickCount;
-                                
-                                    var perpendicular =
-                                        (ObjectManager.Player.ServerPosition.To2D() - safePath.Intersection.Point)
-                                            .Normalized();
-                                    var direction = perpendicular.Perpendicular();
-
-                                    var p = ObjectManager.Player.ServerPosition.To2D() + 1 * perpendicular + 150 * direction;
-                                    var p2 = ObjectManager.Player.ServerPosition.To2D() + 1 * perpendicular - 150 * direction;
-
-                                    if (!IsSafePath(ObjectManager.Player.GetPath(p.To3D()).To2DList(), 100).IsSafe)
-                                    {
-                                        p = new Vector2();
-                                    }
-
-                                    if (!IsSafePath(ObjectManager.Player.GetPath(p2.To3D()).To2DList(), 100).IsSafe)
-                                    {
-                                        p2 = new Vector2();
-                                    }
-
-                                    EvadeToPoint2 = (p.IsValid() && (p.Distance(EvadeToPoint) < p2.Distance(EvadeToPoint))) ? p : p2;
-
-                                    if (EvadeToPoint2.IsValid())
-                                    {
-                                        ObjectManager.Player.SendMovePacket(EvadeToPoint2);
-                                    }
-                            }
-                        }
+                        args.Process = false;
                     }
-                    args.Process = false;
-                }
-
-                //AutoAttacks.
-                if (!safePath.IsSafe && decodedPacket.MoveType == 3)
-                {
-                    var target = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>(decodedPacket.TargetNetworkId);
-                    if (target != null && target.IsValid && target.IsVisible)
-                    {
-                        //Out of attack range.
-                        if (ObjectManager.Player.ServerPosition.To2D().Distance(target.ServerPosition) >
-                            ObjectManager.Player.AttackRange + ObjectManager.Player.BoundingRadius +
-                            target.BoundingRadius)
-                        {
-                            if (safePath.Intersection.Valid)
-                            {
-                                ObjectManager.Player.SendMovePacket(safePath.Intersection.Point);
-                            }
-                            args.Process = false;
-                        }
-                    }
-                }
-            }
-
-            if (args.PacketData[0] == Packet.C2S.Cast.Header)
-            {
-                if (Packet.C2S.Cast.Decoded(args.PacketData).Slot == SpellSlot.Recall)
-                {
-                    EvadeToPoint = new Vector2();
                 }
             }
         }
@@ -972,7 +972,7 @@ namespace Evade
                                             }
 
                                             var ePoint = to.Closest(points);
-                                            wardSlot.UseItem(ePoint.To3D());
+                                            ObjectManager.Player.Spellbook.CastSpell(wardSlot.SpellSlot, ePoint.To3D());
                                             LastWardJumpAttempt = Environment.TickCount;
                                             //Let the user move freely inside the skillshot.
                                             NoSolutionFound = true;
@@ -1138,7 +1138,7 @@ namespace Evade
                                             }
 
                                             var ePoint = to.Closest(points);
-                                            wardSlot.UseItem(ePoint.To3D());
+                                            ObjectManager.Player.Spellbook.CastSpell(wardSlot.SpellSlot, ePoint.To3D());
                                             LastWardJumpAttempt = Environment.TickCount;
                                             //Let the user move freely inside the skillshot.
                                             NoSolutionFound = true;
@@ -1293,7 +1293,7 @@ namespace Evade
             foreach (var skillshot in DetectedSkillshots)
             {
                 skillshot.Draw(
-                    (skillshot.Evade() && Config.Menu.Item("Enabled").GetValue<KeyBind>().Active)
+                    (skillshot.Evade() && Global.Evade)
                         ? Config.Menu.Item("EnabledColor").GetValue<Color>()
                         : Config.Menu.Item("DisabledColor").GetValue<Color>(), missileColor, Border);
             }

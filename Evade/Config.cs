@@ -138,8 +138,12 @@ namespace Evade
             misc.AddItem(new MenuItem("DisableFow", "Disable fog of war dodging").SetValue(false));
             Menu.AddSubMenu(misc);
 
-            Menu.AddItem(
-                new MenuItem("Enabled", "Enabled").SetValue(new KeyBind("K".ToCharArray()[0], KeyBindType.Toggle, true)));
+            var enable = Menu.AddItem(new MenuItem("Enabled", "Enabled").SetValue(new KeyBind("K".ToCharArray()[0], KeyBindType.Toggle, true)));
+            Global.Evade = enable.GetValue<KeyBind>().Active;
+            enable.ValueChanged += (sender, args) =>
+            {
+                Global.Evade = args.GetNewValue<KeyBind>().Active;
+            };
 
             Menu.AddItem(
                 new MenuItem("OnlyDangerous", "Dodge only dangerous").SetValue(new KeyBind(32, KeyBindType.Press)));
