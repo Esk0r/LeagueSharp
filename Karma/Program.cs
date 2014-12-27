@@ -173,12 +173,13 @@ namespace Karma
             }
 
             if (_config.Item("HarassActive").GetValue<KeyBind>().Active &&
-                ObjectManager.Player.Mana - ObjectManager.Player.Spellbook.GetManaCost(SpellSlot.W) -
-                ObjectManager.Player.Spellbook.GetManaCost(SpellSlot.E) < 0)
+                ObjectManager.Player.Mana - ObjectManager.Player.Spellbook.Spells.First(s => s.Slot == SpellSlot.W).ManaCost -
+                ObjectManager.Player.Spellbook.Spells.First(s => s.Slot == SpellSlot.E).ManaCost < 0)
             {
                 return;
             }
 
+            
             var qTarget = TargetSelector.GetTarget(_q.Range, TargetSelector.DamageType.Magical);
             var wTarget = TargetSelector.GetTarget(_w.Range, TargetSelector.DamageType.Magical);
 
