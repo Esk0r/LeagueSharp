@@ -53,7 +53,7 @@ namespace Ryze
             Config = new Menu(ChampionName, ChampionName, true);
 
             var targetSelectorMenu = new Menu("Target Selector", "Target Selector");
-            SimpleTs.AddToMenu(targetSelectorMenu);
+            TargetSelector.AddToMenu(targetSelectorMenu);
             Config.AddSubMenu(targetSelectorMenu);
 
             //Orbwalker submenu
@@ -170,7 +170,7 @@ namespace Ryze
 
         private static void Combo()
         {
-            var target = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Magical);
+            var target = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Magical);
             var qCd = Player.Spellbook.GetSpell(SpellSlot.Q).CooldownExpires - Game.Time;
 
             if (target != null)
@@ -211,7 +211,7 @@ namespace Ryze
 
         private static void Harass()
         {
-            var target = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Magical);
+            var target = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Magical);
 
             if (target != null && Config.Item("UseQHarass").GetValue<bool>())
             {

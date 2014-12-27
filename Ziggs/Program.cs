@@ -67,7 +67,7 @@ namespace Ziggs
             Config = new Menu(ChampionName, ChampionName, true);
 
             var targetSelectorMenu = new Menu("Target Selector", "Target Selector");
-            SimpleTs.AddToMenu(targetSelectorMenu);
+            TargetSelector.AddToMenu(targetSelectorMenu);
             Config.AddSubMenu(targetSelectorMenu);
 
             Config.AddSubMenu(new Menu("Orbwalking", "Orbwalking"));
@@ -205,7 +205,7 @@ namespace Ziggs
                  (ObjectManager.Player.Mana / ObjectManager.Player.MaxMana * 100) >
                  Config.Item("ManaSliderHarass").GetValue<Slider>().Value))
             {
-                var target = SimpleTs.GetTarget(1200f, SimpleTs.DamageType.Magical);
+                var target = TargetSelector.GetTarget(1200f, TargetSelector.DamageType.Magical);
                 if (target != null)
                 {
                     var comboActive = Config.Item("ComboActive").GetValue<KeyBind>().Active;

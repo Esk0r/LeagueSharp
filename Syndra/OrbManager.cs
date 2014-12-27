@@ -63,8 +63,8 @@ namespace Syndra
         public static Obj_AI_Minion WObject(bool onlyOrb)
         {
             if (WObjectNetworkId == -1) return null;
-            var obj = ObjectManager.GetUnitByNetworkId<Obj_AI_Minion>(WObjectNetworkId);
-            if (obj != null && obj.IsValid && (obj.Name == "Seed" && onlyOrb || !onlyOrb)) return obj;
+            var obj = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>(WObjectNetworkId);
+            if (obj != null && obj.IsValid<Obj_AI_Minion>() && (obj.Name == "Seed" && onlyOrb || !onlyOrb)) return (Obj_AI_Minion)obj;
             return null;
         }
 

@@ -58,7 +58,7 @@ namespace TwistedFate
             Config = new Menu("Twisted Fate", "TwistedFate", true);
 
             var TargetSelectorMenu = new Menu("Target Selector", "Target Selector");
-            SimpleTs.AddToMenu(TargetSelectorMenu);
+            TargetSelector.AddToMenu(TargetSelectorMenu);
             Config.AddSubMenu(TargetSelectorMenu);
 
             var SowMenu = new Menu("Orbwalking", "Orbwalking");
@@ -290,7 +290,7 @@ namespace TwistedFate
 
             if (Environment.TickCount - CastQTick < 500)
             {
-                var qTarget = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Magical);
+                var qTarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Magical);
                 if (qTarget != null)
                 {
                     Q.Cast(qTarget);

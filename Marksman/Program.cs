@@ -279,7 +279,10 @@ namespace Marksman
                 }
             }
 
-            CClass.Drawing_OnDraw(args); 
+            if (CClass != null)
+            {
+                CClass.Drawing_OnDraw(args);
+            }
             return;
 
             var y = 10;

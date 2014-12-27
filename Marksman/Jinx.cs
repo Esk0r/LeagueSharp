@@ -247,8 +247,8 @@ namespace Marksman
                             {
                                 if (CountAlliesNearTarget(t, 500) <= 3)
                                 {
-                                    if (rDamage > t.Health && !ObjectManager.Player.IsAutoAttacking &&
-                                        !ObjectManager.Player.IsChanneling)
+                                    if (rDamage > t.Health /*&& !ObjectManager.Player.IsAutoAttacking &&
+                                        !ObjectManager.Player.IsChanneling*/)
                                     {
                                         if (R.Cast(t) == Spell.CastStates.SuccessfullyCasted) { }
                                     }
@@ -262,8 +262,8 @@ namespace Marksman
                             {
                                 if (CountAlliesNearTarget(t, 500) <= 3)
                                 {
-                                    if (rDamage > t.Health && !ObjectManager.Player.IsAutoAttacking &&
-                                        !ObjectManager.Player.IsChanneling)
+                                    if (rDamage > t.Health /*&& !ObjectManager.Player.IsAutoAttacking &&
+                                        !ObjectManager.Player.IsChanneling*/)
                                     {
                                         if (R.Cast(t) == Spell.CastStates.SuccessfullyCasted) { }
                                     }

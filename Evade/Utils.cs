@@ -43,7 +43,7 @@ namespace Evade
 
         public static void SendMovePacket(this Obj_AI_Base v, Vector2 point)
         {
-            Packet.C2S.Move.Encoded(new Packet.C2S.Move.Struct(point.X, point.Y)).Send();
+            ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, point.To3D(), false);
         }
 
         public static Obj_AI_Base Closest(List<Obj_AI_Base> targetList, Vector2 from)
