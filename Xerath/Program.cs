@@ -340,7 +340,7 @@ namespace Xerath
             Obj_AI_Hero bestTarget = null;
             var bestRatio = 0f;
 
-            if (TargetSelector.SelectedTarget.IsValidTarget() && !TargetSelector.IsInvulnerable(TargetSelector.SelectedTarget, TargetSelector.DamageType.Magical, false, true) &&
+            if (TargetSelector.SelectedTarget.IsValidTarget() && !TargetSelector.IsInvulnerable(TargetSelector.SelectedTarget, TargetSelector.DamageType.Magical, true) &&
                 (Game.CursorPos.Distance(TargetSelector.SelectedTarget.ServerPosition) < distance && ObjectManager.Player.Distance(TargetSelector.SelectedTarget) < R.Range))
             {
                 return TargetSelector.SelectedTarget;
@@ -348,7 +348,7 @@ namespace Xerath
 
             foreach (var hero in ObjectManager.Get<Obj_AI_Hero>())
             {
-                if (!hero.IsValidTarget(R.Range) || TargetSelector.IsInvulnerable(hero, TargetSelector.DamageType.Magical, false, true) || Game.CursorPos.Distance(hero.ServerPosition) > distance)
+                if (!hero.IsValidTarget(R.Range) || TargetSelector.IsInvulnerable(hero, TargetSelector.DamageType.Magical, true) || Game.CursorPos.Distance(hero.ServerPosition) > distance)
                 {
                     continue;
                 }
