@@ -203,6 +203,7 @@ namespace Marksman
                     drawing.AddItem(
                         new MenuItem("drawMinionNearKill", "Minion Near Kill").SetValue(new Circle(false,
                             System.Drawing.Color.Gray)));
+                    drawing.AddItem(new MenuItem("drawJunglePosition", "JunglePosition").SetValue(true));
 
                     Config.AddSubMenu(drawing);
                 }
@@ -255,6 +256,12 @@ namespace Marksman
                 Utility.DrawCircle(xSelectedTarget.Position, xSelectedTarget.BoundingRadius * 1.5f, System.Drawing.Color.Red);
             }
             */
+            var drawJunglePosition = CClass.Config.SubMenu("Drawings").Item("drawJunglePosition").GetValue<bool>();
+            {
+                if (drawJunglePosition)
+                    Utils.Jungle.DrawJunglePosition();
+            }
+            
             var drawMinionLastHit = CClass.Config.SubMenu("Drawings").Item("drawMinionLastHit").GetValue<Circle>();
             var drawMinionNearKill = CClass.Config.SubMenu("Drawings").Item("drawMinionNearKill").GetValue<Circle>();
             if (drawMinionLastHit.Active || drawMinionNearKill.Active)
