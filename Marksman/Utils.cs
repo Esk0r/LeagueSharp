@@ -36,7 +36,7 @@ namespace Marksman
             {
                 if (Game.MapId == (GameMapId) 11)
                 {
-                    const float circleRange = 75f;
+                    const float circleRange = 100f;
 
                     Utility.DrawCircle(new Vector3(7461.018f, 3253.575f, 52.57141f), circleRange, Color.Blue, 1, 15); // blue team :red
                     Utility.DrawCircle(new Vector3(3511.601f, 8745.617f, 52.57141f), circleRange, Color.Blue, 1, 15); // blue team :blue
