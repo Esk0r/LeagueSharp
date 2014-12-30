@@ -92,7 +92,7 @@ namespace Marksman
 
         private void OnGameUpdate(EventArgs args)
         {
-            if(ObjectManager.Player.HasBuff("Recall") || Utility.InFountain() && Utility.InShopRange())
+            if(ObjectManager.Player.HasBuff("Recall") || ObjectManager.Player.InFountain() && ObjectManager.Player.InShop())
                 return;
                 
             try
