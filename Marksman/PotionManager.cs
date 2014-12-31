@@ -99,7 +99,7 @@ namespace Marksman
             {
                 if (ExtrasMenu.Item("HealthPotion").GetValue<bool>())
                 {
-                    if (GetPlayerHealthPercentage() <= ExtrasMenu.Item("HealthPercent").GetValue<Slider>().Value)
+                    if ObjectManager.Player.HealthPercentage() <= ExtrasMenu.Item("HealthPercent").GetValue<Slider>().Value)
                     {
                         var healthSlot = GetPotionSlot(PotionType.Health);
                         if (!IsBuffActive(PotionType.Health))
@@ -108,7 +108,7 @@ namespace Marksman
                 }
                 if (ExtrasMenu.Item("ManaPotion").GetValue<bool>())
                 {
-                    if (GetPlayerManaPercentage() <= ExtrasMenu.Item("ManaPercent").GetValue<Slider>().Value)
+                    if (ObjectManager.Player.ManaPercentage() <= ExtrasMenu.Item("ManaPercent").GetValue<Slider>().Value)
                     {
                         var manaSlot = GetPotionSlot(PotionType.Mana);
                         if (!IsBuffActive(PotionType.Mana))
@@ -139,16 +139,6 @@ namespace Marksman
                     from buff in ObjectManager.Player.Buffs
                     where buff.Name == potion.Name && buff.IsActive
                     select potion).Any();
-        }
-
-        private static float GetPlayerHealthPercentage()
-        {
-            return ObjectManager.Player.Health * 100 / ObjectManager.Player.MaxHealth;
-        }
-
-        private static float GetPlayerManaPercentage()
-        {
-            return ObjectManager.Player.Mana * 100 / ObjectManager.Player.MaxMana;
         }
     }
 }
