@@ -35,28 +35,6 @@ namespace Marksman
             xPassiveUsedTime = Game.Time;
 
             Obj_AI_Base.OnProcessSpellCast += Game_OnProcessSpell;
-            GameObject.OnDelete += GameObject_OnDelete;
-        }
-
-        public static void GameObject_OnDelete(GameObject sender, EventArgs args)
-        {
-            /* so ugly code. I'll change later :( */
-            /*
-            return;
-            if (xMustAttackCount > 0 && (sender.Name.Contains("Lucian_P_buf") || sender.Name.Contains("Lucian_AA_mis")))
-            { 
-                xMustAttackCount -= 1;
-            }
-            */
-        }
-
-        public bool LucianHasPassiveX
-        {
-            get
-            {
-                return ObjectManager.Player.Buffs.Any(buff => buff.Name == "lucianpassivebuff");
-                //return ObjectManager.Player.Buffs.Any(buff => buff.Name == "lucianpassivebuff") && xMustAttackCount == 0; 
-            }
         }
 
         public static bool IsPositionSafeForE(Obj_AI_Hero target, Spell spell)
