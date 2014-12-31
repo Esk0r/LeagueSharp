@@ -28,7 +28,6 @@ namespace Marksman
         public static Spell E;
         public Spell R;
 
-        private static int kalistaMarkerCD;
         public static Dictionary<Vector3, Vector3> jumpPos;
 
         public Obj_AI_Hero CoopStrikeAlly;
