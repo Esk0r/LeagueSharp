@@ -99,7 +99,7 @@ namespace Marksman
             {
                 if (ExtrasMenu.Item("HealthPotion").GetValue<bool>())
                 {
-                    if ObjectManager.Player.HealthPercentage() <= ExtrasMenu.Item("HealthPercent").GetValue<Slider>().Value)
+                    if (ObjectManager.Player.HealthPercentage() <= ExtrasMenu.Item("HealthPercent").GetValue<Slider>().Value)
                     {
                         var healthSlot = GetPotionSlot(PotionType.Health);
                         if (!IsBuffActive(PotionType.Health))
