@@ -311,15 +311,15 @@ namespace Marksman
             //Update the combo and harass values.
             CClass.ComboActive = CClass.Config.Item("Orbwalk").GetValue<KeyBind>().Active;
             
-            var harassExistsMana = ObjectManager.Player.MaxMana/100*Config.Item("HarassMana").GetValue<Slider>().Value;
+            var vHarassManaPer = Config.Item("HarassMana").GetValue<Slider>().Value;
             CClass.HarassActive = CClass.Config.Item("Farm").GetValue<KeyBind>().Active &&
-                                  ObjectManager.Player.Mana >= harassExistsMana;
+                                  ObjectManager.Player.ManaPercentage() >= vHarassManaPer;
 
-            CClass.ToggleActive = ObjectManager.Player.Mana >= harassExistsMana;
+            CClass.ToggleActive = ObjectManager.Player.ManaPercentage() >= vHarassManaPer;
 
-            var laneExistsMana = ObjectManager.Player.MaxMana/100*Config.Item("LaneClearMana").GetValue<Slider>().Value;
+            var vLaneClearManaPer = Config.Item("LaneClearMana").GetValue<Slider>().Value;
             CClass.LaneClearActive = CClass.Config.Item("LaneClear").GetValue<KeyBind>().Active &
-                                     ObjectManager.Player.Mana >= laneExistsMana;
+                                     ObjectManager.Player.ManaPercentage() >= vLaneClearManaPer;
 
             CClass.Game_OnGameUpdate(args);
             
