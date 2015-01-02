@@ -391,6 +391,9 @@ namespace Marksman
         
         public static void UseSummoners()
         {
+            if (ObjectManager.Player.IsDead)
+                return;
+                
             const int xDangerousRange = 1100;
 
             if (Config.Item("SUMHEALENABLE").GetValue<bool>())
