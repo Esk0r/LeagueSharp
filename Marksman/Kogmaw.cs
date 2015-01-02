@@ -101,10 +101,10 @@ namespace Marksman
 
         public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
-            var t = target as Obj_AI_Hero;
-            if (t != null && (!ComboActive && !HarassActive) || !unit.IsMe) 
+            if (target != null && (!ComboActive && !HarassActive) || !unit.IsMe || !(target is Obj_AI_Hero)) 
                 return;
 
+            var t = target as Obj_AI_Hero;
             var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
             var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
             var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
