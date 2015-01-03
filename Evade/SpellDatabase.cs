@@ -2332,7 +2332,7 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "RekSai",
-                    SpellName = "RekSaiQBurrowed",
+                    SpellName = "reksaiqburrowed",
                     Slot = SpellSlot.Q,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 500,
