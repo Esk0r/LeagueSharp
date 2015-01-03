@@ -2325,6 +2325,31 @@ namespace Evade
                 });
 
             #endregion Rengar
+            
+            #region RekSai
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "RekSai",
+                    SpellName = "RekSaiQBurrowed",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 500,
+                    Range = 1625,
+                    Radius = 60,
+                    MissileSpeed = 1950,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 3,
+                    IsDangerous = false,
+                    MissileSpellName = "RekSaiQBurrowedMis",
+                    CollisionObjects =
+                        new[]
+                        { CollisionObjectTypes.Champions, CollisionObjectTypes.Minion, CollisionObjectTypes.YasuoWall },
+                });
+
+            #endregion RekSai
 
             #region Riven
 
