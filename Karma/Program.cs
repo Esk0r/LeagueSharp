@@ -127,7 +127,6 @@ namespace Karma
                 {
                     var distance = (1 - Math.Min(Math.Max(850 - ObjectManager.Player.Distance(enemy), 0), 450) / 450);
                 
-                
                     Render.Circle.DrawCircle(
                         ObjectManager.Player.Position, 850, Color.FromArgb((int)(50 * distance), menuItem.Color), -420,
                         true);
