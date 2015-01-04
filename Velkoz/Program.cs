@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
+using LeagueSharp.Network.Packets;
 using SharpDX;
 using SharpDX.Design;
 using Color = System.Drawing.Color;
@@ -198,11 +199,13 @@ namespace Velkoz
 
         private static void Game_OnGameSendPacket(GamePacketEventArgs args)
         {
-            if (args.PacketData[0] == Packet.C2S.ChargedCast.Header)
+            if (args.GetPacketId() == LeagueSharp.Network.Packets.Packet.GetPacketId<PKT_ChargedSpell>())
             {
-                var decodedPacket = Packet.C2S.ChargedCast.Decoded(args.PacketData);
 
-                if (decodedPacket.SourceNetworkId == Player.NetworkId)
+                var decodedPacket = new PKT_ChargedSpell();
+                decodedPacket.Decode(args.PacketData);
+
+                if (decodedPacket.NetworkId == Player.NetworkId)
                 {
                     args.Process =
                         !(Config.Item("ComboActive").GetValue<KeyBind>().Active &&
@@ -411,13 +414,21 @@ namespace Velkoz
                     if (targets.Count > 0)
                     {
                         var target = targets.OrderBy(t => t.Health / Q.GetDamage(t)).ToList()[0];
-                        Packet.C2S.ChargedCast.Encoded(new Packet.C2S.ChargedCast.Struct(SpellSlot.R,
-                            target.ServerPosition.X, target.ServerPosition.Z, target.ServerPosition.Y)).Send();
+                        new PKT_ChargedSpell
+                        {
+                            NetworkId = ObjectManager.Player.NetworkId,
+                            SpellSlot = (byte) SpellSlot.R,
+                            TargetPosition = target.ServerPosition,
+                        }.Encode().SendAsPacket();
                     }
                     else
                     {
-                        Packet.C2S.ChargedCast.Encoded(new Packet.C2S.ChargedCast.Struct(SpellSlot.R, Game.CursorPos.X,
-                            Game.CursorPos.Z, Game.CursorPos.Y)).Send();
+                        new PKT_ChargedSpell
+                        {
+                            NetworkId = ObjectManager.Player.NetworkId,
+                            SpellSlot = (byte)SpellSlot.R,
+                            TargetPosition = Game.CursorPos,
+                        }.Encode().SendAsPacket();
                     }
                 }
                 return;
