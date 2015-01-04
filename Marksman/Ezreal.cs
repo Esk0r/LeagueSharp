@@ -25,7 +25,7 @@ namespace Marksman
             Q = new Spell(SpellSlot.Q, 1200);
             Q.SetSkillshot(0.25f, 60f, 2000f, true, SkillshotType.SkillshotLine);
 
-            W = new Spell(SpellSlot.W, 950);
+            W = new Spell(SpellSlot.W, 850);
             W.SetSkillshot(0.25f, 80f, 1600f, false, SkillshotType.SkillshotLine);
 
             R = new Spell(SpellSlot.R, 2500);
