@@ -404,7 +404,7 @@ namespace Marksman
 
                 if (xCanUse && !ObjectManager.Player.InShop() && 
                     (xSlot != SpellSlot.Unknown || ObjectManager.Player.Spellbook.CanUseSpell(xSlot) == SpellState.Ready) 
-                    && Utility.CountEnemysInRange(xDangerousRange) > 0) 
+                    && ObjectManager.Player.CountEnemysInRange(xDangerousRange) > 0) 
                 {
                     ObjectManager.Player.Spellbook.CastSpell(xSlot);
                 }
@@ -418,7 +418,7 @@ namespace Marksman
 
                 if (xCanUse && !ObjectManager.Player.InShop() && 
                     (xSlot != SpellSlot.Unknown || ObjectManager.Player.Spellbook.CanUseSpell(xSlot) == SpellState.Ready) 
-                    && Utility.CountEnemysInRange(xDangerousRange) > 0) 
+                    && ObjectManager.Player.CountEnemysInRange(xDangerousRange) > 0) 
                 {
                     ObjectManager.Player.Spellbook.CastSpell(xSlot);
                 }
