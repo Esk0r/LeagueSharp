@@ -64,6 +64,7 @@ namespace Marksman
 
             Obj_AI_Hero vTarget;
             
+            /*
             var autoWi = GetValue<bool>("AutoWI");
             
             if (W.IsReady() && autoWi)
@@ -76,7 +77,7 @@ namespace Marksman
                     W.Cast(vTarget.Position);
                 }                
             }
-
+            */
             if (R.IsReady())
             {
                 vTarget = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
