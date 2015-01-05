@@ -192,18 +192,16 @@ namespace Marksman
                 {
                     MenuInterruptableSpell = new Menu("Interruptable Spell",
                         "Interrupt with " + championName == "caitlyn" ? "Caitlyn's W" : "Jinx's E");
-                    if (CClass.ExtrasMenu(MenuInterruptableSpell))
-                    {
-                        MenuInterruptableSpell.AddItem(new MenuItem("InterruptSpells", "Active").SetValue(true));
 
-                        foreach (var xSpell in Interrupter.Spells)
-                        {
-                            MenuInterruptableSpell.AddItem(
-                                new MenuItem("IntNode" + xSpell.BuffName, xSpell.ChampionName + " | " + xSpell.Slot)
-                                    .SetValue(true));
-                        }
-                        Config.AddSubMenu(MenuInterruptableSpell);
+                    MenuInterruptableSpell.AddItem(new MenuItem("InterruptSpells", "Active").SetValue(true));
+
+                    foreach (var xSpell in Interrupter.Spells)
+                    {
+                        MenuInterruptableSpell.AddItem(
+                            new MenuItem("IntNode" + xSpell.BuffName, xSpell.ChampionName + " | " + xSpell.Slot)
+                                .SetValue(true));
                     }
+                    Config.AddSubMenu(MenuInterruptableSpell);
                 }
                 */
                 var extras = new Menu("Extras", "Extras");
