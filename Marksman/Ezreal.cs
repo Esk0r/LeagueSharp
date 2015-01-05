@@ -76,6 +76,15 @@ namespace Marksman
                     Q.Cast(t);
             }
 
+            if (W.IsReady() &&  GetValue<KeyBind>("UseWTH").Active && ToggleActive)
+            {
+                if(ObjectManager.Player.HasBuff("Recall"))
+                    return;
+                t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
+                if (t != null)
+                    W.Cast(t);
+            }
+
             if (ComboActive || HarassActive)
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
@@ -140,6 +149,9 @@ namespace Marksman
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
             config.AddItem(
                 new MenuItem("UseQTH" + Id, "Use Q (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
+                    KeyBindType.Toggle)));
+            config.AddItem(
+                new MenuItem("UseQWH" + Id, "Use W (Toggle)").SetValue(new KeyBind("J".ToCharArray()[0],
                     KeyBindType.Toggle)));
             return true;
         }
