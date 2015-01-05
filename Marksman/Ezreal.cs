@@ -1,4 +1,4 @@
-#region
+UseQTH#region
 
 using System;
 using System.Configuration;
@@ -151,7 +151,7 @@ namespace Marksman
                 new MenuItem("UseQTH" + Id, "Use Q (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
                     KeyBindType.Toggle)));
             config.AddItem(
-                new MenuItem("UseQWH" + Id, "Use W (Toggle)").SetValue(new KeyBind("J".ToCharArray()[0],
+                new MenuItem("UseWTH" + Id, "Use W (Toggle)").SetValue(new KeyBind("J".ToCharArray()[0],
                     KeyBindType.Toggle)));
             return true;
         }
