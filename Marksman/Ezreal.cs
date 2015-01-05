@@ -1,4 +1,4 @@
-UseQTH#region
+#region
 
 using System;
 using System.Configuration;
