@@ -65,20 +65,20 @@ namespace Marksman
             R.Range = 500 * R.Level + 1500;
 
             Obj_AI_Hero vTarget;
-            /*
+            
             var autoWi = GetValue<bool>("AutoWI");
             
             if (W.IsReady() && autoWi)
             {
                 vTarget = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
                 if (vTarget.IsValidTarget(W.Range) &&
-                    (enemy.HasBuffOfType(BuffType.Stun) || enemy.HasBuffOfType(BuffType.Snare) ||
-                    enemy.HasBuffOfType(BuffType.Taunt)))
+                    (vTarget.HasBuffOfType(BuffType.Stun) || vTarget.HasBuffOfType(BuffType.Snare) ||
+                    vTarget.HasBuffOfType(BuffType.Taunt)))
                 {
                     W.Cast(vTarget.Position);
                 }                
             }
-            */
+            
             if (R.IsReady())
             {
                 vTarget = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
