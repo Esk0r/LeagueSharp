@@ -100,7 +100,7 @@ namespace Marksman
                         t.HasBuffOfType(BuffType.Taunt) || t.HasBuff("zhonyasringshield") ||
                         t.HasBuff("Recall")))
                     {
-                        R.Cast(t.position);
+                        R.Cast(t.Position);
                     }                
                 }                    
             }
