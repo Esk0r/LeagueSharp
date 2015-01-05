@@ -11,6 +11,7 @@ namespace Marksman
     {
         public static Menu Config;
         public static Menu QuickSilverMenu;
+//        public static Menu MenuInterruptableSpell;
         public static Champion CClass;
         public static Activator AActivator;
         public static double ActivatorTime;
@@ -186,7 +187,25 @@ namespace Marksman
                 {
                     Config.AddSubMenu(misc);
                 }
+                /*
+                if (championName != "caitlyn" || championName != "jinx")
+                {
+                    MenuInterruptableSpell = new Menu("Interruptable Spell",
+                        "Interrupt with " + championName == "caitlyn" ? "Caitlyn's W" : "Jinx's E");
+                    if (CClass.ExtrasMenu(MenuInterruptableSpell))
+                    {
+                        MenuInterruptableSpell.AddItem(new MenuItem("InterruptSpells", "Active").SetValue(true));
 
+                        foreach (var xSpell in Interrupter.Spells)
+                        {
+                            MenuInterruptableSpell.AddItem(
+                                new MenuItem("IntNode" + xSpell.BuffName, xSpell.ChampionName + " | " + xSpell.Slot)
+                                    .SetValue(true));
+                        }
+                        Config.AddSubMenu(MenuInterruptableSpell);
+                    }
+                }
+                */
                 var extras = new Menu("Extras", "Extras");
                 if (CClass.ExtrasMenu(extras))
                 {
@@ -219,10 +238,40 @@ namespace Marksman
             Game.OnGameUpdate += Game_OnGameUpdate;
             Orbwalking.AfterAttack += Orbwalking_AfterAttack;
             Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
+            //Interrupter.OnPossibleToInterrupt += Interrupter_OnPosibleToInterrupt;
             //Game.OnWndProc += Game_OnWndProc;
         }
+        
+        /*
+        private static void Interrupter_OnPosibleToInterrupt(Obj_AI_Base t, InterruptableSpell args)
+        {
+            if (!Config.Item("InterruptSpells").GetValue<KeyBind>().Active) 
+                return;
 
-         private static void Game_OnWndProc(WndEventArgs args)
+            if (ObjectManager.Player.ChampionName != "Caitlyn" || ObjectManager.Player.ChampionName != "Jinx")
+                return;
+
+            Spell xSpellSlot = null;
+
+            if (ObjectManager.Player.ChampionName == "Caitlyn")
+            {
+                xSpellSlot = new Spell(SpellSlot.W);
+                xSpellSlot.Range = 800f;
+            }
+
+            if (ObjectManager.Player.ChampionName == "Jinx")
+            {
+                xSpellSlot = new Spell(SpellSlot.E);
+                xSpellSlot.Range = 900f;
+            }
+            if (xSpellSlot == null)
+                return;
+
+            if (ObjectManager.Player.Distance(t) < xSpellSlot.Range)
+                xSpellSlot.Cast(t);
+        }
+        */
+        private static void Game_OnWndProc(WndEventArgs args)
         {
             
             if (args.Msg != 0x201)
