@@ -94,7 +94,7 @@ namespace Marksman
                 
                 if (R.IsReady() && GetValue<bool>("AutoRI"))
                 {
-                    var t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
+                    var t = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
                     if (t.IsValidTarget(R.Range) &&
                         (t.HasBuffOfType(BuffType.Stun) || t.HasBuffOfType(BuffType.Snare) ||
                         t.HasBuffOfType(BuffType.Taunt) || t.HasBuff("zhonyasringshield") ||
