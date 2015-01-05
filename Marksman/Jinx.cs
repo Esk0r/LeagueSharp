@@ -119,7 +119,7 @@ namespace Marksman
                     if (autoEi && E.IsReady() &&
                         (enemy.HasBuffOfType(BuffType.Stun) || enemy.HasBuffOfType(BuffType.Snare) ||
                          enemy.HasBuffOfType(BuffType.Charm) || enemy.HasBuffOfType(BuffType.Fear) ||
-                         enemy.HasBuffOfType(BuffType.Taunt)))
+                         enemy.HasBuffOfType(BuffType.Taunt) || enemy.HasBuff("zhonyasringshield")))
                     {
                         E.CastIfHitchanceEquals(enemy, HitChance.High);
                     }
