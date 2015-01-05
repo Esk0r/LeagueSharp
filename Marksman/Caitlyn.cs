@@ -73,7 +73,8 @@ namespace Marksman
                 vTarget = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
                 if (vTarget.IsValidTarget(W.Range) &&
                     (vTarget.HasBuffOfType(BuffType.Stun) || vTarget.HasBuffOfType(BuffType.Snare) ||
-                    vTarget.HasBuffOfType(BuffType.Taunt) || vTarget.HasBuff("zhonyasringshield")))
+                    vTarget.HasBuffOfType(BuffType.Taunt) || vTarget.HasBuff("zhonyasringshield") ||
+                    vTarget.HasBuff("Recall")))
                 {
                     W.Cast(vTarget.Position);
                 }                
