@@ -17,7 +17,8 @@ namespace Marksman
         public Varus()
         {
             Utils.PrintMessage("Varus loaded!");
-
+            Utils.PrintMessage("Added Use Q KeyBind (Default Key: T) Option. Please check the combo menu.");
+           
             Q = new Spell(SpellSlot.Q, 1600f);
             W = new Spell(SpellSlot.W);
             E = new Spell(SpellSlot.E, 925f);
@@ -60,7 +61,6 @@ namespace Marksman
                     where buff.Name == "varuswdebuff" && buff.Count >= buffCount
                     select enemy).FirstOrDefault();
         }
-
 
         public override void Drawing_OnDraw(EventArgs args)
         {
@@ -110,8 +110,6 @@ namespace Marksman
             if (Q.Level == 0)
                 return 0;
 
-
-
             var xQMin = Program.CClass.GetValue<Slider>("UseQMinChargeC").Value;
             var qMinRange = xQMin < Orbwalking.GetRealAutoAttackRange(vTarget)
                 ? Orbwalking.GetRealAutoAttackRange(vTarget)
@@ -123,8 +121,6 @@ namespace Marksman
             var qDamageMinPerLevel = new[] {10f, 47f, 83f, 120f, 157f};
             var qDamageMaxPerLevel = new[] {15f, 70f, 125f, 180f, 235f};
 
-
-            //Game.PrintChat(qDamageMinPerLevel[Q.Level - 1].ToString() + " : " + qDamageMaxPerLevel[Q.Level - 1].ToString());
             double fxQDamage = qDamageMinPerLevel[Q.Level - 1] + qDamageMaxPerLevel[Q.Level - 1]* 1.6; 
             fxQDamage = fxQDamage/ qCalcRange;
 
@@ -175,6 +171,16 @@ namespace Marksman
                     R.Cast(rTarget);
             }
 
+            var useQ2 = GetValue<KeyBind>("UseQ2C").Active;
+            if (Q.IsReady() && useQ2)
+            {
+                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
+                if (t.IsValidTarget(Q.ChargedMaxRange))
+                {
+                    CastQEnemy(t);
+                }
+            }
+
             if (E.IsReady() && GetValue<KeyBind>("UseETH").Active)
             {
                 if(ObjectManager.Player.HasBuff("Recall"))
@@ -189,14 +195,12 @@ namespace Marksman
             var useQ = GetValue<StringList>("UseQ" + (ComboActive ? "C" : "H"));
             var useW = GetValue<Slider>("UseW" + (ComboActive ? "C" : "H"));
             var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
-
+            
+            
             QMinCharge = GetValue<Slider>("UseQMinChargeC").Value;
 
             var qTarget = TargetSelector.GetTarget(Q.ChargedMaxRange, TargetSelector.DamageType.Physical);
             var eTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
-
-            //if (qTarget != null)
-            //    Game.PrintChat("Q Damage: " + CalcQDamage(qTarget));
 
             if (qTarget.Health < CalcQDamage(qTarget))
                 CastQEnemy(qTarget);
@@ -255,13 +259,11 @@ namespace Marksman
 
         public override bool ComboMenu(Menu config)
         {
-            config.AddItem(
-                new MenuItem("UseQC" + Id, "Q").SetValue(
-                    new StringList(new[] {"Off", "Everytime", "W Stack Value", "Max W Stack"}, 3)));
-            config.AddItem(
-                new MenuItem("UseQMinChargeC" + Id, "Min. Q Charge").SetValue(new Slider(1000, 250, 1400)));
+            config.AddItem(new MenuItem("UseQC" + Id, "Q").SetValue(new StringList(new[] {"Off", "Everytime", "W Stack Value", "Max W Stack"}, 3)));
+            config.AddItem(new MenuItem("UseQMinChargeC" + Id, "Min. Q Charge").SetValue(new Slider(1000, 250, 1400)));
             config.AddItem(new MenuItem("UseWC" + Id, "W").SetValue(new Slider(3, 1, 3)));
             config.AddItem(new MenuItem("UseEC" + Id, "E").SetValue(true));
+            config.AddItem(new MenuItem("UseQ2C" + Id, "Q ").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
 
             return true;
         }
