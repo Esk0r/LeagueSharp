@@ -201,7 +201,6 @@ namespace Velkoz
         {
             if (args.GetPacketId() == LeagueSharp.Network.Packets.Packet.GetPacketId<PKT_ChargedSpell>())
             {
-
                 var decodedPacket = new PKT_ChargedSpell();
                 decodedPacket.Decode(args.PacketData);
 
@@ -419,6 +418,8 @@ namespace Velkoz
                             NetworkId = ObjectManager.Player.NetworkId,
                             SpellSlot = (byte) SpellSlot.R,
                             TargetPosition = target.ServerPosition,
+                            Unknown1 = true,
+                            Unknown2 = true,
                         }.Encode().SendAsPacket();
                     }
                     else
@@ -428,9 +429,12 @@ namespace Velkoz
                             NetworkId = ObjectManager.Player.NetworkId,
                             SpellSlot = (byte)SpellSlot.R,
                             TargetPosition = Game.CursorPos,
+                            Unknown1 = true,
+                            Unknown2 = true,
                         }.Encode().SendAsPacket();
                     }
                 }
+
                 return;
             }
 
