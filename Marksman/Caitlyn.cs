@@ -12,8 +12,9 @@ namespace Marksman
 {
     internal class Caitlyn : Champion // Base done by xQx, Drawings and improvements added by Dibes.
     {
-        public Spell E;
         public Spell Q;
+        public Spell W;
+        public Spell E;
         public Spell R;
 
         public bool ShowUlt;
@@ -23,7 +24,8 @@ namespace Marksman
         {
             Utils.PrintMessage("Caitlyn loaded.");
 
-            Q = new Spell(SpellSlot.Q, 1240);
+            Q = new Spell(SpellSlot.Q, 1240)
+            W = new Spell(SpellSlot.E, 820);;
             E = new Spell(SpellSlot.E, 800);
             R = new Spell(SpellSlot.R, 2000);
 
@@ -64,7 +66,6 @@ namespace Marksman
 
             Obj_AI_Hero vTarget;
             
-            /*
             var autoWi = GetValue<bool>("AutoWI");
             
             if (W.IsReady() && autoWi)
@@ -77,7 +78,7 @@ namespace Marksman
                     W.Cast(vTarget.Position);
                 }                
             }
-            */
+
             if (R.IsReady())
             {
                 vTarget = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
