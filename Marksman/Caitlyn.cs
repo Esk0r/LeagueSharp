@@ -24,8 +24,8 @@ namespace Marksman
         {
             Utils.PrintMessage("Caitlyn loaded.");
 
-            Q = new Spell(SpellSlot.Q, 1240)
-            W = new Spell(SpellSlot.W, 820);;
+            Q = new Spell(SpellSlot.Q, 1240);
+            W = new Spell(SpellSlot.W, 820);
             E = new Spell(SpellSlot.E, 800);
             R = new Spell(SpellSlot.R, 2000);
 
