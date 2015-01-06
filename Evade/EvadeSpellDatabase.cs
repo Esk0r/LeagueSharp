@@ -408,16 +408,16 @@ namespace Evade
 
             #endregion
 
-            #region LeBlanc
+            #region Leblanc
 
-            if (ObjectManager.Player.ChampionName == "LeBlanc")
+            if (ObjectManager.Player.ChampionName == "Leblanc")
             {
                 spell = new DashData("LeBlanc W1", SpellSlot.W, 600, false, 100, 1621, 3);
                 spell.CheckSpellName = "LeblancSlide";
                 Spells.Add(spell);
             }
 
-            if (ObjectManager.Player.ChampionName == "LeBlanc")
+            if (ObjectManager.Player.ChampionName == "Leblanc")
             {
                 spell = new DashData("LeBlanc RW", SpellSlot.R, 600, false, 100, 1621, 3);
                 spell.CheckSpellName = "LeblancSlideM";
