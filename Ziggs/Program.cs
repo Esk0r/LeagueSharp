@@ -193,7 +193,7 @@ namespace Ziggs
             var rValueM = Config.Item("DrawRRangeM").GetValue<Circle>();
             if (rValueM.Active)
             {
-                Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, rValueM.Color, 2, 30, true);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, rValueM.Color, true);
             }
         }
 
