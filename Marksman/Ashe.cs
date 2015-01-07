@@ -158,13 +158,13 @@ namespace Marksman
             var drawW = Config.Item("DrawW" + Id).GetValue<Circle>();
             if (drawW.Active)
             {
-                Utility.DrawCircle(ObjectManager.Player.Position, W.Range, drawW.Color);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, W.Range, drawW.Color);
             }
 
             var drawE = Config.Item("DrawE" + Id).GetValue<Circle>();
             if (drawE.Active)
             {
-                Utility.DrawCircle(ObjectManager.Player.Position, E.Range, drawE.Color);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, drawE.Color);
             }
         }
         public override bool ExtrasMenu(Menu config)

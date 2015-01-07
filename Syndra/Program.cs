@@ -551,13 +551,13 @@ namespace Syndra
         {
             //Draw the ranges of the spells.
             var menuItem = Config.Item("QERange").GetValue<Circle>();
-            if (menuItem.Active) Utility.DrawCircle(Player.Position, EQ.Range, menuItem.Color);
+            if (menuItem.Active) Render.Circle.DrawCircle(Player.Position, EQ.Range, menuItem.Color);
 
             foreach (var spell in SpellList)
             {
                 menuItem = Config.Item(spell.Slot + "Range").GetValue<Circle>();
                 if (menuItem.Active)
-                    Utility.DrawCircle(Player.Position, spell.Range, menuItem.Color);
+                    Render.Circle.DrawCircle(Player.Position, spell.Range, menuItem.Color);
             }
         }
     }

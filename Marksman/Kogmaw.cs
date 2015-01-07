@@ -38,7 +38,7 @@ namespace Marksman
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
                 if (menuItem.Active)
-                    Utility.DrawCircle(ObjectManager.Player.Position,
+                    Render.Circle.DrawCircle(ObjectManager.Player.Position,
                         spell.Slot == SpellSlot.W ? Orbwalking.GetRealAutoAttackRange(null) + 65 + W.Range : spell.Range,
                         menuItem.Color);
             }

@@ -53,10 +53,10 @@ namespace Marksman
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
                 if (menuItem.Active && spell.Level > 0)
-                    Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
+                    Render.Circle.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
 
                 if (menuItem.Active && spell.Level > 0 && IsValorMode())
-                    Utility.DrawCircle(ObjectManager.Player.Position, R.Range, menuItem.Color);
+                    Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, menuItem.Color);
             }
         }
 

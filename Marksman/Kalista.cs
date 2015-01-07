@@ -62,12 +62,12 @@ namespace Marksman
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
                 if (menuItem.Active && spell.Level > 0)
-                    Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
+                    Render.Circle.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
             }
 
             var drawConn = GetValue<Circle>("DrawConnMax");
             if (drawConn.Active)
-                Utility.DrawCircle(ObjectManager.Player.Position, CoopStrikeAllyRange, drawConn.Color);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, CoopStrikeAllyRange, drawConn.Color);
 
             var drawJumpPos = GetValue<Circle>("DrawJumpPos");
             if (drawJumpPos.Active)
@@ -84,8 +84,8 @@ namespace Marksman
                     if (ObjectManager.Player.Distance(pos.Key) <= 35f ||
                         ObjectManager.Player.Distance(pos.Value) <= 35f)
                     {
-                        Utility.DrawCircle(pos.Key, 70f, Color.GreenYellow);
-                        Utility.DrawCircle(pos.Value, 70f, Color.GreenYellow);
+                        Render.Circle.DrawCircle(pos.Key, 70f, Color.GreenYellow);
+                        Render.Circle.DrawCircle(pos.Value, 70f, Color.GreenYellow);
                     }
                 }
             }
@@ -174,7 +174,7 @@ namespace Marksman
                                    obj.IsAlly && ObjectManager.Player.Distance(obj) < 1500))
 
             {
-                Utility.DrawCircle(myBoddy.Position, 75f, Color.Red);
+                Render.Circle.DrawCircle(myBoddy.Position, 75f, Color.Red);
             }
             if (CoopStrikeAlly == null)
             {

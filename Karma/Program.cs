@@ -130,7 +130,7 @@ namespace Karma
                     Render.Circle.DrawCircle(
                         ObjectManager.Player.Position, 850, Color.FromArgb((int)(50 * distance), menuItem.Color), -420,
                         true);
-                        Utility.DrawCircle(
+                        Render.Circle.DrawCircle(
                         ObjectManager.Player.Position, 850, Color.FromArgb((int)(255 * distance), menuItem.Color), 10);
                 
                     break;
@@ -142,7 +142,7 @@ namespace Karma
                 menuItem = _config.Item(spell.Slot + "Range").GetValue<Circle>();
                 if (menuItem.Active)
                 {
-                    Utility.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
+                    Render.Circle.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
                 }
             }
         }

@@ -71,16 +71,16 @@ namespace Marksman
             var drawRS = GetValue<Circle>("DrawRS");
 
             if (drawQ.Active)
-                Utility.DrawCircle(ObjectManager.Player.Position, Q.Range, drawQ.Color, 1, 5);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, Q.Range, drawQ.Color, 1, 5);
 
             if (drawE.Active)
-                Utility.DrawCircle(ObjectManager.Player.Position, E.Range, drawE.Color, 1, 5);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, drawE.Color, 1, 5);
 
             if (drawQC.Active)
-                Utility.DrawCircle(ObjectManager.Player.Position, GetValue<Slider>("UseQMinChargeC").Value, drawQC.Color, 1, 5);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, GetValue<Slider>("UseQMinChargeC").Value, drawQC.Color, 1, 5);
 
             if (drawR.Active)
-                Utility.DrawCircle(ObjectManager.Player.Position, R.Range, drawR.Color, 1, 5);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, drawR.Color, 1, 5);
             
             if (GetValue<KeyBind>("CastR").Active && drawRS.Active)
             {
@@ -92,7 +92,7 @@ namespace Marksman
                     DrawPosition = ObjectManager.Player.Position +
                                    Vector3.Normalize(Game.CursorPos - ObjectManager.Player.Position)*(R.Range - 300f);
 
-                Utility.DrawCircle(DrawPosition, 300f, drawRS.Color, 1, 5);
+                Render.Circle.DrawCircle(DrawPosition, 300f, drawRS.Color, 1, 5);
             }
         }
 

@@ -138,7 +138,7 @@ namespace TwistedFate
             var rCircle2 = Config.Item("Rcircle2").GetValue<Circle>();
             if (rCircle2.Active)
             {
-                Utility.DrawCircle(ObjectManager.Player.Position, 5500, rCircle2.Color, 1, 23, true);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, 5500, rCircle2.Color, 1, 23, true);
             }
         }
 
@@ -149,12 +149,12 @@ namespace TwistedFate
             
             if (qCircle.Active)
             {
-                Utility.DrawCircle(ObjectManager.Player.Position, Q.Range, qCircle.Color);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, Q.Range, qCircle.Color);
             }
 
             if (rCircle.Active)
             {
-                Utility.DrawCircle(ObjectManager.Player.Position, 5500, rCircle.Color);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, 5500, rCircle.Color);
             }
         }
 
