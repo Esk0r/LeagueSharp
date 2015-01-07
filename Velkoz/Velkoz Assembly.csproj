@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{88E594CB-F803-4291-A037-40B81549189B}</ProjectGuid>
+    <ProjectGuid>{C1FB4CB4-4DE5-4913-9941-12548C852895}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Velkoz</RootNamespace>
