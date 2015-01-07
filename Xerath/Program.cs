@@ -536,7 +536,7 @@ namespace Xerath
             if (R.Level == 0) return;
             var menuItem = Config.Item(R.Slot + "RangeM").GetValue<Circle>();
             if (menuItem.Active)
-                Render.Circle.DrawCircle(Player.Position, R.Range, menuItem.Color);
+                Utility.DrawCircle(Player.Position, R.Range, menuItem.Color, 2, 30, true);
         }
 
         private static void Drawing_OnDraw(EventArgs args)
@@ -545,7 +545,7 @@ namespace Xerath
             {
                 if (Config.Item("OnlyNearMouse").GetValue<bool>())
                 {
-                    Render.Circle.DrawCircle(Game.CursorPos, Config.Item("MRadius").GetValue<Slider>().Value, Color.White);
+                    Utility.DrawCircle(Game.CursorPos, Config.Item("MRadius").GetValue<Slider>().Value, Color.White);
                 }
             }
 
@@ -554,7 +554,7 @@ namespace Xerath
             {
                 var menuItem = Config.Item(spell.Slot + "Range").GetValue<Circle>();
                 if (menuItem.Active && (spell.Slot != SpellSlot.R || R.Level > 0))
-                    Render.Circle.DrawCircle(Player.Position, spell.Range, menuItem.Color);
+                    Utility.DrawCircle(Player.Position, spell.Range, menuItem.Color);
             }
         }
     }

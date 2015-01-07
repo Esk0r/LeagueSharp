@@ -169,31 +169,31 @@ namespace Ziggs
             var qValue = Config.Item("DrawQRange").GetValue<Circle>();
             if (qValue.Active)
             {
-                Render.Circle.DrawCircle(ObjectManager.Player.Position, Q3.Range, qValue.Color);
+                Utility.DrawCircle(ObjectManager.Player.Position, Q3.Range, qValue.Color);
             }
 
             var wValue = Config.Item("DrawWRange").GetValue<Circle>();
             if (wValue.Active)
             {
-                Render.Circle.DrawCircle(ObjectManager.Player.Position, W.Range, wValue.Color);
+                Utility.DrawCircle(ObjectManager.Player.Position, W.Range, wValue.Color);
             }
 
             var eValue = Config.Item("DrawERange").GetValue<Circle>();
             if (eValue.Active)
             {
-                Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, eValue.Color);
+                Utility.DrawCircle(ObjectManager.Player.Position, E.Range, eValue.Color);
             }
 
             var rValue = Config.Item("DrawRRange").GetValue<Circle>();
             if (rValue.Active)
             {
-                Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, rValue.Color);
+                Utility.DrawCircle(ObjectManager.Player.Position, R.Range, rValue.Color);
             }
 
             var rValueM = Config.Item("DrawRRangeM").GetValue<Circle>();
             if (rValueM.Active)
             {
-                Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, rValueM.Color);
+                Utility.DrawCircle(ObjectManager.Player.Position, R.Range, rValueM.Color, 2, 30, true);
             }
         }
 
