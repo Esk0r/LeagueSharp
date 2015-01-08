@@ -81,7 +81,7 @@ namespace Marksman
             if (Q.IsReady() && GetValue<bool>("AutoQI"))
             {
                 t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
-                if (t.IsValidTarget(W.Range) &&
+                if (t.IsValidTarget(Q.Range) &&
                     (t.HasBuffOfType(BuffType.Stun) || t.HasBuffOfType(BuffType.Snare) ||
                      t.HasBuffOfType(BuffType.Taunt) || t.HasBuffOfType(BuffType.Slow))) 
                 {
