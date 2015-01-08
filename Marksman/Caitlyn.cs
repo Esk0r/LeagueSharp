@@ -64,31 +64,40 @@ namespace Marksman
         {
             R.Range = 500 * R.Level + 1500;
 
-            Obj_AI_Hero vTarget;
+            Obj_AI_Hero t;
             
-            var autoWi = GetValue<bool>("AutoWI");
-            
-            if (W.IsReady() && autoWi)
+            if (W.IsReady() && GetValue<bool>("AutoWI"))
             {
-                vTarget = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
-                if (vTarget.IsValidTarget(W.Range) &&
-                    (vTarget.HasBuffOfType(BuffType.Stun) || vTarget.HasBuffOfType(BuffType.Snare) ||
-                    vTarget.HasBuffOfType(BuffType.Taunt) || vTarget.HasBuff("zhonyasringshield") ||
-                    vTarget.HasBuff("Recall")))
+                t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
+                if (t.IsValidTarget(W.Range) &&
+                    (t.HasBuffOfType(BuffType.Stun) || t.HasBuffOfType(BuffType.Snare) ||
+                    t.HasBuffOfType(BuffType.Taunt) || t.HasBuff("zhonyasringshield") ||
+                    t.HasBuff("Recall")))
                 {
-                    W.Cast(vTarget.Position);
+                    W.Cast(t.Position);
                 }                
             }
-            
+
+            if (Q.IsReady() && GetValue<bool>("AutoQI"))
+            {
+                t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
+                if (t.IsValidTarget(W.Range) &&
+                    (t.HasBuffOfType(BuffType.Stun) || t.HasBuffOfType(BuffType.Snare) ||
+                     t.HasBuffOfType(BuffType.Taunt) || t.HasBuffOfType(BuffType.Slow))) 
+                {
+                    Q.Cast(t, false, true);
+                }
+            }
+
             if (R.IsReady())
             {
-                vTarget = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
-                if (vTarget.IsValidTarget(R.Range) && vTarget.Health <= R.GetDamage(vTarget))
+                t = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
+                if (t.IsValidTarget(R.Range) && t.Health <= R.GetDamage(t))
                 {
                     if (GetValue<KeyBind>("UltHelp").Active)
-                        R.Cast(vTarget);
+                        R.Cast(t);
 
-                    UltTarget = vTarget.ChampionName;
+                    UltTarget = t.ChampionName;
                     ShowUlt = true;
                 }
                 else
@@ -109,11 +118,11 @@ namespace Marksman
 
             if (GetValue<KeyBind>("UseEQC").Active && E.IsReady() && Q.IsReady())
             {
-                vTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
-                if (vTarget.IsValidTarget(E.Range))
+                t = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
+                if (t.IsValidTarget(E.Range))
                 {
-                    E.Cast(vTarget);
-                    Q.Cast(vTarget, false, true);
+                    E.Cast(t);
+                    Q.Cast(t, false, true);
                 }
             }
             // PQ you broke it D:
@@ -125,24 +134,24 @@ namespace Marksman
 
             if (Q.IsReady() && useQ)
             {
-                vTarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
-                if (vTarget != null)
-                    Q.Cast(vTarget, false, true);
+                t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
+                if (t != null)
+                    Q.Cast(t, false, true);
             }
             else if (E.IsReady() && useE)
             {
-                vTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
-                if (vTarget != null && vTarget.Health <= E.GetDamage(vTarget))
-                    E.Cast(vTarget);
+                t = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
+                if (t != null && t.Health <= E.GetDamage(t))
+                    E.Cast(t);
             }
 
             if (R.IsReady() && useR)
             {
-                vTarget = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
-                if (vTarget != null && vTarget.Health <= R.GetDamage(vTarget) &&
-                    !Orbwalking.InAutoAttackRange(vTarget))
+                t = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
+                if (t != null && t.Health <= R.GetDamage(t) &&
+                    !Orbwalking.InAutoAttackRange(t))
                 {
-                    R.CastOnUnit(vTarget);
+                    R.CastOnUnit(t);
                 }
             }
         }
@@ -200,7 +209,8 @@ namespace Marksman
 
         public override bool ExtrasMenu(Menu config)
         {
-            config.AddItem(new MenuItem("AutoWI" + Id, "Auto W").SetValue(true));
+            config.AddItem(new MenuItem("AutoQI" + Id, "Auto Q (Stun/Snare/Taunt/Slow)").SetValue(true));
+            config.AddItem(new MenuItem("AutoWI" + Id, "Auto W (Stun/Snare/Taunt)").SetValue(true));
             return true;
         }
         public override bool LaneClearMenu(Menu config)
