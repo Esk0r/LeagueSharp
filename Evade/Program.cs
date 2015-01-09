@@ -1287,16 +1287,12 @@ namespace Evade
             }
             if (Config.Menu.Item("ShowEvadeStatus").GetValue<bool>())
             {
-            var heropos = Drawing.WorldToScreen(ObjectManager.Player.Position);
-            if (Config.Menu.Item("Enabled").GetValue<KeyBind>().Active)
-             {
-            Drawing.DrawText(heropos.X, heropos.Y, Color.Red, "Evade: ON");
-             }
-            else
-            {
-                Drawing.DrawText(heropos.X, heropos.Y, Color.White, "Evade: OFF");
+                var heropos = Drawing.WorldToScreen(ObjectManager.Player.Position);
+                if (Config.Menu.Item("Enabled").GetValue<KeyBind>().Active)
+                {
+                    Drawing.DrawText(heropos.X, heropos.Y, Color.Red, "Evade: ON");
+                }
             }
-        }
             var Border = Config.Menu.Item("Border").GetValue<Slider>().Value;
             var missileColor = Config.Menu.Item("MissileColor").GetValue<Color>();
             
