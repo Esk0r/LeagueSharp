@@ -151,7 +151,7 @@ namespace Marksman
 
             if (ObjectManager.Player.GetSpellSlot("summonerdot") != SpellSlot.Unknown &&
                 ObjectManager.Player.Spellbook.CanUseSpell(ObjectManager.Player.GetSpellSlot("summonerdot")) ==
-                SpellState.Ready && ObjectManager.Player.Distance(t) < R.Range) 
+                SpellState.Ready && ObjectManager.Player.Distance(t) < W.Range) 
                 fComboDamage += ObjectManager.Player.GetSummonerSpellDamage(t, Damage.SummonerSpell.Ignite);
 
             if (Items.CanUseItem(3144) && ObjectManager.Player.Distance(t) < W.Range)
