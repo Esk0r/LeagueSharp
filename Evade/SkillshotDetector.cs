@@ -52,7 +52,7 @@ namespace Evade
 
         private static void Game_OnWndProc(WndEventArgs args)
         {
-            if (args.Msg == (uint) WindowsMessages.WM_KEYUP)
+            if (args.Msg == (uint)WindowsMessages.WM_KEYUP)
             {
                 TriggerOnDetectSkillshot(
                     DetectionType.ProcessSpell, SpellDatabase.GetByName("TestSkillShot"), Environment.TickCount,
@@ -82,35 +82,36 @@ namespace Evade
 
         private static void ObjSpellMissileOnOnCreate(GameObject sender, EventArgs args)
         {
-            if (!sender.IsValid || !(sender is Obj_SpellMissile))
-            {
-                return; //not sure if needed
-            }
+            var missile = sender as Obj_SpellMissile;
 
-            var missile = (Obj_SpellMissile) sender;
-
-#if DEBUG
-            if (missile.SpellCaster is Obj_AI_Hero)
-            {
-                Console.WriteLine(
-                    Environment.TickCount + " Projectile Created: " + missile.SData.Name + " distance: " +
-                    missile.StartPosition.Distance(missile.EndPosition) + "Radius: " +
-                    missile.SData.CastRadiusSecondary[0] + " Speed: " + missile.SData.MissileSpeed);
-            }
-
-#endif
-
-            var unit = missile.SpellCaster;
-            if (!unit.IsValid || (unit.Team == ObjectManager.Player.Team && !Config.TestOnAllies))
+            if (missile == null || !missile.IsValid)
             {
                 return;
             }
 
+            var unit = missile.SpellCaster as Obj_AI_Hero;
+
+            if (unit == null || !unit.IsValid || (unit.Team == ObjectManager.Player.Team && !Config.TestOnAllies))
+            {
+                return;
+            }
+
+
+#if DEBUG
+            Console.WriteLine(
+                Environment.TickCount + " Projectile Created: " + missile.SData.Name + " distance: " +
+                missile.StartPosition.Distance(missile.EndPosition) + "Radius: " +
+                missile.SData.CastRadiusSecondary[0] + " Speed: " + missile.SData.MissileSpeed);
+
+#endif
+
             var spellData = SpellDatabase.GetByMissileName(missile.SData.Name);
+
             if (spellData == null)
             {
                 return;
             }
+
             var missilePosition = missile.Position.To2D();
             var unitPosition = missile.StartPosition.To2D();
             var endPos = missile.EndPosition.To2D();
@@ -129,7 +130,7 @@ namespace Evade
             }
 
             var castTime = Environment.TickCount - Game.Ping / 2 - (spellData.MissileDelayed ? 0 : spellData.Delay) -
-                           (int) (1000 * missilePosition.Distance(unitPosition) / spellData.MissileSpeed);
+                           (int)(1000 * missilePosition.Distance(unitPosition) / spellData.MissileSpeed);
 
             //Trigger the skillshot detection callbacks.
             TriggerOnDetectSkillshot(DetectionType.RecvPacket, spellData, castTime, unitPosition, endPos, unit);
@@ -140,20 +141,16 @@ namespace Evade
         /// </summary>
         private static void ObjSpellMissileOnOnDelete(GameObject sender, EventArgs args)
         {
-            if (!(sender is Obj_SpellMissile))
+            var missile = sender as Obj_SpellMissile;
+
+            if (missile == null || !missile.IsValid)
             {
                 return;
             }
 
-            var missile = (Obj_SpellMissile) sender;
+            var caster = missile.SpellCaster as Obj_AI_Hero;
 
-            if (!(missile.SpellCaster is Obj_AI_Hero))
-            {
-                return;
-            }
-
-            var unit = (Obj_AI_Hero) missile.SpellCaster;
-            if (!unit.IsValid || (unit.Team == ObjectManager.Player.Team && !Config.TestOnAllies))
+            if (caster == null || !caster.IsValid || (caster.Team == ObjectManager.Player.Team && !Config.TestOnAllies))
             {
                 return;
             }
@@ -165,7 +162,7 @@ namespace Evade
                 foreach (var skillshot in Program.DetectedSkillshots)
                 {
                     if (skillshot.SpellData.MissileSpellName == spellName &&
-                        (skillshot.Unit.NetworkId == unit.NetworkId &&
+                        (skillshot.Unit.NetworkId == caster.NetworkId &&
                          (missile.EndPosition.To2D() - missile.StartPosition.To2D()).AngleBetween(skillshot.Direction) <
                          10) && skillshot.SpellData.CanBeRemoved)
                     {
@@ -184,7 +181,7 @@ namespace Evade
                 skillshot =>
                     (skillshot.SpellData.MissileSpellName == spellName ||
                      skillshot.SpellData.ExtraMissileNames.Contains(spellName)) &&
-                    (skillshot.Unit.NetworkId == unit.NetworkId &&
+                    (skillshot.Unit.NetworkId == caster.NetworkId &&
                      ((missile.EndPosition.To2D() - missile.StartPosition.To2D()).AngleBetween(skillshot.Direction) < 10) &&
                      skillshot.SpellData.CanBeRemoved || skillshot.SpellData.ForceRemove)); // 
         }
@@ -220,6 +217,11 @@ namespace Evade
         /// </summary>
         private static void ObjAiHeroOnOnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
+            if (sender == null || !sender.IsValid)
+            {
+                return;
+            }
+
             if (Config.PrintSpellData && sender is Obj_AI_Hero)
             {
                 Game.PrintChat(Environment.TickCount + " ProcessSpellCast: " + args.SData.Name);
@@ -345,7 +347,7 @@ namespace Evade
                     return;
                 }
 
-                var spellData = SpellDatabase.GetBySpeed(unit.ChampionName, (int) missileSpeed, id);
+                var spellData = SpellDatabase.GetBySpeed(unit.ChampionName, (int)missileSpeed, id);
 
                 if (spellData == null)
                 {
