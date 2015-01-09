@@ -13,9 +13,9 @@ namespace Marksman
 {
     internal class Ezreal : Champion
     {
-        public Spell Q;
-        public Spell R;
-        public Spell W;
+        public static Spell Q;
+        public static Spell R;
+        public static Spell W;
 
         public static Items.Item Dfg = new Items.Item(3128, 750);
         public Ezreal()
@@ -136,6 +136,35 @@ namespace Marksman
                 R.Cast(t);
         }
 
+        private static float GetComboDamage(Obj_AI_Hero t)
+        {
+            var fComboDamage = 0d;
+
+            if (Q.IsReady())
+                fComboDamage += ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q);
+
+            if (W.IsReady())
+                fComboDamage += ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
+
+            if (R.IsReady())
+                fComboDamage += ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
+
+            if (ObjectManager.Player.GetSpellSlot("summonerdot") != SpellSlot.Unknown &&
+                ObjectManager.Player.Spellbook.CanUseSpell(ObjectManager.Player.GetSpellSlot("summonerdot")) ==
+                SpellState.Ready && ObjectManager.Player.Distance(t) < R.Range) 
+                fComboDamage += ObjectManager.Player.GetSummonerSpellDamage(t, Damage.SummonerSpell.Ignite);
+
+            if (Items.CanUseItem(3144) && ObjectManager.Player.Distance(t) < W.Range)
+                fComboDamage += ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Bilgewater);
+
+            if (Items.CanUseItem(3153) && ObjectManager.Player.Distance(t) < W.Range)
+                fComboDamage += ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Botrk);
+
+            if (Items.CanUseItem(3128) && ObjectManager.Player.Distance(t) < W.Range)
+                fComboDamage += ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Dfg);
+
+            return (float)fComboDamage;
+        }
         public override bool ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
@@ -164,12 +193,24 @@ namespace Marksman
             return true;
         }
 
+
         public override bool DrawingMenu(Menu config)
         {
             config.AddItem(
                 new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
             config.AddItem(
                 new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(false, Color.FromArgb(100, 255, 255, 255))));
+
+            var dmgAfterComboItem = new MenuItem("DamageAfterCombo", "Damage After Combo").SetValue(true);
+            Config.AddItem(dmgAfterComboItem);
+
+            Utility.HpBarDamageIndicator.DamageToUnit = GetComboDamage;
+            Utility.HpBarDamageIndicator.Enabled = dmgAfterComboItem.GetValue<bool>();
+            dmgAfterComboItem.ValueChanged += delegate(object sender, OnValueChangeEventArgs eventArgs)
+            {
+                Utility.HpBarDamageIndicator.Enabled = eventArgs.GetNewValue<bool>();
+            };
+
             return true;
         }
 
