@@ -1,4 +1,4 @@
-﻿// Copyright 2014 - 2014 Esk0r
+// Copyright 2014 - 2014 Esk0r
 // Program.cs is part of Evade.
 // 
 // Evade is free software: you can redistribute it and/or modify
@@ -1285,9 +1285,21 @@ namespace Evade
             {
                 return;
             }
+            if (Config.Menu.Item("ShowEvadeStatus").GetValue<bool>())
+            {
+            var heropos = Drawing.WorldToScreen(ObjectManager.Player.Position);
+            if (Config.Menu.Item("Enabled").GetValue<KeyBind>().Active)
+             {
+            Drawing.DrawText(heropos.X, heropos.Y, Color.Red, "Evade: ON");
+             }
+            else
+            {
+                Drawing.DrawText(heropos.X, heropos.Y, Color.White, "Evade: OFF");
+            }
+        }
             var Border = Config.Menu.Item("Border").GetValue<Slider>().Value;
             var missileColor = Config.Menu.Item("MissileColor").GetValue<Color>();
-
+            
             //Draw the polygon for each skillshot.
             foreach (var skillshot in DetectedSkillshots)
             {
