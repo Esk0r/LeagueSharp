@@ -1,4 +1,4 @@
-﻿// Copyright 2014 - 2014 Esk0r
+// Copyright 2014 - 2014 Esk0r
 // Config.cs is part of Evade.
 // 
 // Evade is free software: you can redistribute it and/or modify
@@ -136,6 +136,7 @@ namespace Evade
 
             var misc = new Menu("Misc", "Misc");
             misc.AddItem(new MenuItem("DisableFow", "Disable fog of war dodging").SetValue(false));
+            misc.AddItem(new MenuItem("ShowEvadeStatus", "Show Evade Status").SetValue(false));
             Menu.AddSubMenu(misc);
 
             Menu.AddItem(
