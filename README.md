@@ -1,15 +1,15 @@
 License
 =================
-Copyright 2015 - 2015 LeagueSharp
-legacy3/LeagueSharp is free software: you can redistribute it and/or modify
+Copyright 2014 - 2015 LeagueSharp
+Esk0r/LeagueSharp is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 Free Software Foundation, either version 3 of the License, or
 at your option) any later version.
 
-legacy3/LeagueSharp is distributed in the hope that it will be useful,
+Esk0r/LeagueSharp is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with legacy3/LeagueSharp. If not, see http://www.gnu.org/licenses/
+along with Esk0r/LeagueSharp. If not, see http://www.gnu.org/licenses/
