@@ -1294,10 +1294,7 @@ namespace Evade
              }
             else
             {
-            if (!Config.Menu.Item("Enabled").GetValue<KeyBind>().Active)
-            {
                 Drawing.DrawText(heropos.X, heropos.Y, Color.White, "Evade: OFF");
-            }
         }
     }
                  
