@@ -1295,11 +1295,8 @@ namespace Evade
             else
             {
                 Drawing.DrawText(heropos.X, heropos.Y, Color.White, "Evade: OFF");
+            }
         }
-    }
-                 
-                 
-             }
             var Border = Config.Menu.Item("Border").GetValue<Slider>().Value;
             var missileColor = Config.Menu.Item("MissileColor").GetValue<Color>();
             
