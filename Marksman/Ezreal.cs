@@ -31,6 +31,8 @@ namespace Marksman
             R = new Spell(SpellSlot.R, 2500);
             R.SetSkillshot(1f, 160f, 2000f, false, SkillshotType.SkillshotLine);
 
+            Utility.HpBarDamageIndicator.DamageToUnit = GetComboDamage;
+            Utility.HpBarDamageIndicator.Enabled = true;
         }
 
         public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
@@ -138,32 +140,32 @@ namespace Marksman
 
         private static float GetComboDamage(Obj_AI_Hero t)
         {
-            var fComboDamage = 0d;
+            float fComboDamage = 0f;
 
             if (Q.IsReady())
-                fComboDamage += ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q);
+                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q);
 
             if (W.IsReady())
-                fComboDamage += ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
+                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
 
             if (R.IsReady())
-                fComboDamage += ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
+                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
 
             if (ObjectManager.Player.GetSpellSlot("summonerdot") != SpellSlot.Unknown &&
                 ObjectManager.Player.Spellbook.CanUseSpell(ObjectManager.Player.GetSpellSlot("summonerdot")) ==
-                SpellState.Ready && ObjectManager.Player.Distance(t) < W.Range) 
-                fComboDamage += ObjectManager.Player.GetSummonerSpellDamage(t, Damage.SummonerSpell.Ignite);
+                SpellState.Ready && ObjectManager.Player.Distance(t) < 550)
+                fComboDamage += (float) ObjectManager.Player.GetSummonerSpellDamage(t, Damage.SummonerSpell.Ignite);
 
-            if (Items.CanUseItem(3144) && ObjectManager.Player.Distance(t) < W.Range)
-                fComboDamage += ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Bilgewater);
+            if (Items.CanUseItem(3144) && ObjectManager.Player.Distance(t) < 550)
+                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Bilgewater);
 
-            if (Items.CanUseItem(3153) && ObjectManager.Player.Distance(t) < W.Range)
-                fComboDamage += ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Botrk);
+            if (Items.CanUseItem(3153) && ObjectManager.Player.Distance(t) < 550)
+                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Botrk);
 
-            if (Items.CanUseItem(3128) && ObjectManager.Player.Distance(t) < W.Range)
-                fComboDamage += ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Dfg);
+            if (Items.CanUseItem(3128) && ObjectManager.Player.Distance(t) < 550)
+                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Dfg);
 
-            return (float)fComboDamage;
+            return fComboDamage;
         }
         public override bool ComboMenu(Menu config)
         {
@@ -203,13 +205,6 @@ namespace Marksman
 
             var dmgAfterComboItem = new MenuItem("DamageAfterCombo", "Damage After Combo").SetValue(true);
             Config.AddItem(dmgAfterComboItem);
-
-            Utility.HpBarDamageIndicator.DamageToUnit = GetComboDamage;
-            Utility.HpBarDamageIndicator.Enabled = dmgAfterComboItem.GetValue<bool>();
-            dmgAfterComboItem.ValueChanged += delegate(object sender, OnValueChangeEventArgs eventArgs)
-            {
-                Utility.HpBarDamageIndicator.Enabled = eventArgs.GetNewValue<bool>();
-            };
 
             return true;
         }

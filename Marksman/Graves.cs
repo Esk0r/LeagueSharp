@@ -27,7 +27,38 @@ namespace Marksman
 
             R = new Spell(SpellSlot.R, 1100f);
             R.SetSkillshot(0.25f, 100f, 2100f, true, SkillshotType.SkillshotLine);
+
+            Utility.HpBarDamageIndicator.DamageToUnit = GetComboDamage;
+            Utility.HpBarDamageIndicator.Enabled = true;
         }
+
+        private float GetComboDamage(Obj_AI_Hero t)
+        {
+            float fComboDamage = 0f;
+
+            if (Q.IsReady())
+                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q);
+
+            if (W.IsReady())
+                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
+
+            if (R.IsReady())
+                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
+
+            if (ObjectManager.Player.GetSpellSlot("summonerdot") != SpellSlot.Unknown &&
+                ObjectManager.Player.Spellbook.CanUseSpell(ObjectManager.Player.GetSpellSlot("summonerdot")) ==
+                SpellState.Ready && ObjectManager.Player.Distance(t) < 550)
+                fComboDamage += (float) ObjectManager.Player.GetSummonerSpellDamage(t, Damage.SummonerSpell.Ignite);
+
+            if (Items.CanUseItem(3144) && ObjectManager.Player.Distance(t) < 550)
+                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Bilgewater);
+
+            if (Items.CanUseItem(3153) && ObjectManager.Player.Distance(t) < 550)
+                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Botrk);
+
+            return fComboDamage;
+        }
+
 
         public override void Game_OnGameUpdate(EventArgs args)
         {

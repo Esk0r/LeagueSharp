@@ -46,10 +46,21 @@ namespace Marksman
                 fComboDamage += CalcWDamage;
 
             if (E.IsReady())
-                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.E);
+                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.E);
 
             if (R.IsReady())
-                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
+                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
+
+            if (ObjectManager.Player.GetSpellSlot("summonerdot") != SpellSlot.Unknown &&
+                ObjectManager.Player.Spellbook.CanUseSpell(ObjectManager.Player.GetSpellSlot("summonerdot")) ==
+                SpellState.Ready && ObjectManager.Player.Distance(t) < 550)
+                fComboDamage += (float) ObjectManager.Player.GetSummonerSpellDamage(t, Damage.SummonerSpell.Ignite);
+
+            if (Items.CanUseItem(3144) && ObjectManager.Player.Distance(t) < 550)
+                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Bilgewater);
+
+            if (Items.CanUseItem(3153) && ObjectManager.Player.Distance(t) < 550)
+                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Botrk);
 
             return fComboDamage;
         }
@@ -111,7 +122,7 @@ namespace Marksman
             {
                 var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                 var xEnemyWStackCount = EnemyWStackCount(t);
-                var wExplodePerStack = ObjectManager.Player.GetSpellDamage(t, SpellSlot.W, 1)*xEnemyWStackCount > 0
+                var wExplodePerStack = ObjectManager.Player.GetSpellDamage(t, SpellSlot.W, 1) * xEnemyWStackCount > 0
                     ? xEnemyWStackCount
                     : 1;
                 return (float) wExplodePerStack;
@@ -123,14 +134,11 @@ namespace Marksman
             get
             {
                 var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
-                if (Q.Level == 0 || !Q.IsReady())
+                
+                if (!Q.IsReady())
                     return 0;
 
-                const float xMaxQChargableTime = 5.2f;
-
-                if (Game.Time - Q.LastCastAttemptT > xMaxQChargableTime)
-                    return 0f;
-
+                /*
                 var qDamageMaxPerLevel = new[] {15f, 70f, 125f, 180f, 235f};
                 var fxQDamage2 = qDamageMaxPerLevel[Q.Level - 1] +
                                  1.6*
@@ -138,6 +146,9 @@ namespace Marksman
 
                 var xDis = ObjectManager.Player.Distance(t)/Q.ChargedMaxRange;
                 return (float) fxQDamage2*xDis;
+                */
+                var fxQDamage2 = ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q, 1);
+                return (float) fxQDamage2;
             }
         }
 
