@@ -17,7 +17,6 @@ namespace Marksman
         public Varus()
         {
             Utils.PrintMessage("Varus loaded!");
-            Utils.PrintMessage("Added Use Q KeyBind (Default Key: T) Option. Please check the combo menu.");
            
             Q = new Spell(SpellSlot.Q, 1600f);
             W = new Spell(SpellSlot.W);
@@ -29,16 +28,31 @@ namespace Marksman
             R.SetSkillshot(.25f, 100f, 1950f, false, SkillshotType.SkillshotLine);
 
             Q.SetCharged("VarusQ", "VarusQ", 250, 1600, 1.2f);
+             
+            Utility.HpBarDamageIndicator.DamageToUnit = GetComboDamage;
+            Utility.HpBarDamageIndicator.Enabled = true;
 
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
         }
 
-        static Varus()
+        private float GetComboDamage(Obj_AI_Hero t)
         {
-            QMinCharge = 0;
-        }
+            float fComboDamage = 0f;
 
-        public static float QMinCharge { get; set; }
+            if (Q.IsReady())
+                fComboDamage += CalcQDamage;
+
+            if (W.IsReady())
+                fComboDamage += CalcWDamage;
+
+            if (E.IsReady())
+                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.E);
+
+            if (R.IsReady())
+                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
+
+            return fComboDamage;
+        }
 
         private void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
@@ -48,18 +62,12 @@ namespace Marksman
             LastSpellTick = Environment.TickCount;
         }
 
-        public static Obj_AI_Hero EnemyWStackCount(int buffCount)
+        public static int EnemyWStackCount(Obj_AI_Hero t)
         {
             return
-                (from enemy in
-                    ObjectManager.Get<Obj_AI_Hero>()
-                        .Where(
-                            xEnemy =>
-                                xEnemy.IsEnemy && !xEnemy.IsDead && ObjectManager.Player.Distance(xEnemy) < Q.Range &&
-                                W.Level > 0)
-                    from buff in enemy.Buffs
-                    where buff.Name == "varuswdebuff" && buff.Count >= buffCount
-                    select enemy).FirstOrDefault();
+                t.Buffs.Where(xBuff => xBuff.Name == "varuswdebuff" && t.IsValidTarget(Q.Range))
+                    .Select(xBuff => xBuff.Count)
+                    .FirstOrDefault();
         }
 
         public override void Drawing_OnDraw(EventArgs args)
@@ -67,8 +75,8 @@ namespace Marksman
             var drawQ = GetValue<Circle>("DrawQ");
             var drawE = GetValue<Circle>("DrawE");
             var drawR = GetValue<Circle>("DrawR");
-            var drawQC = GetValue<Circle>("DrawQC");
-            var drawRS = GetValue<Circle>("DrawRS");
+            var drawQc = GetValue<Circle>("DrawQC");
+            var drawRs = GetValue<Circle>("DrawRS");
 
             if (drawQ.Active)
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, Q.Range, drawQ.Color);
@@ -76,71 +84,79 @@ namespace Marksman
             if (drawE.Active)
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, drawE.Color);
 
-            if (drawQC.Active)
-                Render.Circle.DrawCircle(ObjectManager.Player.Position, GetValue<Slider>("UseQMinChargeC").Value, drawQC.Color);
+            if (drawQc.Active)
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, GetValue<Slider>("QMinChargeC").Value,
+                    drawQc.Color);
 
             if (drawR.Active)
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, drawR.Color);
             
-            if (GetValue<KeyBind>("CastR").Active && drawRS.Active)
+            if (GetValue<KeyBind>("CastR").Active && drawRs.Active)
             {
-                Vector3 DrawPosition;
+                Vector3 drawPosition;
 
                 if (ObjectManager.Player.Distance(Game.CursorPos) < R.Range - 300f)
-                    DrawPosition = Game.CursorPos;
+                    drawPosition = Game.CursorPos;
                 else
-                    DrawPosition = ObjectManager.Player.Position +
+                    drawPosition = ObjectManager.Player.Position +
                                    Vector3.Normalize(Game.CursorPos - ObjectManager.Player.Position)*(R.Range - 300f);
 
-                Render.Circle.DrawCircle(DrawPosition, 300f, drawRS.Color);
+                Render.Circle.DrawCircle(drawPosition, 300f, drawRs.Color);
             }
         }
 
-        private static float CalcWExplodeDamage(Obj_AI_Hero vTarget)
+        static float CalcWDamage
         {
-            var wExplodePerStack = new[] {2f, 2.75f, 3.5f, 4.25f, 5f};
-            float xWDamage = /*EnemyWStackCount **/ wExplodePerStack[W.Level - 1];
-
-            float fxWDamage = vTarget.Health/100*xWDamage;
-            return fxWDamage;
+            get
+            {
+                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
+                var xEnemyWStackCount = EnemyWStackCount(t);
+                var wExplodePerStack = ObjectManager.Player.GetSpellDamage(t, SpellSlot.W, 1)*xEnemyWStackCount > 0
+                    ? xEnemyWStackCount
+                    : 1;
+                return (float) wExplodePerStack;
+            }
         }
 
-        public static float CalcQDamage(Obj_AI_Hero vTarget)
+        static float CalcQDamage
         {
-            if (Q.Level == 0)
-                return 0;
+            get
+            {
+                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
+                if (Q.Level == 0 || !Q.IsReady())
+                    return 0;
 
-            var xQMin = Program.CClass.GetValue<Slider>("UseQMinChargeC").Value;
-            var qMinRange = xQMin < Orbwalking.GetRealAutoAttackRange(vTarget)
-                ? Orbwalking.GetRealAutoAttackRange(vTarget)
-                : xQMin;
-            var qMaxRange = Q.ChargedMaxRange;
-            
-            var qCalcRange = qMaxRange/qMinRange;
+                const float xMaxQChargableTime = 5.2f;
 
-            var qDamageMinPerLevel = new[] {10f, 47f, 83f, 120f, 157f};
-            var qDamageMaxPerLevel = new[] {15f, 70f, 125f, 180f, 235f};
+                if (Game.Time - Q.LastCastAttemptT > xMaxQChargableTime)
+                    return 0f;
 
-            double fxQDamage = qDamageMinPerLevel[Q.Level - 1] + qDamageMaxPerLevel[Q.Level - 1]* 1.6; 
-            fxQDamage = fxQDamage/ qCalcRange;
+                var qDamageMaxPerLevel = new[] {15f, 70f, 125f, 180f, 235f};
+                var fxQDamage2 = qDamageMaxPerLevel[Q.Level - 1] +
+                                 1.6*
+                                 (ObjectManager.Player.BaseAttackDamage + ObjectManager.Player.FlatPhysicalDamageMod);
 
-            return (float) fxQDamage;
+                var xDis = ObjectManager.Player.Distance(t)/Q.ChargedMaxRange;
+                return (float) fxQDamage2*xDis;
+            }
         }
 
-        private static void CastQEnemy(Obj_AI_Hero vTarget)
+        private static void CastSpell_Q()
         {
-            if (vTarget == null)
-                return;
             if (!Q.IsReady())
                 return;
 
+            var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
+            if (!t.IsValidTarget(Q.Range)) 
+                return;
+
+            var qMinCharge = Program.Config.Item("QMinChargeC").GetValue<Slider>().Value;
+            ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
+            
             if (Q.IsCharging)
             {
-                ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
-                if (Q.Range >= QMinCharge)
-                {
-                    Q.Cast(vTarget, false, true);
-                }
+                if (Q.Range >= qMinCharge)
+                Q.Cast(t, false, true);
             }
             else
             {
@@ -150,7 +166,6 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            
             if (GetValue<KeyBind>("CastR").Active)
             {
                 Vector3 searchPos;
@@ -171,21 +186,19 @@ namespace Marksman
                     R.Cast(rTarget);
             }
 
-            var useQ2 = GetValue<KeyBind>("UseQ2C").Active;
-            if (Q.IsReady() && useQ2)
+            if (GetValue<KeyBind>("UseQ2C").Active)
             {
-                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
-                if (t.IsValidTarget(Q.ChargedMaxRange))
-                {
-                    CastQEnemy(t);
-                }
+                ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
+                CastSpell_Q();
             }
+
+            Obj_AI_Hero t;
 
             if (E.IsReady() && GetValue<KeyBind>("UseETH").Active)
             {
                 if(ObjectManager.Player.HasBuff("Recall"))
                     return;
-                var t = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
+                t = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
                 if (t != null)
                     E.Cast(t, false, true);
             }           
@@ -193,63 +206,42 @@ namespace Marksman
             if (!ComboActive && !HarassActive) return;
 
             var useQ = GetValue<StringList>("UseQ" + (ComboActive ? "C" : "H"));
-            var useW = GetValue<Slider>("UseW" + (ComboActive ? "C" : "H"));
             var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
+            var useR = GetValue<bool>("UseRC");
             
-            
-            QMinCharge = GetValue<Slider>("UseQMinChargeC").Value;
+            t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
 
-            var qTarget = TargetSelector.GetTarget(Q.ChargedMaxRange, TargetSelector.DamageType.Physical);
-            var eTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
-
-            if (qTarget.Health < CalcQDamage(qTarget))
-                CastQEnemy(qTarget);
-
-            if (useE && E.IsReady() && eTarget != null)
-                E.Cast(eTarget, false, true);
-
-
-            if (ObjectManager.Player.Distance(qTarget) > QMinCharge ||
-                ObjectManager.Player.Distance(qTarget) > Orbwalking.GetRealAutoAttackRange(qTarget)) 
-                CastQEnemy(qTarget);
-            else
-            {
-                switch (useQ.SelectedIndex)
-                {
-                    case 2:
-                        {
-                            CastQEnemy(EnemyWStackCount(useW.Value));
-                            break;
-                        }
-
-                    case 3:
-                        {
-                            CastQEnemy(EnemyWStackCount(3));
-                            break;
-                        }
-                }
-            }
+            if (t.IsValidTarget(Q.Range) && t.Health <= CalcQDamage + CalcWDamage)
+                CastSpell_Q();
 
             switch (useQ.SelectedIndex)
             {
                 case 1:
-                {
-                    CastQEnemy(qTarget);
-                    break;
-                }
+                    {
+                        CastSpell_Q();
+                        break;
+                    }
                 case 2:
-                {
-                    CastQEnemy(EnemyWStackCount(useW.Value));
-                    break;
-                }
-
-                case 3:
-                {
-                    CastQEnemy(EnemyWStackCount(3));
-                    break;
-                }
+                    {
+                        if (EnemyWStackCount(t) > 2)
+                            CastSpell_Q();
+                        break;
+                    }
             }
 
+            if (useE && E.IsReady())
+            {
+                t = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
+                if (t.IsValidTarget(E.Range))
+                    E.Cast(t, false, true);
+            }
+
+            if (useR && R.IsReady())
+            {
+                t = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
+                if (t.IsValidTarget(R.Range) && t.Health <= ObjectManager.Player.GetSpellDamage(t, SpellSlot.R) - 30f) 
+                    R.Cast(t);
+            }
         }
 
         public override void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
@@ -259,25 +251,29 @@ namespace Marksman
 
         public override bool ComboMenu(Menu config)
         {
-            config.AddItem(new MenuItem("UseQC" + Id, "Q").SetValue(new StringList(new[] {"Off", "Everytime", "W Stack Value", "Max W Stack"}, 3)));
-            config.AddItem(new MenuItem("UseQMinChargeC" + Id, "Min. Q Charge").SetValue(new Slider(1000, 250, 1400)));
-            config.AddItem(new MenuItem("UseWC" + Id, "W").SetValue(new Slider(3, 1, 3)));
-            config.AddItem(new MenuItem("UseEC" + Id, "E").SetValue(true));
-            config.AddItem(new MenuItem("UseQ2C" + Id, "Q ").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
+            config.AddItem(
+                new MenuItem("UseQC" + Id, "Q Mode").SetValue(
+                    new StringList(new[] {"Off", "Use Allways", "Max W Stack = 3"}, 0)));
+            config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
+            config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(true));
 
+            config.AddItem(
+                new MenuItem("QMinChargeC", "Min. Q Charge").SetValue(new Slider(1000, Q.ChargedMinRange,
+                    Q.ChargedMaxRange)));
+            config.AddItem(
+                new MenuItem("UseQ2C" + Id, "Use Insta Q").SetValue(new KeyBind("J".ToCharArray()[0], KeyBindType.Press)));
             return true;
         }
 
         public override bool HarassMenu(Menu config)
         {
             config.AddItem(
-                new MenuItem("UseQH" + Id, "Q").SetValue(
-                    new StringList(new[] {"Off", "Everytime", "W Stack Value", "Max W Stack"}, 3)));
-            config.AddItem(new MenuItem("UseWH" + Id, "W").SetValue(new Slider(3, 1, 3)));
+                new MenuItem("UseQH" + Id, "Q").SetValue(new StringList(
+                    new[] {"Off", "Use Allways", "Max W Stack = 3"}, 0)));
             config.AddItem(new MenuItem("UseEH" + Id, "E").SetValue(true));
             config.AddItem(
                 new MenuItem("UseETH" + Id, "Use E (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
-                    KeyBindType.Toggle)));             
+                    KeyBindType.Toggle)));
 
             return true;
         }

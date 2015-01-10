@@ -102,7 +102,6 @@ namespace Marksman
             if (Items.CanUseItem(3153) && ObjectManager.Player.Distance(t) < W.Range)
                 fComboDamage += ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Botrk);
 
-
             return (float)fComboDamage;
         }
 

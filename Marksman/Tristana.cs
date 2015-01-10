@@ -10,9 +10,9 @@ namespace Marksman
 {
     internal class Tristana : Champion
     {
-        public Spell E;
+        public static Spell E;
         public Spell Q;
-        public Spell R;
+        public static Spell R;
 
         public static Items.Item Dfg = new Items.Item(3128, 750);
 
@@ -116,6 +116,30 @@ namespace Marksman
                 R.CastOnUnit(hero);
         }
 
+        private static float GetComboDamage(Obj_AI_Hero t)
+        {
+            var fComboDamage = 0d;
+
+            if (E.IsReady())
+                fComboDamage += ObjectManager.Player.GetSpellDamage(t, SpellSlot.E);
+
+            if (R.IsReady())
+                fComboDamage += ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
+
+            if (ObjectManager.Player.GetSpellSlot("summonerdot") != SpellSlot.Unknown &&
+                ObjectManager.Player.Spellbook.CanUseSpell(ObjectManager.Player.GetSpellSlot("summonerdot")) ==
+                SpellState.Ready && ObjectManager.Player.Distance(t) < 600) 
+                fComboDamage += ObjectManager.Player.GetSummonerSpellDamage(t, Damage.SummonerSpell.Ignite);
+
+            if (Items.CanUseItem(3144) && ObjectManager.Player.Distance(t) < 600)
+                fComboDamage += ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Bilgewater);
+
+            if (Items.CanUseItem(3153) && ObjectManager.Player.Distance(t) < 600)
+                fComboDamage += ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Botrk);
+
+            return (float)fComboDamage;
+        }
+
         public override bool ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
@@ -137,6 +161,16 @@ namespace Marksman
         {
             config.AddItem(
                 new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(true, Color.CornflowerBlue)));
+            var dmgAfterComboItem = new MenuItem("DamageAfterCombo", "Damage After Combo").SetValue(true);
+            Config.AddItem(dmgAfterComboItem);
+
+            Utility.HpBarDamageIndicator.DamageToUnit = GetComboDamage;
+            Utility.HpBarDamageIndicator.Enabled = dmgAfterComboItem.GetValue<bool>();
+            dmgAfterComboItem.ValueChanged += delegate(object sender, OnValueChangeEventArgs eventArgs)
+            {
+                Utility.HpBarDamageIndicator.Enabled = eventArgs.GetNewValue<bool>();
+            };
+
             return true;
         }
 
