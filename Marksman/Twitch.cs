@@ -69,18 +69,26 @@ namespace Marksman
                     var eTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
                     if (eTarget.IsValidTarget(E.Range))
                     {
-                        foreach (var buff in eTarget.Buffs.Where(buff => buff.DisplayName.ToLower() == "twitchdeadlyvenom").Where(buff => buff.Count == 6))
+                        foreach (
+                            var buff in
+                                eTarget.Buffs.Where(buff => buff.DisplayName.ToLower() == "twitchdeadlyvenom")
+                                    .Where(buff => buff.Count == 6)) 
                         {
                             E.Cast();
                         }
                     }
-                    
                 }
             }
 
             if (GetValue<bool>("UseEM") && E.IsReady())
             {
-                foreach (var hero in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsValidTarget(E.Range) && (ObjectManager.Player.GetSpellDamage(hero, SpellSlot.E) - 10 > hero.Health)))
+                foreach (
+                    var hero in
+                        ObjectManager.Get<Obj_AI_Hero>()
+                            .Where(
+                                hero =>
+                                    hero.IsValidTarget(E.Range) &&
+                                    (ObjectManager.Player.GetSpellDamage(hero, SpellSlot.E) - 10 > hero.Health)))
                 {
                     E.Cast();
                 }

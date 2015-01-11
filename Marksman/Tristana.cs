@@ -10,9 +10,7 @@ namespace Marksman
 {
     internal class Tristana : Champion
     {
-        public static Spell E;
-        public Spell Q;
-        public static Spell R;
+        public static Spell Q, E, R;
 
         public static Items.Item Dfg = new Items.Item(3128, 750);
 
@@ -23,6 +21,9 @@ namespace Marksman
             Q = new Spell(SpellSlot.Q, 703);
             E = new Spell(SpellSlot.E, 703);
             R = new Spell(SpellSlot.R, 703);
+
+            Utility.HpBarDamageIndicator.DamageToUnit = GetComboDamage;
+            Utility.HpBarDamageIndicator.Enabled = true;
 
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
@@ -118,24 +119,24 @@ namespace Marksman
 
         private static float GetComboDamage(Obj_AI_Hero t)
         {
-            var fComboDamage = 0d;
+            var fComboDamage = 0f;
 
             if (E.IsReady())
-                fComboDamage += ObjectManager.Player.GetSpellDamage(t, SpellSlot.E);
+                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.E);
 
             if (R.IsReady())
-                fComboDamage += ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
+                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
 
             if (ObjectManager.Player.GetSpellSlot("summonerdot") != SpellSlot.Unknown &&
                 ObjectManager.Player.Spellbook.CanUseSpell(ObjectManager.Player.GetSpellSlot("summonerdot")) ==
-                SpellState.Ready && ObjectManager.Player.Distance(t) < 600) 
-                fComboDamage += ObjectManager.Player.GetSummonerSpellDamage(t, Damage.SummonerSpell.Ignite);
+                SpellState.Ready && ObjectManager.Player.Distance(t) < 550) 
+                fComboDamage += (float) ObjectManager.Player.GetSummonerSpellDamage(t, Damage.SummonerSpell.Ignite);
 
-            if (Items.CanUseItem(3144) && ObjectManager.Player.Distance(t) < 600)
-                fComboDamage += ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Bilgewater);
+            if (Items.CanUseItem(3144) && ObjectManager.Player.Distance(t) < 550)
+                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Bilgewater);
 
-            if (Items.CanUseItem(3153) && ObjectManager.Player.Distance(t) < 600)
-                fComboDamage += ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Botrk);
+            if (Items.CanUseItem(3153) && ObjectManager.Player.Distance(t) < 550)
+                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Botrk);
 
             return (float)fComboDamage;
         }
@@ -163,13 +164,6 @@ namespace Marksman
                 new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(true, Color.CornflowerBlue)));
             var dmgAfterComboItem = new MenuItem("DamageAfterCombo", "Damage After Combo").SetValue(true);
             Config.AddItem(dmgAfterComboItem);
-
-            Utility.HpBarDamageIndicator.DamageToUnit = GetComboDamage;
-            Utility.HpBarDamageIndicator.Enabled = dmgAfterComboItem.GetValue<bool>();
-            dmgAfterComboItem.ValueChanged += delegate(object sender, OnValueChangeEventArgs eventArgs)
-            {
-                Utility.HpBarDamageIndicator.Enabled = eventArgs.GetNewValue<bool>();
-            };
 
             return true;
         }
