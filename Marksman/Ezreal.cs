@@ -18,14 +18,15 @@ namespace Marksman
         public static Spell W;
 
         public static Items.Item Dfg = new Items.Item(3128, 750);
+
         public Ezreal()
         {
             Utils.PrintMessage("Ezreal loaded.");
 
-            Q = new Spell(SpellSlot.Q, 1200);
+            Q = new Spell(SpellSlot.Q, 1190);
             Q.SetSkillshot(0.25f, 60f, 2000f, true, SkillshotType.SkillshotLine);
 
-            W = new Spell(SpellSlot.W, 850);
+            W = new Spell(SpellSlot.W, 800);
             W.SetSkillshot(0.25f, 80f, 1600f, false, SkillshotType.SkillshotLine);
 
             R = new Spell(SpellSlot.R, 2500);
@@ -69,21 +70,27 @@ namespace Marksman
         {
             Obj_AI_Hero t;
 
-            if (Q.IsReady() &&  GetValue<KeyBind>("UseQTH").Active && ToggleActive)
+            if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active && ToggleActive)
             {
-                if(ObjectManager.Player.HasBuff("Recall"))
+                if (ObjectManager.Player.HasBuff("Recall"))
                     return;
+
                 t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
-                if (t != null)
+
+                var useQt = (Program.Config.Item("DontQToggleHarass" + t.ChampionName) != null &&
+                             Program.Config.Item("DontQToggleHarass" + t.ChampionName).GetValue<bool>() == false);
+                if (t != null && useQt)
                     Q.Cast(t);
             }
 
-            if (W.IsReady() &&  GetValue<KeyBind>("UseWTH").Active && ToggleActive)
+            if (W.IsReady() && GetValue<KeyBind>("UseWTH").Active && ToggleActive)
             {
-                if(ObjectManager.Player.HasBuff("Recall"))
+                if (ObjectManager.Player.HasBuff("Recall"))
                     return;
                 t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
-                if (t != null)
+                var useWt = (Program.Config.Item("DontWToggleHarass" + t.ChampionName) != null &&
+                             Program.Config.Item("DontWToggleHarass" + t.ChampionName).GetValue<bool>() == false);
+                if (t != null && useWt)
                     W.Cast(t);
             }
 
@@ -123,16 +130,16 @@ namespace Marksman
                 if (Q.IsReady() && useQ)
                 {
                     var vMinions = MinionManager.GetMinions(ObjectManager.Player.Position, Q.Range);
-                    foreach (
-                        Obj_AI_Base minions in
-                            vMinions.Where(
-                                minions => minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q)))
+                    foreach (Obj_AI_Base minions in
+                        vMinions.Where(
+                            minions => minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q)))
                         Q.Cast(minions);
                 }
             }
 
 
-            if (!R.IsReady() || !GetValue<KeyBind>("CastR").Active) return;
+            if (!R.IsReady() || !GetValue<KeyBind>("CastR").Active)
+                return;
             t = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
             if (t != null)
                 R.Cast(t);
@@ -167,31 +174,57 @@ namespace Marksman
 
             return fComboDamage;
         }
+
         public override bool ComboMenu(Menu config)
         {
-            config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
-            config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
+            config.AddItem(new MenuItem("UseQC" + Id, "Q").SetValue(true));
+            config.AddItem(new MenuItem("UseWC" + Id, "W").SetValue(true));
             return true;
         }
 
         public override bool HarassMenu(Menu config)
         {
-            config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
-            config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
+            config.AddItem(new MenuItem("UseQH" + Id, "Q").SetValue(true));
+            config.AddItem(new MenuItem("UseWH" + Id, "W").SetValue(true));
+
+            config.AddSubMenu(new Menu("Don't Q Toggle to", "DontQToggleHarass"));
+            {
+                foreach (
+                    var enemy in
+                        ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != ObjectManager.Player.Team))
+                {
+                    config.SubMenu("DontQToggleHarass")
+                        .AddItem(
+                            new MenuItem("DontQToggleHarass" + enemy.ChampionName, enemy.ChampionName).SetValue(false));
+                }
+            }
+
+            config.AddSubMenu(new Menu("Don't W Toggle to", "DontWToggleHarass"));
+            {
+                foreach (
+                    var enemy in
+                        ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != ObjectManager.Player.Team))
+                {
+                    config.SubMenu("DontWToggleHarass")
+                        .AddItem(
+                            new MenuItem("DontWToggleHarass" + enemy.ChampionName, enemy.ChampionName).SetValue(false));
+                }
+            }
+
             config.AddItem(
-                new MenuItem("UseQTH" + Id, "Use Q (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
-                    KeyBindType.Toggle)));
+                new MenuItem("UseQTH" + Id, "Q (Toggle)").SetValue(
+                    new KeyBind("H".ToCharArray()[0], KeyBindType.Toggle)));
             config.AddItem(
-                new MenuItem("UseWTH" + Id, "Use W (Toggle)").SetValue(new KeyBind("J".ToCharArray()[0],
-                    KeyBindType.Toggle)));
+                new MenuItem("UseWTH" + Id, "W (Toggle)").SetValue(
+                    new KeyBind("J".ToCharArray()[0], KeyBindType.Toggle)));
             return true;
         }
 
         public override bool MiscMenu(Menu config)
         {
             config.AddItem(
-                new MenuItem("CastR" + Id, "Cast R (2000 Range)").SetValue(new KeyBind("T".ToCharArray()[0],
-                    KeyBindType.Press)));
+                new MenuItem("CastR" + Id, "Cast R (2000 Range)").SetValue(
+                    new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
             return true;
         }
 
@@ -214,6 +247,7 @@ namespace Marksman
 
             return true;
         }
+
         public override bool LaneClearMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQL" + Id, "Use Q").SetValue(true));
