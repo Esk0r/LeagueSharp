@@ -64,13 +64,15 @@ namespace Marksman
                 if (menuItem.Active)
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
             }
+            ShowToggleStatus();
+
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
             Obj_AI_Hero t;
 
-            if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active && ToggleActive)
+            if (Q.IsReady() && Program.Config.Item("UseQTH").GetValue<KeyBind>().Active && ToggleActive)
             {
                 if (ObjectManager.Player.HasBuff("Recall"))
                     return;
@@ -83,7 +85,7 @@ namespace Marksman
                     Q.Cast(t);
             }
 
-            if (W.IsReady() && GetValue<KeyBind>("UseWTH").Active && ToggleActive)
+            if (W.IsReady() && Program.Config.Item("UseWTH").GetValue<KeyBind>().Active && ToggleActive)
             {
                 if (ObjectManager.Player.HasBuff("Recall"))
                     return;
@@ -189,9 +191,8 @@ namespace Marksman
 
             config.AddSubMenu(new Menu("Don't Q Toggle to", "DontQToggleHarass"));
             {
-                foreach (
-                    var enemy in
-                        ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != ObjectManager.Player.Team))
+                foreach (var enemy in
+                    ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != ObjectManager.Player.Team))
                 {
                     config.SubMenu("DontQToggleHarass")
                         .AddItem(
@@ -201,9 +202,8 @@ namespace Marksman
 
             config.AddSubMenu(new Menu("Don't W Toggle to", "DontWToggleHarass"));
             {
-                foreach (
-                    var enemy in
-                        ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != ObjectManager.Player.Team))
+                foreach (var enemy in
+                    ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != ObjectManager.Player.Team))
                 {
                     config.SubMenu("DontWToggleHarass")
                         .AddItem(
@@ -212,11 +212,9 @@ namespace Marksman
             }
 
             config.AddItem(
-                new MenuItem("UseQTH" + Id, "Q (Toggle)").SetValue(
-                    new KeyBind("H".ToCharArray()[0], KeyBindType.Toggle)));
+                new MenuItem("UseQTH", "Q (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0], KeyBindType.Toggle)));
             config.AddItem(
-                new MenuItem("UseWTH" + Id, "W (Toggle)").SetValue(
-                    new KeyBind("J".ToCharArray()[0], KeyBindType.Toggle)));
+                new MenuItem("UseWTH", "W (Toggle)").SetValue(new KeyBind("J".ToCharArray()[0], KeyBindType.Toggle)));
             return true;
         }
 
@@ -228,17 +226,43 @@ namespace Marksman
             return true;
         }
 
+        private static void ShowToggleStatus()
+        {
+            if (Program.Config.Item("HarassShowInfo").GetValue<bool>())
+            {
+                var xHarassInfo = "";
+                if (Program.Config.Item("UseQTH").GetValue<KeyBind>().Active)
+                    xHarassInfo += "Q - ";
+
+                if (Program.Config.Item("UseWTH").GetValue<KeyBind>().Active)
+                    xHarassInfo += "W - ";
+
+                if (xHarassInfo.Length < 1)
+                {
+                    xHarassInfo = "Harass Toggle: OFF   ";
+                }
+                else
+                {
+                    xHarassInfo = "Harass Toggle: " + xHarassInfo;
+                }
+                xHarassInfo = xHarassInfo.Substring(0, xHarassInfo.Length - 3);
+                Drawing.DrawText(Drawing.Width * 0.44f, Drawing.Height * 0.82f, Color.Wheat, xHarassInfo);
+            }
+        }
 
         public override bool DrawingMenu(Menu config)
         {
+
             config.AddItem(
                 new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
             config.AddItem(
                 new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(false, Color.FromArgb(100, 255, 255, 255))));
+            config.AddItem(new MenuItem("HarassShowInfo", "Show Toggle Info").SetValue(true));
+
 
             var dmgAfterComboItem = new MenuItem("DamageAfterCombo", "Damage After Combo").SetValue(true);
-            Config.AddItem(dmgAfterComboItem);
 
+            Config.AddItem(dmgAfterComboItem);
             return true;
         }
 
