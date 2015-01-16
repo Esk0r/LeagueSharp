@@ -14,6 +14,7 @@ namespace Marksman
     {
         public Spell Q;
         public Spell W;
+        private Menu MenuSupportedSpells;
 
         public Sivir()
         {
@@ -23,6 +24,8 @@ namespace Marksman
             Q.SetSkillshot(0.25f, 90f, 1350f, false, SkillshotType.SkillshotLine);
 
             W = new Spell(SpellSlot.W, 593);
+            
+            //Obj_AI_Base.OnProcessSpellCast += Game_OnProcessSpellCast;
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
@@ -34,7 +37,6 @@ namespace Marksman
                     Q.CastIfHitchanceEquals(enemy, HitChance.Immobile);
                 }
             }
-
 
             if (ComboActive || HarassActive)
             {
@@ -102,6 +104,20 @@ namespace Marksman
         {
             config.AddItem(new MenuItem("AutoQ" + Id, "Auto Q on stunned targets").SetValue(true));
 
+/*
+            MenuSupportedSpells = new Menu("Supported Spells", "suppspells");
+
+            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy))
+            {
+                foreach (var ccList in Activator.BuffList.Where(xEnemy => xEnemy.ChampionName == BuffList.ChampionName)
+                {
+                    MenuSupportedSpells.AddItem(new MenuItem(ccList.SDataName,
+                        enemy.ChampionName + " " + BuffList.DisplayName)).SetValue(true);
+                }
+            }
+            Config.AddSubMenu(MenuSupportedSpells);
+*/
+
             return true;
         }
 
@@ -121,5 +137,48 @@ namespace Marksman
         {
             return true;
         }
+        /*
+        private void Game_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (sender.Type == GameObjectType.obj_AI_Hero && sender.IsEnemy)
+            {
+                foreach (var t in MenuSupportedSpells.Items)
+                {
+                    foreach (var spell in BuffList.BuffName)
+                    {
+                        if (t.Name == args.SData.Name && t.Name == spell.SDataName && t.GetValue<bool>())
+                        {
+                            switch (spell.Type)
+                            {
+                                case Skilltype.Circle:
+                                    if (ObjectManager.Player.Distance(args.End) <= 250f)
+                                    {
+                                        if (E.IsReady())
+                                            E.Cast();
+                                    }
+                                    break;
+                                case Skilltype.Line:
+                                    if (ObjectManager.Player.Distance(args.End) <= 100f)
+                                    {
+                                        if (E.IsReady())
+                                            E.Cast();
+                                    }
+                                    break;
+                                case Skilltype.Unknown:
+                                    if (ObjectManager.Player.Distance(args.End) <= 500f ||
+                                        ObjectManager.Player.Distance(sender.Position) <= 500)
+                                    {
+                                        if (E.IsReady())
+                                            E.Cast();
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        */
+
     }
 }
