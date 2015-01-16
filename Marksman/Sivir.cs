@@ -1,11 +1,9 @@
 #region
-
 using System;
 using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-
 #endregion
 
 namespace Marksman
