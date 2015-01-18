@@ -417,7 +417,7 @@ namespace Xerath
             if (useW && W.IsReady())
             {
                 var locW = W.GetCircularFarmLocation(rangedMinionsW, W.Width * 0.75f);
-                if (locW.MinionsHit >= 3 && W.InRange(locW.Position.To3D()))
+                if (locW.MinionsHit >= 3 && W.IsInRange(locW.Position.To3D()))
                 {
                     W.Cast(locW.Position);
                     return;
@@ -425,7 +425,7 @@ namespace Xerath
                 else
                 {
                     var locW2 = W.GetCircularFarmLocation(allMinionsQ, W.Width * 0.75f);
-                    if (locW2.MinionsHit >= 1 && W.InRange(locW.Position.To3D()))
+                    if (locW2.MinionsHit >= 1 && W.IsInRange(locW.Position.To3D()))
                     {
                         W.Cast(locW.Position);
                         return;
@@ -536,7 +536,7 @@ namespace Xerath
             if (R.Level == 0) return;
             var menuItem = Config.Item(R.Slot + "RangeM").GetValue<Circle>();
             if (menuItem.Active)
-                Utility.DrawCircle(Player.Position, R.Range, menuItem.Color, 2, 30, true);
+                Render.Circle.DrawCircle(Player.Position, R.Range, menuItem.Color, 1, true);
         }
 
         private static void Drawing_OnDraw(EventArgs args)
@@ -545,7 +545,7 @@ namespace Xerath
             {
                 if (Config.Item("OnlyNearMouse").GetValue<bool>())
                 {
-                    Utility.DrawCircle(Game.CursorPos, Config.Item("MRadius").GetValue<Slider>().Value, Color.White);
+                    Render.Circle.DrawCircle(Game.CursorPos, Config.Item("MRadius").GetValue<Slider>().Value, Color.White);
                 }
             }
 
@@ -554,7 +554,7 @@ namespace Xerath
             {
                 var menuItem = Config.Item(spell.Slot + "Range").GetValue<Circle>();
                 if (menuItem.Active && (spell.Slot != SpellSlot.R || R.Level > 0))
-                    Utility.DrawCircle(Player.Position, spell.Range, menuItem.Color);
+                    Render.Circle.DrawCircle(Player.Position, spell.Range, menuItem.Color);
             }
         }
     }
