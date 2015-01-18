@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-using LeagueSharp.Network.Packets;
 using SharpDX;
 using SharpDX.Design;
 using Color = System.Drawing.Color;
@@ -199,7 +198,7 @@ namespace Velkoz
 
         private static void Game_OnGameSendPacket(GamePacketEventArgs args)
         {
-            if (args.GetPacketId() == LeagueSharp.Network.Packets.Packet.GetPacketId<PKT_ChargedSpell>())
+            /*if (args.GetPacketId() == LeagueSharp.Network.Packets.Packet.GetPacketId<PKT_ChargedSpell>())
             {
                 var decodedPacket = new PKT_ChargedSpell();
                 decodedPacket.Decode(args.PacketData);
@@ -210,7 +209,7 @@ namespace Velkoz
                         !(Config.Item("ComboActive").GetValue<KeyBind>().Active &&
                           Config.Item("UseRCombo").GetValue<bool>());
                 }
-            }
+            }*/
         }
 
         private static void Interrupter_OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
@@ -409,7 +408,7 @@ namespace Velkoz
                         if (enemy.ServerPosition.To2D().Distance(Player.ServerPosition.To2D(), endPoint, true) < 400)
                             targets.Add(enemy);
                     }
-
+                    /*
                     if (targets.Count > 0)
                     {
                         var target = targets.OrderBy(t => t.Health / Q.GetDamage(t)).ToList()[0];
@@ -432,7 +431,7 @@ namespace Velkoz
                             Unknown1 = true,
                             Unknown2 = true,
                         }.Encode().SendAsPacket();
-                    }
+                    }*/
                 }
 
                 return;
