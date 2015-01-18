@@ -471,12 +471,12 @@ namespace Syndra
                         var fl1 = Q.GetCircularFarmLocation(rangedMinionsW, W.Width);
                         var fl2 = Q.GetCircularFarmLocation(allMinionsW, W.Width);
 
-                        if (fl1.MinionsHit >= 3 && W.IsInRange(fl1.Position.To3D()))
+                        if (fl1.MinionsHit >= 3 && W.InRange(fl1.Position.To3D()))
                         {
                             W.Cast(fl1.Position);
                         }
 
-                        else if (fl2.MinionsHit >= 1 && W.IsInRange(fl2.Position.To3D()) && fl1.MinionsHit <= 2)
+                        else if (fl2.MinionsHit >= 1 && W.InRange(fl2.Position.To3D()) && fl1.MinionsHit <= 2)
                         {
                             W.Cast(fl2.Position);
                         }
