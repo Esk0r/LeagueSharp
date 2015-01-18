@@ -554,9 +554,9 @@ namespace Evade
             }
         }
 
-        static void Spellbook_OnCastSpell(GameObject sender, SpellbookCastSpellEventArgs args)
+        static void Spellbook_OnCastSpell(Spellbook sender, SpellbookCastSpellEventArgs args)
         {
-            if (sender.IsValid && sender.IsMe)
+            if (sender.Owner.IsValid && sender.Owner.IsMe)
             {
                 if (args.Slot == SpellSlot.Recall)
                 {
