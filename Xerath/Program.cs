@@ -417,7 +417,7 @@ namespace Xerath
             if (useW && W.IsReady())
             {
                 var locW = W.GetCircularFarmLocation(rangedMinionsW, W.Width * 0.75f);
-                if (locW.MinionsHit >= 3 && W.InRange(locW.Position.To3D()))
+                if (locW.MinionsHit >= 3 && W.IsInRange(locW.Position.To3D()))
                 {
                     W.Cast(locW.Position);
                     return;
@@ -425,7 +425,7 @@ namespace Xerath
                 else
                 {
                     var locW2 = W.GetCircularFarmLocation(allMinionsQ, W.Width * 0.75f);
-                    if (locW2.MinionsHit >= 1 && W.InRange(locW.Position.To3D()))
+                    if (locW2.MinionsHit >= 1 && W.IsInRange(locW.Position.To3D()))
                     {
                         W.Cast(locW.Position);
                         return;
