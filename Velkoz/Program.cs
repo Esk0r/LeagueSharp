@@ -408,30 +408,15 @@ namespace Velkoz
                         if (enemy.ServerPosition.To2D().Distance(Player.ServerPosition.To2D(), endPoint, true) < 400)
                             targets.Add(enemy);
                     }
-                    /*
                     if (targets.Count > 0)
                     {
                         var target = targets.OrderBy(t => t.Health / Q.GetDamage(t)).ToList()[0];
-                        new PKT_ChargedSpell
-                        {
-                            NetworkId = ObjectManager.Player.NetworkId,
-                            SpellSlot = (byte) SpellSlot.R,
-                            TargetPosition = target.ServerPosition,
-                            Unknown1 = true,
-                            Unknown2 = true,
-                        }.Encode().SendAsPacket();
+                        ObjectManager.Player.Spellbook.UpdateChargedSpell(SpellSlot.R, target.ServerPosition, false);
                     }
                     else
                     {
-                        new PKT_ChargedSpell
-                        {
-                            NetworkId = ObjectManager.Player.NetworkId,
-                            SpellSlot = (byte)SpellSlot.R,
-                            TargetPosition = Game.CursorPos,
-                            Unknown1 = true,
-                            Unknown2 = true,
-                        }.Encode().SendAsPacket();
-                    }*/
+                        ObjectManager.Player.Spellbook.UpdateChargedSpell(SpellSlot.R, Game.CursorPos, false);
+                    }
                 }
 
                 return;
