@@ -159,7 +159,7 @@ namespace Evade
                     Delay = 250,
                     Range = 1000,
                     Radius = 60,
-                    MissileSpeed = 1500,
+                    MissileSpeed = 1550,
                     FixedRange = true,
                     AddHitbox = true,
                     DangerValue = 3,
@@ -1382,7 +1382,7 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Jinx",
-                    SpellName = "JinxRWrapper",
+                    SpellName = "JinxR",
                     Slot = SpellSlot.R,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 600,
