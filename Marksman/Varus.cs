@@ -264,7 +264,7 @@ namespace Marksman
         {
             config.AddItem(
                 new MenuItem("UseQC" + Id, "Q Mode").SetValue(
-                    new StringList(new[] {"Off", "Use Allways", "Max W Stack = 3"}, 0)));
+                    new StringList(new[] {"Off", "Use Allways", "Max W Stack = 3"}, 2)));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
             config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(true));
 
@@ -280,7 +280,7 @@ namespace Marksman
         {
             config.AddItem(
                 new MenuItem("UseQH" + Id, "Q").SetValue(new StringList(
-                    new[] {"Off", "Use Allways", "Max W Stack = 3"}, 0)));
+                    new[] {"Off", "Use Allways", "Max W Stack = 3"}, 1)));
             config.AddItem(new MenuItem("UseEH" + Id, "E").SetValue(true));
             config.AddItem(
                 new MenuItem("UseETH" + Id, "Use E (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
