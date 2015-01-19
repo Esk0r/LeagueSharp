@@ -84,7 +84,7 @@ namespace Syndra
 
             //Load the orbwalker and add it to the menu as submenu.
             Orbwalker = new Orbwalking.Orbwalker(Config.SubMenu("Orbwalking"));
-
+            
             //Combo menu:
             Config.AddSubMenu(new Menu("Combo", "Combo"));
             Config.SubMenu("Combo").AddItem(new MenuItem("UseQCombo", "Use Q").SetValue(true));
@@ -559,6 +559,8 @@ namespace Syndra
                 if (menuItem.Active)
                     Render.Circle.DrawCircle(Player.Position, spell.Range, menuItem.Color);
             }
+            //if (OrbManager.WObject(false) != null)
+            //    Render.Circle.DrawCircle(OrbManager.WObject(false).Position, 100, Color.White);
         }
     }
 }
