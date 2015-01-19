@@ -40,10 +40,11 @@ namespace Marksman
             float fComboDamage = 0f;
 
             if (Q.IsReady())
-                fComboDamage += CalcQDamage;
+                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q); 
+            //fComboDamage += CalcQDamage;
 
-            if (W.IsReady())
-                fComboDamage += CalcWDamage;
+            if (W.Level >0)
+                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
 
             if (E.IsReady())
                 fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.E);
@@ -152,7 +153,7 @@ namespace Marksman
             }
         }
 
-        private static void CastSpell_Q()
+        private static void CastSpellQ()
         {
             if (!Q.IsReady())
                 return;
@@ -200,7 +201,7 @@ namespace Marksman
             if (GetValue<KeyBind>("UseQ2C").Active)
             {
                 ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
-                CastSpell_Q();
+                CastSpellQ();
             }
 
             Obj_AI_Hero t;
@@ -223,19 +224,19 @@ namespace Marksman
             t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
 
             if (t.IsValidTarget(Q.Range) && t.Health <= CalcQDamage + CalcWDamage)
-                CastSpell_Q();
+                CastSpellQ();
 
             switch (useQ.SelectedIndex)
             {
                 case 1:
                     {
-                        CastSpell_Q();
+                        CastSpellQ();
                         break;
                     }
                 case 2:
                     {
                         if (EnemyWStackCount(t) > 2 || W.Level == 0)
-                            CastSpell_Q();
+                            CastSpellQ();
                         break;
                     }
             }
