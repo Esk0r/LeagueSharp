@@ -180,8 +180,8 @@ namespace Velkoz
             Game.OnGameUpdate += Game_OnGameUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
             Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
-            Game.OnGameSendPacket += Game_OnGameSendPacket;
             GameObject.OnCreate += Obj_SpellMissile_OnCreate;
+            Spellbook.OnUpdateChargedSpell += Spellbook_OnUpdateChargedSpell;
             Game.PrintChat(ChampionName + " Loaded!");
         }
 
@@ -195,21 +195,14 @@ namespace Velkoz
                 QMissile = missile;
             }
         }
-
-        private static void Game_OnGameSendPacket(GamePacketEventArgs args)
+        static void Spellbook_OnUpdateChargedSpell(Spellbook sender, SpellbookUpdateChargedSpellEventArgs args)
         {
-            /*if (args.GetPacketId() == LeagueSharp.Network.Packets.Packet.GetPacketId<PKT_ChargedSpell>())
+            if (sender.Owner.IsMe)
             {
-                var decodedPacket = new PKT_ChargedSpell();
-                decodedPacket.Decode(args.PacketData);
-
-                if (decodedPacket.NetworkId == Player.NetworkId)
-                {
-                    args.Process =
+                args.Process =
                         !(Config.Item("ComboActive").GetValue<KeyBind>().Active &&
                           Config.Item("UseRCombo").GetValue<bool>());
-                }
-            }*/
+            }
         }
 
         private static void Interrupter_OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
@@ -411,11 +404,11 @@ namespace Velkoz
                     if (targets.Count > 0)
                     {
                         var target = targets.OrderBy(t => t.Health / Q.GetDamage(t)).ToList()[0];
-                        ObjectManager.Player.Spellbook.UpdateChargedSpell(SpellSlot.R, target.ServerPosition, false);
+                        ObjectManager.Player.Spellbook.UpdateChargedSpell(SpellSlot.R, target.ServerPosition, false, false);
                     }
                     else
                     {
-                        ObjectManager.Player.Spellbook.UpdateChargedSpell(SpellSlot.R, Game.CursorPos, false);
+                        ObjectManager.Player.Spellbook.UpdateChargedSpell(SpellSlot.R, Game.CursorPos, false, false);
                     }
                 }
 
