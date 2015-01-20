@@ -12,7 +12,8 @@ namespace Marksman
     {
         public Spell Q;
         public Spell W;
-        private Menu MenuSupportedSpells;
+        public Spell E;
+        private Menu _menuSupportedSpells;
 
         public Sivir()
         {
@@ -22,17 +23,31 @@ namespace Marksman
             Q.SetSkillshot(0.25f, 90f, 1350f, false, SkillshotType.SkillshotLine);
 
             W = new Spell(SpellSlot.W, 593);
-            
-            //Obj_AI_Base.OnProcessSpellCast += Game_OnProcessSpellCast;
+
+            E = new Spell(SpellSlot.E);
+            Obj_AI_Base.OnProcessSpellCast += Game_OnProcessSpellCast;
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
             if (GetValue<bool>("AutoQ"))
             {
-                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsValidTarget(Q.Range)))
+                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
+                if (Q.IsReady() && t.IsValidTarget())
                 {
-                    Q.CastIfHitchanceEquals(enemy, HitChance.Immobile);
+                    int xDelay = 0;
+                    if ((t.HasBuffOfType(BuffType.Slow) || t.HasBuffOfType(BuffType.Stun) ||
+                         t.HasBuffOfType(BuffType.Snare) || t.HasBuffOfType(BuffType.Fear) ||
+                         t.HasBuffOfType(BuffType.Taunt)))
+                    {
+                        xDelay = 50;
+                        Utility.DelayAction.Add(xDelay, () => Q.Cast(t, false, true));
+                    }
+
+                    if (t.HasBuffOfType(BuffType.Charm))
+                        xDelay = 200;
+
+                    Utility.DelayAction.Add(xDelay, () => Q.Cast(t, false, true));
                 }
             }
 
@@ -100,21 +115,19 @@ namespace Marksman
 
         public override bool MiscMenu(Menu config)
         {
-            config.AddItem(new MenuItem("AutoQ" + Id, "Auto Q on stunned targets").SetValue(true));
+            config.AddItem(new MenuItem("AutoQ" + Id, "Auto Q on Stun/Slow/Fear/Taunt/Snare").SetValue(true));
 
-/*
-            MenuSupportedSpells = new Menu("Supported Spells", "suppspells");
+            _menuSupportedSpells = new Menu("E Supported Spells", "suppspells");
 
-            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy))
+            foreach (var xEnemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy))
             {
-                foreach (var ccList in Activator.BuffList.Where(xEnemy => xEnemy.ChampionName == BuffList.ChampionName)
+                Obj_AI_Hero enemy = xEnemy;
+                foreach (var ccList in SpellList.BuffList.Where(xList => xList.ChampionName == enemy.ChampionName))
                 {
-                    MenuSupportedSpells.AddItem(new MenuItem(ccList.SDataName,
-                        enemy.ChampionName + " " + BuffList.DisplayName)).SetValue(true);
+                    _menuSupportedSpells.AddItem(new MenuItem(ccList.BuffName, ccList.DisplayName)).SetValue(true);
                 }
             }
-            Config.AddSubMenu(MenuSupportedSpells);
-*/
+            Program.Config.AddSubMenu(_menuSupportedSpells);
 
             return true;
         }
@@ -131,52 +144,53 @@ namespace Marksman
 
             return true;
         }
+
         public override bool LaneClearMenu(Menu config)
         {
             return true;
         }
-        /*
+
         private void Game_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (sender.Type == GameObjectType.obj_AI_Hero && sender.IsEnemy)
             {
-                foreach (var t in MenuSupportedSpells.Items)
+                foreach (var spell in
+                    _menuSupportedSpells.Items.SelectMany(
+                        t =>
+                            SpellList.BuffList.Where(
+                                xSpell => xSpell.CanBlockWith.ToList().Contains(BlockableSpells.SivirE))
+                                .Where(
+                                    spell => t.Name == args.SData.Name && t.Name == spell.BuffName && t.GetValue<bool>()))
+                    )
                 {
-                    foreach (var spell in BuffList.BuffName)
+                    switch (spell.SkillType)
                     {
-                        if (t.Name == args.SData.Name && t.Name == spell.SDataName && t.GetValue<bool>())
-                        {
-                            switch (spell.Type)
+                        case SkillShotType.SkillshotCircle:
+                            if (ObjectManager.Player.Distance(args.End) <= 250f)
                             {
-                                case Skilltype.Circle:
-                                    if (ObjectManager.Player.Distance(args.End) <= 250f)
-                                    {
-                                        if (E.IsReady())
-                                            E.Cast();
-                                    }
-                                    break;
-                                case Skilltype.Line:
-                                    if (ObjectManager.Player.Distance(args.End) <= 100f)
-                                    {
-                                        if (E.IsReady())
-                                            E.Cast();
-                                    }
-                                    break;
-                                case Skilltype.Unknown:
-                                    if (ObjectManager.Player.Distance(args.End) <= 500f ||
-                                        ObjectManager.Player.Distance(sender.Position) <= 500)
-                                    {
-                                        if (E.IsReady())
-                                            E.Cast();
-                                    }
-                                    break;
+                                if (E.IsReady())
+                                    E.Cast();
                             }
-                        }
+                            break;
+                        case SkillShotType.SkillshotLine:
+                            if (ObjectManager.Player.Distance(args.End) <= 100f)
+                            {
+                                if (E.IsReady())
+                                    E.Cast();
+                            }
+                            break;
+                        case SkillShotType.SkillshotUnknown:
+                            if (ObjectManager.Player.Distance(args.End) <= 500f ||
+                                ObjectManager.Player.Distance(sender.Position) <= 500)
+                            {
+                                if (E.IsReady())
+                                    E.Cast();
+                            }
+                            break;
                     }
                 }
             }
         }
-        */
 
     }
 }
