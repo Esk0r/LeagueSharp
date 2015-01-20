@@ -529,10 +529,10 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Elise",
-                    DisplayName = "Cocoon",
+                    DisplayName = "Elise (Human-E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
-                    BuffName = "DravenDoubleShot",
+                    BuffName = "EliseHumanE",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
                     DefaultMenuValue = true,
                     Delay = 0
@@ -541,7 +541,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Evelynn",
-                    DisplayName = "Agony's Embrace",
+                    DisplayName = "Evelynn (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "EvelynnR",
@@ -553,7 +553,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Fizz",
-                    DisplayName = "Chum the Waters",
+                    DisplayName = "Fizz (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "FizzMarinerDoomMissile",
@@ -565,7 +565,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Galio",
-                    DisplayName = "Resolute Smite",
+                    DisplayName = "Galio (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "GalioResoluteSmite",
@@ -577,7 +577,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Galio",
-                    DisplayName = "Idol Of Durand",
+                    DisplayName = "Galio (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "GalioIdolOfDurand",
@@ -589,7 +589,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Gnar",
-                    DisplayName = "Wallop",
+                    DisplayName = "Gnar (W)",
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "GnarBigW",
@@ -601,7 +601,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Gnar",
-                    DisplayName = "GNAR!",
+                    DisplayName = "Gnar (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "GnarR",
@@ -613,7 +613,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Gragas",
-                    DisplayName = "Barrel Roll",
+                    DisplayName = "Gragas (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "GragasQ",
@@ -625,7 +625,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Gragas",
-                    DisplayName = "Body Slam",
+                    DisplayName = "Gragas (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "GragasE",
@@ -637,7 +637,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Gragas",
-                    DisplayName = "Explosive Cask",
+                    DisplayName = "Gragas (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "GragasR",
@@ -649,7 +649,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Heimerdinger",
-                    DisplayName = "Electron Storm Grenade",
+                    DisplayName = "Heimerdinger (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "HeimerdingerE",
@@ -661,7 +661,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Hecarim",
-                    DisplayName = "Onslaught of Shadows",
+                    DisplayName = "Hecarim (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "HecarimUlt",
@@ -670,7 +670,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Hecarim",
-                    DisplayName = "Devestating Charge",
+                    DisplayName = "Hecarim (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "HecarimRamp",
@@ -682,7 +682,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Janna",
-                    DisplayName = "Howling Gale",
+                    DisplayName = "Janna (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "HowlingGale",
@@ -694,7 +694,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Janna",
-                    DisplayName = "Zephyr",
+                    DisplayName = "Janna (W)",
                     Slot = SpellSlot.W,
                     BuffName = "ReapTheWhirlwind",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -705,19 +705,19 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Jax",
-                    DisplayName = "Counter Strike",
+                    DisplayName = "Jax (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "JaxCounterStrike",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
                     DefaultMenuValue = true,
-                    Delay = 0
+                    Delay = 2
                 });
             BuffList.Add(
                 new SpellList
                 {
                     ChampionName = "JarvanIV",
-                    DisplayName = "Dragon Strike",
+                    DisplayName = "Jarvan (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "JarvanIVDragonStrike",
@@ -729,7 +729,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Jayce",
-                    DisplayName = "Thundering Blow",
+                    DisplayName = "Jayce (Melee-E)",
                     Slot = SpellSlot.E,
                     BuffName = "JayceThunderingBlow",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -740,7 +740,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Jinx",
-                    DisplayName = "Zap!",
+                    DisplayName = "Jinx (W)",
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "JinxW",
@@ -752,7 +752,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Jinx",
-                    DisplayName = "Chompers!",
+                    DisplayName = "Jinx (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "JinxE",
@@ -764,7 +764,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Karma",
-                    DisplayName = "Inner Flame (Mantra)",
+                    DisplayName = "Karma (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "KarmaQMantra",
@@ -776,7 +776,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Karma",
-                    DisplayName = "Sprit Bond",
+                    DisplayName = "Karma (W)",
                     Slot = SpellSlot.W,
                     BuffName = "KarmaQMantra",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -787,7 +787,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Kassadin",
-                    DisplayName = "Force Pulse",
+                    DisplayName = "Kassadin (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCone,
                     BuffName = "ForcePulse",
@@ -799,7 +799,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Khazix",
-                    DisplayName = "Void Spikes",
+                    DisplayName = "Khazix (W)",
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "KhazixW",
@@ -811,7 +811,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Kayle",
-                    DisplayName = "Reckoning",
+                    DisplayName = "Kayle (Q)",
                     Slot = SpellSlot.Q,
                     BuffName = "JudicatorReckoning",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -822,7 +822,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "KogMaw",
-                    DisplayName = "Void Ooze",
+                    DisplayName = "Kog'Maw (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "KogMawVoidOoze",
@@ -834,7 +834,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Leblanc",
-                    DisplayName = "Soul Shackle",
+                    DisplayName = "Leblanc (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LeblancSoulShackle",
@@ -846,7 +846,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Leblanc",
-                    DisplayName = "Soul Shackle (Mimic)",
+                    DisplayName = "Leblanc (R->E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LeblancSoulShackleM",
@@ -858,7 +858,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "LeeSin",
-                    DisplayName = "Dragon's Rage",
+                    DisplayName = "LeeSin (R)",
                     Slot = SpellSlot.R,
                     BuffName = "BlindMonkRKick",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -869,7 +869,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Leona",
-                    DisplayName = "Zenith Blade",
+                    DisplayName = "Leona (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LeonaZenithBlade",
@@ -881,7 +881,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Leona",
-                    DisplayName = "Shield of Daybreak",
+                    DisplayName = "Leona (Q)",
                     Slot = SpellSlot.Q,
                     BuffName = "LeonaShieldOfDaybreak",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -892,7 +892,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Leona",
-                    DisplayName = "Solar Flare",
+                    DisplayName = "Leona (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "LeonaSolarFlare",
@@ -904,7 +904,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Lissandra",
-                    DisplayName = "Ice Shard",
+                    DisplayName = "Lissandra (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LissandraQ",
@@ -916,7 +916,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Lissandra",
-                    DisplayName = "Ring of Frost",
+                    DisplayName = "Lissandra (W)",
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LissandraW",
@@ -928,7 +928,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Lulu",
-                    DisplayName = "Glitterlance",
+                    DisplayName = "Lulu (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LuluQ",
@@ -940,7 +940,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Lulu",
-                    DisplayName = "Glitterlance: Extended",
+                    DisplayName = "Lulu (Q:Extended)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LuluQMissileTwo",
@@ -952,7 +952,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Lux",
-                    DisplayName = "Light Binding",
+                    DisplayName = "Lux (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LuxLightBinding",
@@ -964,7 +964,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Lux",
-                    DisplayName = "Lucent Singularity",
+                    DisplayName = "Lux (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "LuxLightStrikeKugel",
@@ -976,11 +976,11 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Lux",
-                    DisplayName = "Final Spark",
+                    DisplayName = "Lux (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LuxMaliceCannon",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] { BlockableSpells.SivirE },
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -988,11 +988,11 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Malphite",
-                    DisplayName = "Unstoppable Force",
+                    DisplayName = "Malphite (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "UFSlash",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] { BlockableSpells.SivirE },
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1000,7 +1000,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Malphite",
-                    DisplayName = "Sismic Shard",
+                    DisplayName = "Malphite (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "SismicShard",
@@ -1012,7 +1012,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Malzahar",
-                    DisplayName = "Nether Grasp",
+                    DisplayName = "Malzahar (R)",
                     Slot = SpellSlot.R,
                     BuffName = "AlZaharNetherGrasp",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1023,7 +1023,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Maokai",
-                    DisplayName = "Twisted Advance",
+                    DisplayName = "Maokai (W)",
                     Slot = SpellSlot.W,
                     BuffName = "MaokaiUnstableGrowth",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1034,7 +1034,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Maokai",
-                    DisplayName = "Arcane Smash",
+                    DisplayName = "MaoKai (Q)",
                     Slot = SpellSlot.Q,
                     BuffName = "MaokaiTrunkLine",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1045,10 +1045,10 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Mordekaiser",
-                    DisplayName = "Children of the Grave",
+                    DisplayName = "Mordekaiser (Q)",
                     Slot = SpellSlot.Q,
                     BuffName = "MordekaiserChildrenOfTheGrave",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] { BlockableSpells.SivirE },
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1056,7 +1056,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Wukong",
-                    DisplayName = "Cyclone",
+                    DisplayName = "Wukong (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "MonkeyKingSpinToWin",
@@ -1068,7 +1068,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Nami",
-                    DisplayName = "Aqua Prision",
+                    DisplayName = "Nami (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "NamiQ",
@@ -1080,7 +1080,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Nami",
-                    DisplayName = "Tidal Wave",
+                    DisplayName = "Nami (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "NamiR",
@@ -1092,7 +1092,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Nasus",
-                    DisplayName = "Wither",
+                    DisplayName = "Nasus (Q)",
                     Slot = SpellSlot.Q,
                     BuffName = "NasusW",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1103,19 +1103,19 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Karthus",
-                    DisplayName = "Wall of Pain",
+                    DisplayName = "Karthus (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "KarthusWallOfPain",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
                     DefaultMenuValue = true,
-                    Delay = 0
+                    Delay = 3
                 });
             BuffList.Add(
                 new SpellList
                 {
                     ChampionName = "Nautilus",
-                    DisplayName = "Dredge Line",
+                    DisplayName = "Nautilus (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "NautilusAnchorDragMissile",
@@ -1127,7 +1127,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Nautilus",
-                    DisplayName = "Riptide",
+                    DisplayName = "Nautilus (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "NautilusSplashZone",
@@ -1139,7 +1139,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Nautilus",
-                    DisplayName = "Depth Charge",
+                    DisplayName = "Nautilus (R)",
                     Slot = SpellSlot.R,
                     BuffName = "NautilusGrandLine",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1150,7 +1150,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Nidalee",
-                    DisplayName = "Javelin Toss",
+                    DisplayName = "Nidalee (Q:Human)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "JavelinToss",
@@ -1162,7 +1162,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Olaf",
-                    DisplayName = "Undertow",
+                    DisplayName = "Olaf (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "OlafAxeThrowCast",
@@ -1174,7 +1174,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Orianna",
-                    DisplayName = "Command: Dissonance ",
+                    DisplayName = "Orianna (W)",
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "OrianaDissonanceCommand",
@@ -1186,7 +1186,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Orianna",
-                    DisplayName = "OrianaDetonateCommand",
+                    DisplayName = "Orianna (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "OrianaDetonateCommand",
@@ -1210,11 +1210,11 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Rammus",
-                    DisplayName = "Puncturing Taunt",
+                    DisplayName = "Rammus (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "PuncturingTaunt",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] { BlockableSpells.SivirE },
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1222,7 +1222,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Rengar",
-                    DisplayName = "Bola Strike (Emp)",
+                    DisplayName = "Rengar (E:Emp)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "RengarEFinal",
@@ -1234,10 +1234,10 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Fiddlesticks",
-                    DisplayName = "Terrify",
+                    DisplayName = "Fiddle (Q)",
                     Slot = SpellSlot.Q,
                     BuffName = "Terrify",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] { BlockableSpells.SivirE },
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1245,7 +1245,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Renekton",
-                    DisplayName = "Ruthless Predator",
+                    DisplayName = "Renekton (W)",
                     Slot = SpellSlot.W,
                     BuffName = "RenektonPreExecute",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1256,7 +1256,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Riven",
-                    DisplayName = "Ki Burst",
+                    DisplayName = "Riven (W)",
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "RivenMartyr",
@@ -1268,7 +1268,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Rumble",
-                    DisplayName = "RumbleGrenade",
+                    DisplayName = "Rumble (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "RumbleGrenade",
@@ -1280,7 +1280,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Rumble",
-                    DisplayName = "RumbleCarpetBombM",
+                    DisplayName = "Rumble (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "RumbleCarpetBombMissile",
@@ -1292,7 +1292,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Ryze",
-                    DisplayName = "Rune Prision",
+                    DisplayName = "Ryze (W)",
                     Slot = SpellSlot.W,
                     BuffName = "RunePrison",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1303,7 +1303,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Sejuani",
-                    DisplayName = "Arctic Assault",
+                    DisplayName = "Sejuani (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "SejuaniArcticAssault",
@@ -1315,7 +1315,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Sejuani",
-                    DisplayName = "Glacial Prision",
+                    DisplayName = "Sejuani (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "SejuaniGlacialPrisonStart",
@@ -1327,7 +1327,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Singed",
-                    DisplayName = "Mega Adhesive",
+                    DisplayName = "Singed (W)",
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "MegaAdhesive",
@@ -1339,7 +1339,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Singed",
-                    DisplayName = "Fling",
+                    DisplayName = "Singed (E)",
                     Slot = SpellSlot.E,
                     BuffName = "Fling",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1350,7 +1350,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Nocturne",
-                    DisplayName = "Unspeakable Horror",
+                    DisplayName = "Nocturne (E)",
                     Slot = SpellSlot.E,
                     BuffName = "NocturneUnspeakableHorror",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1361,7 +1361,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Shen",
-                    DisplayName = "ShenShadowDash",
+                    DisplayName = "Shen (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "ShenShadowDash",
@@ -1373,7 +1373,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Shyvana",
-                    DisplayName = "ShyvanaTransformCast",
+                    DisplayName = "Shyvana (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "ShyvanaTransformCast",
@@ -1385,7 +1385,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Skarner",
-                    DisplayName = "Fracture",
+                    DisplayName = "Skarner (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "SkarnerFractureMissile",
@@ -1397,7 +1397,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Skarner",
-                    DisplayName = "Impale",
+                    DisplayName = "Skarner (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "SkarnerFractureMissile",
@@ -1409,7 +1409,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Pantheon",
-                    DisplayName = "Aegis of Zeonia",
+                    DisplayName = "Pantheon (W)",
                     Slot = SpellSlot.W,
                     BuffName = "PantheonW",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1419,19 +1419,8 @@ namespace Marksman
             BuffList.Add(
                 new SpellList
                 {
-                    ChampionName = "Pantheon",
-                    DisplayName = "Heroic Charge",
-                    Slot = SpellSlot.W,
-                    BuffName = "PoppyHeroicCharge",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
-                    DefaultMenuValue = true,
-                    Delay = 0
-                });
-            BuffList.Add(
-                new SpellList
-                {
                     ChampionName = "Nunu",
-                    DisplayName = "Ice Blast",
+                    DisplayName = "Nunu (E)",
                     Slot = SpellSlot.E,
                     BuffName = "Ice Blast",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1442,7 +1431,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Sona",
-                    DisplayName = "Crescendo",
+                    DisplayName = "Sona (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "SonaCrescendo",
@@ -1454,7 +1443,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Swain",
-                    DisplayName = "Nevermove",
+                    DisplayName = "Swain (W)",
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "SwainShadowGrasp",
@@ -1466,7 +1455,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Syndra",
-                    DisplayName = "Scatter the Weak",
+                    DisplayName = "Syndra (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCone,
                     BuffName = "SyndraE",
@@ -1478,7 +1467,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Thresh",
-                    DisplayName = "Death Sentence",
+                    DisplayName = "Thresh (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "ThreshQ",
@@ -1490,7 +1479,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Thresh",
-                    DisplayName = "Flay",
+                    DisplayName = "Thresh (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "ThreshEFlay",
@@ -1502,7 +1491,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Tristana",
-                    DisplayName = "Buster Shot",
+                    DisplayName = "Tristana (R)",
                     Slot = SpellSlot.R,
                     BuffName = "BusterShot",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1513,10 +1502,10 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Trundle",
-                    DisplayName = "Pillar of Ice",
+                    DisplayName = "Trundle (E)",
                     Slot = SpellSlot.E,
                     BuffName = "TrundleCircle",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] { BlockableSpells.SivirE },
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1524,7 +1513,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Trundle",
-                    DisplayName = "Subjugate",
+                    DisplayName = "Trundle (R)",
                     Slot = SpellSlot.R,
                     BuffName = "TrundlePain",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1535,7 +1524,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Tryndamere",
-                    DisplayName = "Mocking Shout",
+                    DisplayName = "Tryndamere (W)",
                     Slot = SpellSlot.W,
                     BuffName = "MockingShout",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1547,7 +1536,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Twitch",
-                    DisplayName = "Venom Cask",
+                    DisplayName = "Twitch (W)",
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "TwitchVenomCaskMissile",
@@ -1559,7 +1548,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Urgot",
-                    DisplayName = "Corrosive Charge",
+                    DisplayName = "Urgot (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "UrgotPlasmaGrenadeBoom",
@@ -1571,7 +1560,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Varus",
-                    DisplayName = "Hail of Arrowws",
+                    DisplayName = "Varus (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "VarusE",
@@ -1583,7 +1572,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Varus",
-                    DisplayName = "Chain of Corruption",
+                    DisplayName = "Varus (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "VarusR",
@@ -1595,7 +1584,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Veigar",
-                    DisplayName = "Event Horizon",
+                    DisplayName = "Veigar (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "VeigarEventHorizon",
@@ -1607,7 +1596,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Velkoz",
-                    DisplayName = "VelkozQ",
+                    DisplayName = "Velkoz (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "VelkozQ",
@@ -1619,7 +1608,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Velkoz",
-                    DisplayName = "Plasma Fission",
+                    DisplayName = "Velkoz (Q:Split)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "VelkozQSplit",
@@ -1631,7 +1620,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Velkoz",
-                    DisplayName = "Tectonic Disruption",
+                    DisplayName = "Velkoz (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "VelkozE",
@@ -1643,11 +1632,11 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Vi",
-                    DisplayName = "Vault Breaker",
+                    DisplayName = "Vi (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "ViQ",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] { BlockableSpells.SivirE },
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1655,7 +1644,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Vi",
-                    DisplayName = "Assault and Battery",
+                    DisplayName = "Vi (R)",
                     Slot = SpellSlot.R,
                     BuffName = "ViR",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1666,7 +1655,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Viktor",
-                    DisplayName = "Gravity Field",
+                    DisplayName = "Viktor (W)",
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "ViktorGravitonField",
@@ -1678,7 +1667,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Vayne",
-                    DisplayName = "Condemn",
+                    DisplayName = "Vayne (E)",
                     Slot = SpellSlot.E,
                     BuffName = "Vayne Condemn",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1689,7 +1678,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Warwick",
-                    DisplayName = "Infinite Duress",
+                    DisplayName = "Warwick (R)",
                     Slot = SpellSlot.R,
                     BuffName = "InfiniteDuress",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1700,7 +1689,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Xerath",
-                    DisplayName = "Eye of Destruction",
+                    DisplayName = "Xerath (W)",
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "XerathArcaneBarrage2",
@@ -1712,7 +1701,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Xerath",
-                    DisplayName = "Shocking Orb",
+                    DisplayName = "Xerath (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "XerathMageSpearMissile",
@@ -1724,10 +1713,10 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "XinZhao",
-                    DisplayName = "Three Talon Strike",
+                    DisplayName = "XinZhao (Q)",
                     Slot = SpellSlot.Q,
                     BuffName = "XenZhaoComboTarget",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] { BlockableSpells.SivirE },
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1735,18 +1724,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "XinZhao",
-                    DisplayName = "Audacious Charge",
-                    Slot = SpellSlot.E,
-                    BuffName = "XenZhaoSweep",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
-                    DefaultMenuValue = true,
-                    Delay = 0
-                });
-            BuffList.Add(
-                new SpellList
-                {
-                    ChampionName = "XinZhao",
-                    DisplayName = "Crescent Sweep",
+                    DisplayName = "XinZhao (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "XenZhaoParry",
@@ -1758,7 +1736,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Yasuo",
-                    DisplayName = "yasuoq2",
+                    DisplayName = "Yasuo (Q2)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "yasuoq2",
@@ -1770,7 +1748,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Yasuo",
-                    DisplayName = "yasuoq3w",
+                    DisplayName = "Yasuo (Q3)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "yasuoq3w",
@@ -1782,7 +1760,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Yasuo",
-                    DisplayName = "yasuoq",
+                    DisplayName = "Yasuo (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "yasuoq",
@@ -1794,7 +1772,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Zac",
-                    DisplayName = "Stretching Strike",
+                    DisplayName = "Zac (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "ZacQ",
@@ -1806,7 +1784,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Zac",
-                    DisplayName = "Lets Bounce!",
+                    DisplayName = "Zac (R)",
                     Slot = SpellSlot.R,
                     BuffName = "ZacR",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1817,18 +1795,18 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Zed",
-                    DisplayName = "Death Mark",
+                    DisplayName = "Zed (R)",
                     Slot = SpellSlot.R,
                     BuffName = "ZedUlt",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
                     DefaultMenuValue = true,
-                    Delay = 0
+                    Delay = 3
                 });
             BuffList.Add(
                 new SpellList
                 {
                     ChampionName = "Ziggs",
-                    DisplayName = "Satchel Charge",
+                    DisplayName = "Ziggs (W)",
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "ZiggsW",
@@ -1840,7 +1818,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Zyra",
-                    DisplayName = "Grasping Roots",
+                    DisplayName = "Zyra (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "ZyraGraspingRoots",
@@ -1852,7 +1830,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Zyra",
-                    DisplayName = "Stranglethorns",
+                    DisplayName = "Zyra (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "ZyraBrambleZone",
@@ -1864,7 +1842,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Taric",
-                    DisplayName = "Dazzle",
+                    DisplayName = "Taric (E)",
                     Slot = SpellSlot.E,
                     BuffName = "Dazzle",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1875,7 +1853,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Yoric",
-                    DisplayName = "Omen of Pestilence",
+                    DisplayName = "Yoric (W)",
                     Slot = SpellSlot.W,
                     BuffName = "YorickDecayed",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1885,30 +1863,8 @@ namespace Marksman
             BuffList.Add(
                 new SpellList
                 {
-                    ChampionName = "Yasuo",
-                    DisplayName = "Steel Tempest (3)",
-                    Slot = SpellSlot.Q,
-                    BuffName = "YasuoQ3",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
-                    DefaultMenuValue = true,
-                    Delay = 0
-                });
-            BuffList.Add(
-                new SpellList
-                {
-                    ChampionName = "Fiddlesticks",
-                    DisplayName = "Dark Wind",
-                    Slot = SpellSlot.E,
-                    BuffName = "FiddlesticksDarkWind",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
-                    DefaultMenuValue = true,
-                    Delay = 0
-                });
-            BuffList.Add(
-                new SpellList
-                {
                     ChampionName = "Blitzcrank",
-                    DisplayName = "Static Field",
+                    DisplayName = "Blitzcrank (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "StaticField",
@@ -1920,7 +1876,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Chogath",
-                    DisplayName = "Feral Scream",
+                    DisplayName = "Cho'Gath (W)",
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotCone,
                     BuffName = "FeralScream",
@@ -1932,7 +1888,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Malzahar",
-                    DisplayName = "Call of the Void",
+                    DisplayName = "Malzahar (Q)",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "AlZaharCalloftheVoid",
@@ -1944,7 +1900,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Garen",
-                    DisplayName = "Decisive Strike",
+                    DisplayName = "Garen (Q)",
                     Slot = SpellSlot.Q,
                     BuffName = "GarenQ",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1955,7 +1911,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Viktor",
-                    DisplayName = "Chaos Storm",
+                    DisplayName = "Viktor (R)",
                     Slot = SpellSlot.R,
                     BuffName = "ViktorChaosStorm",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
@@ -1966,7 +1922,7 @@ namespace Marksman
                 new SpellList
                 {
                     ChampionName = "Soraka",
-                    DisplayName = "Equinox",
+                    DisplayName = "Soraka (E)",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "SorakaE",
