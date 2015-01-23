@@ -63,6 +63,9 @@
     <Reference Include="SharpDX">
       <HintPath>C:\Program Files (x86)\LeagueSharp\System\SharpDX.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX.Direct3D9">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\LeagueSharp\System\SharpDX.Direct3D9.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -80,7 +83,7 @@
     <Compile Include="Corki.cs" />
     <Compile Include="Draven.cs" />
     <Compile Include="Ezreal.cs" />
-    <Compile Include="Gnar.cs" />    
+    <Compile Include="Gnar.cs" />
     <Compile Include="Graves.cs" />
     <Compile Include="Jinx.cs" />
     <Compile Include="Kalista.cs" />
@@ -102,7 +105,7 @@
     <Compile Include="Tristana.cs" />
     <Compile Include="Twitch.cs" />
     <Compile Include="Utils.cs" />
-    <Compile Include="Urgot.cs" />    
+    <Compile Include="Urgot.cs" />
     <Compile Include="Varus.cs" />
     <Compile Include="Vayne.cs" />
   </ItemGroup>
