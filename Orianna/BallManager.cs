@@ -8,24 +8,27 @@ namespace Orianna
 {
     public static class BallManager
     {
-        public static Vector3 BallPosition { get; private set; }
-        private static int _sTick = 0;
+        private static int _sTick;
 
         static BallManager()
         {
             Game.OnGameUpdate += Game_OnGameUpdate;
-            Obj_AI_Hero.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
+            Obj_AI_Base.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
             BallPosition = ObjectManager.Player.Position;
         }
 
-        static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        public static Vector3 BallPosition { get; private set; }
+
+        private static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (sender.IsMe)
             {
                 switch (args.SData.Name)
                 {
                     case "OrianaIzunaCommand":
-                        Utility.DelayAction.Add((int)(BallPosition.Distance(args.End) / 1.2 - 70 - Game.Ping), () => BallPosition = args.End);
+                        Utility.DelayAction.Add(
+                            (int) (BallPosition.Distance(args.End) / 1.2 - 70 - Game.Ping),
+                            () => BallPosition = args.End);
                         BallPosition = Vector3.Zero;
                         _sTick = Environment.TickCount;
                         break;
@@ -33,12 +36,12 @@ namespace Orianna
                     case "OrianaRedactCommand":
                         BallPosition = Vector3.Zero;
                         _sTick = Environment.TickCount;
-                    break;
+                        break;
                 }
             }
         }
 
-        static void Game_OnGameUpdate(EventArgs args)
+        private static void Game_OnGameUpdate(EventArgs args)
         {
             if (Environment.TickCount - _sTick > 300 && ObjectManager.Player.HasBuff("OrianaGhostSelf"))
             {
