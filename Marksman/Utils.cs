@@ -70,6 +70,7 @@ namespace Marksman
 
         public static void DrawText(Font vFont, String vText, int vPosX, int vPosY, Color vColor)
         {
+            vFont.DrawText(null, vText, vPosX + 2, vPosY + 2, vColor != Color.Black ? Color.Black : Color.White);
             vFont.DrawText(null, vText, vPosX, vPosY, vColor);
         }
     }
