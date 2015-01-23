@@ -162,9 +162,15 @@ namespace Marksman
                     {
                         var minRRange = Program.Config.SubMenu("Combo").Item("UseRCMinRange").GetValue<Slider>().Value;
                         var maxRRange = Program.Config.SubMenu("Combo").Item("UseRCMaxRange").GetValue<Slider>().Value;
+
                         t = TargetSelector.GetTarget(maxRRange, TargetSelector.DamageType.Physical);
+
+                        if (Q.IsReady() && t.IsValidTarget(Q.Range) && Q.GetPrediction(t).CollisionObjects.Count == 0 &&
+                            t.Health < ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q))
+                            return;
+                        
                         if (t.IsValidTarget() && ObjectManager.Player.Distance(t) >= minRRange &&
-                            t.Health <= ObjectManager.Player.GetSpellDamage(t, SpellSlot.R) - 25)
+                            t.Health <= ObjectManager.Player.GetSpellDamage(t, SpellSlot.R))
                         {
                             R.Cast(t);
                         }
