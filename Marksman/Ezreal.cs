@@ -201,6 +201,9 @@ namespace Marksman
             if (W.IsReady())
                 fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
 
+            if (E.IsReady())
+                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.E);
+
             if (R.IsReady())
                 fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
 
