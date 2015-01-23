@@ -448,7 +448,7 @@ namespace Marksman
                     DisplayName = "90 Caliber Net",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
-                    BuffName = "R",
+                    BuffName = "caitlynaceinthehole",
                     CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
                     DefaultMenuValue = true,
                     Delay = 0
