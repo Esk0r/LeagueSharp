@@ -161,7 +161,7 @@ namespace Marksman
                         var maxRRange = Program.Config.SubMenu("Combo").Item("UseRCMaxRange").GetValue<Slider>().Value;
                         t = TargetSelector.GetTarget(maxRRange, TargetSelector.DamageType.Physical);
                         if (t.IsValidTarget() && ObjectManager.Player.Distance(t) >= minRRange &&
-                            t.Health <= ObjectManager.Player.GetSpellDamage(t, SpellSlot.R))
+                            t.Health <= ObjectManager.Player.GetSpellDamage(t, SpellSlot.R) - 25)
                         {
                             R.Cast(t);
                         }
