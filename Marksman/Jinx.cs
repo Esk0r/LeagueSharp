@@ -416,7 +416,7 @@ namespace Marksman
 
                 if (t.Health > aaDamage && t.Health <= ObjectManager.Player.GetSpellDamage(t, SpellSlot.R))
                 {
-                    if (t.IsValidTarget(maxRRange))
+                    if (t.IsValidTarget())
                     {
                         R.Cast(t);
                     }
