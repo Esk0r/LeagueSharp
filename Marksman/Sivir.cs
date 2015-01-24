@@ -40,14 +40,11 @@ namespace Marksman
                          t.HasBuffOfType(BuffType.Snare) || t.HasBuffOfType(BuffType.Fear) ||
                          t.HasBuffOfType(BuffType.Taunt)))
                     {
-                        xDelay = 50;
-                        Utility.DelayAction.Add(xDelay, () => Q.Cast(t, false, true));
+                        Utility.DelayAction.Add(50, () => Q.Cast(t, false, true));
                     }
 
                     if (t.HasBuffOfType(BuffType.Charm))
-                        xDelay = 200;
-
-                    Utility.DelayAction.Add(xDelay, () => Q.Cast(t, false, true));
+                        Utility.DelayAction.Add(100, () => Q.Cast(t, false, true));     
                 }
             }
 
