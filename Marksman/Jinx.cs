@@ -408,7 +408,7 @@ namespace Marksman
             if (GetValue<bool>("UseRC") && R.IsReady())
             {
                 var maxRRange = GetValue<Slider>("MaxRRange").Value;
-                var t = TargetSelector.GetTarget(40000, TargetSelector.DamageType.Physical);
+                var t = TargetSelector.GetTarget(maxRRange, TargetSelector.DamageType.Physical);
 
                 var aaDamage = Orbwalking.InAutoAttackRange(t)
                     ? ObjectManager.Player.GetAutoAttackDamage(t, true) * JinxData.GetPowPowStacks
