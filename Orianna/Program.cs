@@ -35,6 +35,38 @@ namespace Orianna
 
         private static Obj_AI_Hero Player;
 
+        private static Dictionary<string, string> InitiatorsList = new Dictionary<string, string>
+        {
+            {"viq", "Vi"},
+            {"vir", "Vi"},
+            {"ufslash", "Malphite"},
+            {"nocturneparanoia", "Nocturne"},
+            {"zace", "Zac"},
+            {"monkeykingnimbus", "Monkeyking"},
+            {"monkeykingspintowin", "Monkeyking"},
+            {"shyvanatransformcast", "Shyvana"},
+            {"threshqleap", "Thresh"},
+            {"aatroxq", "Aatrox"},
+            {"renektonsliceanddice", "Renekton"},
+            {"kennenlightningrush", "Kennen"},
+            {"summonerflash", "Kennen"},
+            {"olafragnarok", "Olaf"},
+            {"udyrbearstance", "Udyr"},
+            {"volibearq", "Volibear"},
+            {"taloncutthroat", "Talon"},
+            {"jarvanivdragonstrike", "Jarvaniv"},
+            {"infiniteduress", "Warwick"},
+            {"jaxleapstrike", "Jax"},
+            {"yasuorknockupcombow", "Yasuo"},
+            {"dianateleport", "Diana"},
+            {"blindmonkqtwo", "Leesin"},
+            {"shenshadowdash", "Shen"},
+            {"headbutt", "Alistar"},
+            {"bandagetoss", "Amumu"},
+            {"urgotswap2", "Urgot"},
+            {"rengarr", "Rengar"},
+        };
+
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -58,11 +90,8 @@ namespace Orianna
             R.SetSkillshot(0.6f, 375f, float.MaxValue, false, SkillshotType.SkillshotCircle);
 
 
-
             Config = new Menu(ChampionName, ChampionName, true);
-
             TargetSelector.AddToMenu(Config.SubMenu("Target Selector"));
-
             Orbwalker = new Orbwalking.Orbwalker(Config.SubMenu("Orbwalking"));
 
             #region Combo
@@ -80,6 +109,23 @@ namespace Orianna
             #region Misc
             Config.SubMenu("Misc").AddItem(new MenuItem("AutoW", "Auto W if it'll hit").SetValue(new StringList(new string[] { "No", ">=1 target", ">=2 target", ">=3 target", ">=4 target", ">=5 target" }, 2)));
             Config.SubMenu("Misc").AddItem(new MenuItem("AutoR", "Auto R if it'll hit").SetValue(new StringList(new string[] { "No", ">=1 target", ">=2 target", ">=3 target", ">=4 target", ">=5 target" }, 3)));
+            Config.SubMenu("Misc").AddItem(new MenuItem("AutoEInitiators", "Auto E initiators").SetValue(true));
+
+            ObjectManager.Get<Obj_AI_Hero>().FindAll(h => h.IsAlly && !h.IsMe).ForEach(
+                delegate(Obj_AI_Hero hero)
+                {
+                    InitiatorsList.ToList().ForEach(
+                        delegate(KeyValuePair<string, string> pair)
+                        {
+                            if (string.Equals(hero.ChampionName, pair.Value, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                Config.SubMenu("Misc")
+                                    .SubMenu("Initiator's List")
+                                    .AddItem(new MenuItem(pair.Key, pair.Value + " - " + pair.Key).SetValue(true));
+                            }
+                        });
+                });
+            
             Config.SubMenu("Misc").AddItem(new MenuItem("InterruptSpells", "Interrupt spells using R").SetValue(true));
             Config.SubMenu("Misc").AddItem(new MenuItem("BlockR", "Block R if it won't hit").SetValue(false));
             #endregion
@@ -168,10 +214,46 @@ namespace Orianna
 
             Config.AddToMainMenu();
 
+            Obj_AI_Hero.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
             Game.OnGameUpdate += Game_OnGameUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
             Spellbook.OnCastSpell += Spellbook_OnCastSpell;
             Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
+        }
+
+        static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (!(sender is Obj_AI_Hero))
+            {
+                return;
+            }
+
+            if (!Config.SubMenu("Misc").Item("AutoEInitiators").GetValue<bool>())
+            {
+                return;
+            }
+
+            var spellName = args.SData.Name.ToLower();
+            if (!InitiatorsList.ContainsKey(spellName))
+            {
+                return;
+            }
+
+            var item = Config.SubMenu("Misc").SubMenu("Initiator's List").Item(spellName);
+            if (item == null || !item.GetValue<bool>())
+            {
+                return;
+            }
+
+            if (!EIsReady)
+            {
+                return;
+            }
+
+            if (sender.IsAlly && Player.Distance(sender, true) < E.Range * E.Range)
+            {
+                E.CastOnUnit(sender);
+            }
         }
 
         static void Spellbook_OnCastSpell(Spellbook sender, SpellbookCastSpellEventArgs args)
