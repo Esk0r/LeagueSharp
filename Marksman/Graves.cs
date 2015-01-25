@@ -19,11 +19,11 @@ namespace Marksman
         {
             Utils.PrintMessage("Graves loaded.");
 
-            Q = new Spell(SpellSlot.Q, 900f); // Q likes to shoot a bit too far away, so moving the range inward.
-            Q.SetSkillshot(0.25f, 15f * 1.5f * (float)Math.PI / 180, 2000f, false, SkillshotType.SkillshotCone);
-
+            Q = new Spell(SpellSlot.Q, 920f); // Q likes to shoot a bit too far away, so moving the range inward.
+            Q.SetSkillshot(0.26f, 10f * 2* (float) Math.PI / 180, 1950, false, SkillshotType.SkillshotCone);
+            
             W = new Spell(SpellSlot.W, 1100f);
-            W.SetSkillshot(0.25f, 250f, 1650f, false, SkillshotType.SkillshotCircle);
+            W.SetSkillshot(0.35f, 250f, 1650f, false, SkillshotType.SkillshotCircle);
 
             R = new Spell(SpellSlot.R, 1100f);
             R.SetSkillshot(0.25f, 100f, 2100f, true, SkillshotType.SkillshotLine);
