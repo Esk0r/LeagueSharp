@@ -43,6 +43,7 @@ namespace Orianna
             {"nocturneparanoia", "Nocturne"},
             {"zace", "Zac"},
             {"monkeykingnimbus", "Monkeyking"},
+            {"maokaiunstablegrowth", "Maokai"},
             {"monkeykingspintowin", "Monkeyking"},
             {"shyvanatransformcast", "Shyvana"},
             {"threshqleap", "Thresh"},
