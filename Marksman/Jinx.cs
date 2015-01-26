@@ -420,13 +420,6 @@ namespace Marksman
                     {
                         R.Cast(t);
                     }
-                    else
-                    {
-                        var xRKillNotice = String.Format(
-                            "Killable Target: {0}, Distance: {1}", t.ChampionName, JinxData.GetRealDistance(t));
-                        Drawing.DrawText(
-                            Drawing.Width * 0.44f, Drawing.Height * 0.80f, System.Drawing.Color.Red, xRKillNotice);
-                    }
                 }
             }
 
