@@ -35,8 +35,6 @@ namespace Marksman
         public Dictionary<String, int> MarkedChampions = new Dictionary<String, int>();
         private static readonly List<EnemyMarker> xEnemyMarker = new List<EnemyMarker>();
 
-        public static Items.Item Dfg = new Items.Item(3128, 750);
-
         public Kalista()
         {
             Utils.PrintMessage("Kalista loaded.");
