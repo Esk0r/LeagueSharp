@@ -30,8 +30,6 @@ namespace Syndra
 
         public static SpellSlot IgniteSlot;
 
-        public static Items.Item DFG;
-
         //Menu
         public static Menu Config;
         private static int QEComboT;
@@ -59,7 +57,7 @@ namespace Syndra
 
             IgniteSlot = Player.GetSpellSlot("SummonerDot");
 
-            DFG = Utility.Map.GetMap().Type == Utility.Map.MapType.TwistedTreeline ? new Items.Item(3188, 750) : new Items.Item(3128, 750);
+//            DFG = Utility.Map.GetMap().Type == Utility.Map.MapType.TwistedTreeline ? new Items.Item(3188, 750) : new Items.Item(3128, 750);
 
             Q.SetSkillshot(0.6f, 125f, float.MaxValue, false, SkillshotType.SkillshotCircle);
             W.SetSkillshot(0.25f, 140f, 1600f, false, SkillshotType.SkillshotCircle);
@@ -281,9 +279,6 @@ namespace Syndra
             if (Q.IsReady(420))
                 damage += Player.GetSpellDamage(enemy, SpellSlot.Q);
 
-            if (DFG.IsReady())
-                damage += Player.GetItemDamage(enemy, Damage.DamageItems.Dfg) / 1.2;
-
             if (W.IsReady())
                 damage += Player.GetSpellDamage(enemy, SpellSlot.W);
 
@@ -296,7 +291,7 @@ namespace Syndra
             if (R.IsReady())
                 damage += Math.Min(7, Player.Spellbook.GetSpell(SpellSlot.R).Ammo) * Player.GetSpellDamage(enemy, SpellSlot.R, 1);
 
-            return (float)damage * (DFG.IsReady() ? 1.2f : 1);
+            return (float)damage;
         }
 
         private static void UseSpells(bool useQ, bool useW, bool useE, bool useR, bool useQE, bool useIgnite, bool isHarass)
@@ -346,10 +341,8 @@ namespace Syndra
                 useR = (Config.Item("DontUlt" + rTarget.BaseSkinName) != null &&
                         Config.Item("DontUlt" + rTarget.BaseSkinName).GetValue<bool>() == false) && useR;
 
-            //DFG (and ult if ready)
-            if (rTarget != null && useR && comboDamage > rTarget.Health && DFG.IsReady())
+            if (rTarget != null && useR && comboDamage > rTarget.Health)
             {
-                DFG.Cast(rTarget);
                 if (R.IsReady())
                 {
                     R.Cast(rTarget);
@@ -357,7 +350,7 @@ namespace Syndra
             }
 
             //R
-            if (rTarget != null && useR && R.IsReady() && !Q.IsReady() && !DFG.IsReady())
+            if (rTarget != null && useR && R.IsReady() && !Q.IsReady())
             {
                 if (comboDamage > rTarget.Health)
                 {
