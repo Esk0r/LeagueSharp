@@ -17,8 +17,6 @@ namespace Marksman
         public static Spell R;
         public static Font vText;
 
-        public static Items.Item Dfg = new Items.Item(3128, 750);
-
         public Ezreal()
         {
             Q = new Spell(SpellSlot.Q, 1190);
@@ -138,12 +136,6 @@ namespace Marksman
 
                 if (Orbwalking.CanMove(100))
                 {
-                    if (Dfg.IsReady())
-                    {
-                        t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Magical);
-                        Dfg.Cast(t);
-                    }
-
                     if (Q.IsReady() && useQ)
                     {
                         t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
@@ -226,9 +218,6 @@ namespace Marksman
 
             if (Items.CanUseItem(3153) && ObjectManager.Player.Distance(t) < 550)
                 fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Botrk);
-
-            if (Items.CanUseItem(3128) && ObjectManager.Player.Distance(t) < 550)
-                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Dfg);
 
             return fComboDamage;
         }
