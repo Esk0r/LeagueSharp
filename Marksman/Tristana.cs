@@ -12,8 +12,6 @@ namespace Marksman
     {
         public static Spell Q, E, R;
 
-        public static Items.Item Dfg = new Items.Item(3128, 750);
-
         public Tristana()
         {
             Utils.PrintMessage("Tristana loaded.");
@@ -96,12 +94,6 @@ namespace Marksman
                     var eTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
                     if (E.IsReady() && eTarget.IsValidTarget())
                         E.CastOnUnit(eTarget);
-                }
-
-                if (Dfg.IsReady())
-                {
-                    var eTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Magical);
-                    Dfg.Cast(eTarget);
                 }
             }
 
