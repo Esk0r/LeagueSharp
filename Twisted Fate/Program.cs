@@ -260,13 +260,6 @@ namespace TwistedFate
             dmg += Player.GetSpellDamage(hero, SpellSlot.W);
             dmg += Player.GetSpellDamage(hero, SpellSlot.Q);
 
-
-            if (Items.HasItem("ItemBlackfireTorch"))
-            {
-                dmg += ObjectManager.Player.GetItemDamage(hero, Damage.DamageItems.Dfg);
-                dmg = dmg * 1.2;
-            }
-
             if(ObjectManager.Player.GetSpellSlot("SummonerIgnite") != SpellSlot.Unknown)
             {
                 dmg += ObjectManager.Player.GetSummonerSpellDamage(hero, Damage.SummonerSpell.Ignite);
@@ -315,7 +308,7 @@ namespace TwistedFate
             {
                 CardSelector.StartSelecting(Cards.Red);
             }
-
+/*
             if (CardSelector.Status == SelectStatus.Selected && combo)
             {
                 var target = SOW.GetTarget();
@@ -324,7 +317,7 @@ namespace TwistedFate
                     Items.UseItem("DeathfireGrasp", (Obj_AI_Hero) target);
                 }
             }
-
+*/
 
             //Auto Q
             var autoQI = Config.Item("AutoQI").GetValue<bool>();
