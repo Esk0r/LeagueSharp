@@ -1,140 +1,389 @@
-﻿#region
-
+#region
 using System;
+using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-
 #endregion
 
 namespace Marksman
 {
-    internal class Graves : Champion
+    internal class Jinx : Champion
     {
         public Spell Q;
-        public Spell R;
         public Spell W;
+        public Spell E;
+        public Spell R;
 
-        public Graves()
+        public Jinx()
         {
-            Utils.PrintMessage("Graves loaded.");
+            Utils.PrintMessage("Jinx by [Credits in Github] loaded.");
 
-            Q = new Spell(SpellSlot.Q, 920f); // Q likes to shoot a bit too far away, so moving the range inward.
-            Q.SetSkillshot(0.26f, 10f * 2* (float) Math.PI / 180, 1950, false, SkillshotType.SkillshotCone);
-            
-            W = new Spell(SpellSlot.W, 1100f);
-            W.SetSkillshot(0.35f, 250f, 1650f, false, SkillshotType.SkillshotCircle);
+            Q = new Spell(SpellSlot.Q);
+            W = new Spell(SpellSlot.W, 1500f);
+            E = new Spell(SpellSlot.E, 900f);
+            R = new Spell(SpellSlot.R, 25000f);
 
-            R = new Spell(SpellSlot.R, 1100f);
-            R.SetSkillshot(0.25f, 100f, 2100f, true, SkillshotType.SkillshotLine);
-
-            Utility.HpBarDamageIndicator.DamageToUnit = GetComboDamage;
-            Utility.HpBarDamageIndicator.Enabled = true;
+            W.SetSkillshot(0.6f, 60f, 3300f, true, SkillshotType.SkillshotLine);
+            E.SetSkillshot(0.7f, 120f, 1750f, false, SkillshotType.SkillshotCircle);
+            R.SetSkillshot(0.6f, 140f, 1700f, false, SkillshotType.SkillshotLine);
         }
 
-        private float GetComboDamage(Obj_AI_Hero t)
+        public float QAddRange
         {
-            float fComboDamage = 0f;
-
-            if (Q.IsReady())
-                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q);
-
-            if (W.IsReady())
-                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
-
-            if (R.IsReady())
-                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
-
-            if (ObjectManager.Player.GetSpellSlot("summonerdot") != SpellSlot.Unknown &&
-                ObjectManager.Player.Spellbook.CanUseSpell(ObjectManager.Player.GetSpellSlot("summonerdot")) ==
-                SpellState.Ready && ObjectManager.Player.Distance(t) < 550)
-                fComboDamage += (float) ObjectManager.Player.GetSummonerSpellDamage(t, Damage.SummonerSpell.Ignite);
-
-            if (Items.CanUseItem(3144) && ObjectManager.Player.Distance(t) < 550)
-                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Bilgewater);
-
-            if (Items.CanUseItem(3153) && ObjectManager.Player.Distance(t) < 550)
-                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Botrk);
-
-            return fComboDamage;
+            get { return 50 + 25 * ObjectManager.Player.Spellbook.GetSpell(SpellSlot.Q).Level; }
         }
 
-
-        public override void Game_OnGameUpdate(EventArgs args)
+        private static bool FishBoneActive
         {
-            if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active)
-            {
-                if(ObjectManager.Player.HasBuff("Recall"))
-                    return;
-                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
-                if (t != null)
-                    Q.Cast(t, false, true);
-            }
-            
-            if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100)) return;
-            var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-            var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
-            var useR = GetValue<bool>("UseR" + (ComboActive ? "C" : "H"));
-
-            if (Q.IsReady() && useQ)
-            {
-                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
-                if (t != null)
-                    Q.Cast(t, false, true);
-            }
-
-            if (W.IsReady() && useW)
-            {
-                var t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
-                if (t != null)
-                    W.Cast(t, false, true);
-            }
-
-            if (R.IsReady() && useR)
-            {
-                foreach (
-                    var hero in
-                        ObjectManager.Get<Obj_AI_Hero>()
-                            .Where(
-                                hero =>
-                                    hero.IsValidTarget(R.Range) &&
-                                    ObjectManager.Player.GetSpellDamage(hero, SpellSlot.R, 1) - 20 > hero.Health))
-                    R.Cast(hero, false, true);
-            }
+            get { return ObjectManager.Player.AttackRange > 565f; }
         }
 
-        public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
+        private static int PowPowStacks
         {
-            var t = target as Obj_AI_Hero;
-            if (t != null && (ComboActive || HarassActive) && unit.IsMe)
+            get
             {
-                var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-                var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
-
-                if (Q.IsReady() && useQ)
-                    Q.Cast(t);
-
-                if (W.IsReady() && useW)
-                    W.Cast(t);
+                return
+                    ObjectManager.Player.Buffs.Where(buff => buff.DisplayName.ToLower() == "jinxqramp")
+                        .Select(buff => buff.Count)
+                        .FirstOrDefault();
             }
         }
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { Q };
+            Spell[] spellList = { W };
+            var drawQbound = GetValue<Circle>("DrawQBound");
+
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
                 if (menuItem.Active)
+                {
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
+                }
             }
+
+            if (drawQbound.Active)
+            {
+                if (FishBoneActive)
+                {
+                    Render.Circle.DrawCircle(
+                        ObjectManager.Player.Position, 525f + ObjectManager.Player.BoundingRadius + 65f,
+                        drawQbound.Color);
+                }
+                else
+                {
+                    Render.Circle.DrawCircle(
+                        ObjectManager.Player.Position,
+                        525f + ObjectManager.Player.BoundingRadius + 65f + QAddRange + 20f, drawQbound.Color);
+                }
+            }
+        }
+
+        public override void Game_OnGameUpdate(EventArgs args)
+        {
+            var autoEi = GetValue<bool>("AutoEI");
+            var autoEs = GetValue<bool>("AutoES");
+            var autoEd = GetValue<bool>("AutoED");
+
+            if (autoEs || autoEi || autoEd)
+            {
+                foreach (
+                    var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsValidTarget(E.Range - 150)))
+                {
+                    if (autoEs && E.IsReady() && enemy.HasBuffOfType(BuffType.Slow))
+                    {
+                        var castPosition =
+                            Prediction.GetPrediction(
+                                new PredictionInput
+                                {
+                                    Unit = enemy,
+                                    Delay = 0.7f,
+                                    Radius = 120f,
+                                    Speed = 1750f,
+                                    Range = 900f,
+                                    Type = SkillshotType.SkillshotCircle,
+                                }).CastPosition;
+
+
+                        if (GetSlowEndTime(enemy) >= (Game.Time + E.Delay + 0.5f))
+                        {
+                            E.Cast(castPosition);
+                        }
+                    }
+
+                    if (autoEi && E.IsReady() &&
+                        (enemy.HasBuffOfType(BuffType.Stun) || enemy.HasBuffOfType(BuffType.Snare) ||
+                         enemy.HasBuffOfType(BuffType.Charm) || enemy.HasBuffOfType(BuffType.Fear) ||
+                         enemy.HasBuffOfType(BuffType.Taunt) || enemy.HasBuff("zhonyasringshield") ||
+                         enemy.HasBuff("Recall")))
+                    {
+                        E.CastIfHitchanceEquals(enemy, HitChance.High);
+                    }
+
+                    if (autoEd && E.IsReady() && enemy.IsDashing())
+                    {
+                        E.CastIfHitchanceEquals(enemy, HitChance.Dashing);
+                    }
+                }
+            }
+
+            if (GetValue<KeyBind>("CastR").Active && R.IsReady())
+            {
+                var target = TargetSelector.GetTarget(1500, TargetSelector.DamageType.Physical);
+
+                if (target.IsValidTarget())
+                {
+                    if (ObjectManager.Player.GetSpellDamage(target, SpellSlot.R) > target.Health)
+                    {
+                        R.Cast(target);
+                    }
+                }
+            }
+
+            if (GetValue<bool>("SwapQ") && FishBoneActive &&
+                (LaneClearActive ||
+                 (HarassActive && TargetSelector.GetTarget(675f + QAddRange, TargetSelector.DamageType.Physical) == null)))
+            {
+                Q.Cast();
+            }
+
+            if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100))
+            {
+                return;
+            }
+
+            var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
+            var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
+            var useR = GetValue<bool>("UseRC");
+
+            if (useW && W.IsReady())
+            {
+                var t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
+                var minW = GetValue<Slider>("MinWRange").Value;
+
+                if (t.IsValidTarget() && GetRealDistance(t) >= minW)
+                {
+                    if (W.Cast(t) == Spell.CastStates.SuccessfullyCasted)
+                    {
+                        return;
+                    }
+                }
+            }
+
+            if (useQ)
+            {
+                foreach (var t in
+                    ObjectManager.Get<Obj_AI_Hero>()
+                        .Where(t => t.IsValidTarget(GetRealPowPowRange(t) + QAddRange + 20f)))
+                {
+                    var swapDistance = GetValue<bool>("SwapDistance");
+                    var swapAoe = GetValue<bool>("SwapAOE");
+                    var distance = GetRealDistance(t);
+                    var powPowRange = GetRealPowPowRange(t);
+
+                    if (swapDistance && Q.IsReady())
+                    {
+                        if (distance > powPowRange && !FishBoneActive)
+                        {
+                            if (Q.Cast())
+                            {
+                                return;
+                            }
+                        }
+                        else if (distance < powPowRange && FishBoneActive)
+                        {
+                            if (Q.Cast())
+                            {
+                                return;
+                            }
+                        }
+                    }
+
+                    if (swapAoe && Q.IsReady())
+                    {
+                        if (distance > powPowRange && PowPowStacks > 2 && !FishBoneActive && CountEnemies(t, 150) > 1)
+                        {
+                            if (Q.Cast())
+                            {
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (useR && R.IsReady())
+            {
+                var checkRok = GetValue<bool>("ROverKill");
+                var minR = GetValue<Slider>("MinRRange").Value;
+                var maxR = GetValue<Slider>("MaxRRange").Value;
+                var t = TargetSelector.GetTarget(maxR, TargetSelector.DamageType.Physical);
+
+                if (t.IsValidTarget())
+                {
+                    var distance = GetRealDistance(t);
+
+                    if (!checkRok)
+                    {
+                        if (ObjectManager.Player.GetSpellDamage(t, SpellSlot.R, 1) > t.Health)
+                        {
+                            if (R.Cast(t) == Spell.CastStates.SuccessfullyCasted) { }
+                        }
+                    }
+                    else if (distance > minR)
+                    {
+                        var aDamage = ObjectManager.Player.GetAutoAttackDamage(t);
+                        var wDamage = ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
+                        var rDamage = ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
+                        var powPowRange = GetRealPowPowRange(t);
+
+                        if (distance < (powPowRange + QAddRange) && !(aDamage * 3.5 > t.Health))
+                        {
+                            if (!W.IsReady() || !(wDamage > t.Health) || W.GetPrediction(t).CollisionObjects.Count > 0)
+                            {
+                                if (CountAlliesNearTarget(t, 500) <= 3)
+                                {
+                                    if (rDamage > t.Health /*&& !ObjectManager.Player.IsAutoAttacking &&
+                                        !ObjectManager.Player.IsChanneling*/)
+                                    {
+                                        if (R.Cast(t) == Spell.CastStates.SuccessfullyCasted) { }
+                                    }
+                                }
+                            }
+                        }
+                        else if (distance > (powPowRange + QAddRange))
+                        {
+                            if (!W.IsReady() || !(wDamage > t.Health) || distance > W.Range ||
+                                W.GetPrediction(t).CollisionObjects.Count > 0)
+                            {
+                                if (CountAlliesNearTarget(t, 500) <= 3)
+                                {
+                                    if (rDamage > t.Health /*&& !ObjectManager.Player.IsAutoAttacking &&
+                                        !ObjectManager.Player.IsChanneling*/)
+                                    {
+                                        if (R.Cast(t) == Spell.CastStates.SuccessfullyCasted) { }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
+        {
+            if ((ComboActive || HarassActive) && unit.IsMe && (target is Obj_AI_Hero))
+            {
+                var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
+                var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
+
+                if (useW && W.IsReady())
+                {
+                    var t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
+                    var minW = GetValue<Slider>("MinWRange").Value;
+
+                    if (t.IsValidTarget() && GetRealDistance(t) >= minW)
+                    {
+                        if (W.Cast(t) == Spell.CastStates.SuccessfullyCasted)
+                        {
+                            return;
+                        }
+                    }
+                }
+
+                if (useQ)
+                {
+                    foreach (var t in
+                        ObjectManager.Get<Obj_AI_Hero>()
+                            .Where(t => t.IsValidTarget(GetRealPowPowRange(t) + QAddRange + 20f)))
+                    {
+                        var swapDistance = GetValue<bool>("SwapDistance");
+                        var swapAoe = GetValue<bool>("SwapAOE");
+                        var distance = GetRealDistance(t);
+                        var powPowRange = GetRealPowPowRange(t);
+
+                        if (swapDistance && Q.IsReady())
+                        {
+                            if (distance > powPowRange && !FishBoneActive)
+                            {
+                                if (Q.Cast())
+                                {
+                                    return;
+                                }
+                            }
+                            else if (distance < powPowRange && FishBoneActive)
+                            {
+                                if (Q.Cast())
+                                {
+                                    return;
+                                }
+                            }
+                        }
+
+                        if (swapAoe && Q.IsReady())
+                        {
+                            if (distance > powPowRange && PowPowStacks > 2 && !FishBoneActive &&
+                                CountEnemies(t, 150) > 1)
+                            {
+                                if (Q.Cast())
+                                {
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private static int CountEnemies(Obj_AI_Base target, float range)
+        {
+            return
+                ObjectManager.Get<Obj_AI_Hero>()
+                    .Count(
+                        hero =>
+                            hero.IsValidTarget() && hero.Team != ObjectManager.Player.Team &&
+                            hero.ServerPosition.Distance(target.ServerPosition) <= range);
+        }
+
+        private int CountAlliesNearTarget(Obj_AI_Base target, float range)
+        {
+            return
+                ObjectManager.Get<Obj_AI_Hero>()
+                    .Count(
+                        hero =>
+                            hero.Team == ObjectManager.Player.Team &&
+                            hero.ServerPosition.Distance(target.ServerPosition) <= range);
+        }
+
+        private static float GetRealPowPowRange(GameObject target)
+        {
+            return 525f + ObjectManager.Player.BoundingRadius + target.BoundingRadius;
+        }
+
+        private static float GetRealDistance(GameObject target)
+        {
+            return ObjectManager.Player.Position.Distance(target.Position) + ObjectManager.Player.BoundingRadius +
+                   target.BoundingRadius;
+        }
+
+        private static float GetSlowEndTime(Obj_AI_Base target)
+        {
+            return
+                target.Buffs.OrderByDescending(buff => buff.EndTime - Game.Time)
+                    .Where(buff => buff.Type == BuffType.Slow)
+                    .Select(buff => buff.EndTime)
+                    .FirstOrDefault();
         }
 
         public override bool ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
-            config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(true));
             config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
+            config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(true));
             return true;
         }
 
@@ -142,18 +391,39 @@ namespace Marksman
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(false));
+            return true;
+        }
+
+        public override bool LaneClearMenu(Menu config)
+        {
+            config.AddItem(new MenuItem("SwapQ" + Id, "Always swap to Minigun").SetValue(false));
+            return true;
+        }
+
+        public override bool MiscMenu(Menu config)
+        {
+            config.AddItem(new MenuItem("SwapDistance" + Id, "Swap Q for distance").SetValue(true));
+            config.AddItem(new MenuItem("SwapAOE" + Id, "Swap Q for AOE").SetValue(false));
+            config.AddItem(new MenuItem("MinWRange" + Id, "Min W range").SetValue(new Slider(525 + 65 * 2, 0, 1200)));
+            config.AddItem(new MenuItem("AutoEI" + Id, "Auto-E on immobile").SetValue(true));
+            config.AddItem(new MenuItem("AutoES" + Id, "Auto-E on slowed").SetValue(true));
+            config.AddItem(new MenuItem("AutoED" + Id, "Auto-E on dashing").SetValue(false));
             config.AddItem(
-                new MenuItem("UseQTH" + Id, "Use Q (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
-                    KeyBindType.Toggle)));           
-            
+                new MenuItem("CastR" + Id, "Cast R (2000 Range)").SetValue(
+                    new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
+            config.AddItem(new MenuItem("ROverKill" + Id, "Check R Overkill").SetValue(true));
+            config.AddItem(new MenuItem("MinRRange" + Id, "Min R range").SetValue(new Slider(300, 0, 1500)));
+            config.AddItem(new MenuItem("MaxRRange" + Id, "Max R range").SetValue(new Slider(1700, 0, 4000)));
             return true;
         }
 
         public override bool DrawingMenu(Menu config)
         {
             config.AddItem(
-                new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true,
-                    System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                new MenuItem("DrawQBound" + Id, "Draw Q bound").SetValue(
+                    new Circle(true, Color.FromArgb(100, 255, 0, 0))));
+            config.AddItem(
+                new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(false, Color.CornflowerBlue)));
             return true;
         }
 
@@ -162,12 +432,6 @@ namespace Marksman
 
             return true;
         }
-        public override bool LaneClearMenu(Menu config)
-        {
-
-             return true;
-        }
-
 
     }
 }
