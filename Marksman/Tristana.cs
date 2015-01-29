@@ -3,20 +3,27 @@ using System;
 using System.Drawing;
 using System.Linq;
 using LeagueSharp;
+using SharpDX.Direct3D9;
+using Font = SharpDX.Direct3D9.Font;
 using LeagueSharp.Common;
 #endregion
 
 namespace Marksman
 {
+
     internal class Tristana : Champion
     {
-        public static Spell Q, E, R;
-
+        public static Spell Q, W, E, R;
+        public static Font vText;
+        public static int xBuffCount;
+        public static int LastTickTime;
         public Tristana()
         {
-            Utils.PrintMessage("Tristana loaded.");
-            
             Q = new Spell(SpellSlot.Q, 703);
+            
+            W = new Spell(SpellSlot.W, 900);
+            W.SetSkillshot(.50f, 250f, 1400f, false, SkillshotType.SkillshotCircle);
+
             E = new Spell(SpellSlot.E, 703);
             R = new Spell(SpellSlot.R, 703);
 
@@ -25,6 +32,18 @@ namespace Marksman
 
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
+
+            vText = new Font(
+                Drawing.Direct3DDevice,
+                new FontDescription
+                {
+                    FaceName = "Courier new",
+                    Height = 15,
+                    OutputPrecision = FontPrecision.Default,
+                    Quality = FontQuality.Default,
+                });
+
+            Utils.PrintMessage("Tristana loaded.");
         }
 
         public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
@@ -37,6 +56,37 @@ namespace Marksman
         {
             if (R.IsReady() && unit.IsValidTarget(R.Range) && GetValue<bool>("UseRMI"))
                 R.CastOnUnit(unit);
+        }
+
+        public Obj_AI_Hero GetEChargeEnemy
+        {
+            get
+            {
+                return
+                    ObjectManager.Get<Obj_AI_Hero>()
+                        .Where(
+                            enemy =>
+                                !enemy.IsDead &&
+                                enemy.IsValidTarget(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)))
+                        .FirstOrDefault(
+                            enemy => enemy.Buffs.Any(buff => buff.DisplayName == "TristanaEChargeSound"));
+            }
+        }
+
+        public int GetECharge
+        {
+            get
+            {
+                foreach (
+                    var buff in
+                        ObjectManager.Get<Obj_AI_Hero>()
+                            .Where(enemy => !enemy.IsDead && enemy.IsValidTarget(1500))
+                            .SelectMany(enemy => enemy.Buffs.Where(buff => buff.DisplayName == "TristanaECharge")))
+                {
+                    return buff.Count;
+                }
+                return 0;
+            }
         }
 
         public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
@@ -57,6 +107,30 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
+            var xTime = 0;
+            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => !enemy.IsDead && enemy.IsValidTarget(1500)))
+            {
+                foreach (var buff in enemy.Buffs.Where(buff => buff.DisplayName.Contains("TristanaECharge")))
+                {
+                    if (buff.DisplayName == "TristanaEChargeSound")
+                    {
+                        if (LastTickTime < Environment.TickCount)
+                            LastTickTime = Environment.TickCount + 5000;
+                        xTime = LastTickTime - Environment.TickCount;
+                    }
+
+                    if (buff.DisplayName == "TristanaECharge")
+                    {
+                        xBuffCount = buff.Count;
+                    }
+    
+                    var timer = string.Format("0:{0:D2}", xTime / 1000);
+                    Utils.DrawText(
+                        vText, timer + " : 4 / " + xBuffCount, (int)enemy.HPBarPosition.X + 145,
+                        (int)enemy.HPBarPosition.Y + 5, SharpDX.Color.White);
+                }
+            }
+
             Spell[] spellList = { E};
             foreach (var spell in spellList)
             {
@@ -66,6 +140,7 @@ namespace Marksman
             }
         }
 
+      
         public override void Game_OnGameUpdate(EventArgs args)
         {
             if (!Orbwalking.CanMove(100)) return;
@@ -87,13 +162,24 @@ namespace Marksman
 
             if (ComboActive || HarassActive)
             {
-                var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
+                Obj_AI_Hero t;
+                t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
 
+                var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
                 if (useE)
                 {
-                    var eTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
-                    if (E.IsReady() && eTarget.IsValidTarget())
-                        E.CastOnUnit(eTarget);
+                    if (E.IsReady() && t.IsValidTarget(E.Range))
+                        E.CastOnUnit(t);
+                }
+
+                var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
+                if (useW)
+                {
+                    t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
+                    if (t.IsValidTarget() && W.IsReady() && GetECharge == 4 && !t.UnderTurret())
+                    {
+                        W.Cast(t);
+                    }
                 }
             }
 
@@ -130,12 +216,13 @@ namespace Marksman
             if (Items.CanUseItem(3153) && ObjectManager.Player.Distance(t) < 550)
                 fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Botrk);
 
-            return (float)fComboDamage;
+            return fComboDamage;
         }
 
         public override bool ComboMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
+            config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
             return true;
         }
@@ -143,6 +230,7 @@ namespace Marksman
         public override bool HarassMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(false));
+            config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(true));
             config.AddItem(new MenuItem("UseEH" + Id, "Use E").SetValue(true));
             config.AddItem(
                 new MenuItem("UseETH" + Id, "Use E (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
