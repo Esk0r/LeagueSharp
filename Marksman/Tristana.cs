@@ -94,11 +94,20 @@ namespace Marksman
                 if (useQ && Q.IsReady())
                     Q.CastOnUnit(ObjectManager.Player);
 
-                if (useE && E.IsReady())
+                if (useE && canUseE(t) && E.IsReady())
                     E.CastOnUnit(t);
             }
         }
 
+        private static bool canUseE(Obj_AI_Hero t)
+        {
+            if (ObjectManager.Player.CountEnemiesInRange(W.Range + (E.Range / 2)) == 1)
+                return true;
+
+            return (Program.Config.Item("DontUseE" + t.ChampionName) != null &&
+                    Program.Config.Item("DontUseE" + t.ChampionName).GetValue<bool>() == false);
+
+        }
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
@@ -125,9 +134,10 @@ namespace Marksman
             {
                 if (ObjectManager.Player.HasBuff("Recall"))
                     return;
-                var eTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
-                if (E.IsReady() && eTarget.IsValidTarget())
-                    E.CastOnUnit(eTarget);
+                var t = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
+
+                if (E.IsReady() && canUseE(t) && t.IsValidTarget())
+                    E.CastOnUnit(t);
             }
 
             if (ComboActive || HarassActive)
@@ -144,7 +154,8 @@ namespace Marksman
                 }
 
                 var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
-                if (useE)
+
+                if (useE && canUseE(t))
                 {
                     if (E.IsReady() && t.IsValidTarget(E.Range))
                         E.CastOnUnit(t);
@@ -255,6 +266,16 @@ namespace Marksman
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
+
+            config.AddSubMenu(new Menu("Don't Use E to", "DontUseE"));
+            {
+                foreach (var enemy in
+                    ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != ObjectManager.Player.Team))
+                {
+                    config.SubMenu("DontUseE")
+                        .AddItem(new MenuItem("DontUseE" + enemy.ChampionName, enemy.ChampionName).SetValue(false));
+                }
+            }
             return true;
         }
 
