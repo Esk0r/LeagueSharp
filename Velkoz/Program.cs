@@ -179,10 +179,16 @@ namespace Velkoz
             //Add the events we are going to use:
             Game.OnGameUpdate += Game_OnGameUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
-            Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
+            Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
             GameObject.OnCreate += Obj_SpellMissile_OnCreate;
             Spellbook.OnUpdateChargedSpell += Spellbook_OnUpdateChargedSpell;
             Game.PrintChat(ChampionName + " Loaded!");
+        }
+
+        static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
+        {
+            if (!Config.Item("InterruptSpells").GetValue<bool>()) return;
+            E.Cast(sender);
         }
 
         private static void Obj_SpellMissile_OnCreate(GameObject sender, EventArgs args)
@@ -203,13 +209,6 @@ namespace Velkoz
                         !(Config.Item("ComboActive").GetValue<KeyBind>().Active &&
                           Config.Item("UseRCombo").GetValue<bool>());
             }
-        }
-
-        private static void Interrupter_OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
-        {
-            if (!Config.Item("InterruptSpells").GetValue<bool>()) return;
-
-            E.Cast(unit);
         }
 
         private static void Combo()

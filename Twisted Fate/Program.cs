@@ -149,12 +149,12 @@ namespace TwistedFate
             
             if (qCircle.Active)
             {
-                Utility.DrawCircle(ObjectManager.Player.Position, Q.Range, qCircle.Color);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, Q.Range, qCircle.Color);
             }
 
             if (rCircle.Active)
             {
-                Utility.DrawCircle(ObjectManager.Player.Position, 5500, rCircle.Color);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, 5500, rCircle.Color);
             }
         }
 

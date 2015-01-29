@@ -441,8 +441,8 @@ namespace Evade
                 return;
             }
 
-            //Avoid sending move/cast packets while channeling important spells.
-            if (ObjectManager.Player.IsChannelingImportantSpell())
+            //Avoid sending move/cast packets while channeling interruptable spells that cause hero not being able to move.
+            if (ObjectManager.Player.IsCastingInterruptableSpell(true))
             {
                 return;
             }

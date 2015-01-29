@@ -105,7 +105,20 @@ namespace Karma
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Drawing.OnDraw += Drawing_OnDraw;
             Game.OnGameUpdate += Game_OnGameUpdate;
-            Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
+            Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
+        }
+
+        static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
+        {
+            if (sender.IsValidTarget(1000f) && args.DangerLevel == Interrupter2.DangerLevel.High && _e.IsReady())
+            {
+                _r.Cast();
+
+                if (!_r.IsReady())
+                {
+                    _e.Cast(ObjectManager.Player);
+                }
+            }
         }
 
         private static void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
@@ -242,19 +255,6 @@ namespace Karma
             if (wActive && wTarget != null)
             {
                 _w.Cast(wTarget);
-            }
-        }
-
-        private static void Interrupter_OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
-        {
-            if (unit.IsValidTarget(1000f) && spell.DangerLevel == InterruptableDangerLevel.High && _e.IsReady())
-            {
-                _r.Cast();
-
-                if (!_r.IsReady())
-                {
-                    _e.Cast(ObjectManager.Player);
-                }
             }
         }
     }

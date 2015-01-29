@@ -223,13 +223,23 @@ namespace Xerath
             Game.OnGameUpdate += Game_OnGameUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
             Drawing.OnEndScene += Drawing_OnEndScene;
-            Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
+            Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Obj_AI_Hero.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
             Game.OnWndProc += Game_OnWndProc;
             Game.PrintChat(ChampionName + " Loaded!");
             Orbwalking.BeforeAttack += OrbwalkingOnBeforeAttack;
             Obj_AI_Hero.OnIssueOrder += Obj_AI_Hero_OnIssueOrder;
+        }
+
+        static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
+        {
+            if (!Config.Item("InterruptSpells").GetValue<bool>()) return;
+
+            if (Player.Distance(sender) < E.Range)
+            {
+                E.Cast(sender);
+            }
         }
 
         static void Obj_AI_Hero_OnIssueOrder(Obj_AI_Base sender, GameObjectIssueOrderEventArgs args)
@@ -279,16 +289,6 @@ namespace Xerath
                     RCharge.Position = args.End;
                     RCharge.TapKeyPressed = false;
                 }
-            }
-        }
-
-        private static void Interrupter_OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
-        {
-            if (!Config.Item("InterruptSpells").GetValue<bool>()) return;
-
-            if (Player.Distance(unit) < E.Range)
-            {
-                E.Cast(unit);
             }
         }
 

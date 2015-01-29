@@ -187,9 +187,24 @@ namespace Syndra
             Game.OnGameUpdate += Game_OnGameUpdate;
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
             Drawing.OnDraw += Drawing_OnDraw;
-            Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
+            Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
             Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
             Game.PrintChat(ChampionName + " Loaded!");
+        }
+
+        static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
+        {
+            if (!Config.Item("InterruptSpells").GetValue<bool>()) return;
+
+            if (Player.Distance(sender) < E.Range && E.IsReady())
+            {
+                Q.Cast(sender.ServerPosition);
+                E.Cast(sender.ServerPosition);
+            }
+            else if (Player.Distance(sender) < EQ.Range && E.IsReady() && Q.IsReady())
+            {
+                UseQE(sender);
+            }
         }
 
         static void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
@@ -198,20 +213,7 @@ namespace Syndra
                 args.Process = !(Q.IsReady() || W.IsReady());
         }
 
-        private static void Interrupter_OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
-        {
-            if (!Config.Item("InterruptSpells").GetValue<bool>()) return;
 
-            if (Player.Distance(unit) < E.Range && E.IsReady())
-            {
-                Q.Cast(unit.ServerPosition);
-                E.Cast(unit.ServerPosition);
-            }
-            else if (Player.Distance(unit) < EQ.Range && E.IsReady() && Q.IsReady())
-            {
-                UseQE(unit);
-            }
-        }
 
         private static void Combo()
         {

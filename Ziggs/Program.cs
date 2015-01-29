@@ -156,7 +156,17 @@ namespace Ziggs
             Drawing.OnDraw += Drawing_OnDraw;
 
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
-            Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
+            Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
+        }
+
+        static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
+        {
+            if (sender.IsAlly)
+            {
+                return;
+            }
+
+            W.Cast(sender);
         }
 
         private static void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
@@ -169,25 +179,25 @@ namespace Ziggs
             var qValue = Config.Item("DrawQRange").GetValue<Circle>();
             if (qValue.Active)
             {
-                Utility.DrawCircle(ObjectManager.Player.Position, Q3.Range, qValue.Color);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, Q3.Range, qValue.Color);
             }
 
             var wValue = Config.Item("DrawWRange").GetValue<Circle>();
             if (wValue.Active)
             {
-                Utility.DrawCircle(ObjectManager.Player.Position, W.Range, wValue.Color);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, W.Range, wValue.Color);
             }
 
             var eValue = Config.Item("DrawERange").GetValue<Circle>();
             if (eValue.Active)
             {
-                Utility.DrawCircle(ObjectManager.Player.Position, E.Range, eValue.Color);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, eValue.Color);
             }
 
             var rValue = Config.Item("DrawRRange").GetValue<Circle>();
             if (rValue.Active)
             {
-                Utility.DrawCircle(ObjectManager.Player.Position, R.Range, rValue.Color);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, rValue.Color);
             }
 
             var rValueM = Config.Item("DrawRRangeM").GetValue<Circle>();
@@ -354,11 +364,6 @@ namespace Ziggs
                     UseSecondWT = Environment.TickCount;
                 }
             }
-        }
-
-        private static void Interrupter_OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
-        {
-            W.Cast(unit);
         }
 
         private static void CastQ(Obj_AI_Base target)
