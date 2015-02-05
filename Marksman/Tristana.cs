@@ -15,8 +15,7 @@ namespace Marksman
     {
         public static Spell Q, W, E, R;
         public static Font vText;
-        public static int xBuffCount;
-        public static int LastTickTime;
+        public static int QLastTickTime, LastTickTime;
 
         public Tristana()
         {
@@ -46,6 +45,102 @@ namespace Marksman
             Utils.PrintMessage("Tristana loaded.");
         }
 
+        public class TristanaData
+        {
+            public static double GetWDamage
+            {
+                get
+                {
+                    if (W.IsReady())
+                    {
+                        double fComboDamage = 0;
+                        var wDamage = new double[] { 80, 105, 130, 155, 180 }[W.Level - 1] + 0.5 * ObjectManager.Player.FlatMagicDamageMod;
+                        if (GetEMarkedCount > 0 && GetEMarkedCount < 4)
+                        {
+                            return wDamage + (wDamage * GetEMarkedCount * .20);
+                        }
+                        switch (GetEMarkedCount)
+                        {
+                            case 0:
+                                return  wDamage;
+                            case 4:
+                                return wDamage * 2;
+                        }
+                    }
+                    return 0;
+                }
+            }
+
+            public static float GetComboDamage
+            {
+                get
+                {
+                    
+                    var fComboDamage = 0d;
+                    var t = TargetSelector.GetTarget(W.Range * 2, TargetSelector.DamageType.Physical);
+                    if (!t.IsValidTarget())
+                        return 0;
+                    /*
+                    if (Q.IsReady())
+                    {
+                        var baseAttackSpeed = 0.656 + (0.656 / 100 * (ObjectManager.Player.Level - 1) * 1.5);
+                        var qExtraAttackSpeed = new double[] { 30, 50, 70, 90, 110 }[Q.Level - 1];
+                        var attackDelay = (float) (baseAttackSpeed + (baseAttackSpeed / 100 * qExtraAttackSpeed));
+                        attackDelay = (float) Math.Round(attackDelay, 2);
+
+                        attackDelay *= 5;
+                        attackDelay *= (float) Math.Floor(ObjectManager.Player.TotalAttackDamage());
+                        fComboDamage += attackDelay;
+                    }
+                    */
+                    if (W.IsReady())
+                    {
+                        fComboDamage += GetWDamage;
+                    }
+
+                    if (E.IsReady())
+                    {
+                        fComboDamage += new double[] { 60, 70, 80, 90, 100 }[E.Level - 1] * 2 *
+                                        ObjectManager.Player.FlatMagicDamageMod;
+                    }
+
+                    if (R.IsReady())
+                    {
+                        fComboDamage += new double[] { 300, 400, 500 }[R.Level - 1] +
+                                        ObjectManager.Player.FlatMagicDamageMod;
+                    }
+                    return (float) fComboDamage;
+                }
+            }
+
+            public static Obj_AI_Hero GetEMarkedEnemy
+            {
+                get
+                {
+                    return
+                        ObjectManager.Get<Obj_AI_Hero>()
+                            .Where(
+                                enemy =>
+                                    !enemy.IsDead &&
+                                    enemy.IsValidTarget(W.Range + Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)))
+                            .FirstOrDefault(enemy => enemy.Buffs.Any(buff => buff.DisplayName == "TristanaEChargeSound"));
+                }
+            }
+
+            public static int GetEMarkedCount
+            {
+                get
+                {
+                    if (GetEMarkedEnemy == null)
+                        return 0;
+                    return
+                        GetEMarkedEnemy.Buffs.Where(buff => buff.DisplayName == "TristanaECharge")
+                            .Select(xBuff => xBuff.Count)
+                            .FirstOrDefault();
+                }
+            }   
+        }
+
         public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
         {
             if (R.IsReady() && gapcloser.Sender.IsValidTarget(R.Range) && GetValue<bool>("UseRMG"))
@@ -58,30 +153,7 @@ namespace Marksman
                 R.CastOnUnit(unit);
         }
 
-        public Obj_AI_Hero GetEMarkedEnemy
-        {
-            get
-            {
-                return
-                    ObjectManager.Get<Obj_AI_Hero>()
-                        .Where(
-                            enemy =>
-                                !enemy.IsDead &&
-                                enemy.IsValidTarget(W.Range + Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)))
-                        .FirstOrDefault(enemy => enemy.Buffs.Any(buff => buff.DisplayName == "TristanaEChargeSound"));
-            }
-        }
-
-        public int GetEMarkedCount
-        {
-            get
-            {
-                return
-                    GetEMarkedEnemy.Buffs.Where(buff => buff.DisplayName == "TristanaECharge")
-                        .Select(xBuff => xBuff.Count)
-                        .FirstOrDefault();
-            }
-        }
+       
 
         public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
@@ -113,7 +185,8 @@ namespace Marksman
         {
             if (!Orbwalking.CanMove(100))
                 return;
-            var getEMarkedEnemy = GetEMarkedEnemy;
+            
+            var getEMarkedEnemy = TristanaData.GetEMarkedEnemy;
             if (getEMarkedEnemy != null)
             {
                 TargetSelector.SetTarget(getEMarkedEnemy);
@@ -124,11 +197,9 @@ namespace Marksman
                 TargetSelector.SetTarget(TargetSelector.GetTarget(attackRange, TargetSelector.DamageType.Physical));
             }
 
-            //Update Q range depending on level; 600 + 5 Ã— ( Tristana's level - 1)/* dont waste your Q for only 1 or 2 hits. */
-            //Update E and R range depending on level; 630 + 9 Ã— ( Tristana's level - 1)
             Q.Range = 600 + 5 * (ObjectManager.Player.Level - 1);
-            E.Range = 630 + 9 * (ObjectManager.Player.Level - 1);
-            R.Range = 630 + 9 * (ObjectManager.Player.Level - 1);
+            E.Range = 630 + 7 * (ObjectManager.Player.Level - 1);
+            R.Range = 630 + 7 * (ObjectManager.Player.Level - 1);
 
             if (GetValue<KeyBind>("UseETH").Active)
             {
@@ -143,10 +214,10 @@ namespace Marksman
             if (ComboActive || HarassActive)
             {
                 Obj_AI_Hero t;
-                if (GetEMarkedEnemy != null)
+                if (TristanaData.GetEMarkedEnemy != null)
                 {
-                    t = GetEMarkedEnemy;
-                    TargetSelector.SetTarget(GetEMarkedEnemy);
+                    t = TristanaData.GetEMarkedEnemy;
+                    TargetSelector.SetTarget(TristanaData.GetEMarkedEnemy);
                 }
                 else
                 {
@@ -165,11 +236,18 @@ namespace Marksman
                 if (useW)
                 {
                     t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
-                    if (t.IsValidTarget() && W.IsReady() && GetEMarkedCount == 4 && !t.UnderTurret() &&
-                        ObjectManager.Player.Distance(t) > Orbwalking.GetRealAutoAttackRange(t))
+                    if (t.IsValidTarget() && W.IsReady() &&
+                        (t.Health < TristanaData.GetWDamage || TristanaData.GetEMarkedCount == 4))
                     {
                         W.Cast(t);
                     }
+                }
+                if (GetValue<bool>("UseRM") && R.IsReady())
+                {
+                    t = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
+                    if (t.IsValidTarget() && t.Health <= ObjectManager.Player.GetSpellDamage(t, SpellSlot.R) - 30 &&
+                        t.Health > ObjectManager.Player.GetAutoAttackDamage(t, true))
+                        R.CastOnUnit(t);
                 }
             }
 
@@ -181,10 +259,7 @@ namespace Marksman
                 ObjectManager.Get<Obj_AI_Hero>()
                     .Where(hero => hero.IsValidTarget(R.Range) || hero.IsValidTarget(W.Range)))
             {
-                if (GetValue<bool>("UseWM") && W.IsReady() &&
-                    ObjectManager.Player.GetSpellDamage(hero, SpellSlot.W) - 10 > hero.Health)
-                    W.Cast(hero);
-                else if (GetValue<bool>("UseRM") && R.IsReady() &&
+                if (GetValue<bool>("UseRM") && R.IsReady() &&
                          ObjectManager.Player.GetSpellDamage(hero, SpellSlot.R) - 30 > hero.Health)
                     R.CastOnUnit(hero);
             }
@@ -193,25 +268,7 @@ namespace Marksman
         private static float GetComboDamage(Obj_AI_Hero t)
         {
             var fComboDamage = 0f;
-
-            if (E.IsReady())
-                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.E);
-
-            if (R.IsReady())
-                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
-
-            if (ObjectManager.Player.GetSpellSlot("summonerdot") != SpellSlot.Unknown &&
-                ObjectManager.Player.Spellbook.CanUseSpell(ObjectManager.Player.GetSpellSlot("summonerdot")) ==
-                SpellState.Ready && ObjectManager.Player.Distance(t) < 550)
-                fComboDamage += (float) ObjectManager.Player.GetSummonerSpellDamage(t, Damage.SummonerSpell.Ignite);
-
-            if (Items.CanUseItem(3144) && ObjectManager.Player.Distance(t) < 550)
-                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Bilgewater);
-
-            if (Items.CanUseItem(3153) && ObjectManager.Player.Distance(t) < 550)
-                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Botrk);
-
-            return fComboDamage;
+            return TristanaData.GetComboDamage;
         }
 
         public override void Drawing_OnDraw(EventArgs args)
@@ -221,7 +278,8 @@ namespace Marksman
             var drawEMarkEnemy = Program.Config.SubMenu("Drawings").Item("DrawEMarkEnemy").GetValue<Circle>();
             if (drawEMarksStatus || drawEMarkEnemy.Active)
             {
-                var getEMarkedEnemy = GetEMarkedEnemy;
+                var vText1 = vText;
+                var getEMarkedEnemy = TristanaData.GetEMarkedEnemy;
                 if (getEMarkedEnemy != null)
                 {
                     if (drawEMarksStatus)
@@ -230,16 +288,15 @@ namespace Marksman
                             LastTickTime = Environment.TickCount + 5000;
                         var xTime = LastTickTime - Environment.TickCount;
 
-                        xBuffCount = GetEMarkedCount;
                         var timer = string.Format("0:{0:D2}", xTime / 1000);
                         Utils.DrawText(
-                            vText, timer + " : 4 / " + xBuffCount, (int) getEMarkedEnemy.HPBarPosition.X + 145,
+                            vText1, timer + " : 4 / " + TristanaData.GetEMarkedCount, (int)getEMarkedEnemy.HPBarPosition.X + 145,
                             (int) getEMarkedEnemy.HPBarPosition.Y + 5, SharpDX.Color.White);
                     }
 
                     if (drawEMarkEnemy.Active)
                     {
-                        Render.Circle.DrawCircle(GetEMarkedEnemy.Position, 140f, drawEMarkEnemy.Color, 1);
+                        Render.Circle.DrawCircle(TristanaData.GetEMarkedEnemy.Position, 140f, drawEMarkEnemy.Color, 1);
                     }
                 }
             }
