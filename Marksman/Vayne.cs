@@ -1,28 +1,24 @@
 #region
-
 using System;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-
 #endregion
 
 namespace Marksman
 {
     internal class Vayne : Champion
     {
+        public static Spell Q;
         public Spell E;
-        public Spell Q;
-        
+
         public Vayne()
         {
             Utils.PrintMessage("Vayne loaded");
-            
-            Q = new Spell(SpellSlot.Q);
-            E = new Spell(SpellSlot.E);
 
-            Q.Range = 300f;
+            Q = new Spell(SpellSlot.Q, 300f);
+            E = new Spell(SpellSlot.E, 650f);
+
             E.SetTargetted(0.25f, 2200f);
 
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
@@ -43,24 +39,27 @@ namespace Marksman
 
         private static Obj_AI_Hero GetSilverBuffCountX(Obj_AI_Hero t)
         {
-
-            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy && enemy.IsValidTarget(800)))
+            foreach (
+                var enemy in
+                    from enemy in
+                        ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy && enemy.IsValidTarget(800))
+                    let buff = enemy.Buffs.Where(bx => bx.Name.Contains("vaynesilvereddebuf"))
+                    where buff.Count() > 1
+                    select enemy)
             {
-                var buff = enemy.Buffs.Where(bx => bx.Name.Contains("vaynesilvereddebuf"));
-                if (buff.Count()>1)
-                {
-                 return enemy;      
-                }
-
+                return enemy;
             }
-            
-            return (from enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy && enemy.ChampionName == t.ChampionName)
-                from buff in enemy.Buffs
-                where buff.Name.Contains("vaynesilvereddebuf")
-                select buff).Select(buff => buff.Count == 2 ? t : null).FirstOrDefault();
+
+            return
+                (from enemy in
+                    ObjectManager.Get<Obj_AI_Hero>()
+                        .Where(enemy => enemy.IsEnemy && enemy.ChampionName == t.ChampionName)
+                    from buff in enemy.Buffs
+                    where buff.Name.Contains("vaynesilvereddebuf")
+                    select buff).Select(buff => buff.Count == 2 ? t : null).FirstOrDefault();
         }
 
-        static int GetSilverBuffCount
+        private static int GetSilverBuffCount
         {
             get
             {
@@ -68,26 +67,54 @@ namespace Marksman
                 foreach (var buff in from enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy)
                     from buff in enemy.Buffs
                     where buff.Name.Contains("vaynesilvereddebuf")
-                    select buff) 
+                    select buff)
                 {
                     xBuffCount = buff.Count;
                 }
-                
-                 return xBuffCount;
+
+                return xBuffCount;
             }
         }
+
+        public static Obj_AI_Hero GetSilverBuffMarkedEnemy
+        {
+            get
+            {
+                return
+                    ObjectManager.Get<Obj_AI_Hero>()
+                        .Where(
+                            enemy =>
+                                !enemy.IsDead &&
+                                enemy.IsValidTarget(Q.Range + Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)))
+                        .FirstOrDefault(
+                            enemy => enemy.Buffs.Any(buff => buff.DisplayName == "vaynesilvereddebuf" && buff.Count > 1));
+            }
+        }
+
         public override void Game_OnGameUpdate(EventArgs args)
         {
             if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100))
             {
+
+                var silverBuffMarkedEnemy = GetSilverBuffMarkedEnemy;
+                if (silverBuffMarkedEnemy != null)
+                {
+                    TargetSelector.SetTarget(silverBuffMarkedEnemy);
+                }
+                else
+                {
+                    var attackRange = Orbwalking.GetRealAutoAttackRange(ObjectManager.Player);
+                    TargetSelector.SetTarget(TargetSelector.GetTarget(attackRange, TargetSelector.DamageType.Physical));
+                }
 
                 var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
 
                 if (Q.IsReady() && GetValue<bool>("CompleteSilverBuff"))
                 {
                     var t =
-                        GetSilverBuffCountX(TargetSelector.GetTarget(Q.Range + ObjectManager.Player.AttackRange,
-                            TargetSelector.DamageType.Physical));
+                        GetSilverBuffCountX(
+                            TargetSelector.GetTarget(
+                                Q.Range + ObjectManager.Player.AttackRange, TargetSelector.DamageType.Physical));
                     if (t != null)
                     {
                         Q.Cast(Game.CursorPos);
@@ -96,22 +123,23 @@ namespace Marksman
 
                 if (E.IsReady() && useE)
                 {
-                    foreach (
-                        var hero in
-                            from hero in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsValidTarget(550f))
-                            let prediction = E.GetPrediction(hero)
-                            where NavMesh.GetCollisionFlags(
+                    foreach (var hero in
+                        from hero in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsValidTarget(550f))
+                        let prediction = E.GetPrediction(hero)
+                        where
+                            NavMesh.GetCollisionFlags(
                                 prediction.UnitPosition.To2D()
-                                    .Extend(ObjectManager.Player.ServerPosition.To2D(),
+                                    .Extend(
+                                        ObjectManager.Player.ServerPosition.To2D(),
                                         -GetValue<Slider>("PushDistance").Value)
-                                    .To3D())
-                                .HasFlag(CollisionFlags.Wall) || NavMesh.GetCollisionFlags(
-                                    prediction.UnitPosition.To2D()
-                                        .Extend(ObjectManager.Player.ServerPosition.To2D(),
-                                            -(GetValue<Slider>("PushDistance").Value/2))
-                                        .To3D())
-                                    .HasFlag(CollisionFlags.Wall)
-                            select hero)
+                                    .To3D()).HasFlag(CollisionFlags.Wall) ||
+                            NavMesh.GetCollisionFlags(
+                                prediction.UnitPosition.To2D()
+                                    .Extend(
+                                        ObjectManager.Player.ServerPosition.To2D(),
+                                        -(GetValue<Slider>("PushDistance").Value / 2))
+                                    .To3D()).HasFlag(CollisionFlags.Wall)
+                        select hero)
                     {
                         E.Cast(hero);
                     }
@@ -125,10 +153,9 @@ namespace Marksman
                 if (Q.IsReady() && useQ)
                 {
                     var vMinions = MinionManager.GetMinions(ObjectManager.Player.Position, Q.Range);
-                    foreach (
-                        Obj_AI_Base minions in
-                            vMinions.Where(
-                                minions => minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q)))
+                    foreach (Obj_AI_Base minions in
+                        vMinions.Where(
+                            minions => minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q)))
                         Q.Cast(minions);
                 }
             }
@@ -137,14 +164,15 @@ namespace Marksman
         public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
             var useQ =
-                GetValue<bool>("UseQ" +
-                               (ComboActive
-                                   ? Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo ? "C" : ""
-                                   : Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Mixed ? "H" : ""));
+                GetValue<bool>(
+                    "UseQ" +
+                    (ComboActive
+                        ? Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo ? "C" : ""
+                        : Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Mixed ? "H" : ""));
             //if (unit.IsMe && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo && GetValue<bool>("UseQC"))
             if (unit.IsMe && useQ)
                 Q.Cast(Game.CursorPos);
- 
+
         }
 
         public override bool ComboMenu(Menu config)
@@ -160,14 +188,14 @@ namespace Marksman
             config.AddItem(new MenuItem("UseEH" + Id, "Use E").SetValue(true));
             return true;
         }
+
         public override bool MiscMenu(Menu config)
         {
             config.AddItem(
                 new MenuItem("UseET" + Id, "Use E (Toggle)").SetValue(
                     new KeyBind("T".ToCharArray()[0], KeyBindType.Toggle)));
             config.AddItem(new MenuItem("UseEInterrupt" + Id, "Use E To Interrupt").SetValue(true));
-            config.AddItem(
-                new MenuItem("PushDistance" + Id, "E Push Distance").SetValue(new Slider(425, 475, 300)));
+            config.AddItem(new MenuItem("PushDistance" + Id, "E Push Distance").SetValue(new Slider(425, 475, 300)));
             config.AddItem(new MenuItem("CompleteSilverBuff" + Id, "Complete Silver Buff With Q").SetValue(true));
             return true;
         }
@@ -177,11 +205,30 @@ namespace Marksman
 
             return true;
         }
+
         public override bool LaneClearMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQL" + Id, "Use Q").SetValue(true));
             return true;
         }
 
+        public override bool DrawingMenu(Menu config)
+        {
+            config.AddItem(
+                new MenuItem("DrawE" + Id, "E range").SetValue(
+                    new Circle(true, System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+
+            return true;
+        }
+
+        public override void Drawing_OnDraw(EventArgs args)
+        {
+            var menuItem = GetValue<Circle>("DrawE");
+            if (menuItem.Active)
+            {
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, menuItem.Color, 1);
+            }
+
+        }
     }
 }
