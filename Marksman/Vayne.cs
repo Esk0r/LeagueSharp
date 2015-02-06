@@ -10,12 +10,10 @@ namespace Marksman
     internal class Vayne : Champion
     {
         public static Spell Q;
-        public Spell E;
+        public static Spell E;
 
         public Vayne()
         {
-            Utils.PrintMessage("Vayne loaded");
-
             Q = new Spell(SpellSlot.Q, 300f);
             E = new Spell(SpellSlot.E, 650f);
 
@@ -23,6 +21,42 @@ namespace Marksman
 
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
+
+            Utils.PrintMessage("Vayne loaded");
+        }
+
+        public class VayneData
+        {
+            public static int GetWMarkedCount
+            {
+                get
+                {
+                    if (GetSilverBuffMarkedEnemy == null)
+                        return 0;
+
+                    return
+                        GetSilverBuffMarkedEnemy.Buffs.Where(buff => buff.Name == "vaynesilvereddebuff")
+                            .Select(xBuff => xBuff.Count)
+                            .FirstOrDefault();
+                }
+            }
+
+            public static Obj_AI_Hero GetSilverBuffMarkedEnemy
+            {
+                get
+                {
+                    return
+                        ObjectManager.Get<Obj_AI_Hero>()
+                            .Where(
+                                enemy =>
+                                    !enemy.IsDead &&
+                                    enemy.IsValidTarget(
+                                        (Q.IsReady() ? Q.Range : 1) +
+                                        Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)))
+                            .FirstOrDefault(
+                                enemy => enemy.Buffs.Any(buff => buff.Name == "vaynesilvereddebuff" && buff.Count > 0));
+                }
+            }            
         }
 
         public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
@@ -37,66 +71,11 @@ namespace Marksman
                 E.Cast(unit);
         }
 
-        private static Obj_AI_Hero GetSilverBuffCountX(Obj_AI_Hero t)
-        {
-            foreach (
-                var enemy in
-                    from enemy in
-                        ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy && enemy.IsValidTarget(800))
-                    let buff = enemy.Buffs.Where(bx => bx.Name.Contains("vaynesilvereddebuf"))
-                    where buff.Count() > 1
-                    select enemy)
-            {
-                return enemy;
-            }
-
-            return
-                (from enemy in
-                    ObjectManager.Get<Obj_AI_Hero>()
-                        .Where(enemy => enemy.IsEnemy && enemy.ChampionName == t.ChampionName)
-                    from buff in enemy.Buffs
-                    where buff.Name.Contains("vaynesilvereddebuf")
-                    select buff).Select(buff => buff.Count == 2 ? t : null).FirstOrDefault();
-        }
-
-        private static int GetSilverBuffCount
-        {
-            get
-            {
-                var xBuffCount = 0;
-                foreach (var buff in from enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy)
-                    from buff in enemy.Buffs
-                    where buff.Name.Contains("vaynesilvereddebuf")
-                    select buff)
-                {
-                    xBuffCount = buff.Count;
-                }
-
-                return xBuffCount;
-            }
-        }
-
-        public static Obj_AI_Hero GetSilverBuffMarkedEnemy
-        {
-            get
-            {
-                return
-                    ObjectManager.Get<Obj_AI_Hero>()
-                        .Where(
-                            enemy =>
-                                !enemy.IsDead &&
-                                enemy.IsValidTarget(Q.Range + Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)))
-                        .FirstOrDefault(
-                            enemy => enemy.Buffs.Any(buff => buff.DisplayName == "vaynesilvereddebuf" && buff.Count > 1));
-            }
-        }
-
         public override void Game_OnGameUpdate(EventArgs args)
         {
             if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100))
             {
-
-                var silverBuffMarkedEnemy = GetSilverBuffMarkedEnemy;
+                var silverBuffMarkedEnemy = VayneData.GetSilverBuffMarkedEnemy;
                 if (silverBuffMarkedEnemy != null)
                 {
                     TargetSelector.SetTarget(silverBuffMarkedEnemy);
@@ -111,11 +90,7 @@ namespace Marksman
 
                 if (Q.IsReady() && GetValue<bool>("CompleteSilverBuff"))
                 {
-                    var t =
-                        GetSilverBuffCountX(
-                            TargetSelector.GetTarget(
-                                Q.Range + ObjectManager.Player.AttackRange, TargetSelector.DamageType.Physical));
-                    if (t != null)
+                    if (VayneData.GetSilverBuffMarkedEnemy != null && VayneData.GetWMarkedCount == 2)
                     {
                         Q.Cast(Game.CursorPos);
                     }
@@ -148,12 +123,12 @@ namespace Marksman
 
             if (LaneClearActive)
             {
-                bool useQ = GetValue<bool>("UseQL");
+                var useQ = GetValue<bool>("UseQL");
 
                 if (Q.IsReady() && useQ)
                 {
                     var vMinions = MinionManager.GetMinions(ObjectManager.Player.Position, Q.Range);
-                    foreach (Obj_AI_Base minions in
+                    foreach (var minions in
                         vMinions.Where(
                             minions => minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q)))
                         Q.Cast(minions);
@@ -169,10 +144,8 @@ namespace Marksman
                     (ComboActive
                         ? Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo ? "C" : ""
                         : Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Mixed ? "H" : ""));
-            //if (unit.IsMe && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo && GetValue<bool>("UseQC"))
             if (unit.IsMe && useQ)
                 Q.Cast(Game.CursorPos);
-
         }
 
         public override bool ComboMenu(Menu config)
