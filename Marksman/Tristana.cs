@@ -10,12 +10,11 @@ using LeagueSharp.Common;
 
 namespace Marksman
 {
-
     internal class Tristana : Champion
     {
         public static Spell Q, W, E, R;
         public static Font vText;
-        public static int QLastTickTime, LastTickTime;
+        public static int LastTickTime;
 
         public Tristana()
         {
@@ -47,14 +46,19 @@ namespace Marksman
 
         public class TristanaData
         {
+            public static Obj_AI_Hero GetTarget(float vRange)
+            {
+                return TargetSelector.GetTarget(vRange, TargetSelector.DamageType.Physical);
+            }
+
             public static double GetWDamage
             {
                 get
                 {
                     if (W.IsReady())
                     {
-                        double fComboDamage = 0;
-                        var wDamage = new double[] { 80, 105, 130, 155, 180 }[W.Level - 1] + 0.5 * ObjectManager.Player.FlatMagicDamageMod;
+                        var wDamage = new double[] { 80, 105, 130, 155, 180 }[W.Level - 1] +
+                                      0.5 * ObjectManager.Player.FlatMagicDamageMod;
                         if (GetEMarkedCount > 0 && GetEMarkedCount < 4)
                         {
                             return wDamage + (wDamage * GetEMarkedCount * .20);
@@ -62,7 +66,7 @@ namespace Marksman
                         switch (GetEMarkedCount)
                         {
                             case 0:
-                                return  wDamage;
+                                return wDamage;
                             case 4:
                                 return wDamage * 2;
                         }
@@ -75,9 +79,8 @@ namespace Marksman
             {
                 get
                 {
-                    
                     var fComboDamage = 0d;
-                    var t = TargetSelector.GetTarget(W.Range * 2, TargetSelector.DamageType.Physical);
+                    var t = GetTarget(W.Range * 2);
                     if (!t.IsValidTarget())
                         return 0;
                     /*
@@ -88,7 +91,7 @@ namespace Marksman
                         var attackDelay = (float) (baseAttackSpeed + (baseAttackSpeed / 100 * qExtraAttackSpeed));
                         attackDelay = (float) Math.Round(attackDelay, 2);
 
-                        attackDelay *= 5;
+                        attackDelay *= 5; // buff cd
                         attackDelay *= (float) Math.Floor(ObjectManager.Player.TotalAttackDamage());
                         fComboDamage += attackDelay;
                     }
@@ -122,8 +125,10 @@ namespace Marksman
                             .Where(
                                 enemy =>
                                     !enemy.IsDead &&
-                                    enemy.IsValidTarget(W.Range + Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)))
-                            .FirstOrDefault(enemy => enemy.Buffs.Any(buff => buff.DisplayName == "TristanaEChargeSound"));
+                                    enemy.IsValidTarget(
+                                        W.Range + Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)))
+                            .FirstOrDefault(
+                                enemy => enemy.Buffs.Any(buff => buff.DisplayName == "TristanaEChargeSound"));
                 }
             }
 
@@ -138,7 +143,7 @@ namespace Marksman
                             .Select(xBuff => xBuff.Count)
                             .FirstOrDefault();
                 }
-            }   
+            }
         }
 
         public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
@@ -152,8 +157,6 @@ namespace Marksman
             if (R.IsReady() && unit.IsValidTarget(R.Range) && GetValue<bool>("UseRMI"))
                 R.CastOnUnit(unit);
         }
-
-       
 
         public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
@@ -178,14 +181,13 @@ namespace Marksman
 
             return (Program.Config.Item("DontUseE" + t.ChampionName) != null &&
                     Program.Config.Item("DontUseE" + t.ChampionName).GetValue<bool>() == false);
-
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
             if (!Orbwalking.CanMove(100))
                 return;
-            
+
             var getEMarkedEnemy = TristanaData.GetEMarkedEnemy;
             if (getEMarkedEnemy != null)
             {
@@ -193,7 +195,7 @@ namespace Marksman
             }
             else
             {
-                var attackRange = Orbwalking.GetRealAutoAttackRange(ObjectManager.Player);
+                var attackRange = Orbwalking.GetRealAutoAttackRange(ObjectManager.Player) + 30;
                 TargetSelector.SetTarget(TargetSelector.GetTarget(attackRange, TargetSelector.DamageType.Physical));
             }
 
@@ -205,9 +207,8 @@ namespace Marksman
             {
                 if (ObjectManager.Player.HasBuff("Recall"))
                     return;
-                var t = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
-
-                if (E.IsReady() && canUseE(t) && t.IsValidTarget())
+                var t = TristanaData.GetTarget(E.Range);
+                if (t.IsValidTarget() && E.IsReady() && canUseE(t))
                     E.CastOnUnit(t);
             }
 
@@ -221,30 +222,35 @@ namespace Marksman
                 }
                 else
                 {
-                    t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
+                    t = TristanaData.GetTarget(W.Range);
                 }
 
                 var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
-
                 if (useE && canUseE(t))
                 {
                     if (E.IsReady() && t.IsValidTarget(E.Range))
                         E.CastOnUnit(t);
                 }
 
-                var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
+                var useW = GetValue<bool>("UseWC");
                 if (useW)
                 {
-                    t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
-                    if (t.IsValidTarget() && W.IsReady() &&
-                        (t.Health < TristanaData.GetWDamage || TristanaData.GetEMarkedCount == 4))
-                    {
+                    t = TristanaData.GetTarget(W.Range);
+                    if (t.IsValidTarget() && W.IsReady() && t.Health < TristanaData.GetWDamage)
                         W.Cast(t);
-                    }
                 }
+
+                var useWcs = GetValue<bool>("UseWCS");
+                if (useWcs)
+                {
+                    t = TristanaData.GetTarget(W.Range);
+                    if (t.IsValidTarget() && W.IsReady() && TristanaData.GetEMarkedCount == 4)
+                        W.Cast(t);
+                }
+
                 if (GetValue<bool>("UseRM") && R.IsReady())
                 {
-                    t = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
+                    t = TristanaData.GetTarget(R.Range);
                     if (t.IsValidTarget() && t.Health <= ObjectManager.Player.GetSpellDamage(t, SpellSlot.R) - 30 &&
                         t.Health > ObjectManager.Player.GetAutoAttackDamage(t, true))
                         R.CastOnUnit(t);
@@ -260,14 +266,13 @@ namespace Marksman
                     .Where(hero => hero.IsValidTarget(R.Range) || hero.IsValidTarget(W.Range)))
             {
                 if (GetValue<bool>("UseRM") && R.IsReady() &&
-                         ObjectManager.Player.GetSpellDamage(hero, SpellSlot.R) - 30 > hero.Health)
+                    ObjectManager.Player.GetSpellDamage(hero, SpellSlot.R) - 30 > hero.Health)
                     R.CastOnUnit(hero);
             }
         }
 
         private static float GetComboDamage(Obj_AI_Hero t)
         {
-            var fComboDamage = 0f;
             return TristanaData.GetComboDamage;
         }
 
@@ -290,8 +295,9 @@ namespace Marksman
 
                         var timer = string.Format("0:{0:D2}", xTime / 1000);
                         Utils.DrawText(
-                            vText1, timer + " : 4 / " + TristanaData.GetEMarkedCount, (int)getEMarkedEnemy.HPBarPosition.X + 145,
-                            (int) getEMarkedEnemy.HPBarPosition.Y + 5, SharpDX.Color.White);
+                            vText1, timer + " : 4 / " + TristanaData.GetEMarkedCount,
+                            (int) getEMarkedEnemy.HPBarPosition.X + 145, (int) getEMarkedEnemy.HPBarPosition.Y + 5,
+                            SharpDX.Color.White);
                     }
 
                     if (drawEMarkEnemy.Active)
@@ -322,6 +328,7 @@ namespace Marksman
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
+            config.AddItem(new MenuItem("UseWCS" + Id, "Complete E stacks with W").SetValue(true));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
 
             config.AddSubMenu(new Menu("Don't Use E to", "DontUseE"));
