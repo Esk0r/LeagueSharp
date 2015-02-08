@@ -1,17 +1,18 @@
 #region
+using LeagueSharp;
+using LeagueSharp.Common;
 using System;
 using System.Drawing;
 using System.Linq;
-using LeagueSharp;
 using SharpDX.Direct3D9;
 using Font = SharpDX.Direct3D9.Font;
-using LeagueSharp.Common;
 #endregion
 
 namespace Marksman
 {
     internal class Tristana : Champion
     {
+        public static Obj_AI_Hero Player = ObjectManager.Player;
         public static Spell Q, W, E, R;
         public static Font vText;
         public static int LastTickTime;
@@ -31,6 +32,7 @@ namespace Marksman
 
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
+
             vText = new Font(
                 Drawing.Direct3DDevice,
                 new FontDescription
@@ -58,7 +60,7 @@ namespace Marksman
                     if (W.IsReady())
                     {
                         var wDamage = new double[] { 80, 105, 130, 155, 180 }[W.Level - 1] +
-                                      0.5 * ObjectManager.Player.FlatMagicDamageMod;
+                                      0.5 * Player.FlatMagicDamageMod;
                         if (GetEMarkedCount > 0 && GetEMarkedCount < 4)
                         {
                             return wDamage + (wDamage * GetEMarkedCount * .20);
@@ -86,13 +88,13 @@ namespace Marksman
                     /*
                     if (Q.IsReady())
                     {
-                        var baseAttackSpeed = 0.656 + (0.656 / 100 * (ObjectManager.Player.Level - 1) * 1.5);
+                        var baseAttackSpeed = 0.656 + (0.656 / 100 * (Player.Level - 1) * 1.5);
                         var qExtraAttackSpeed = new double[] { 30, 50, 70, 90, 110 }[Q.Level - 1];
                         var attackDelay = (float) (baseAttackSpeed + (baseAttackSpeed / 100 * qExtraAttackSpeed));
                         attackDelay = (float) Math.Round(attackDelay, 2);
 
-                        attackDelay *= 5; // buff cd
-                        attackDelay *= (float) Math.Floor(ObjectManager.Player.TotalAttackDamage());
+                        attackDelay *= 5;
+                        attackDelay *= (float) Math.Floor(Player.TotalAttackDamage());
                         fComboDamage += attackDelay;
                     }
                     */
@@ -104,13 +106,12 @@ namespace Marksman
                     if (E.IsReady())
                     {
                         fComboDamage += new double[] { 60, 70, 80, 90, 100 }[E.Level - 1] * 2 *
-                                        ObjectManager.Player.FlatMagicDamageMod;
+                                        Player.FlatMagicDamageMod;
                     }
 
                     if (R.IsReady())
                     {
-                        fComboDamage += new double[] { 300, 400, 500 }[R.Level - 1] +
-                                        ObjectManager.Player.FlatMagicDamageMod;
+                        fComboDamage += new double[] { 300, 400, 500 }[R.Level - 1] + Player.FlatMagicDamageMod;
                     }
                     return (float) fComboDamage;
                 }
@@ -125,8 +126,7 @@ namespace Marksman
                             .Where(
                                 enemy =>
                                     !enemy.IsDead &&
-                                    enemy.IsValidTarget(
-                                        W.Range + Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)))
+                                    enemy.IsValidTarget(W.Range + Orbwalking.GetRealAutoAttackRange(Player)))
                             .FirstOrDefault(
                                 enemy => enemy.Buffs.Any(buff => buff.DisplayName == "TristanaEChargeSound"));
                 }
@@ -163,20 +163,20 @@ namespace Marksman
             var t = target as Obj_AI_Hero;
             if (t != null && (ComboActive || HarassActive) && unit.IsMe)
             {
-                var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
-                var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
+                var useQ = Q.IsReady() && GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
+                var useE = E.IsReady() && GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
 
-                if (useQ && Q.IsReady())
-                    Q.CastOnUnit(ObjectManager.Player);
+                if (useQ)
+                    Q.CastOnUnit(Player);
 
-                if (useE && canUseE(t) && E.IsReady())
+                if (useE && canUseE(t))
                     E.CastOnUnit(t);
             }
         }
 
         private static bool canUseE(Obj_AI_Hero t)
         {
-            if (ObjectManager.Player.CountEnemiesInRange(W.Range + (E.Range / 2)) == 1)
+            if (Player.CountEnemiesInRange(W.Range + (E.Range / 2)) == 1)
                 return true;
 
             return (Program.Config.Item("DontUseE" + t.ChampionName) != null &&
@@ -195,22 +195,27 @@ namespace Marksman
             }
             else
             {
-                var attackRange = Orbwalking.GetRealAutoAttackRange(ObjectManager.Player) + 30;
+                var attackRange = Orbwalking.GetRealAutoAttackRange(Player);
                 TargetSelector.SetTarget(TargetSelector.GetTarget(attackRange, TargetSelector.DamageType.Physical));
             }
 
-            Q.Range = 600 + 5 * (ObjectManager.Player.Level - 1);
-            E.Range = 630 + 7 * (ObjectManager.Player.Level - 1);
-            R.Range = 630 + 7 * (ObjectManager.Player.Level - 1);
+            Q.Range = 600 + 5 * (Player.Level - 1);
+            E.Range = 630 + 7 * (Player.Level - 1);
+            R.Range = 630 + 7 * (Player.Level - 1);
 
             if (GetValue<KeyBind>("UseETH").Active)
             {
-                if (ObjectManager.Player.HasBuff("Recall"))
+                if (Player.HasBuff("Recall"))
                     return;
                 var t = TristanaData.GetTarget(E.Range);
                 if (t.IsValidTarget() && E.IsReady() && canUseE(t))
                     E.CastOnUnit(t);
             }
+
+            var useW = W.IsReady() && GetValue<bool>("UseWC");
+            var useWc = W.IsReady() && GetValue<bool>("UseWCS");
+            var useE = E.IsReady() && GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
+            var useR = R.IsReady() && GetValue<bool>("UseRM") && R.IsReady();
 
             if (ComboActive || HarassActive)
             {
@@ -225,49 +230,45 @@ namespace Marksman
                     t = TristanaData.GetTarget(W.Range);
                 }
 
-                var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
                 if (useE && canUseE(t))
                 {
                     if (E.IsReady() && t.IsValidTarget(E.Range))
                         E.CastOnUnit(t);
                 }
 
-                var useW = GetValue<bool>("UseWC");
                 if (useW)
                 {
                     t = TristanaData.GetTarget(W.Range);
-                    if (t.IsValidTarget() && W.IsReady() && t.Health < TristanaData.GetWDamage)
+                    if (t.IsValidTarget() && t.Health < TristanaData.GetWDamage)
                         W.Cast(t);
                 }
 
-                var useWcs = GetValue<bool>("UseWCS");
-                if (useWcs)
+
+                if (useWc)
                 {
                     t = TristanaData.GetTarget(W.Range);
-                    if (t.IsValidTarget() && W.IsReady() && TristanaData.GetEMarkedCount == 4)
+                    if (t.IsValidTarget() && TristanaData.GetEMarkedCount == 4)
                         W.Cast(t);
-                }
-
-                if (GetValue<bool>("UseRM") && R.IsReady())
-                {
-                    t = TristanaData.GetTarget(R.Range);
-                    if (t.IsValidTarget() && t.Health <= ObjectManager.Player.GetSpellDamage(t, SpellSlot.R) - 30 &&
-                        t.Health > ObjectManager.Player.GetAutoAttackDamage(t, true))
-                        R.CastOnUnit(t);
                 }
             }
 
-            //Killsteal
-            if (!ComboActive)
-                return;
-
-            foreach (var hero in
-                ObjectManager.Get<Obj_AI_Hero>()
-                    .Where(hero => hero.IsValidTarget(R.Range) || hero.IsValidTarget(W.Range)))
+            if (ComboActive)
             {
-                if (GetValue<bool>("UseRM") && R.IsReady() &&
-                    ObjectManager.Player.GetSpellDamage(hero, SpellSlot.R) - 30 > hero.Health)
-                    R.CastOnUnit(hero);
+                if (useR)
+                {
+                    var t = TristanaData.GetTarget(W.Range + R.Range - 30);
+
+                    if (!t.IsValidTarget())
+                        return;
+
+                    if (Player.GetSpellDamage(t, SpellSlot.R) - 30 < t.Health ||
+                        t.Health < Player.GetAutoAttackDamage(t, true))
+                        return;
+
+                    if (t.IsValidTarget() && !t.IsValidTarget(R.Range) && W.IsReady())
+                        W.Cast(t);
+                    R.CastOnUnit(t);
+                }
             }
         }
 
@@ -307,20 +308,18 @@ namespace Marksman
                 }
             }
 
-            // draw W spell
             Spell[] spellList = { W };
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
                 if (menuItem.Active)
-                    Render.Circle.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color, 1);
+                    Render.Circle.DrawCircle(Player.Position, spell.Range, menuItem.Color, 1);
             }
 
-            // draw E spell
             var drawE = Program.Config.SubMenu("Drawings").Item("DrawE").GetValue<Circle>();
             if (drawE.Active)
             {
-                Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, drawE.Color, 1);
+                Render.Circle.DrawCircle(Player.Position, E.Range, drawE.Color, 1);
             }
         }
 
@@ -334,7 +333,7 @@ namespace Marksman
             config.AddSubMenu(new Menu("Don't Use E to", "DontUseE"));
             {
                 foreach (var enemy in
-                    ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != ObjectManager.Player.Team))
+                    ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != Player.Team))
                 {
                     config.SubMenu("DontUseE")
                         .AddItem(new MenuItem("DontUseE" + enemy.ChampionName, enemy.ChampionName).SetValue(false));
