@@ -25,7 +25,7 @@ namespace Marksman
 
             Q.SetSkillshot(.25f, 70f, 1650f, false, SkillshotType.SkillshotLine);
             E.SetSkillshot(.50f, 250f, 1400f, false, SkillshotType.SkillshotCircle);
-            R.SetSkillshot(.25f, 100f, 1950f, false, SkillshotType.SkillshotLine);
+            R.SetSkillshot(.25f, 120f, 1950f, false, SkillshotType.SkillshotLine);
 
             Q.SetCharged("VarusQ", "VarusQ", 250, 1600, 1.2f);
              
