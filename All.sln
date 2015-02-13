@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xerath", "Xerath\Xerath.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ziggs", "Ziggs\Ziggs.csproj", "{89252065-9FA8-43E7-81C7-F78BFCF2E8B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azir", "Azir\Azir.csproj", "{49E2E826-D2A0-431C-B31E-8FADA9F2C580}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{89252065-9FA8-43E7-81C7-F78BFCF2E8B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89252065-9FA8-43E7-81C7-F78BFCF2E8B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89252065-9FA8-43E7-81C7-F78BFCF2E8B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49E2E826-D2A0-431C-B31E-8FADA9F2C580}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49E2E826-D2A0-431C-B31E-8FADA9F2C580}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49E2E826-D2A0-431C-B31E-8FADA9F2C580}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49E2E826-D2A0-431C-B31E-8FADA9F2C580}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
