@@ -19,6 +19,11 @@ namespace Azir
             get { return _soldiers.Where(s => s.IsValid && !s.IsDead && !s.IsMoving && (!Animations.ContainsKey(s.NetworkId) || Animations[s.NetworkId] != "Inactive")).ToList(); }
         }
 
+        public static List<Obj_AI_Minion> AllSoldiers2
+        {
+            get { return _soldiers.Where(s => s.IsValid && !s.IsDead).ToList(); }
+        }
+
         public static List<Obj_AI_Minion> AllSoldiers
         {
             get { return _soldiers.Where(s => s.IsValid && !s.IsDead && !s.IsMoving).ToList(); }

@@ -47,7 +47,7 @@ namespace Azir
             Q.SetSkillshot(0, 70, 1600, false, SkillshotType.SkillshotCircle);
             Qline.SetSkillshot(0, 70, 1600, false, SkillshotType.SkillshotLine);
             E.SetSkillshot(0, 100, 1700, false, SkillshotType.SkillshotLine);
-            R.SetSkillshot(0.25f, 0, 1400, false, SkillshotType.SkillshotLine);
+            R.SetSkillshot(0.5f, 0, 1400, false, SkillshotType.SkillshotLine);
 
             IgniteSlot = Player.GetSpellSlot("SummonerDot");
             #endregion
@@ -63,7 +63,7 @@ namespace Azir
             Menu.SubMenu("Combo").AddItem(new MenuItem("UseEC", "Use E").SetValue(true));
             Menu.SubMenu("Combo").AddItem(new MenuItem("UseRC", "Use R").SetValue(true));
             Menu.SubMenu("Combo").AddItem(new MenuItem("UseIgnite", "Use Ignite").SetValue(true));
-            Menu.SubMenu("Combo").AddItem(new MenuItem("AllInKEK", "All-in (tap)!").SetValue(new KeyBind('T', KeyBindType.Press)));
+            Menu.SubMenu("Combo").AddItem(new MenuItem("AllInKEK", "All-in (tap)!").SetValue(new KeyBind('G', KeyBindType.Press)));
             Menu.SubMenu("Combo").AddItem(new MenuItem("ComboActive", "Combo!").SetValue(new KeyBind(32, KeyBindType.Press)));
 
             Menu.SubMenu("Harass").AddItem(new MenuItem("HarassMinMana", "Min mana %").SetValue(new Slider(20, 0, 100)));
