@@ -23,14 +23,32 @@ namespace Azir
 
                     if(Program.Q.Instance.State != SpellState.Cooldown)
                     {
-                        Utility.DelayAction.Add(200, () => Program.E.Cast(extended, true));
-                        Utility.DelayAction.Add(250, () => Program.Q.Cast(extended, true));
+                        var extended2 = ObjectManager.Player.ServerPosition.To2D().Extend(Game.CursorPos.To2D(), Program.W.Range);
+                        if(Utility.IsWall(extended2))
+                        {
+                            Utility.DelayAction.Add(300, () => Program.E.Cast(extended, true));
+                            Utility.DelayAction.Add(250, () => Program.Q.Cast(extended, true));
+                        }
+                        else
+                        {
+                            Utility.DelayAction.Add(200, () => Program.E.Cast(extended, true));
+                            Utility.DelayAction.Add(250, () => Program.Q.Cast(extended, true));
+                        }
                     }
                     else
                     {
                         Utility.DelayAction.Add(100, () => Program.E.Cast(extended, true));
                     }
                     return;
+                }
+
+                if(SoldiersManager.AllSoldiers2.Count > 0 && Program.Q.IsReady())
+                {
+                    var closestSoldier = SoldiersManager.AllSoldiers2.MinOrDefault(s => s.Distance(extended, true));
+                    if(closestSoldier.Distance(extended, true) < ObjectManager.Player.Distance(extended, true) && ObjectManager.Player.Distance(closestSoldier, true) < Program.W.RangeSqr)
+                    {
+                              //E first
+                    }
                 }
 
                   /*
