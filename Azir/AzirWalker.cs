@@ -25,20 +25,25 @@ namespace Azir
 
         public override bool InAutoAttackRange(AttackableUnit target)
         {
+            return CustomInAutoattackRange(target) != 0;
+        }
+
+        public int CustomInAutoattackRange(AttackableUnit target)
+        {
             if (Orbwalking.InAutoAttackRange(target))
             {
-                return true;
+                return 1;
             }
 
             if (!target.IsValidTarget())
             {
-                return false;
+                return 0;
             }
 
             //Azir's soldiers can't attack structures.
             if (!(target is Obj_AI_Base))
             {
-                return false;
+                return 0;
             }
 
             var soldierAArange = _soldierAARange + 65 + target.BoundingRadius;
@@ -47,15 +52,47 @@ namespace Azir
             {
                 if (soldier.Distance(target, true) <= soldierAArange)
                 {
-                    return true;
+                    return 2;
                 }
             }
 
-            return false;
+            return 0;
         }
 
         public override AttackableUnit GetTarget()
         {
+            AttackableUnit result;
+            if (ActiveMode == Orbwalking.OrbwalkingMode.LaneClear || ActiveMode == Orbwalking.OrbwalkingMode.Mixed ||
+                ActiveMode == Orbwalking.OrbwalkingMode.LastHit)
+            {
+                foreach (var minion in
+                    ObjectManager.Get<Obj_AI_Minion>()
+                        .Where(
+                            minion =>
+                                minion.IsValidTarget() &&
+                                minion.Health <
+                                3 *
+                                (ObjectManager.Player.BaseAttackDamage + ObjectManager.Player.FlatPhysicalDamageMod))
+                    )
+                {
+                    var r = CustomInAutoattackRange(minion);
+                    if(r != 0)
+                    {
+                        var t = (int)(Program.Player.AttackCastDelay * 1000) - 100 + Game.Ping / 2;
+                        var predHealth = HealthPrediction.GetHealthPrediction(minion, t, 0);
+
+                        var damage = (r == 1) ? Program.Player.GetAutoAttackDamage(minion, true) : Program.Player.GetSpellDamage(minion, SpellSlot.W);
+                        if (minion.Team != GameObjectTeam.Neutral && MinionManager.IsMinion(minion, true))
+                        {
+                            if (predHealth > 0 && predHealth <= damage)
+                            {
+                                return minion;
+                            }
+                        }
+                    }
+                }
+            }
+
             if(ActiveMode != Orbwalking.OrbwalkingMode.LastHit)
             {
                 var posibleTargets = new Dictionary<Obj_AI_Base, float>();
@@ -90,7 +127,7 @@ namespace Azir
                 {
                     var minions = MinionManager.GetMinions(1100, MinionTypes.All, MinionTeam.NotAlly);
                     var validEnemiesPosition = HeroManager.Enemies.Where(e => e.IsValidTarget(1100)).Select(e => e.ServerPosition.To2D()).ToList();
-                    const int AAWidthSqr = 50*50;
+                    const int AAWidthSqr = 100*100;
                     //Try to harass using minions
                     foreach (var soldier in soldiers)
                     {
@@ -114,8 +151,53 @@ namespace Azir
                     }
                 }
             }
-            
-            return base.GetTarget();
+
+            /* turrets / inhibitors / nexus */
+            if (ActiveMode == Orbwalking.OrbwalkingMode.LaneClear)
+            {
+                /* turrets */
+                foreach (var turret in
+                    ObjectManager.Get<Obj_AI_Turret>().Where(t => t.IsValidTarget() && Orbwalking.InAutoAttackRange(t)))
+                {
+                    return turret;
+                }
+
+                /* inhibitor */
+                foreach (var turret in
+                    ObjectManager.Get<Obj_BarracksDampener>().Where(t => t.IsValidTarget() && Orbwalking.InAutoAttackRange(t)))
+                {
+                    return turret;
+                }
+
+                /* nexus */
+                foreach (var nexus in
+                    ObjectManager.Get<Obj_HQ>().Where(t => t.IsValidTarget() && Orbwalking.InAutoAttackRange(t)))
+                {
+                    return nexus;
+                }
+            }
+
+            /*Jungle minions*/
+            if (ActiveMode == Orbwalking.OrbwalkingMode.LaneClear || ActiveMode == Orbwalking.OrbwalkingMode.Mixed)
+            {
+                result =
+                    ObjectManager.Get<Obj_AI_Minion>()
+                        .Where(
+                            mob =>
+                                mob.IsValidTarget() && Orbwalking.InAutoAttackRange(mob) && mob.Team == GameObjectTeam.Neutral)
+                        .MaxOrDefault(mob => mob.MaxHealth);
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+
+            if (ActiveMode == Orbwalking.OrbwalkingMode.LaneClear)
+            {
+                return (ObjectManager.Get<Obj_AI_Minion>().Where(minion => minion.IsValidTarget() && InAutoAttackRange(minion))).MaxOrDefault(m => CustomInAutoattackRange(m) * m.Health);
+            }
+
+            return null;
         }
     }
 }

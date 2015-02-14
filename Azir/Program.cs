@@ -94,7 +94,6 @@ namespace Azir
 
             Menu.AddToMainMenu();
             #endregion
-
             Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
             Game.OnGameUpdate += Game_OnGameUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
