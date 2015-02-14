@@ -74,6 +74,7 @@ namespace Azir
             Menu.SubMenu("LaneClear").AddItem(new MenuItem("LaneClearActive", "LaneClear!").SetValue(new KeyBind('V', KeyBindType.Press)));
 
             Menu.SubMenu("Misc").AddItem(new MenuItem("Jump", "Jump towards cursor").SetValue(new KeyBind('E', KeyBindType.Press)));
+            Menu.SubMenu("Misc").Item("Jump").ValueChanged += Program_ValueChanged;
             Menu.SubMenu("Misc").AddItem(new MenuItem("AutoEInterrupt", "Interrupt targets with E").SetValue(false));
 
             Menu.SubMenu("R").AddItem(new MenuItem("AutoRN", "Auto R if it will hit >=").SetValue(new Slider(3, 1, 6)));
@@ -97,6 +98,14 @@ namespace Azir
             Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
             Game.OnGameUpdate += Game_OnGameUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
+        }
+
+        static void Program_ValueChanged(object sender, OnValueChangeEventArgs e)
+        {
+            if(e.GetNewValue<KeyBind>().Active)
+            {
+                Jumper.Jump();
+            }
         }
 
         static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
@@ -304,12 +313,6 @@ namespace Azir
         static void Game_OnGameUpdate(EventArgs args)
         {
             R.Width = 133 * (3 + R.Level);
-
-            if(Menu.SubMenu("Misc").Item("Jump").GetValue<KeyBind>().Active)
-            {
-                Jumper.Jump();
-                return;
-            }
             
             var minTargets = Menu.SubMenu("R").Item("AutoRN").GetValue<Slider>().Value;
             if(minTargets != 6)

@@ -11,14 +11,44 @@ namespace Azir
 {
     internal static class Jumper
     {
+        private static int CastQT = 0;
+        private static Vector2 CastQLocation = new Vector2();
+
+        private static int CastET = 0;
+        private static Vector2 CastELocation = new Vector2();
+
+        static Jumper()
+        {
+            Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
+        }
+
+        static void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if(sender.IsMe)
+            {
+                if(args.SData.Name == "AzirE" && Environment.TickCount - CastQT < 500)
+                {
+                    Program.Q.Cast(CastQLocation, true);
+                    CastQT = 0;
+                }
+
+                if (args.SData.Name == "AzirQ" && Environment.TickCount - CastET < 500)
+                {
+                    Program.E.Cast(CastELocation, true);
+                    CastET = 0;
+                }
+            }
+        }
+
         public static void Jump()
         {
             if(Program.E.IsReady())
             {
-                var extended = ObjectManager.Player.ServerPosition.To2D().Extend(Game.CursorPos.To2D(), Program.Q.Range);
+                var extended = ObjectManager.Player.ServerPosition.To2D().Extend(Game.CursorPos.To2D(), Program.Q.Range - 25);
 
                 if (Program.W.IsReady() && (SoldiersManager.AllSoldiers2.Count == 0 || Program.Q.Instance.State == SpellState.Cooldown && SoldiersManager.AllSoldiers2.Min(s => s.Distance(extended, true)) >= Program.Player.Distance(extended, true)))
                 {
+                    Console.WriteLine("KEK" + Environment.TickCount);
                     Program.W.Cast(extended);
 
                     if(Program.Q.Instance.State != SpellState.Cooldown)
@@ -26,13 +56,15 @@ namespace Azir
                         var extended2 = ObjectManager.Player.ServerPosition.To2D().Extend(Game.CursorPos.To2D(), Program.W.Range);
                         if(Utility.IsWall(extended2))
                         {
-                            Utility.DelayAction.Add(300, () => Program.E.Cast(extended, true));
                             Utility.DelayAction.Add(250, () => Program.Q.Cast(extended, true));
+                            CastET = Environment.TickCount + 250;
+                            CastELocation = extended;
                         }
                         else
                         {
-                            Utility.DelayAction.Add(200, () => Program.E.Cast(extended, true));
-                            Utility.DelayAction.Add(250, () => Program.Q.Cast(extended, true));
+                            Utility.DelayAction.Add(250, () => Program.E.Cast(extended, true));
+                            CastQT = Environment.TickCount + 250;
+                            CastQLocation = extended;
                         }
                     }
                     else
@@ -45,41 +77,18 @@ namespace Azir
                 if(SoldiersManager.AllSoldiers2.Count > 0 && Program.Q.IsReady())
                 {
                     var closestSoldier = SoldiersManager.AllSoldiers2.MinOrDefault(s => s.Distance(extended, true));
-                    if(closestSoldier.Distance(extended, true) < ObjectManager.Player.Distance(extended, true) && ObjectManager.Player.Distance(closestSoldier, true) < Program.W.RangeSqr)
+                    if(closestSoldier.Distance(extended, true) < ObjectManager.Player.Distance(extended, true) && ObjectManager.Player.Distance(closestSoldier, true) > Program.W.RangeSqr)
                     {
-                              //E first
+                        Utility.DelayAction.Add(250, () => Program.E.Cast(extended, true));
+                        CastQT = Environment.TickCount + 250;
+                        CastQLocation = extended;
+                    }
+                    else
+                    {
+                        Utility.DelayAction.Add(250, () => Program.Q.Cast(extended, true));
+                        Utility.DelayAction.Add(600, () => Program.E.Cast(extended, true));
                     }
                 }
-
-                  /*
-                var closestSoldier = SoldiersManager.AllSoldiers2.MinOrDefault(s => s.Distance(_point, true));
-                if (closestSoldier.Distance(_point, true) < 200 * 200)
-                {
-                    Program.E.Cast(closestSoldier.Position, true);
-                    _reqTick = 0;
-                    return;
-                }
-
-                if (Program.E.IsReady() && SoldiersManager.AllSoldiers2.Max(s => s.Distance(extended, true)) < Math.Pow(Program.Q.Range - 400, 2))
-                {
-                    Program.E.Cast(extended.To3D(), true);
-                    return;
-                }
-
-                if (_jumpType == 2)
-                {
-                    if (Program.Q.IsReady())
-                    {
-                        Program.Q.Cast(extended.To3D(), true);
-                        return;
-                    }
-                }
-
-                if (Program.E.IsReady())
-                {
-                    Program.E.Cast(extended.To3D(), true);
-                    return;
-                }  */
             }
         }
     }
