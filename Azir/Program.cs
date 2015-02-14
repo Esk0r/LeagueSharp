@@ -251,7 +251,7 @@ namespace Azir
         {
             var useQ = Menu.SubMenu("Combo").Item("UseQC").GetValue<bool>();
             var useW = Menu.SubMenu("Combo").Item("UseWC").GetValue<bool>();
-            var useE = (Environment.TickCount - _allinT < 4000) && Menu.SubMenu("Combo").Item("UseEC").GetValue<bool>();
+            var useE = Menu.SubMenu("Combo").Item("UseEC").GetValue<bool>();
             var useR = (Environment.TickCount - _allinT < 4000) && Menu.SubMenu("Combo").Item("UseRC").GetValue<bool>();
             
             var qTarget = TargetSelector.GetTarget(Q.Range + 200, TargetSelector.DamageType.Magical);
@@ -267,9 +267,9 @@ namespace Azir
                 return;
             }
 
-            if(useE && E.IsReady())
+            if (useE && ((Environment.TickCount - _allinT) < 4000 || (HeroManager.Enemies.Count(e => e.IsValidTarget(1000)) <= 2 && GetComboDamage(qTarget) > qTarget.Health)) && E.IsReady())
             {
-                foreach (var soldier in SoldiersManager.AllSoldiers)
+                foreach (var soldier in SoldiersManager.AllSoldiers2)
                 {
                     if(E.WillHit(qTarget, soldier.ServerPosition))
                     {

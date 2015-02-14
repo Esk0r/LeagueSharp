@@ -53,7 +53,7 @@ namespace Azir
         {
             foreach (var soldier in ActiveSoldiers)
             {
-                Drawing.DrawCircle(soldier.Position, 100, System.Drawing.Color.White);
+                Render.Circle.DrawCircle(soldier.Position, 320, System.Drawing.Color.FromArgb(150, System.Drawing.Color.Yellow));
             }
         }
 
