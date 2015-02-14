@@ -41,7 +41,7 @@ namespace Azir
             Qline = new Spell(SpellSlot.Q, 825);
 
             W = new Spell(SpellSlot.W, 450);
-            E = new Spell(SpellSlot.E, float.MaxValue);
+            E = new Spell(SpellSlot.E, 1250);
             R = new Spell(SpellSlot.R, 450);
 
             Q.SetSkillshot(0, 70, 1600, false, SkillshotType.SkillshotCircle);
@@ -108,7 +108,7 @@ namespace Azir
 
             if(Menu.SubMenu("Misc").Item("AutoEInterrupt").GetValue<bool>() && E.IsReady())
             {
-                foreach (var soldier in SoldiersManager.AllSoldiers)
+                foreach (var soldier in SoldiersManager.AllSoldiers.Where(s => Player.Distance(s, true) < E.RangeSqr))
                 {
                     if (E.WillHit(sender, soldier.ServerPosition))
                     {
@@ -260,31 +260,30 @@ namespace Azir
                 return;
             }
 
-            if (useW && W.Instance.Ammo > 0)
-            {
-                var p = Player.Distance(qTarget, true) > W.RangeSqr ? Player.Position.To2D().Extend(qTarget.Position.To2D(), W.Range) : qTarget.Position.To2D();
-                W.Cast(p);
-                return;
-            }
-
-            if (useE && ((Environment.TickCount - _allinT) < 4000 || (HeroManager.Enemies.Count(e => e.IsValidTarget(1000)) <= 2 && GetComboDamage(qTarget) > qTarget.Health)) && E.IsReady())
-            {
-                foreach (var soldier in SoldiersManager.AllSoldiers2)
-                {
-                    if(E.WillHit(qTarget, soldier.ServerPosition))
-                    {
-                        E.Cast(soldier.ServerPosition);
-                        return;
-                    }
-                }
-            }
-
             if (useQ && Q.IsReady())
             {
                 foreach (var soldier in SoldiersManager.AllSoldiers)
                 {
                     Q.UpdateSourcePosition(soldier.ServerPosition, ObjectManager.Player.ServerPosition);
                     Q.Cast(qTarget);
+                }
+            }
+
+            if (useW && W.Instance.Ammo > 0)
+            {
+                var p = Player.Distance(qTarget, true) > W.RangeSqr ? Player.Position.To2D().Extend(qTarget.Position.To2D(), W.Range) : qTarget.Position.To2D();
+                W.Cast(p);
+            }
+
+            if (useE && ((Environment.TickCount - _allinT) < 4000 || (HeroManager.Enemies.Count(e => e.IsValidTarget(1000)) <= 2 && GetComboDamage(qTarget) > qTarget.Health)) && E.IsReady())
+            {
+                foreach (var soldier in SoldiersManager.AllSoldiers2.Where(s => Player.Distance(s, true) < E.RangeSqr))
+                {
+                    if(E.WillHit(qTarget, soldier.ServerPosition))
+                    {
+                        E.Cast(soldier.ServerPosition);
+                        return;
+                    }
                 }
             }
 
