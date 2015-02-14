@@ -179,7 +179,7 @@ namespace Azir
 
             if (minions.Count > 0)
             {
-                if(useW && W.Instance.Ammo > 0)
+                if (useW && W.Instance.Ammo > 0 && (minions.Count > 2 || minions[0].Team == GameObjectTeam.Neutral))
                 {
                     var p = Player.Position.To2D().Extend(minions[0].Position.To2D(), W.Range);
                     W.Cast(p);
