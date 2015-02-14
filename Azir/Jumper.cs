@@ -48,7 +48,6 @@ namespace Azir
 
                 if (Program.W.IsReady() && (SoldiersManager.AllSoldiers2.Count == 0 || Program.Q.Instance.State == SpellState.Cooldown && SoldiersManager.AllSoldiers2.Min(s => s.Distance(extended, true)) >= Program.Player.Distance(extended, true)))
                 {
-                    Console.WriteLine("KEK" + Environment.TickCount);
                     Program.W.Cast(extended);
 
                     if(Program.Q.Instance.State != SpellState.Cooldown)
