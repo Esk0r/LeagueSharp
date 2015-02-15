@@ -319,13 +319,13 @@ namespace Xerath
                     E.Cast(eTarget);
             }
 
-            if (useQ && Q.IsReady())
+            if (useQ && Q.IsReady() && qTarget != null)
             {
                 if (Q.IsCharging)
                 {
                     Q.Cast(qTarget, false, false);
                 }
-                else if (qTarget != null && (!useW || !W.IsReady() || Player.Distance(qTarget) > W.Range))
+                else if (!useW || !W.IsReady() || Player.Distance(qTarget) > W.Range)
                 {
                     Q.StartCharging();
                 }
