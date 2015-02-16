@@ -104,19 +104,19 @@ namespace Evade
             }
 
             //Sivir E
-            if (unit.LastCastedSpellName() == "SivirE" && (Environment.TickCount - unit.LastCastedSpellT()) < 300)
+            if (unit.LastCastedSpellName() == "SivirE" && (Utils.TickCount - unit.LastCastedSpellT()) < 300)
             {
                 return true;
             }
 
             //Morganas E
-            if (unit.LastCastedSpellName() == "BlackShield" && (Environment.TickCount - unit.LastCastedSpellT()) < 300)
+            if (unit.LastCastedSpellName() == "BlackShield" && (Utils.TickCount - unit.LastCastedSpellT()) < 300)
             {
                 return true;
             }
 
             //Nocturnes E
-            if (unit.LastCastedSpellName() == "NocturneShit" && (Environment.TickCount - unit.LastCastedSpellT()) < 300)
+            if (unit.LastCastedSpellName() == "NocturneShit" && (Utils.TickCount - unit.LastCastedSpellT()) < 300)
             {
                 return true;
             }
@@ -182,7 +182,7 @@ namespace Evade
                     for (var i = -1; i <= 1; i = i + 2)
                     {
                         var skillshotToAdd = new Skillshot(
-                            DetectionType.ProcessSpell, spellData, Environment.TickCount, missile.Position.To2D(),
+                            DetectionType.ProcessSpell, spellData, Utils.TickCount, missile.Position.To2D(),
                             missile.Position.To2D() + i * direction * spellData.Range, skillshot.Unit);
                         DetectedSkillshots.Add(skillshotToAdd);
                     }
@@ -402,7 +402,7 @@ namespace Evade
                     return;
                 }
 #if DEBUG
-                Console.WriteLine(Environment.TickCount + "Adding new skillshot: " + skillshot.SpellData.SpellName);
+                Console.WriteLine(Utils.TickCount + "Adding new skillshot: " + skillshot.SpellData.SpellName);
 #endif
 
                 DetectedSkillshots.Add(skillshot);
@@ -448,7 +448,7 @@ namespace Evade
             }
 
             /*Avoid evading while stunned or immobile.*/
-            if (Utils.ImmobileTime(ObjectManager.Player) - Environment.TickCount > Game.Ping / 2 + 70)
+            if (Utils.ImmobileTime(ObjectManager.Player) - Utils.TickCount > Game.Ping / 2 + 70)
             {
                 Evading = false;
                 return;
@@ -499,10 +499,10 @@ namespace Evade
             /**/
             if (EvadeToPoint.IsValid() && DetectedSkillshots.Count > 0)
             {
-                if (Environment.TickCount - LastSentMovePacketT2 > 1000 / 10)
+                if (Utils.TickCount - LastSentMovePacketT2 > 1000 / 10)
                 {
                     ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, EvadeToPoint.To3D());
-                    LastSentMovePacketT2 = Environment.TickCount;
+                    LastSentMovePacketT2 = Utils.TickCount;
                 }
             }
 
@@ -522,9 +522,9 @@ namespace Evade
                 }
                 else
                 {
-                    if (Environment.TickCount - LastSentMovePacketT > 1000/15)
+                    if (Utils.TickCount - LastSentMovePacketT > 1000/15)
                     {
-                        LastSentMovePacketT = Environment.TickCount;
+                        LastSentMovePacketT = Utils.TickCount;
                         ObjectManager.Player.SendMovePacket(EvadePoint);
                     }
                     return;
@@ -623,7 +623,7 @@ namespace Evade
                 if (args.Order == GameObjectOrder.MoveTo)
                 {
                     if (Evading &&
-                        Environment.TickCount - Config.LastEvadePointChangeT > Config.EvadePointChangeInterval)
+                        Utils.TickCount - Config.LastEvadePointChangeT > Config.EvadePointChangeInterval)
                     {
                         //Update the evade point to the closest one:
                         var points = Evader.GetEvadePoints(-1, 0, false, true);
@@ -632,7 +632,7 @@ namespace Evade
                             var to = new Vector2(args.TargetPosition.X, args.TargetPosition.Y);
                             EvadePoint = to.Closest(points);
                             Evading = true;
-                            Config.LastEvadePointChangeT = Environment.TickCount;
+                            Config.LastEvadePointChangeT = Utils.TickCount;
                         }
                     }
 
@@ -663,9 +663,9 @@ namespace Evade
                     }
                     else
                     {
-                        if (/*DetectedSkillshots.Count == 1 &&*/ Environment.TickCount - LastSMovePacketT > 400)
+                        if (/*DetectedSkillshots.Count == 1 &&*/ Utils.TickCount - LastSMovePacketT > 400)
                         {
-                            LastSMovePacketT = Environment.TickCount;
+                            LastSMovePacketT = Utils.TickCount;
 
                             var perpendicular =
                                 (ObjectManager.Player.ServerPosition.To2D() - safePath.Intersection.Point)
@@ -725,7 +725,7 @@ namespace Evade
                 if (Config.PrintSpellData)
                 {
                     Console.WriteLine(
-                        Environment.TickCount + "DASH: Speed: " + args.Speed + " Width:" +
+                        Utils.TickCount + "DASH: Speed: " + args.Speed + " Width:" +
                         args.EndPos.Distance(args.StartPos));
                 }
 
@@ -929,7 +929,7 @@ namespace Evade
 
                                     return;
                                 }
-                                if (Environment.TickCount - LastWardJumpAttempt < 250)
+                                if (Utils.TickCount - LastWardJumpAttempt < 250)
                                 {
                                     //Let the user move freely inside the skillshot.
                                     NoSolutionFound = true;
@@ -959,7 +959,7 @@ namespace Evade
                                                         (600 -
                                                          ObjectManager.Player.ServerPosition.To2D().Distance(points[i]));
 
-                                                k = k - new Random(Environment.TickCount).Next(k);
+                                                k = k - new Random(Utils.TickCount).Next(k);
                                                 var extended = points[i] +
                                                                k *
                                                                (points[i] - ObjectManager.Player.ServerPosition.To2D())
@@ -972,7 +972,7 @@ namespace Evade
 
                                             var ePoint = to.Closest(points);
                                             ObjectManager.Player.Spellbook.CastSpell(wardSlot.SpellSlot, ePoint.To3D());
-                                            LastWardJumpAttempt = Environment.TickCount;
+                                            LastWardJumpAttempt = Utils.TickCount;
                                             //Let the user move freely inside the skillshot.
                                             NoSolutionFound = true;
                                             return;
@@ -1095,7 +1095,7 @@ namespace Evade
                                     NoSolutionFound = true;
                                     return;
                                 }
-                                if (Environment.TickCount - LastWardJumpAttempt < 250)
+                                if (Utils.TickCount - LastWardJumpAttempt < 250)
                                 {
                                     //Let the user move freely inside the skillshot.
                                     NoSolutionFound = true;
@@ -1125,7 +1125,7 @@ namespace Evade
                                                         (600 -
                                                          ObjectManager.Player.ServerPosition.To2D().Distance(points[i]));
 
-                                                k = k - new Random(Environment.TickCount).Next(k);
+                                                k = k - new Random(Utils.TickCount).Next(k);
                                                 var extended = points[i] +
                                                                k *
                                                                (points[i] - ObjectManager.Player.ServerPosition.To2D())
@@ -1138,7 +1138,7 @@ namespace Evade
 
                                             var ePoint = to.Closest(points);
                                             ObjectManager.Player.Spellbook.CastSpell(wardSlot.SpellSlot, ePoint.To3D());
-                                            LastWardJumpAttempt = Environment.TickCount;
+                                            LastWardJumpAttempt = Utils.TickCount;
                                             //Let the user move freely inside the skillshot.
                                             NoSolutionFound = true;
                                             return;
@@ -1165,7 +1165,7 @@ namespace Evade
                                             (evadeSpell.MaxRange -
                                              ObjectManager.Player.ServerPosition.To2D().Distance(points[i]));
 
-                                    k = k - new Random(Environment.TickCount).Next(k);
+                                    k = k - new Random(Utils.TickCount).Next(k);
                                     var extended = points[i] +
                                                    k *
                                                    (points[i] - ObjectManager.Player.ServerPosition.To2D()).Normalized();

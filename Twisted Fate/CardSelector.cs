@@ -42,7 +42,7 @@ namespace TwistedFate
 
         private static void SendWPacket()
         {
-            LastSendWSent = Environment.TickCount;
+            LastSendWSent = Utils.TickCount;
             ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W, false);
         }
 
@@ -51,11 +51,11 @@ namespace TwistedFate
             if (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name == "PickACard" && Status == SelectStatus.Ready)
             {
                 Select = card;
-                if (Environment.TickCount - LastWSent > 200)
+                if (Utils.TickCount - LastWSent > 200)
                 {
                     if (ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W, ObjectManager.Player))
                     {
-                        LastWSent = Environment.TickCount;
+                        LastWSent = Utils.TickCount;
                     }
                 }
             }
@@ -68,7 +68,7 @@ namespace TwistedFate
 
             if ((wState == SpellState.Ready &&
                  wName == "PickACard" &&
-                 (Status != SelectStatus.Selecting || Environment.TickCount - LastWSent > 500)) ||
+                 (Status != SelectStatus.Selecting || Utils.TickCount - LastWSent > 500)) ||
                 ObjectManager.Player.IsDead)
             {
                 Status = SelectStatus.Ready;

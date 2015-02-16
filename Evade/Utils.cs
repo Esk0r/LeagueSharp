@@ -81,7 +81,7 @@ namespace Evade
                 }
             }
 
-            return (result == 0f) ? -1 : (int) (Environment.TickCount + (result - Game.Time) * 1000);
+            return (result == 0f) ? -1 : (int) (Utils.TickCount + (result - Game.Time) * 1000);
         }
 
 

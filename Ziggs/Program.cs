@@ -243,7 +243,7 @@ namespace Ziggs
                                         .Extend(prediction.UnitPosition.To2D(), W.Range)
                                         .To3D();
                                 W.Cast(cp);
-                                UseSecondWT = Environment.TickCount;
+                                UseSecondWT = Utils.TickCount;
                             }
                         }
                     }
@@ -279,7 +279,7 @@ namespace Ziggs
                                 ally.Distance(target) < 700)
                             {
                                 alliesarround++;
-                                if (Environment.TickCount - ally.LastCastedSpellT() < 1500)
+                                if (Utils.TickCount - ally.LastCastedSpellT() < 1500)
                                 {
                                     n++;
                                 }
@@ -315,7 +315,7 @@ namespace Ziggs
                 }
             }
 
-            if (Environment.TickCount - UseSecondWT < 500 &&
+            if (Utils.TickCount - UseSecondWT < 500 &&
                 ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name == "ziggswtoggle")
             {
                 W.Cast(ObjectManager.Player.ServerPosition, true);
@@ -336,13 +336,13 @@ namespace Ziggs
 
             //W to mouse
             var castToMouse = Config.Item("WToMouse").GetValue<KeyBind>().Active && !Keyboard.IsKeyDown(Key.LeftCtrl);
-            if (castToMouse || Environment.TickCount - LastWToMouseT < 400)
+            if (castToMouse || Utils.TickCount - LastWToMouseT < 400)
             {
                 var pos = ObjectManager.Player.ServerPosition.To2D().Extend(Game.CursorPos.To2D(), -150).To3D();
                 W.Cast(pos, true);
                 if (castToMouse)
                 {
-                    LastWToMouseT = Environment.TickCount;
+                    LastWToMouseT = Utils.TickCount;
                 }
             }
 
@@ -361,7 +361,7 @@ namespace Ziggs
                     select pos + Math.Min(200, Math.Max(50, enemy.Distance(ObjectManager.Player) / 2)) * direction)
                 {
                     W.Cast(pos.To3D(), true);
-                    UseSecondWT = Environment.TickCount;
+                    UseSecondWT = Utils.TickCount;
                 }
             }
         }

@@ -312,7 +312,7 @@ namespace Velkoz
             if (useR && rTarget != null && R.IsReady() &&
                 Player.GetSpellDamage(rTarget, SpellSlot.R) / 10 * (Player.Distance(rTarget) < (R.Range - 500) ? 10 : 6) > rTarget.Health &&
                 (LastCastedSpell.LastCastPacketSent.Slot != SpellSlot.R ||
-                 Environment.TickCount - LastCastedSpell.LastCastPacketSent.Tick > 350))
+                 Utils.TickCount - LastCastedSpell.LastCastPacketSent.Tick > 350))
             {
                 R.Cast(rTarget);
             }
@@ -416,7 +416,7 @@ namespace Velkoz
 
 
             if (QMissile != null && QMissile.IsValid && Q.Instance.Name == "velkozqsplitactivate" &&
-                Environment.TickCount - Q.LastCastAttemptT < 2000)
+                Utils.TickCount - Q.LastCastAttemptT < 2000)
             {
                 var qMissilePosition = QMissile.Position.To2D();
                 var perpendicular = (QMissile.EndPosition - QMissile.StartPosition).To2D().Normalized().Perpendicular();

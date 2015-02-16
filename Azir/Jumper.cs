@@ -26,13 +26,13 @@ namespace Azir
         {
             if(sender.IsMe)
             {
-                if(args.SData.Name == "AzirE" && Environment.TickCount - CastQT < 500)
+                if(args.SData.Name == "AzirE" && Utils.TickCount - CastQT < 500)
                 {
                     Program.Q.Cast(CastQLocation, true);
                     CastQT = 0;
                 }
 
-                if (args.SData.Name == "AzirQ" && Environment.TickCount - CastET < 500)
+                if (args.SData.Name == "AzirQ" && Utils.TickCount - CastET < 500)
                 {
                     Program.E.Cast(CastELocation, true);
                     CastET = 0;
@@ -56,13 +56,13 @@ namespace Azir
                         if(Utility.IsWall(extended2))
                         {
                             Utility.DelayAction.Add(250, () => Program.Q.Cast(extended, true));
-                            CastET = Environment.TickCount + 250;
+                            CastET = Utils.TickCount + 250;
                             CastELocation = extended;
                         }
                         else
                         {
                             Utility.DelayAction.Add(250, () => Program.E.Cast(extended, true));
-                            CastQT = Environment.TickCount + 250;
+                            CastQT = Utils.TickCount + 250;
                             CastQLocation = extended;
                         }
                     }
@@ -79,7 +79,7 @@ namespace Azir
                     if(closestSoldier.Distance(extended, true) < ObjectManager.Player.Distance(extended, true) && ObjectManager.Player.Distance(closestSoldier, true) > Program.W.RangeSqr)
                     {
                         Utility.DelayAction.Add(250, () => Program.E.Cast(extended, true));
-                        CastQT = Environment.TickCount + 250;
+                        CastQT = Utils.TickCount + 250;
                         CastQLocation = extended;
                     }
                     else

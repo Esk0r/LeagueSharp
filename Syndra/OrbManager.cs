@@ -49,13 +49,13 @@ namespace Syndra
         {
             if (sender.IsMe && args.SData.Name == "SyndraQ")
             {
-                tmpQOrbT = Environment.TickCount;
+                tmpQOrbT = Utils.TickCount;
                 tmpQOrbPos = args.End;
             }
 
             if (sender.IsMe && WObject(true) != null && (args.SData.Name == "SyndraW" || args.SData.Name == "syndraw2"))
             {
-                tmpWOrbT = Environment.TickCount + 250;
+                tmpWOrbT = Utils.TickCount + 250;
                 tmpWOrbPos = args.End;
             }
         }
@@ -102,12 +102,12 @@ namespace Syndra
                     result.Add(obj.ServerPosition);
             }
 
-            if (Environment.TickCount - tmpQOrbT < 400)
+            if (Utils.TickCount - tmpQOrbT < 400)
             {
                 result.Add(tmpQOrbPos);
             }
 
-            if (Environment.TickCount - tmpWOrbT < 400 && Environment.TickCount - tmpWOrbT > 0)
+            if (Utils.TickCount - tmpWOrbT < 400 && Utils.TickCount - tmpWOrbT > 0)
             {
                 result.Add(tmpWOrbPos);
             }

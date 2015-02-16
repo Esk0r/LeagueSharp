@@ -32,8 +32,8 @@ namespace TwistedFate
 
         private static void Ping(Vector2 position)
         {
-            if (Environment.TickCount - LastPingT < 30 * 1000) return;
-            LastPingT = Environment.TickCount;
+            if (Utils.TickCount - LastPingT < 30 * 1000) return;
+            LastPingT = Utils.TickCount;
             PingLocation = position;
             SimplePing();
             Utility.DelayAction.Add(150, SimplePing);
@@ -122,7 +122,7 @@ namespace TwistedFate
         private static void OrbwalkingOnBeforeAttack(Orbwalking.BeforeAttackEventArgs args)
         {
             if(args.Target is Obj_AI_Hero)
-                args.Process = CardSelector.Status != SelectStatus.Selecting && Environment.TickCount - CardSelector.LastWSent > 300;
+                args.Process = CardSelector.Status != SelectStatus.Selecting && Utils.TickCount - CardSelector.LastWSent > 300;
         }
 
         static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
@@ -278,10 +278,10 @@ namespace TwistedFate
 
             if (Config.Item("CastQ").GetValue<KeyBind>().Active)
             {
-                CastQTick = Environment.TickCount;
+                CastQTick = Utils.TickCount;
             }
 
-            if (Environment.TickCount - CastQTick < 500)
+            if (Utils.TickCount - CastQTick < 500)
             {
                 var qTarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Magical);
                 if (qTarget != null)

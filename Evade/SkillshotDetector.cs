@@ -55,7 +55,7 @@ namespace Evade
             if (args.Msg == (uint)WindowsMessages.WM_KEYUP)
             {
                 TriggerOnDetectSkillshot(
-                    DetectionType.ProcessSpell, SpellDatabase.GetByName("TestSkillShot"), Environment.TickCount,
+                    DetectionType.ProcessSpell, SpellDatabase.GetByName("TestSkillShot"), Utils.TickCount,
                     ObjectManager.Player.ServerPosition.To2D(), Game.CursorPos.To2D(), ObjectManager.Player);
             }
         }
@@ -99,7 +99,7 @@ namespace Evade
 
 #if DEBUG
             Console.WriteLine(
-                Environment.TickCount + " Projectile Created: " + missile.SData.Name + " distance: " +
+                Utils.TickCount + " Projectile Created: " + missile.SData.Name + " distance: " +
                 missile.StartPosition.Distance(missile.EndPosition) + "Radius: " +
                 missile.SData.CastRadiusSecondary[0] + " Speed: " + missile.SData.MissileSpeed);
 
@@ -129,7 +129,7 @@ namespace Evade
                          Math.Min(spellData.ExtraRange, spellData.Range - endPos.Distance(unitPosition)) * direction;
             }
 
-            var castTime = Environment.TickCount - Game.Ping / 2 - (spellData.MissileDelayed ? 0 : spellData.Delay) -
+            var castTime = Utils.TickCount - Game.Ping / 2 - (spellData.MissileDelayed ? 0 : spellData.Delay) -
                            (int)(1000 * missilePosition.Distance(unitPosition) / spellData.MissileSpeed);
 
             //Trigger the skillshot detection callbacks.
@@ -224,8 +224,8 @@ namespace Evade
 
             if (Config.PrintSpellData && sender is Obj_AI_Hero)
             {
-                Game.PrintChat(Environment.TickCount + " ProcessSpellCast: " + args.SData.Name);
-                Console.WriteLine(Environment.TickCount + " ProcessSpellCast: " + args.SData.Name);
+                Game.PrintChat(Utils.TickCount + " ProcessSpellCast: " + args.SData.Name);
+                Console.WriteLine(Utils.TickCount + " ProcessSpellCast: " + args.SData.Name);
             }
 
             if (args.SData.Name == "dravenrdoublecast")
@@ -274,7 +274,7 @@ namespace Evade
                         var start = obj.Position.To2D();
                         var end = start + spellData.Range * (args.End.To2D() - obj.Position.To2D()).Normalized();
                         TriggerOnDetectSkillshot(
-                            DetectionType.ProcessSpell, spellData, Environment.TickCount - Game.Ping / 2, start, end,
+                            DetectionType.ProcessSpell, spellData, Utils.TickCount - Game.Ping / 2, start, end,
                             sender);
                     }
                 }
@@ -309,7 +309,7 @@ namespace Evade
 
             //Trigger the skillshot detection callbacks.
             TriggerOnDetectSkillshot(
-                DetectionType.ProcessSpell, spellData, Environment.TickCount - Game.Ping / 2, startPos, endPos, sender);
+                DetectionType.ProcessSpell, spellData, Utils.TickCount - Game.Ping / 2, startPos, endPos, sender);
         }
 
         /// <summary>
@@ -357,7 +357,7 @@ namespace Evade
                 {
                     return;
                 }
-                var castTime = Environment.TickCount - Game.Ping / 2 - spellData.Delay -
+                var castTime = Utils.TickCount - Game.Ping / 2 - spellData.Delay -
                                (int)
                                    (1000 * missilePosition.SwitchYZ().To2D().Distance(unitPosition.SwitchYZ()) /
                                     spellData.MissileSpeed);

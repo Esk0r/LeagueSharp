@@ -45,7 +45,7 @@ namespace Marksman
             if (!sender.IsMe || args.SData.Name.ToLower().Contains("attack"))
                 return;
 
-            LastSpellTick = Environment.TickCount;
+            LastSpellTick = Utils.TickCount;
         }
 
         public static Obj_AI_Hero EnemyWStackCount(int buffCount)

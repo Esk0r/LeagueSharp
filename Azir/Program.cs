@@ -261,7 +261,7 @@ namespace Azir
             var useQ = Menu.SubMenu("Combo").Item("UseQC").GetValue<bool>();
             var useW = Menu.SubMenu("Combo").Item("UseWC").GetValue<bool>();
             var useE = Menu.SubMenu("Combo").Item("UseEC").GetValue<bool>();
-            var useR = (Environment.TickCount - _allinT < 4000) && Menu.SubMenu("Combo").Item("UseRC").GetValue<bool>();
+            var useR = (Utils.TickCount - _allinT < 4000) && Menu.SubMenu("Combo").Item("UseRC").GetValue<bool>();
             
             var qTarget = TargetSelector.GetTarget(Q.Range + 200, TargetSelector.DamageType.Magical);
             if (qTarget == null)
@@ -284,7 +284,7 @@ namespace Azir
                 W.Cast(p);
             }
 
-            if (useE && ((Environment.TickCount - _allinT) < 4000 || (HeroManager.Enemies.Count(e => e.IsValidTarget(1000)) <= 2 && GetComboDamage(qTarget) > qTarget.Health)) && E.IsReady())
+            if (useE && ((Utils.TickCount - _allinT) < 4000 || (HeroManager.Enemies.Count(e => e.IsValidTarget(1000)) <= 2 && GetComboDamage(qTarget) > qTarget.Health)) && E.IsReady())
             {
                 foreach (var soldier in SoldiersManager.AllSoldiers2.Where(s => Player.Distance(s, true) < E.RangeSqr))
                 {
@@ -322,7 +322,7 @@ namespace Azir
 
             if (Menu.SubMenu("Combo").Item("AllInKEK").GetValue<KeyBind>().Active)
             {
-                _allinT = Environment.TickCount;
+                _allinT = Utils.TickCount;
             }
 
             if (Menu.SubMenu("Harass").Item("HarassActive").GetValue<KeyBind>().Active && Player.ManaPercentage() > Menu.SubMenu("Harass").Item("HarassMinMana").GetValue<Slider>().Value)
