@@ -27,7 +27,7 @@ namespace Marksman
 
         public class VayneData
         {
-            public static int GetWMarkedCount
+            public static int GetSilverBuffMarkedCount
             {
                 get
                 {
@@ -51,7 +51,7 @@ namespace Marksman
                                 enemy =>
                                     !enemy.IsDead &&
                                     enemy.IsValidTarget(
-                                        (Q.IsReady() ? Q.Range : 1) +
+                                        (Q.IsReady() ? Q.Range : 0) +
                                         Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)))
                             .FirstOrDefault(
                                 enemy => enemy.Buffs.Any(buff => buff.Name == "vaynesilvereddebuff" && buff.Count > 0));
@@ -75,22 +75,26 @@ namespace Marksman
         {
             if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100))
             {
-                var silverBuffMarkedEnemy = VayneData.GetSilverBuffMarkedEnemy;
-                if (silverBuffMarkedEnemy != null)
+                if (GetValue<bool>("FocusW"))
                 {
-                    TargetSelector.SetTarget(silverBuffMarkedEnemy);
-                }
-                else
-                {
-                    var attackRange = Orbwalking.GetRealAutoAttackRange(ObjectManager.Player);
-                    TargetSelector.SetTarget(TargetSelector.GetTarget(attackRange, TargetSelector.DamageType.Physical));
+                    var silverBuffMarkedEnemy = VayneData.GetSilverBuffMarkedEnemy;
+                    if (silverBuffMarkedEnemy != null)
+                    {
+                        TargetSelector.SetTarget(silverBuffMarkedEnemy);
+                    }
+                    else
+                    {
+                        var attackRange = Orbwalking.GetRealAutoAttackRange(ObjectManager.Player);
+                        TargetSelector.SetTarget(
+                            TargetSelector.GetTarget(attackRange, TargetSelector.DamageType.Physical));
+                    }
                 }
 
                 var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
 
                 if (Q.IsReady() && GetValue<bool>("CompleteSilverBuff"))
                 {
-                    if (VayneData.GetSilverBuffMarkedEnemy != null && VayneData.GetWMarkedCount == 2)
+                    if (VayneData.GetSilverBuffMarkedEnemy != null && VayneData.GetSilverBuffMarkedCount == 2)
                     {
                         Q.Cast(Game.CursorPos);
                     }
@@ -152,6 +156,7 @@ namespace Marksman
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
+            config.AddItem(new MenuItem("FocusW" + Id, "Force Focus Marked Enemy").SetValue(true));
             return true;
         }
 
@@ -164,9 +169,7 @@ namespace Marksman
 
         public override bool MiscMenu(Menu config)
         {
-            config.AddItem(
-                new MenuItem("UseET" + Id, "Use E (Toggle)").SetValue(
-                    new KeyBind("T".ToCharArray()[0], KeyBindType.Toggle)));
+            config.AddItem(new MenuItem("UseET" + Id, "Use E (Toggle)").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Toggle)));
             config.AddItem(new MenuItem("UseEInterrupt" + Id, "Use E To Interrupt").SetValue(true));
             config.AddItem(new MenuItem("PushDistance" + Id, "E Push Distance").SetValue(new Slider(425, 475, 300)));
             config.AddItem(new MenuItem("CompleteSilverBuff" + Id, "Complete Silver Buff With Q").SetValue(true));
@@ -201,7 +204,6 @@ namespace Marksman
             {
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, menuItem.Color, 1);
             }
-
         }
     }
 }
