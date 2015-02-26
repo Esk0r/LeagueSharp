@@ -3065,6 +3065,25 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Veigar",
+                    SpellName = "VeigarBalefulStrike",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 250,
+                    Range = 850,
+                    Radius = 70,
+                    MissileSpeed = 1750,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 5,
+                    IsDangerous = true,
+                    MissileSpellName = "VeigarBalefulStrikeMis",
+                    CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Veigar",
                     SpellName = "VeigarDarkMatter",
                     Slot = SpellSlot.W,
                     Type = SkillShotType.SkillshotCircle,
@@ -3086,7 +3105,7 @@ namespace Evade
                     SpellName = "VeigarEventHorizon",
                     Slot = SpellSlot.E,
                     Type = SkillShotType.SkillshotRing,
-                    Delay = 325,
+                    Delay = 750,
                     Range = 700,
                     Radius = 80,
                     MissileSpeed = int.MaxValue,
@@ -3096,7 +3115,7 @@ namespace Evade
                     IsDangerous = true,
                     DontAddExtraDuration = true,
                     RingRadius = 350,
-                    ExtraDuration = 3000,
+                    ExtraDuration = 3300,
                     DontCross = true,
                     MissileSpellName = "",
                 });
