@@ -3074,8 +3074,8 @@ namespace Evade
                     MissileSpeed = 1750,
                     FixedRange = true,
                     AddHitbox = true,
-                    DangerValue = 5,
-                    IsDangerous = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
                     MissileSpellName = "VeigarBalefulStrikeMis",
                     CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
                 });
@@ -3562,6 +3562,29 @@ namespace Evade
                 });
 
             #endregion Ziggs
+
+            #region Zilean
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Zilean",
+                    SpellName = "ZileanQ",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotCircle,
+                    Delay = 300,
+                    Range = 900,
+                    Radius = 210,
+                    MissileSpeed = 2000,
+                    FixedRange = false,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "ZileanQMissile",
+                    CollisionObjects = new[] { CollisionObjectTypes.YasuoWall }
+                });
+
+            #endregion Zilean
 
             #region Zyra
 
