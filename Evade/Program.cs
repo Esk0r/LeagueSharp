@@ -160,7 +160,7 @@ namespace Evade
                     {
                         Console.WriteLine(
                              "Slot  " + spell.Slot + " " + spell.SData.Name + " w:" + spell.SData.LineWidth + " s:" + spell.SData.MissileSpeed + " r: " +
-                            spell.SData.CastRange[0]);
+                            spell.SData.CastRangeArray[0]);
                     }
                 }
                 Console.WriteLine(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name);
