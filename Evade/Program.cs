@@ -158,9 +158,9 @@ namespace Evade
                 {
                     foreach (var spell in hero.Spellbook.Spells)
                     {
-                        Console.WriteLine(
+                 /*       Console.WriteLine(
                              "Slot  " + spell.Slot + " " + spell.SData.Name + " w:" + spell.SData.LineWidth + " s:" + spell.SData.MissileSpeed + " r: " +
-                            spell.SData.CastRangeArray[0]);
+                            spell.SData.CastRangeArray[0]);*/
                     }
                 }
                 Console.WriteLine(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name);
