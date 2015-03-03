@@ -98,10 +98,10 @@ namespace Evade
 
 
 #if DEBUG
-            Console.WriteLine(
+   /*         Console.WriteLine(
                 Utils.TickCount + " Projectile Created: " + missile.SData.Name + " distance: " +
                 missile.StartPosition.Distance(missile.EndPosition) + "Radius: " +
-                missile.SData.CastRadiusSecondaryArray[0] + " Speed: " + missile.SData.MissileSpeed);
+                missile.SData.CastRadiusSecondaryArray[0] + " Speed: " + missile.SData.MissileSpeed); */
 
 #endif
 
