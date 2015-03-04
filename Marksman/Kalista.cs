@@ -8,7 +8,7 @@ using LeagueSharp.Common;
 using System.Collections.Generic;
 using System.Linq;
 using SharpDX;
-using Color = System.Drawing.Color;
+using Color = System.Drawing.Color;M
 
 #endregion
 
@@ -383,24 +383,6 @@ namespace Marksman
 
             switch (Game.MapId)
             {
-                case (GameMapId) 11:
-                    var pNewMap0 = new Vector3(4985.81f, 2818.019f, 51.12f);
-                    var pNewMap1 = new Vector3(4652f, 2756f, 95.74805f);
-                    jumpPos.Add(pNewMap0, pNewMap1);
-
-                    var pNewMap2 = new Vector3(6020.855f, 5568.958f, 51.78101f);
-                    var pNewMap3 = new Vector3(6106.917f, 5249.015f, 48.52844f);
-                    jumpPos.Add(pNewMap2, pNewMap3);
-
-                    var pNewMap4 = new Vector3(4724f, 5608f, 50.23453f);
-                    var pNewMap5 = new Vector3(4644f, 5882f, 51.61236f);
-                    jumpPos.Add(pNewMap4, pNewMap5);
-
-                    var pNewMap6 = new Vector3(9356f, 4590f, -71.2406f);
-                    var pNewMap7 = new Vector3(9076f, 4580f, 52.1311f);
-                    jumpPos.Add(pNewMap6, pNewMap7);
-                    break;
-
                 case GameMapId.SummonersRift: /* thnx to DZ191 for this list */
                     var pos0 = new Vector3(6393.7299804688f, 8341.7451171875f, -63.87451171875f);
                     var pos1 = new Vector3(6612.1625976563f, 8574.7412109375f, 56.018413543701f);
