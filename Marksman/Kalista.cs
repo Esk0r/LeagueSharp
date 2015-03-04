@@ -8,7 +8,7 @@ using LeagueSharp.Common;
 using System.Collections.Generic;
 using System.Linq;
 using SharpDX;
-using Color = System.Drawing.Color;M
+using Color = System.Drawing.Color;
 
 #endregion
 
