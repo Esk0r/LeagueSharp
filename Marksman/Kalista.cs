@@ -385,7 +385,7 @@ namespace Marksman
 
             switch (Game.MapId)
             {
-                case (GameMapId) 11:
+                case GameMapId.TwistedTreeline:
                     var pNewMap0 = new Vector3(4985.81f, 2818.019f, 51.12f);
                     var pNewMap1 = new Vector3(4652f, 2756f, 95.74805f);
                     jumpPos.Add(pNewMap0, pNewMap1);
