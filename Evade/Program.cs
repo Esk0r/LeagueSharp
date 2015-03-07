@@ -88,7 +88,7 @@ namespace Evade
                 Game_OnGameStart(new EventArgs());
             }
            
-            Game.OnGameStart += Game_OnGameStart;
+            Game.OnStart += Game_OnGameStart;
         }
 
         private static bool IsSpellShielded(Obj_AI_Hero unit)
@@ -128,7 +128,7 @@ namespace Evade
         private static void Game_OnGameStart(EventArgs args)
         {
             //Add the game events.
-            Game.OnGameUpdate += Game_OnOnGameUpdate;
+            Game.OnUpdate += Game_OnOnGameUpdate;
             Obj_AI_Hero.OnIssueOrder += ObjAiHeroOnOnIssueOrder;
             Spellbook.OnCastSpell += Spellbook_OnCastSpell;
             //Set up the OnDetectSkillshot Event.

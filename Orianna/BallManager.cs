@@ -13,7 +13,7 @@ namespace Orianna
 
         static BallManager()
         {
-            Game.OnGameUpdate += Game_OnGameUpdate;
+            Game.OnUpdate += Game_OnGameUpdate;
             Obj_AI_Hero.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
             BallPosition = ObjectManager.Player.Position;
         }

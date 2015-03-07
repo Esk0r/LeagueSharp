@@ -216,7 +216,7 @@ namespace Orianna
             Config.AddToMainMenu();
 
             Obj_AI_Hero.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
-            Game.OnGameUpdate += Game_OnGameUpdate;
+            Game.OnUpdate += Game_OnGameUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
             Spellbook.OnCastSpell += Spellbook_OnCastSpell;
             Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;

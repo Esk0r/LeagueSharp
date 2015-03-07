@@ -35,7 +35,7 @@ namespace TwistedFate
         static CardSelector()
         {
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
-            Game.OnGameUpdate += Game_OnGameUpdate;
+            Game.OnUpdate += Game_OnGameUpdate;
         }
 
         public static SelectStatus Status { get; set; }
