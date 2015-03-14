@@ -326,6 +326,48 @@ namespace Evade
 
             #endregion Ashe
 
+            #region Bard
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Bard",
+                    SpellName = "BardQ",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 250,
+                    Range = 950,
+                    Radius = 60,
+                    MissileSpeed = 1600,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 3,
+                    IsDangerous = true,
+                    MissileSpellName = "BardQMissile",
+                    CanBeRemoved = true,
+                    CollisionObjects = new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.YasuoWall }
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Bard",
+                    SpellName = "BardR",
+                    Slot = SpellSlot.R,
+                    Type = SkillShotType.SkillshotCircle,
+                    Delay = 500,
+                    Range = 3400,
+                    Radius = 500,
+                    MissileSpeed = 2100,
+                    FixedRange = false,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "BardR",
+                });
+
+            #endregion
+
             #region Blitzcrank
 
             Spells.Add(
