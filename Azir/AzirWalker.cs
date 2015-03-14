@@ -10,7 +10,7 @@ namespace Azir
 {
     class AzirWalker : Orbwalking.Orbwalker
     {
-        private const int _soldierAARange = 200;
+        private const int _soldierAARange = 250;
 
         public AzirWalker(Menu attachToMenu) : base(attachToMenu)
         {
@@ -138,7 +138,7 @@ namespace Azir
                             if(soldier.Distance(minion, true) < soldierAArange)
                             {
                                 var p1 = minion.Position.To2D();
-                                var p2 = soldier.Position.To2D().Extend(minion.Position.To2D(), 400);
+                                var p2 = soldier.Position.To2D().Extend(minion.Position.To2D(), 375);
                                 foreach (var enemyPosition in validEnemiesPosition)
                                 {
                                     if (enemyPosition.Distance(p1, p2, true, true) < AAWidthSqr)
