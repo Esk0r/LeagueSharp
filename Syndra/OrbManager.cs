@@ -36,9 +36,6 @@ namespace Syndra
         public static int tmpWOrbT;
         public static Vector3 tmpWOrbPos = new Vector3();
 
-        public static bool ActiveRecv = false;
-        public static Byte Activebyte = 0x00;
-
         static OrbManager()
         {
             Game.OnProcessPacket += Game_OnGameProcessPacket;
@@ -70,7 +67,7 @@ namespace Syndra
 
         private static void Game_OnGameProcessPacket(GamePacketEventArgs args)
         {
-            if (args.PacketData[0] == 0x1A)
+            if (args.PacketData[0] == 0x32)
             {
                 var packet = new GamePacket(args.PacketData);
                 packet.Position = 2;
