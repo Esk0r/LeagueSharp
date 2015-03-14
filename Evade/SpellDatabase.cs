@@ -357,7 +357,7 @@ namespace Evade
                     Type = SkillShotType.SkillshotCircle,
                     Delay = 500,
                     Range = 3400,
-                    Radius = 500,
+                    Radius = 350,
                     MissileSpeed = 2100,
                     FixedRange = false,
                     AddHitbox = true,
