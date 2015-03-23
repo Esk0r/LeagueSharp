@@ -26,7 +26,6 @@ using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
-using SharpDX.Design;
 using Color = System.Drawing.Color;
 
 #endregion
