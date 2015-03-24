@@ -3697,7 +3697,7 @@ namespace Evade
                     SpellName = "zyrapassivedeathmanager",
                     Slot = SpellSlot.E,
                     Type = SkillShotType.SkillshotMissileLine,
-                    Delay = 700,
+                    Delay = 500,
                     Range = 1474,
                     Radius = 70,
                     MissileSpeed = 2000,
