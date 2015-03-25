@@ -132,13 +132,13 @@ namespace Marksman
 
             if (GetValue<KeyBind>("CastR").Active && R.IsReady())
             {
-                var target = TargetSelector.GetTarget(1500, TargetSelector.DamageType.Physical);
-
-                if (target.IsValidTarget())
+                var t = TargetSelector.GetTarget(1500, TargetSelector.DamageType.Physical);
+                if (t.IsValidTarget())
                 {
-                    if (ObjectManager.Player.GetSpellDamage(target, SpellSlot.R) > target.Health)
+                    if (ObjectManager.Player.GetSpellDamage(t, SpellSlot.R) > t.Health)
                     {
-                        R.Cast(target);
+                        //R.Cast(target);
+                         R.CastIfHitchanceEquals(t, HitChance.High, false);
                     }
                 }
             }
@@ -230,7 +230,8 @@ namespace Marksman
                     {
                         if (ObjectManager.Player.GetSpellDamage(t, SpellSlot.R, 1) > t.Health)
                         {
-                            if (R.Cast(t) == Spell.CastStates.SuccessfullyCasted) { }
+                            R.CastIfHitchanceEquals(t, HitChance.High, false);
+                            //if (R.Cast(t) == Spell.CastStates.SuccessfullyCasted) { }
                         }
                     }
                     else if (distance > minR)
@@ -249,7 +250,8 @@ namespace Marksman
                                     if (rDamage > t.Health /*&& !ObjectManager.Player.IsAutoAttacking &&
                                         !ObjectManager.Player.IsChanneling*/)
                                     {
-                                        if (R.Cast(t) == Spell.CastStates.SuccessfullyCasted) { }
+                                        R.CastIfHitchanceEquals(t, HitChance.High, false);
+                                        //if (R.Cast(t) == Spell.CastStates.SuccessfullyCasted) { }
                                     }
                                 }
                             }
@@ -264,7 +266,8 @@ namespace Marksman
                                     if (rDamage > t.Health /*&& !ObjectManager.Player.IsAutoAttacking &&
                                         !ObjectManager.Player.IsChanneling*/)
                                     {
-                                        if (R.Cast(t) == Spell.CastStates.SuccessfullyCasted) { }
+                                        R.CastIfHitchanceEquals(t, HitChance.High, false);
+                                        //if (R.Cast(t) == Spell.CastStates.SuccessfullyCasted) { }
                                     }
                                 }
                             }
