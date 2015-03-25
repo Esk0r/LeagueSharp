@@ -268,7 +268,7 @@ namespace Evade
                     SpellName = "InfernalGuardian",
                     Slot = SpellSlot.R,
                     Type = SkillShotType.SkillshotCircle,
-                    Delay = 250,
+                    Delay = 0,
                     Range = 600,
                     Radius = 251,
                     MissileSpeed = int.MaxValue,
