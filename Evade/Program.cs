@@ -496,6 +496,12 @@ namespace Evade
                 return;
             }
 
+            //Don't evade while casting R as sion
+            if (ObjectManager.Player.ChampionName == "Sion" && ObjectManager.Player.HasBuff("SionR"))
+            {
+                return;
+            }
+
             /**/
             if (EvadeToPoint.IsValid() && DetectedSkillshots.Count > 0)
             {
