@@ -72,7 +72,6 @@ namespace Orianna
             {"renektonsliceanddice", "Renekton"},
             {"rengarr", "Rengar"},
             {"reksaieburrowed", "RekSai"},
-            {"reksaiwburrowed", "RekSai"},
             {"summonerflash", "RekSai"},
             {"sejuaniarcticassault", "Sejuani"},
             {"shenshadowdash", "Shen"},
