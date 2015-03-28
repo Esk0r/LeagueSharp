@@ -233,7 +233,7 @@ namespace Marksman
             Config.AddToMainMenu();
 
             Drawing.OnDraw += Drawing_OnDraw;
-            Game.OnGameUpdate += Game_OnGameUpdate;
+            Game.OnUpdate += Game_OnGameUpdate;
             Orbwalking.AfterAttack += Orbwalking_AfterAttack;
             Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
             //Interrupter.OnPossibleToInterrupt += Interrupter_OnPosibleToInterrupt;

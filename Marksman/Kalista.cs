@@ -2,7 +2,6 @@
 
 using System;
 using System.IO;
-using System.Xml;
 using LeagueSharp;
 using LeagueSharp.Common;
 using System.Collections.Generic;
