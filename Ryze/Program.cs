@@ -189,7 +189,7 @@ namespace Ryze
                     }
                     else
                     {
-                        if (qCd > 1.25f)
+                        if (qCd > 1.25f || true)
                         {
                             if (W.IsReady())
                             {
