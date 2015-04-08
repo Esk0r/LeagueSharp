@@ -225,7 +225,7 @@ namespace Evade
             }
 
             //Add the skillshot to the detected skillshot list.
-            if (!alreadyAdded)
+            if (!alreadyAdded || skillshot.SpellData.DontCheckForDuplicates)
             {
                 //Multiple skillshots like twisted fate Q.
                 if (skillshot.DetectionType == DetectionType.ProcessSpell)

@@ -1957,6 +1957,44 @@ namespace Evade
                     MissileSpellName = "LucianQ",
                 });
 
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Lucian",
+                    SpellName = "LucianW",
+                    Slot = SpellSlot.W,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 250,
+                    Range = 1000,
+                    Radius = 55,
+                    MissileSpeed = 1600,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "lucianwmissile",
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Lucian",
+                    SpellName = "LucianRMis",
+                    Slot = SpellSlot.R,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 500,
+                    Range = 1400,
+                    Radius = 110,
+                    MissileSpeed = 2800,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "lucianrmissileoffhand",
+                    ExtraMissileNames = new[] { "lucianrmissile" },
+                    DontCheckForDuplicates = true,
+                });
+
             #endregion Lucian
 
             #region Lulu
