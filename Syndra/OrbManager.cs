@@ -67,7 +67,7 @@ namespace Syndra
 
         private static void Game_OnGameProcessPacket(GamePacketEventArgs args)
         {
-            if (args.PacketData[0] == 0x30)
+            if (args.PacketData[0] == 0x24)
             {
                 var packet = new GamePacket(args.PacketData);
                 packet.Position = 2;
