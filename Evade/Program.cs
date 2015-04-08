@@ -255,6 +255,11 @@ namespace Evade
                         skillshot.SpellData.MissileSpeed = 1600 + (int) skillshot.Unit.MoveSpeed;
                     }
 
+                    if (skillshot.SpellData.SpellName == "SionR")
+                    {
+                        skillshot.SpellData.MissileSpeed = (int)skillshot.Unit.MoveSpeed;
+                    }
+
                     if (skillshot.SpellData.Invert)
                     {
                         var newDirection = -(skillshot.End - skillshot.Start).Normalized();

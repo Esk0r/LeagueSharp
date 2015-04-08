@@ -95,6 +95,7 @@ namespace Evade
         public SpellData SpellData;
         public Vector2 Start;
         public int StartTick;
+        private int _helperTick;
 
         private bool _cachedValue;
         private int _cachedValueTick;
@@ -248,6 +249,35 @@ namespace Evade
                     End = Unit.ServerPosition.To2D();
                     Direction = (End - Start).Normalized();
                     UpdatePolygon();
+                }
+            }
+
+            if (SpellData.SpellName == "SionR")
+            {
+                if (_helperTick == 0)
+                {
+                    _helperTick = StartTick;
+                }
+
+                SpellData.MissileSpeed = (int)Unit.MoveSpeed;
+                if (Unit.IsValidTarget(float.MaxValue, false))
+                {
+                    if (!Unit.HasBuff("SionR") && Utils.TickCount - _helperTick > 600)
+                    {
+                        StartTick = 0;
+                    }
+                    else
+                    {
+                        StartTick = Utils.TickCount - SpellData.Delay;
+                        Start = Unit.ServerPosition.To2D();
+                        End = Unit.ServerPosition.To2D() + 1000 * Unit.Direction.To2D().Perpendicular();
+                        Direction = (End - Start).Normalized();
+                        UpdatePolygon();
+                    }
+                }
+                else
+                {
+                    StartTick = 0;
                 }
             }
         }
