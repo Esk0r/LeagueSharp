@@ -56,12 +56,25 @@ namespace Marksman
 
                 if (Q.IsReady() && useQ)
                 {
-                    Q.Cast(t);
+                    CastQ();
                 }
                 else if (W.IsReady() && useW)
                 {
                     W.Cast(t);
                 }
+            }
+        }
+        private static void CastQ()
+        {
+            var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
+
+            if (t.IsValidTarget() && Q.IsReady() &&
+                ObjectManager.Player.Distance(t.ServerPosition) <= Q.Range)
+            {
+                PredictionOutput Qpredict = Q.GetPrediction(t);
+                var hithere = Qpredict.CastPosition.Extend(ObjectManager.Player.Position, -140);
+                if (Qpredict.Hitchance >= HitChance.High)
+                    Q.Cast(hithere);
             }
         }
 
@@ -114,7 +127,7 @@ namespace Marksman
                 var useQt = (Program.Config.Item("DontQToggleHarass" + t.ChampionName) != null &&
                              Program.Config.Item("DontQToggleHarass" + t.ChampionName).GetValue<bool>() == false);
                 if (useQt)
-                    Q.Cast(t);
+                    CastQ();
             }
 
             if (W.IsReady() && Program.Config.Item("UseWTH").GetValue<KeyBind>().Active && ToggleActive)
@@ -140,7 +153,7 @@ namespace Marksman
                     {
                         t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                         if (t != null)
-                            Q.Cast(t);
+                            CastQ();
                     }
 
                     if (W.IsReady() && useW)
