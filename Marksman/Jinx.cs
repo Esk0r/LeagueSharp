@@ -53,6 +53,15 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
+            var t = TargetSelector.SelectedTarget;;
+            if (!t.IsValidTarget())
+                t = TargetSelector.GetTarget(1100, TargetSelector.DamageType.Physical);
+
+            if (t.IsValidTarget() && ObjectManager.Player.Distance(t)<1200)
+            {
+                Render.Circle.DrawCircle(t.Position, 150, Color.Goldenrod);
+            }
+
             Spell[] spellList = { W };
             var drawQbound = GetValue<Circle>("DrawQBound");
 
@@ -84,6 +93,30 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
+            if (Q.IsReady())
+            {
+                var activeQ = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.Q).Level*25 + 650;
+                var t = TargetSelector.GetTarget(activeQ, TargetSelector.DamageType.Physical);
+                
+                if (t.IsValidTarget() && ObjectManager.Player.Distance(t) > Orbwalking.GetRealAutoAttackRange(null) + 65)
+                {
+                    if (!FishBoneActive)
+                    {
+                        Q.Cast();
+                        Orbwalker.ForceTarget(t);
+                        return;
+                    }
+                }
+                if (!t.IsValidTarget() || ObjectManager.Player.Distance(t) < Orbwalking.GetRealAutoAttackRange(null) + 65)
+                {
+                    if (FishBoneActive)
+                    {
+                        Q.Cast();
+                        return;
+                    }
+                }
+            }
+
             var autoEi = GetValue<bool>("AutoEI");
             var autoEs = GetValue<bool>("AutoES");
             var autoEd = GetValue<bool>("AutoED");
@@ -130,6 +163,7 @@ namespace Marksman
                 }
             }
 
+
             if (GetValue<KeyBind>("CastR").Active && R.IsReady())
             {
                 var t = TargetSelector.GetTarget(1500, TargetSelector.DamageType.Physical);
@@ -142,13 +176,14 @@ namespace Marksman
                     }
                 }
             }
-
+            /*
             if (GetValue<bool>("SwapQ") && FishBoneActive &&
                 (LaneClearActive ||
                  (HarassActive && TargetSelector.GetTarget(675f + QAddRange, TargetSelector.DamageType.Physical) == null)))
             {
                 Q.Cast();
             }
+            */
 
             if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100))
             {
@@ -172,7 +207,7 @@ namespace Marksman
                     }
                 }
             }
-
+            /*
             if (useQ)
             {
                 foreach (var t in
@@ -215,6 +250,7 @@ namespace Marksman
                 }
             }
 
+            */
             if (useR && R.IsReady())
             {
                 var checkRok = GetValue<bool>("ROverKill");
