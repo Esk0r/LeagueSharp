@@ -53,11 +53,11 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            var t = TargetSelector.SelectedTarget;;
+            var t = TargetSelector.SelectedTarget; ;
             if (!t.IsValidTarget())
                 t = TargetSelector.GetTarget(1100, TargetSelector.DamageType.Physical);
 
-            if (t.IsValidTarget() && ObjectManager.Player.Distance(t)<1200)
+            if (t.IsValidTarget() && ObjectManager.Player.Distance(t) < 1200)
             {
                 Render.Circle.DrawCircle(t.Position, 150, Color.Goldenrod);
             }
@@ -93,11 +93,12 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            if (Q.IsReady() && GetValue<bool>("SwapDistance"))
+            if (Q.IsReady() && GetValue<bool>("SwapDistance") &&
+                Program.CClass.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
             {
                 var activeQ = ObjectManager.Player.Spellbook.GetSpell(SpellSlot.Q).Level*25 + 650;
                 var t = TargetSelector.GetTarget(activeQ, TargetSelector.DamageType.Physical);
-                
+
                 if (t.IsValidTarget() && ObjectManager.Player.Distance(t) > Orbwalking.GetRealAutoAttackRange(null) + 65)
                 {
                     if (!FishBoneActive)
@@ -107,7 +108,8 @@ namespace Marksman
                         return;
                     }
                 }
-                if (!t.IsValidTarget() || ObjectManager.Player.Distance(t) < Orbwalking.GetRealAutoAttackRange(null) + 65)
+                if (!t.IsValidTarget() ||
+                    ObjectManager.Player.Distance(t) < Orbwalking.GetRealAutoAttackRange(null) + 65)
                 {
                     if (FishBoneActive)
                     {
@@ -172,7 +174,7 @@ namespace Marksman
                     if (ObjectManager.Player.GetSpellDamage(t, SpellSlot.R) > t.Health)
                     {
                         //R.Cast(target);
-                         R.CastIfHitchanceEquals(t, HitChance.High, false);
+                        R.CastIfHitchanceEquals(t, HitChance.High, false);
                     }
                 }
             }
