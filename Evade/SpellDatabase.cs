@@ -2544,6 +2544,30 @@ namespace Evade
 
             #endregion Rumble
 
+            #region Ryze
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Ryze",
+                    SpellName = "RyzeQ",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 250,
+                    Range = 845,
+                    Radius = 50,
+                    MissileSpeed = 1700,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "RyzeQ",
+                    CanBeRemoved = true,
+                    CollisionObjects =
+                        new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.Minion, CollisionObjectTypes.YasuoWall },
+                });
+            #endregion
+
             #region Sejuani
 
             Spells.Add(
