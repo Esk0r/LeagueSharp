@@ -41,7 +41,9 @@ namespace Ryze
             if (Player.BaseSkinName != ChampionName) return;
 
             //Create the spells
-            Q = new Spell(SpellSlot.Q, 625);
+            Q = new Spell(SpellSlot.Q, 900);
+            Q.SetSkillshot(0.25f, 50f, 1700, true, SkillshotType.SkillshotLine);
+
             W = new Spell(SpellSlot.W, 600);
             E = new Spell(SpellSlot.E, 600);
 
@@ -170,42 +172,18 @@ namespace Ryze
 
         private static void Combo()
         {
-            var target = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Magical);
-            var qCd = Player.Spellbook.GetSpell(SpellSlot.Q).CooldownExpires - Game.Time;
+            var target = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Magical);
+            var qTarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Magical);
 
             if (target != null)
             {
-                if (Player.Distance(target) <= 600)
-                {
-                    if (Player.Distance(target) >= 575 && W.IsReady() && target.Path.Count() > 0 &&
-                        target.Path[0].Distance(Player.ServerPosition) >
-                        Player.Distance(target))
-                    {
-                        W.CastOnUnit(target);
-                    }
-                    else if (Q.IsReady())
-                    {
-                        Q.CastOnUnit(target);
-                    }
-                    else
-                    {
-                        if (qCd > 1.25f || true)
-                        {
-                            if (W.IsReady())
-                            {
-                                W.CastOnUnit(target);
-                            }
-                            else if (E.IsReady())
-                            {
-                                E.CastOnUnit(target);
-                            }
-                        }
-                    }
-                }
-                else if (Player.GetSpellDamage(target, SpellSlot.Q) > target.Health)
-                {
-                    Q.CastOnUnit(target);
-                }
+                W.CastOnUnit(target);
+                E.CastOnUnit(target);
+            }
+
+            if (qTarget != null)
+            {
+                Q.Cast(qTarget);
             }
         }
 
@@ -215,7 +193,7 @@ namespace Ryze
 
             if (target != null && Config.Item("UseQHarass").GetValue<bool>())
             {
-                Q.CastOnUnit(target);
+                Q.Cast(target);
             }
         }
 
@@ -236,10 +214,10 @@ namespace Ryze
                 {
                     if (minion.IsValidTarget() &&
                         HealthPrediction.GetHealthPrediction(minion,
-                            (int)(Player.Distance(minion) * 1000 / 1400)) <
+                            (int)(Player.Distance(minion) * 1000 / 1700)) <
                          Player.GetSpellDamage(minion, SpellSlot.Q))
                     {
-                        Q.CastOnUnit(minion);
+                        Q.Cast(minion);
                         return;
                     }
                 }
@@ -276,7 +254,7 @@ namespace Ryze
                 foreach (var minion in allMinions)
                 {
                     if (useQ)
-                        Q.CastOnUnit(minion);
+                        Q.Cast(minion.Position);
 
                     if (useW)
                         W.CastOnUnit(minion);
@@ -289,15 +267,25 @@ namespace Ryze
 
         private static void JungleFarm()
         {
-            var mobs = MinionManager.GetMinions(Player.ServerPosition, Q.Range,
+            var mobs = MinionManager.GetMinions(Player.ServerPosition, W.Range,
                 MinionTypes.All,
                 MinionTeam.Neutral, MinionOrderTypes.MaxHealth);
+
+            var QMobs = MinionManager.GetMinions(Player.ServerPosition, Q.Range,
+                MinionTypes.All,
+                MinionTeam.Neutral, MinionOrderTypes.MaxHealth);
+
             if (mobs.Count > 0)
             {
                 var mob = mobs[0];
-                Q.CastOnUnit(mob);
                 W.CastOnUnit(mob);
                 E.CastOnUnit(mob);
+            }
+
+            if (QMobs.Count > 0)
+            {
+                var mob = QMobs[0];
+                Q.Cast(mob.Position);
             }
         }
     }
