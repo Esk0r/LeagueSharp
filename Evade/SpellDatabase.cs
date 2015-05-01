@@ -3429,7 +3429,7 @@ namespace Evade
                     AddHitbox = true,
                     DangerValue = 2,
                     IsDangerous = false,
-                    MissileSpellName = "ViktorDeathRayFixMissile",
+                    MissileSpellName = "ViktorDeathRayMissile",
                     CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
                 });
 
