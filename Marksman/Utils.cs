@@ -20,6 +20,9 @@ namespace Marksman
 
         public static void PrintMessage(string message)
         {
+            Notifications.AddNotification("Marksman: " + message, 4000);
+            return;
+            
             Game.PrintChat("<font color='#70DBDB'>Marksman:</font> <font color='#FFFFFF'>" + message + "</font>");
 
             foreach (
