@@ -3430,6 +3430,7 @@ namespace Evade
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "ViktorDeathRayMissile",
+                    ExtraMissileNames = new[] { "viktoreaugmissile" },
                     CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
                 });
 
