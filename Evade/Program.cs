@@ -404,10 +404,8 @@ namespace Evade
 
                 if (skillshot.SpellData.SpellName == "OriannasQ")
                 {
-                    var endCSpellData = SpellDatabase.GetByName("OriannaQend");
-
                     var skillshotToAdd = new Skillshot(
-                        skillshot.DetectionType, endCSpellData, skillshot.StartTick, skillshot.Start, skillshot.End,
+                        skillshot.DetectionType, SpellDatabase.GetByName("OriannaQend"), skillshot.StartTick, skillshot.Start, skillshot.End,
                         skillshot.Unit);
 
                     DetectedSkillshots.Add(skillshotToAdd);
