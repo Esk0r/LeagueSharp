@@ -1338,6 +1338,23 @@ namespace Evade
                     ChampionName = "JarvanIV",
                     SpellName = "JarvanIVDragonStrike",
                     Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotLine,
+                    Delay = 600,
+                    Range = 770,
+                    Radius = 70,
+                    MissileSpeed = int.MaxValue,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 3,
+                    IsDangerous = false,
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "JarvanIV",
+                    SpellName = "JarvanIVEQ",
+                    Slot = SpellSlot.Q,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 250,
                     Range = 880,
@@ -1347,7 +1364,6 @@ namespace Evade
                     AddHitbox = true,
                     DangerValue = 3,
                     IsDangerous = true,
-                    MissileSpellName = "JarvanIVDragonStrike",
                 });
 
             Spells.Add(

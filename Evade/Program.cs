@@ -364,7 +364,7 @@ namespace Evade
 
                         foreach (var s in DetectedSkillshots)
                         {
-                            if (s.Unit.NetworkId == skillshot.Unit.NetworkId && s.SpellData.Slot == SpellSlot.E)
+                            if (s.Unit.NetworkId == skillshot.Unit.NetworkId && s.SpellData.Slot == SpellSlot.E && skillshot.IsDanger(s.End))
                             {
                                 endPos = s.End;
                             }
@@ -379,13 +379,12 @@ namespace Evade
                             }
                         }
 
-                        if (!endPos.IsValid())
+                        if (endPos.IsValid())
                         {
-                            return;
+                            skillshot = new Skillshot(DetectionType.ProcessSpell, SpellDatabase.GetByName("JarvanIVEQ"), Environment.TickCount, skillshot.Start, endPos, skillshot.Unit);
+                            skillshot.End = endPos + 200 * (endPos - skillshot.Start).Normalized();
+                            skillshot.Direction = (skillshot.End - skillshot.Start).Normalized();
                         }
-
-                        skillshot.End = endPos + 200 * (endPos - skillshot.Start).Normalized();
-                        skillshot.Direction = (skillshot.End - skillshot.Start).Normalized();
                     }
                 }
 
