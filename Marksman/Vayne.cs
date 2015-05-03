@@ -61,7 +61,7 @@ namespace Marksman
 
         public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
         {
-            if (E.IsReady() && gapcloser.Sender.IsValidTarget(E.Range))
+            if (GetValue<bool>("UseEGapcloser") && E.IsReady() && gapcloser.Sender.IsValidTarget(E.Range))
                 E.CastOnUnit(gapcloser.Sender);
         }
 
@@ -171,6 +171,7 @@ namespace Marksman
         {
             config.AddItem(new MenuItem("UseET" + Id, "Use E (Toggle)").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Toggle)));
             config.AddItem(new MenuItem("UseEInterrupt" + Id, "Use E To Interrupt").SetValue(true));
+            config.AddItem(new MenuItem("UseEGapcloser" + Id, "Use E To Gapcloser").SetValue(true));
             config.AddItem(new MenuItem("PushDistance" + Id, "E Push Distance").SetValue(new Slider(425, 475, 300)));
             config.AddItem(new MenuItem("CompleteSilverBuff" + Id, "Complete Silver Buff With Q").SetValue(true));
             return true;
