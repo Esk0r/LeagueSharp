@@ -311,6 +311,8 @@ namespace Xerath
             var wTarget = TargetSelector.GetTarget(W.Range + W.Width * 0.5f, TargetSelector.DamageType.Magical);
             var eTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Magical);
 
+            Hacks.DisableCastIndicator = Q.IsCharging && useQ;
+
             if (eTarget != null && useE && E.IsReady())
             {
                 if (Player.Distance(eTarget) < E.Range * 0.4f)
@@ -413,6 +415,8 @@ namespace Xerath
             var useWi = Config.Item("UseWFarm").GetValue<StringList>().SelectedIndex;
             var useQ = (laneClear && (useQi == 1 || useQi == 2)) || (!laneClear && (useQi == 0 || useQi == 2));
             var useW = (laneClear && (useWi == 1 || useWi == 2)) || (!laneClear && (useWi == 0 || useWi == 2));
+
+            Hacks.DisableCastIndicator = Q.IsCharging && useQi != 0;
 
             if (useW && W.IsReady())
             {
