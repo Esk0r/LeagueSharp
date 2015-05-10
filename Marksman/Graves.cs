@@ -86,7 +86,10 @@ namespace Marksman
             if (W.IsReady() && useW)
             {
                 var t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
-                if (t != null)
+                if (t.IsValidTarget(W.Range) &&
+                    (t.HasBuffOfType(BuffType.Stun) || t.HasBuffOfType(BuffType.Snare) ||
+                     t.HasBuffOfType(BuffType.Taunt) || t.HasBuff("zhonyasringshield") ||
+                     t.HasBuff("Recall")))
                     W.Cast(t, false, true);
             }
 
@@ -115,7 +118,13 @@ namespace Marksman
                     Q.Cast(t);
 
                 if (W.IsReady() && useW)
-                    W.Cast(t);
+                {
+                    if (t.IsValidTarget(W.Range) &&
+                        (t.HasBuffOfType(BuffType.Stun) || t.HasBuffOfType(BuffType.Snare) ||
+                         t.HasBuffOfType(BuffType.Taunt) || t.HasBuff("zhonyasringshield") ||
+                         t.HasBuff("Recall")))
+                        W.Cast(t);
+                }
             }
         }
 
