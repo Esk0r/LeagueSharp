@@ -33,7 +33,7 @@ namespace Evade
     {
         public static int TickCount
         {
-            get { return Environment.TickCount & int.MaxValue; }
+            get { return (int)(Game.Time * 1000f); }
         }
 
         public static List<Vector2> To2DList(this Vector3[] v)
