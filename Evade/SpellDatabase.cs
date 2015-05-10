@@ -1338,6 +1338,23 @@ namespace Evade
                     ChampionName = "JarvanIV",
                     SpellName = "JarvanIVDragonStrike",
                     Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotLine,
+                    Delay = 600,
+                    Range = 770,
+                    Radius = 70,
+                    MissileSpeed = int.MaxValue,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 3,
+                    IsDangerous = false,
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "JarvanIV",
+                    SpellName = "JarvanIVEQ",
+                    Slot = SpellSlot.Q,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 250,
                     Range = 880,
@@ -1347,7 +1364,6 @@ namespace Evade
                     AddHitbox = true,
                     DangerValue = 3,
                     IsDangerous = true,
-                    MissileSpellName = "JarvanIVDragonStrike",
                 });
 
             Spells.Add(
@@ -2544,6 +2560,51 @@ namespace Evade
 
             #endregion Rumble
 
+            #region Ryze
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Ryze",
+                    SpellName = "RyzeQ",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 250,
+                    Range = 900,
+                    Radius = 50,
+                    MissileSpeed = 1700,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "RyzeQ",
+                    CanBeRemoved = true,
+                    CollisionObjects =
+                        new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.Minion, CollisionObjectTypes.YasuoWall },
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Ryze",
+                    SpellName = "ryzerq",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 250,
+                    Range = 900,
+                    Radius = 50,
+                    MissileSpeed = 1700,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "ryzerq",
+                    CanBeRemoved = true,
+                    CollisionObjects =
+                        new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.Minion, CollisionObjectTypes.YasuoWall },
+                });
+            #endregion
+
             #region Sejuani
 
             Spells.Add(
@@ -3384,7 +3445,8 @@ namespace Evade
                     AddHitbox = true,
                     DangerValue = 2,
                     IsDangerous = false,
-                    MissileSpellName = "ViktorDeathRayFixMissile",
+                    MissileSpellName = "ViktorDeathRayMissile",
+                    ExtraMissileNames = new[] { "viktoreaugmissile" },
                     CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
                 });
 

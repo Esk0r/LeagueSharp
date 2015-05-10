@@ -366,35 +366,46 @@ namespace Evade
                         {
                             if (s.Unit.NetworkId == skillshot.Unit.NetworkId && s.SpellData.Slot == SpellSlot.E)
                             {
-                                endPos = s.End;
+                                var extendedE = new Skillshot(
+                                    skillshot.DetectionType, skillshot.SpellData, skillshot.StartTick, skillshot.Start,
+                                    skillshot.End + skillshot.Direction * 100, skillshot.Unit);
+                                if (!extendedE.IsSafe(s.End))
+                                {
+                                    endPos = s.End;
+                                }
+                                break;
                             }
                         }
 
                         foreach (var m in ObjectManager.Get<Obj_AI_Minion>())
                         {
-                            if (m.BaseSkinName == "jarvanivstandard" && m.Team == skillshot.Unit.Team &&
-                                skillshot.IsDanger(m.Position.To2D()))
+                            if (m.BaseSkinName == "jarvanivstandard" && m.Team == skillshot.Unit.Team)
                             {
-                                endPos = m.Position.To2D();
+                                
+                                var extendedE = new Skillshot(
+                                    skillshot.DetectionType, skillshot.SpellData, skillshot.StartTick, skillshot.Start,
+                                    skillshot.End + skillshot.Direction * 100, skillshot.Unit);
+                                if (!extendedE.IsSafe(m.Position.To2D()))
+                                {
+                                    endPos = m.Position.To2D();
+                                }
+                                break;
                             }
                         }
 
-                        if (!endPos.IsValid())
+                        if (endPos.IsValid())
                         {
-                            return;
+                            skillshot = new Skillshot(DetectionType.ProcessSpell, SpellDatabase.GetByName("JarvanIVEQ"), Environment.TickCount, skillshot.Start, endPos, skillshot.Unit);
+                            skillshot.End = endPos + 200 * (endPos - skillshot.Start).Normalized();
+                            skillshot.Direction = (skillshot.End - skillshot.Start).Normalized();
                         }
-
-                        skillshot.End = endPos + 200 * (endPos - skillshot.Start).Normalized();
-                        skillshot.Direction = (skillshot.End - skillshot.Start).Normalized();
                     }
                 }
 
                 if (skillshot.SpellData.SpellName == "OriannasQ")
                 {
-                    var endCSpellData = SpellDatabase.GetByName("OriannaQend");
-
                     var skillshotToAdd = new Skillshot(
-                        skillshot.DetectionType, endCSpellData, skillshot.StartTick, skillshot.Start, skillshot.End,
+                        skillshot.DetectionType, SpellDatabase.GetByName("OriannaQend"), skillshot.StartTick, skillshot.Start, skillshot.End,
                         skillshot.Unit);
 
                     DetectedSkillshots.Add(skillshotToAdd);

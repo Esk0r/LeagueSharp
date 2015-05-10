@@ -186,7 +186,7 @@ namespace Xerath
             Config.AddSubMenu(new Menu("Misc", "Misc"));
             Config.SubMenu("Misc").AddItem(new MenuItem("InterruptSpells", "Interrupt spells").SetValue(true));
             Config.SubMenu("Misc").AddItem(new MenuItem("AutoEGC", "AutoE gapclosers").SetValue(true));
-
+            Config.SubMenu("Misc").AddItem(new MenuItem("UseVHHC", "Use very high hit chance").SetValue(true));
 
             //Damage after combo:
             var dmgAfterComboItem = new MenuItem("DamageAfterR", "Draw damage after 3xR").SetValue(true);
@@ -235,7 +235,7 @@ namespace Xerath
         static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
         {
             if (!Config.Item("InterruptSpells").GetValue<bool>()) return;
-
+                  
             if (Player.Distance(sender) < E.Range)
             {
                 E.Cast(sender);
@@ -310,6 +310,8 @@ namespace Xerath
             var qTarget = TargetSelector.GetTarget(Q.ChargedMaxRange, TargetSelector.DamageType.Magical);
             var wTarget = TargetSelector.GetTarget(W.Range + W.Width * 0.5f, TargetSelector.DamageType.Magical);
             var eTarget = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Magical);
+
+            Hacks.DisableCastIndicator = Q.IsCharging && useQ;
 
             if (eTarget != null && useE && E.IsReady())
             {
@@ -414,6 +416,8 @@ namespace Xerath
             var useQ = (laneClear && (useQi == 1 || useQi == 2)) || (!laneClear && (useQi == 0 || useQi == 2));
             var useW = (laneClear && (useWi == 1 || useWi == 2)) || (!laneClear && (useWi == 0 || useWi == 2));
 
+            Hacks.DisableCastIndicator = Q.IsCharging && useQi != 0;
+
             if (useW && W.IsReady())
             {
                 var locW = W.GetCircularFarmLocation(rangedMinionsW, W.Width * 0.75f);
@@ -492,6 +496,20 @@ namespace Xerath
         {
             if (Player.IsDead) return;
 
+            if (Config.SubMenu("Misc").Item("UseVHHC").GetValue<bool>())
+            {
+                Q.MinHitChance = HitChance.VeryHigh;
+                W.MinHitChance = HitChance.VeryHigh;
+                E.MinHitChance = HitChance.VeryHigh;
+                R.MinHitChance = HitChance.VeryHigh;
+            }
+            else
+            {
+                Q.MinHitChance = HitChance.High;
+                W.MinHitChance = HitChance.High;
+                E.MinHitChance = HitChance.High;
+                R.MinHitChance = HitChance.High;
+            }
             Orbwalker.SetMovement(true);
 
             //Update the R range
