@@ -193,8 +193,20 @@ namespace Marksman
                 UltInMyTeam();
             }
 
+            if (!ComboActive)
+            {
+                var t = TargetSelector.GetTarget(QEx.Range, TargetSelector.DamageType.Physical);
+                if (!t.IsValidTarget())
+                    return;
 
-            if (ComboActive || HarassActive)
+                if (HarassActive && GetValue<bool>("UseQH"))
+                    CastQ(t);
+
+                if (GetValue<KeyBind>("UseQTH").Active)
+                    CastQ(t);
+            }
+
+            if (ComboActive)
             {
 
                 var t = TargetSelector.GetTarget(QEx.Range, TargetSelector.DamageType.Physical);
