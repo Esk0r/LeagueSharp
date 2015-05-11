@@ -4,13 +4,14 @@ using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
+
 #endregion
 
 namespace Marksman
 {
     internal class Sivir : Champion
     {
-        public Spell Q;
+        public static Spell Q;
         public Spell W;
         public Spell E;
         private Menu _menuSupportedSpells;
@@ -40,11 +41,8 @@ namespace Marksman
                          t.HasBuffOfType(BuffType.Snare) || t.HasBuffOfType(BuffType.Fear) ||
                          t.HasBuffOfType(BuffType.Taunt)))
                     {
-                        Utility.DelayAction.Add(50, () => Q.Cast(t, false, true));
+                        CastQ();
                     }
-
-                    if (t.HasBuffOfType(BuffType.Charm))
-                        Utility.DelayAction.Add(100, () => Q.Cast(t, false, true));     
                 }
             }
 
@@ -52,15 +50,12 @@ namespace Marksman
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
 
-                if (Orbwalking.CanMove(100))
+                if (Q.IsReady() && useQ)
                 {
-                    if (Q.IsReady() && useQ)
+                    var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
+                    if (t != null)
                     {
-                        var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
-                        if (t != null)
-                        {
-                            Q.Cast(t, false, true);
-                        }
+                        CastQ();
                     }
                 }
             }
@@ -80,8 +75,30 @@ namespace Marksman
                 }
                 else if (Q.IsReady() && useQ)
                 {
-                    Q.Cast(t);
+                    CastQ();
                 }
+            }
+        }
+
+        private static void CastQ()
+        {
+            var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
+
+            if (t.IsValidTarget() && Q.IsReady() &&
+                ObjectManager.Player.Distance(t.ServerPosition) <= Q.Range)
+            {
+                PredictionOutput Qpredict = Q.GetPrediction(t);
+                var hithere = Qpredict.CastPosition.Extend(ObjectManager.Player.Position, -140);
+
+                var Hitchance = HitChance.High;
+                if(ObjectManager.Player.Distance(t) >= 850)
+                    Hitchance = HitChance.VeryHigh;
+                else if (ObjectManager.Player.Distance(t) < 850 && ObjectManager.Player.Distance(t) > 600)
+                    Hitchance = HitChance.High;
+                else
+                    Hitchance = HitChance.Medium;
+                if (Qpredict.Hitchance >= Hitchance)
+                    Q.Cast(hithere);
             }
         }
 
@@ -169,6 +186,7 @@ namespace Marksman
                                     E.Cast();
                             }
                             break;
+
                         case SkillShotType.SkillshotLine:
                             if (ObjectManager.Player.Distance(args.End) <= 100f)
                             {
@@ -176,6 +194,7 @@ namespace Marksman
                                     E.Cast();
                             }
                             break;
+
                         case SkillShotType.SkillshotUnknown:
                             if (ObjectManager.Player.Distance(args.End) <= 500f ||
                                 ObjectManager.Player.Distance(sender.Position) <= 500)
