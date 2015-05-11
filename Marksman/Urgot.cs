@@ -12,13 +12,14 @@ namespace Marksman
     internal class Urgot : Champion
     {
         public static Spell Q, QEx, W, E, R;
+        private const string vSpace = "     ";
 
         public Urgot()
         {
             Utils.PrintMessage("Urgot loaded.");
 
             Q = new Spell(SpellSlot.Q, 1000);
-            QEx = new Spell(SpellSlot.Q, 1600) { MinHitChance = HitChance.Collision };
+            QEx = new Spell(SpellSlot.Q, 1200);
             W = new Spell(SpellSlot.W);
             E = new Spell(SpellSlot.E, 900);
             R = new Spell(SpellSlot.R, 700);
@@ -26,14 +27,13 @@ namespace Marksman
             Q.SetSkillshot(0.10f, 100f, 1600f, true, SkillshotType.SkillshotLine);
             QEx.SetSkillshot(0.10f, 60f, 1600f, false, SkillshotType.SkillshotLine);
 
-            E.SetSkillshot(0.283f, 0f, 1750f, false, SkillshotType.SkillshotCircle);
+            E.SetSkillshot(0.25f, 120f, 1500f, false, SkillshotType.SkillshotCircle);
+
             R.SetTargetted(1f, 100f);
         }
 
         public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
         {
-            if (E.IsReady() && gapcloser.Sender.IsValidTarget(E.Range))
-                E.CastOnUnit(gapcloser.Sender);
         }
 
         public static bool UnderAllyTurret(Obj_AI_Base unit)
@@ -70,9 +70,24 @@ namespace Marksman
             }
         }
 
+        private static Obj_AI_Hero GetEnfectedEnemy
+        {
+            get
+            {
+                return
+                    (from enemy in
+                        ObjectManager.Get<Obj_AI_Hero>()
+                            .Where(
+                                enemy =>
+                                    enemy.IsEnemy && ObjectManager.Player.Distance(enemy) <= QEx.Range &&
+                                    enemy.HasBuff("urgotcorrosivedebuff", true))
+                        select enemy).FirstOrDefault();
+            }
+        }
+
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { Q, QEx, E, R };
+            Spell[] spellList = {Q, QEx, E, R};
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -83,18 +98,7 @@ namespace Marksman
             var drawQEx = GetValue<Circle>("DrawQEx");
             if (drawQEx.Active)
             {
-                foreach (
-                    var enemy in
-                        from enemy in
-                            ObjectManager.Get<Obj_AI_Hero>()
-                                .Where(
-                                    enemy =>
-                                        enemy.IsEnemy && ObjectManager.Player.Distance(enemy) <= QEx.Range &&
-                                        enemy.HasBuff("urgotcorrosivedebuff", true))
-                        select enemy)
-                {
-                    Render.Circle.DrawCircle(enemy.Position, 75f, drawQEx.Color);
-                }
+                Render.Circle.DrawCircle(GetEnfectedEnemy.Position, 125f, System.Drawing.Color.GreenYellow);
             }
         }
 
@@ -102,38 +106,11 @@ namespace Marksman
         {
             Obj_AI_Hero t;
 
-            if (Q.IsReady() && useQ)
-            {
-                t = TargetSelector.GetTarget(QEx.Range, TargetSelector.DamageType.Physical);
-                if (t != null && t.HasBuff("urgotcorrosivedebuff", true))
-                {
-                    W.Cast();
-                    QEx.Cast(t);
-                }
-                else
-                {
-                    t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
-                    if (t != null)
-                    {
-                        if (Q.GetPrediction(t).Hitchance >= HitChance.High)
-                            W.Cast();
-                        Q.Cast(t);
-                    }
-                }
-            }
-
             if (W.IsReady() && useW)
             {
                 t = TargetSelector.GetTarget(ObjectManager.Player.AttackRange - 30, TargetSelector.DamageType.Physical);
                 if (t != null)
                     W.Cast();
-            }
-
-            if (E.IsReady() && useE)
-            {
-                t = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
-                if (t != null)
-                    E.Cast(t);
             }
         }
 
@@ -141,7 +118,7 @@ namespace Marksman
         {
             ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
 
-            Drawing.DrawText(Drawing.Width * 0.41f, Drawing.Height * 0.80f, Color.GreenYellow,
+            Drawing.DrawText(Drawing.Width*0.41f, Drawing.Height*0.80f, Color.GreenYellow,
                 "Teleport enemy to under ally turret active!");
 
             if (R.IsReady() && Program.CClass.GetValue<bool>("UseRC"))
@@ -157,13 +134,14 @@ namespace Marksman
             UseSpells(Program.CClass.GetValue<bool>("UseQC"), Program.CClass.GetValue<bool>("UseWC"),
                 Program.CClass.GetValue<bool>("UseEC"));
         }
+
         private static void UltInMyTeam()
         {
             ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
 
-            Drawing.DrawText(Drawing.Width * 0.42f, Drawing.Height * 0.80f, Color.GreenYellow,
-            "Teleport enemy to my team active!");
-            
+            Drawing.DrawText(Drawing.Width*0.42f, Drawing.Height*0.80f, Color.GreenYellow,
+                "Teleport enemy to my team active!");
+
             var t = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
             if (R.IsReady() && t != null)
             {
@@ -183,12 +161,23 @@ namespace Marksman
                 Program.CClass.GetValue<bool>("UseEC"));
         }
 
+        private static void CastQ(Obj_AI_Hero t)
+        {
+            PredictionOutput Qpredict = Q.GetPrediction(t);
+            var hithere = Qpredict.CastPosition.Extend(ObjectManager.Player.Position, -20);
+
+            if (Qpredict.Hitchance >= HitChance.High)
+            {
+                if (W.IsReady())
+                    W.Cast();
+                Q.Cast(hithere);
+            }
+        }
+
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            if (Orbwalking.CanMove(100))
-                return;
-            
-            R.Range = 150 * R.Level + 400;
+            if (R.Level > 0)
+                R.Range = 150*R.Level + 400;
 
             if (GetValue<KeyBind>("UltOp1").Active)
             {
@@ -200,14 +189,34 @@ namespace Marksman
                 UltInMyTeam();
             }
 
+
             if (ComboActive || HarassActive)
             {
-                UseSpells
-                (
-                    GetValue<bool>("UseQ" + (ComboActive ? "C" : "H")), 
-                    GetValue<bool>("UseWC"),
-                    GetValue<bool>("UseEC")
-                );
+
+                var t = TargetSelector.GetTarget(QEx.Range, TargetSelector.DamageType.Physical);
+
+                if (E.IsReady() && GetValue<bool>("UseEC"))
+                {
+                    if (t.IsValidTarget(E.Range))
+                    {
+                        E.CastIfHitchanceEquals(t, HitChance.Medium);
+                    }
+                }
+
+                if (Q.IsReady() && GetValue<bool>("UseQC"))
+                {
+                    if (GetEnfectedEnemy != null)
+                    {
+                        if (W.IsReady())
+                            W.Cast();
+                        QEx.Cast(GetEnfectedEnemy);
+                    }
+                    else
+                    {
+                        if (t.IsValidTarget(Q.Range))
+                            CastQ(t);
+                    }
+                }
             }
 
             if (LaneClearActive)
@@ -234,24 +243,21 @@ namespace Marksman
             config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(true));
 
 
-            config.AddSubMenu(new Menu("Ult Option 1", "UltOpt1"));
+            config.AddItem(new MenuItem("UltOpt1", "Ult Option 1"));
+            config.AddItem(
+                new MenuItem("UltOp1" + Id, vSpace + "Teleport Ally Turrent").SetValue(new KeyBind(
+                    "T".ToCharArray()[0], KeyBindType.Press)));
 
-            config.SubMenu("UltOpt1")
-                .AddItem(
-                    new MenuItem("UltOp1" + Id, "Teleport Ally Turrent").SetValue(new KeyBind("T".ToCharArray()[0],
-                        KeyBindType.Press)));
-
-            config.AddSubMenu(new Menu("Ult Option 2", "UltOpt2"));
-            config.SubMenu("UltOpt2")
-                .AddItem(
-                    new MenuItem("UltOp2" + Id, "Teleport My Team").SetValue(new KeyBind("G".ToCharArray()[0],
-                        KeyBindType.Press)));
-            config.SubMenu("UltOpt2")
-                .AddItem(new MenuItem("UltOp2Count" + Id, "Min. Ally Count").SetValue(new Slider(1, 1, 5)));
+            config.AddItem(new MenuItem("UltOpt2", "Ult Option 2"));
+            config.AddItem(
+                new MenuItem("UltOp2" + Id, vSpace + "Teleport My Team").SetValue(new KeyBind("G".ToCharArray()[0],
+                    KeyBindType.Press)));
+            config.AddItem(new MenuItem("UltOp2Count" + Id, vSpace + "Min. Ally Count").SetValue(new Slider(1, 1, 5)));
 
 
             config.AddSubMenu(new Menu("Don't Use Ult on", "DontUlt"));
-            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != ObjectManager.Player.Team))
+            foreach (
+                var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != ObjectManager.Player.Team))
             {
                 config.SubMenu("DontUlt")
                     .AddItem(
@@ -273,14 +279,10 @@ namespace Marksman
 
         public override bool DrawingMenu(Menu config)
         {
-            config.AddItem(
-                new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true, Color.LightGray)));
-            config.AddItem(
-                new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(false, Color.LightGray)));
-            config.AddItem(
-                new MenuItem("DrawR" + Id, "R range").SetValue(new Circle(false, Color.LightGray)));
-            config.AddItem(
-                new MenuItem("DrawQEx" + Id, "Corrosive Charge").SetValue(new Circle(true, Color.LightGray)));
+            config.AddItem(new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true, Color.LightGray)));
+            config.AddItem(new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(false, Color.LightGray)));
+            config.AddItem(new MenuItem("DrawR" + Id, "R range").SetValue(new Circle(false, Color.LightGray)));
+            config.AddItem(new MenuItem("DrawQEx" + Id, "Corrosive Charge").SetValue(new Circle(true, Color.LightGray)));
 
             return true;
         }
