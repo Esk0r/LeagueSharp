@@ -468,7 +468,7 @@ namespace Marksman
             BuffList.Add(
                 new SpellList
                 {
-                    ChampionName = "Cho'gath",
+                    ChampionName = "Chogath",
                     DisplayName = "Rupture",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotCircle,
