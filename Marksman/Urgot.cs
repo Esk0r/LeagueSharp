@@ -70,7 +70,7 @@ namespace Marksman
             }
         }
 
-        private static Obj_AI_Hero GetEnfectedEnemy
+        private static Obj_AI_Hero getInfectedEnemy
         {
             get
             {
@@ -87,7 +87,7 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = {Q, QEx, E, R};
+            Spell[] spellList = {Q, E, R};
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -98,7 +98,11 @@ namespace Marksman
             var drawQEx = GetValue<Circle>("DrawQEx");
             if (drawQEx.Active)
             {
-                Render.Circle.DrawCircle(GetEnfectedEnemy.Position, 125f, System.Drawing.Color.GreenYellow);
+                if (getInfectedEnemy != null)
+                {
+                    Render.Circle.DrawCircle(ObjectManager.Player.Position, QEx.Range, Color.GreenYellow);
+                    Render.Circle.DrawCircle(getInfectedEnemy.Position, 125f, Color.GreenYellow);
+                }
             }
         }
 
@@ -205,11 +209,11 @@ namespace Marksman
 
                 if (Q.IsReady() && GetValue<bool>("UseQC"))
                 {
-                    if (GetEnfectedEnemy != null)
+                    if (getInfectedEnemy != null)
                     {
                         if (W.IsReady())
                             W.Cast();
-                        QEx.Cast(GetEnfectedEnemy);
+                        QEx.Cast(getInfectedEnemy);
                     }
                     else
                     {
