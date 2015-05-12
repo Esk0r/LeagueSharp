@@ -3,7 +3,6 @@ using System;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-using LeagueSharp.Common.Orbwalking;
 
 #endregion
 
@@ -69,8 +68,7 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active &&
-                Program.CClass.Orbwalker.ActiveMode != OrbwalkingMode.Combo)
+            if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active)
             {
                 if (ObjectManager.Player.HasBuff("Recall"))
                     return;
