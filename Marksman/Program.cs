@@ -7,7 +7,7 @@ using LeagueSharp.Common;
 
 namespace Marksman
 {
-    internal class Programma
+    internal class Program
     {
         public static Menu Config;
         public static Menu QuickSilverMenu;
@@ -136,6 +136,7 @@ namespace Marksman
             items.AddItem(new MenuItem("GHOSTBLADE", "Ghostblade").SetValue(true));
             items.AddItem(new MenuItem("SWORD", "Sword of the Divine").SetValue(true));
             items.AddItem(new MenuItem("MURAMANA", "Muramana").SetValue(true));
+
             QuickSilverMenu = new Menu("QSS", "QuickSilverSash");
             items.AddSubMenu(QuickSilverMenu);
             QuickSilverMenu.AddItem(new MenuItem("AnyStun", "Any Stun").SetValue(true));
