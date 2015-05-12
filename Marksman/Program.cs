@@ -7,7 +7,7 @@ using LeagueSharp.Common;
 
 namespace Marksman
 {
-    internal class Program
+    internal class Programma
     {
         public static Menu Config;
         public static Menu QuickSilverMenu;
@@ -360,13 +360,13 @@ namespace Marksman
             
             var vHarassManaPer = Config.Item("HarassMana").GetValue<Slider>().Value;
             CClass.HarassActive = CClass.Config.Item("Farm").GetValue<KeyBind>().Active &&
-                                  ObjectManager.Player.ManaPercentage() >= vHarassManaPer;
+                                  ObjectManager.Player.Mana >= ObjectManager.Player.MaxMana / 100 * vHarassManaPer;
 
-            CClass.ToggleActive = ObjectManager.Player.ManaPercentage() >= vHarassManaPer;
+            CClass.ToggleActive = ObjectManager.Player.Mana >= ObjectManager.Player.MaxMana / 100 * vHarassManaPer;
 
             var vLaneClearManaPer = Config.Item("LaneClearMana").GetValue<Slider>().Value;
             CClass.LaneClearActive = CClass.Config.Item("LaneClear").GetValue<KeyBind>().Active &
-                                     ObjectManager.Player.ManaPercentage() >= vLaneClearManaPer;
+                                     ObjectManager.Player.Mana >= ObjectManager.Player.MaxMana/100*vLaneClearManaPer;
 
             CClass.Game_OnGameUpdate(args);
             
