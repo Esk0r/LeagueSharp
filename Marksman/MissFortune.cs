@@ -3,6 +3,8 @@ using System;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
+using LeagueSharp.Common.Orbwalking;
+
 #endregion
 
 namespace Marksman
@@ -33,9 +35,8 @@ namespace Marksman
                 var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
 
                 if (useQ)
-                {
                     Q.CastOnUnit(t);
-                }
+
                 if (useW && W.IsReady())
                     W.CastOnUnit(ObjectManager.Player);
             }
@@ -63,13 +64,13 @@ namespace Marksman
             if (t.IsValidTarget(Q.Range))
             {
                 Q.CastOnUnit(t);
-                return;
             }
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active)
+            if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active &&
+                Program.CClass.Orbwalker.ActiveMode != OrbwalkingMode.Combo)
             {
                 if (ObjectManager.Player.HasBuff("Recall"))
                     return;
@@ -78,13 +79,14 @@ namespace Marksman
 
             if (E.IsReady() && GetValue<KeyBind>("UseETH").Active)
             {
-                if (ObjectManager.Player.HasBuff("Recall"))
-                    return;
-                var t = (Orbwalker.GetTarget() ??
-                        TargetSelector.GetTarget(E.Range + E.Range / 2, TargetSelector.DamageType.Physical)) as Obj_AI_Base;
-                
-                if (t != null)
-                    E.CastIfHitchanceEquals(t, HitChance.High);
+                var t = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
+                if (t.IsValidTarget() && (t.HasBuffOfType(BuffType.Stun) || t.HasBuffOfType(BuffType.Snare) ||
+                                          t.HasBuffOfType(BuffType.Charm) || t.HasBuffOfType(BuffType.Fear) ||
+                                          t.HasBuffOfType(BuffType.Taunt) || t.HasBuff("zhonyasringshield") ||
+                                          t.HasBuff("Recall")))
+                {
+                    E.CastIfHitchanceEquals(t, HitChance.Low);
+                }
             }
 
             if (ComboActive || HarassActive)
@@ -92,22 +94,21 @@ namespace Marksman
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
                 var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
 
-                if (Orbwalking.CanMove(100))
+                if (Q.IsReady() && useQ)
                 {
-                    if (Q.IsReady() && useQ)
-                    {
-                        CastQ();
-                    }
+                    CastQ();
+                }
 
-                    if (E.IsReady() && useE)
-                    {
-                        var vTarget = (Orbwalker.GetTarget() ??
-                                TargetSelector.GetTarget(E.Range + E.Range / 2, TargetSelector.DamageType.Physical)) as Obj_AI_Base;
-                        if (vTarget != null)
-                            E.CastIfHitchanceEquals(vTarget, HitChance.High);
-                    }
+                if (E.IsReady() && useE)
+                {
+                    var t = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
+                    if (ObjectManager.Player.Distance(t) > 600)
+                        E.CastIfHitchanceEquals(t, t.Path.Count() > 1 ? HitChance.High : HitChance.Medium);
+                    else
+                        E.CastIfHitchanceEquals(t, HitChance.Low);
                 }
             }
+
             if (LaneClearActive)
             {
                 bool useQ = GetValue<bool>("UseQL");
