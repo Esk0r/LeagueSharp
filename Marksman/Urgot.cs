@@ -34,8 +34,10 @@ namespace Marksman
 
         public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
         {
+            if (W.IsReady() && gapcloser.Sender.IsValidTarget(250f))
+                W.Cast();
         }
-
+        
         public static bool UnderAllyTurret(Obj_AI_Base unit)
         {
             return ObjectManager.Get<Obj_AI_Turret>().Where<Obj_AI_Turret>((turret) =>
