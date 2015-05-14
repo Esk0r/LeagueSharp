@@ -287,7 +287,7 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Ashe",
-                    SpellName = "VolleyAttack",
+                    SpellName = "Volley",
                     Slot = SpellSlot.W,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 250,
@@ -299,9 +299,10 @@ namespace Evade
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "VolleyAttack",
-                    MultipleNumber = 7,
-                    MultipleAngle = 9.58f * (float) Math.PI / 180,
-                    CanBeRemoved = false,
+                    MultipleNumber = 9,
+                    MultipleAngle = 4.62f * (float)Math.PI / 180,
+                    CanBeRemoved = true,
+                    CollisionObjects = new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.YasuoWall, CollisionObjectTypes.Minion }
                 });
 
             Spells.Add(
@@ -2500,7 +2501,7 @@ namespace Evade
                     Delay = 250,
                     Range = 1100,
                     Radius = 125,
-                    MissileSpeed = 2200,
+                    MissileSpeed = 1600,
                     FixedRange = false,
                     AddHitbox = false,
                     DangerValue = 5,
