@@ -50,7 +50,7 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "Nocturne")
             {
-                spell = new ShieldData("Nocturne E", SpellSlot.E, 100, 1, true);
+                spell = new ShieldData("Nocturne W", SpellSlot.W, 100, 1, true);
                 Spells.Add(spell);
             }
 
