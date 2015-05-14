@@ -15,8 +15,8 @@ namespace Marksman
         public static Champion CClass;
         public static Activator AActivator;
         public static double ActivatorTime;
-        private static Obj_AI_Hero xSelectedTarget;        
-        
+        private static Obj_AI_Hero xSelectedTarget;
+
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -27,7 +27,7 @@ namespace Marksman
             Config = new Menu("Marksman", "Marksman", true);
             CClass = new Champion();
             AActivator = new Activator();
-            
+
             var BaseType = CClass.GetType();
 
             /* Update this with Activator.CreateInstance or Invoke
@@ -73,7 +73,7 @@ namespace Marksman
                     break;
                 case "missfortune":
                     CClass = new MissFortune();
-                    break;   
+                    break;
                 case "quinn":
                     CClass = new Quinn();
                     break;
@@ -130,13 +130,12 @@ namespace Marksman
             {
                 summonersIgnite.AddItem(new MenuItem("SUMIGNITEENABLE", "Enable").SetValue(true));
             }
-            /* Menu Items */            
+            /* Menu Items */
             var items = Config.AddSubMenu(new Menu("Items", "Items"));
             items.AddItem(new MenuItem("BOTRK", "BOTRK").SetValue(true));
             items.AddItem(new MenuItem("GHOSTBLADE", "Ghostblade").SetValue(true));
             items.AddItem(new MenuItem("SWORD", "Sword of the Divine").SetValue(true));
             items.AddItem(new MenuItem("MURAMANA", "Muramana").SetValue(true));
-
             QuickSilverMenu = new Menu("QSS", "QuickSilverSash");
             items.AddSubMenu(QuickSilverMenu);
             QuickSilverMenu.AddItem(new MenuItem("AnyStun", "Any Stun").SetValue(true));
@@ -155,7 +154,7 @@ namespace Marksman
                 new MenuItem("UseItemsMode", "Use items on").SetValue(
                     new StringList(new[] {"No", "Mixed mode", "Combo mode", "Both"}, 2)));
 
-            
+
             //var Extras = Config.AddSubMenu(new Menu("Extras", "Extras"));
             //new PotionManager(Extras);
 
@@ -240,7 +239,7 @@ namespace Marksman
             //Interrupter.OnPossibleToInterrupt += Interrupter_OnPosibleToInterrupt;
             //Game.OnWndProc += Game_OnWndProc;
         }
-        
+
         /*
         private static void Interrupter_OnPosibleToInterrupt(Obj_AI_Base t, InterruptableSpell args)
         {
@@ -270,46 +269,57 @@ namespace Marksman
                 xSpellSlot.Cast(t);
         }
         */
+
         private static void Game_OnWndProc(WndEventArgs args)
         {
-            
+
             if (args.Msg != 0x201)
                 return;
 
-                foreach (var objAiHero in from hero in ObjectManager.Get<Obj_AI_Hero>()
-                                          where hero.IsValidTarget()
-                                          select hero
-                                              into h
-                                              orderby h.Distance(Game.CursorPos) descending
-                                              select h
-                                                  into enemy
-                                                  where enemy.Distance(Game.CursorPos) < 150f
-                                                  select enemy)
+            foreach (var objAiHero in from hero in ObjectManager.Get<Obj_AI_Hero>()
+                where hero.IsValidTarget()
+                select hero
+                into h
+                orderby h.Distance(Game.CursorPos) descending
+                select h
+                into enemy
+                where enemy.Distance(Game.CursorPos) < 150f
+                select enemy)
+            {
+                if (objAiHero != null && objAiHero != xSelectedTarget)
                 {
-                    if (objAiHero != null && objAiHero != xSelectedTarget)
-                    {
-                        xSelectedTarget = objAiHero;
-                        TargetSelector.SetTarget(objAiHero);
-                        Utils.PrintMessage(string.Format("{0} selected.", objAiHero.BaseSkinName));
-                    }
+                    xSelectedTarget = objAiHero;
+                    TargetSelector.SetTarget(objAiHero);
+                    Utils.PrintMessage(string.Format("{0} selected.", objAiHero.BaseSkinName));
                 }
-          
+            }
+
         }
 
         private static void Drawing_OnDraw(EventArgs args)
         {
-           /* 
-           if (xSelectedTarget != null && xSelectedTarget.IsValidTarget())
+            var t = TargetSelector.SelectedTarget;
+            ;
+            if (!t.IsValidTarget())
+                t = TargetSelector.GetTarget(1100, TargetSelector.DamageType.Physical);
+
+            if (t.IsValidTarget() && ObjectManager.Player.Distance(t) < 1200)
             {
-                Render.Circle.DrawCircle(xSelectedTarget.Position, xSelectedTarget.BoundingRadius * 1.5f, System.Drawing.Color.Red);
+                Render.Circle.DrawCircle(t.Position, 150, System.Drawing.Color.Goldenrod);
             }
-            */
+
+            /* 
+            if (xSelectedTarget != null && xSelectedTarget.IsValidTarget())
+             {
+                 Render.Circle.DrawCircle(xSelectedTarget.Position, xSelectedTarget.BoundingRadius * 1.5f, System.Drawing.Color.Red);
+             }
+             */
             var drawJunglePosition = CClass.Config.SubMenu("Drawings").Item("drawJunglePosition").GetValue<bool>();
             {
                 if (drawJunglePosition)
                     Utils.Jungle.DrawJunglePosition();
             }
-            
+
             var drawMinionLastHit = CClass.Config.SubMenu("Drawings").Item("drawMinionLastHit").GetValue<Circle>();
             var drawMinionNearKill = CClass.Config.SubMenu("Drawings").Item("drawMinionNearKill").GetValue<Circle>();
             if (drawMinionLastHit.Active || drawMinionNearKill.Active)
@@ -327,7 +337,7 @@ namespace Marksman
                         Render.Circle.DrawCircle(xMinion.Position, xMinion.BoundingRadius, drawMinionLastHit.Color);
                     }
                     else if (drawMinionNearKill.Active &&
-                             ObjectManager.Player.GetAutoAttackDamage(xMinion, true) * 2 >= xMinion.Health) 
+                             ObjectManager.Player.GetAutoAttackDamage(xMinion, true)*2 >= xMinion.Health)
                     {
                         Render.Circle.DrawCircle(xMinion.Position, xMinion.BoundingRadius, drawMinionNearKill.Color);
                     }
@@ -338,19 +348,6 @@ namespace Marksman
             {
                 CClass.Drawing_OnDraw(args);
             }
-            return;
-
-            var y = 10;
-
-            foreach (
-                var t in
-                    ObjectManager.Player.Buffs.Select(
-                        b => b.DisplayName + " - " + b.IsActive + " - " + (b.EndTime > Game.Time) + " - " + b.IsPositive)
-                )
-            {
-                Drawing.DrawText(0, y, System.Drawing.Color.Wheat, t);
-                y = y + 16;
-            }
         }
 
         private static void Game_OnGameUpdate(EventArgs args)
@@ -358,19 +355,19 @@ namespace Marksman
             CheckChampionBuff();
             //Update the combo and harass values.
             CClass.ComboActive = CClass.Config.Item("Orbwalk").GetValue<KeyBind>().Active;
-            
+
             var vHarassManaPer = Config.Item("HarassMana").GetValue<Slider>().Value;
             CClass.HarassActive = CClass.Config.Item("Farm").GetValue<KeyBind>().Active &&
-                                  ObjectManager.Player.Mana >= ObjectManager.Player.MaxMana / 100 * vHarassManaPer;
+                                  ObjectManager.Player.ManaPercentage() >= vHarassManaPer;
 
-            CClass.ToggleActive = ObjectManager.Player.Mana >= ObjectManager.Player.MaxMana / 100 * vHarassManaPer;
+            CClass.ToggleActive = ObjectManager.Player.ManaPercentage() >= vHarassManaPer;
 
             var vLaneClearManaPer = Config.Item("LaneClearMana").GetValue<Slider>().Value;
             CClass.LaneClearActive = CClass.Config.Item("LaneClear").GetValue<KeyBind>().Active &
-                                     ObjectManager.Player.Mana >= ObjectManager.Player.MaxMana/100*vLaneClearManaPer;
+                                     ObjectManager.Player.ManaPercentage() >= vLaneClearManaPer;
 
             CClass.Game_OnGameUpdate(args);
-            
+
             UseSummoners();
             var useItemModes = Config.Item("UseItemsMode").GetValue<StringList>().SelectedIndex;
 
@@ -408,19 +405,19 @@ namespace Marksman
             }
 
             if (ghostblade && target != null && target.Type == ObjectManager.Player.Type &&
-                 !ObjectManager.Player.HasBuff("ItemSoTD", true) /*if Sword of the divine is not active */ 
-                 && Orbwalking.InAutoAttackRange(target)) 
+                !ObjectManager.Player.HasBuff("ItemSoTD", true) /*if Sword of the divine is not active */
+                && Orbwalking.InAutoAttackRange(target))
                 Items.UseItem(3142);
 
             if (sword && target != null && target.Type == ObjectManager.Player.Type &&
-                !ObjectManager.Player.HasBuff("spectralfury", true) /*if ghostblade is not active*/ 
-                && Orbwalking.InAutoAttackRange(target)) 
+                !ObjectManager.Player.HasBuff("spectralfury", true) /*if ghostblade is not active*/
+                && Orbwalking.InAutoAttackRange(target))
                 Items.UseItem(3131);
 
             if (muramana && Items.HasItem(3042))
             {
                 if (target != null && CClass.ComboActive &&
-                    target.Position.Distance(ObjectManager.Player.Position) < 1200) 
+                    target.Position.Distance(ObjectManager.Player.Position) < 1200)
                 {
                     if (!ObjectManager.Player.HasBuff("Muramana", true))
                     {
@@ -436,12 +433,12 @@ namespace Marksman
                 }
             }
         }
-        
+
         public static void UseSummoners()
         {
             if (ObjectManager.Player.IsDead)
                 return;
-                
+
             const int xDangerousRange = 1100;
 
             if (Config.Item("SUMHEALENABLE").GetValue<bool>())
@@ -450,33 +447,34 @@ namespace Marksman
                 var xCanUse = ObjectManager.Player.Health <=
                               ObjectManager.Player.MaxHealth/100*Config.Item("SUMHEALSLIDER").GetValue<Slider>().Value;
 
-                if (xCanUse && !ObjectManager.Player.InShop() && 
-                    (xSlot != SpellSlot.Unknown || ObjectManager.Player.Spellbook.CanUseSpell(xSlot) == SpellState.Ready) 
-                    && ObjectManager.Player.CountEnemiesInRange(xDangerousRange) > 0) 
+                if (xCanUse && !ObjectManager.Player.InShop() &&
+                    (xSlot != SpellSlot.Unknown || ObjectManager.Player.Spellbook.CanUseSpell(xSlot) == SpellState.Ready)
+                    && ObjectManager.Player.CountEnemiesInRange(xDangerousRange) > 0)
                 {
                     ObjectManager.Player.Spellbook.CastSpell(xSlot);
                 }
             }
-            
+
             if (Config.Item("SUMBARRIERENABLE").GetValue<bool>())
             {
                 var xSlot = ObjectManager.Player.GetSpellSlot("summonerbarrier");
                 var xCanUse = ObjectManager.Player.Health <=
-                              ObjectManager.Player.MaxHealth/100*Config.Item("SUMBARRIERSLIDER").GetValue<Slider>().Value;
+                              ObjectManager.Player.MaxHealth/100*
+                              Config.Item("SUMBARRIERSLIDER").GetValue<Slider>().Value;
 
-                if (xCanUse && !ObjectManager.Player.InShop() && 
-                    (xSlot != SpellSlot.Unknown || ObjectManager.Player.Spellbook.CanUseSpell(xSlot) == SpellState.Ready) 
-                    && ObjectManager.Player.CountEnemiesInRange(xDangerousRange) > 0) 
+                if (xCanUse && !ObjectManager.Player.InShop() &&
+                    (xSlot != SpellSlot.Unknown || ObjectManager.Player.Spellbook.CanUseSpell(xSlot) == SpellState.Ready)
+                    && ObjectManager.Player.CountEnemiesInRange(xDangerousRange) > 0)
                 {
                     ObjectManager.Player.Spellbook.CastSpell(xSlot);
                 }
             }
-            
+
             if (Config.Item("SUMIGNITEENABLE").GetValue<bool>())
             {
                 var xSlot = ObjectManager.Player.GetSpellSlot("summonerdot");
                 var t = CClass.Orbwalker.GetTarget() as Obj_AI_Hero;
-                
+
                 if (t != null && xSlot != SpellSlot.Unknown &&
                     ObjectManager.Player.Spellbook.CanUseSpell(xSlot) == SpellState.Ready)
                 {
@@ -489,6 +487,7 @@ namespace Marksman
                 }
             }
         }
+
         private static void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
             CClass.Orbwalking_AfterAttack(unit, target);
@@ -558,7 +557,7 @@ namespace Marksman
                         if (Items.HasItem(3140)) Items.UseItem(3140);
                     }
                 }
-            }           
+            }
         }
     }
 }
