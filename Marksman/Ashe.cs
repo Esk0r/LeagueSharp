@@ -22,10 +22,10 @@ namespace Marksman
         {
             Q = new Spell(SpellSlot.Q);
             W = new Spell(SpellSlot.W, 1200);
-            E = new Spell(SpellSlot.E, 2500);
+            E = new Spell(SpellSlot.E);
             R = new Spell(SpellSlot.R, 20000);
 
-            W.SetSkillshot(250f, (float) (24.32f * Math.PI / 180), 902f, true, SkillshotType.SkillshotCone);
+            W.SetSkillshot(250f, (float)(24.32f * Math.PI / 180), 902f, true, SkillshotType.SkillshotCone);
             E.SetSkillshot(377f, 299f, 1400f, false, SkillshotType.SkillshotLine);
             R.SetSkillshot(250f, 130f, 1600f, false, SkillshotType.SkillshotLine);
 
@@ -61,21 +61,21 @@ namespace Marksman
             var fComboDamage = 0f;
 
             if (W.IsReady())
-                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
+                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
 
             if (R.IsReady())
-                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
+                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
 
             if (ObjectManager.Player.GetSpellSlot("summonerdot") != SpellSlot.Unknown &&
                 ObjectManager.Player.Spellbook.CanUseSpell(ObjectManager.Player.GetSpellSlot("summonerdot")) ==
                 SpellState.Ready && ObjectManager.Player.Distance(t) < 550)
-                fComboDamage += (float) ObjectManager.Player.GetSummonerSpellDamage(t, Damage.SummonerSpell.Ignite);
+                fComboDamage += (float)ObjectManager.Player.GetSummonerSpellDamage(t, Damage.SummonerSpell.Ignite);
 
             if (Items.CanUseItem(3144) && ObjectManager.Player.Distance(t) < 550)
-                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Bilgewater);
+                fComboDamage += (float)ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Bilgewater);
 
             if (Items.CanUseItem(3153) && ObjectManager.Player.Distance(t) < 550)
-                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Botrk);
+                fComboDamage += (float)ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Botrk);
 
             return fComboDamage;
         }
@@ -98,8 +98,8 @@ namespace Marksman
             xHarassStatus = xHarassStatus.Substring(0, xHarassStatus.Length - 3);
 
             Utils.DrawText(
-                vText, xHarassStatus, (int) ObjectManager.Player.HPBarPosition.X + 145,
-                (int) ObjectManager.Player.HPBarPosition.Y + 5, SharpDX.Color.White);
+                vText, xHarassStatus, (int)ObjectManager.Player.HPBarPosition.X + 145,
+                (int)ObjectManager.Player.HPBarPosition.Y + 5, SharpDX.Color.White);
         }
 
         public void Game_OnProcessSpell(Obj_AI_Base unit, GameObjectProcessSpellCastEventArgs spell)
@@ -113,32 +113,44 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            if (W.IsReady() && Program.Config.Item("UseWTH").GetValue<KeyBind>().Active)
+            if (!ComboActive)
             {
-                if (ObjectManager.Player.HasBuff("Recall"))
-                    return;
                 var t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
-                if (t != null)
+                if (!t.IsValidTarget() || !W.IsReady())
+                    return;
+
+                if (Program.Config.Item("UseWTH").GetValue<KeyBind>().Active)
+                {
+                    if (ObjectManager.Player.HasBuff("Recall"))
+                        return;
                     W.Cast(t);
+                }
+
+                if (t.HasBuffOfType(BuffType.Stun) || t.HasBuffOfType(BuffType.Snare) ||
+                    t.HasBuffOfType(BuffType.Charm) || t.HasBuffOfType(BuffType.Fear) ||
+                    t.HasBuffOfType(BuffType.Taunt) || t.HasBuff("zhonyasringshield") ||
+                    t.HasBuff("Recall"))
+                {
+                    W.Cast(t.Position);
+                }
             }
-            //Combo
+
+            /* [ Combo ] */
             if (ComboActive)
             {
                 var useQ = Config.Item("UseQC" + Id).GetValue<bool>();
                 var useW = Config.Item("UseWC" + Id).GetValue<bool>();
+
                 var t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
 
                 if (useQ && Q.IsReady())
                 {
-                    if (!IsQActive &&
-                        ObjectManager.Player.CountEnemiesInRange(Orbwalking.GetRealAutoAttackRange(t) + 350) > 0)
-
+                    if (t.IsValidTarget(Orbwalking.GetRealAutoAttackRange(null) + 90))
                     {
-                        Q.Cast();
-                    }
-                    else
-                    {
-                        Q.Cast();
+                        if (!IsQActive)
+                            Q.Cast();
+                        else
+                            Q.Cast();
                     }
                 }
 
