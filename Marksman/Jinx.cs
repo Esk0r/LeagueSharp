@@ -53,15 +53,6 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            var t = TargetSelector.SelectedTarget; ;
-            if (!t.IsValidTarget())
-                t = TargetSelector.GetTarget(1100, TargetSelector.DamageType.Physical);
-
-            if (t.IsValidTarget() && ObjectManager.Player.Distance(t) < 1200)
-            {
-                Render.Circle.DrawCircle(t.Position, 150, Color.Goldenrod);
-            }
-
             Spell[] spellList = { W };
             var drawQbound = GetValue<Circle>("DrawQBound");
 
