@@ -110,11 +110,19 @@ namespace Marksman
             if (spell.SData.Name.ToLower() == "summonerflash")
                 E.Cast(spell.End);
         }
+        private static bool AsheQCastReady
+        {
+            get { return ObjectManager.Player.HasBuff("AsheQCastReady", true); }
+        }
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
             if (!ComboActive)
             {
+                if (ObjectManager.Player.HasBuff("AsheQCastReady", true))
+                    Console.WriteLine("Ashe Buff Ready");
+                
+
                 var t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
                 if (!t.IsValidTarget() || !W.IsReady())
                     return;
@@ -143,13 +151,10 @@ namespace Marksman
 
                 var t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
 
-                if (useQ && Q.IsReady())
+                if (useQ && Q.IsReady() && AsheQCastReady)
                 {
                     if (t.IsValidTarget(Orbwalking.GetRealAutoAttackRange(null) + 90))
                     {
-                        if (!IsQActive)
-                            Q.Cast();
-                        else
                             Q.Cast();
                     }
                 }
@@ -188,9 +193,6 @@ namespace Marksman
                 if (target == null)
                     return;
 
-                if (!IsQActive && Config.Item("UseQH" + Id).GetValue<bool>())
-                    Q.Cast();
-
                 if (Config.Item("UseWH" + Id).GetValue<bool>() && W.IsReady())
                     W.Cast(target);
             }
@@ -227,7 +229,6 @@ namespace Marksman
 
         public override bool HarassMenu(Menu config)
         {
-            config.AddItem(new MenuItem("UseQH" + Id, "Q").SetValue(true));
             config.AddItem(new MenuItem("UseWH" + Id, "W").SetValue(true));
             config.AddItem(
                 new MenuItem("UseWTH", "Use W (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0], KeyBindType.Toggle)));
@@ -277,10 +278,10 @@ namespace Marksman
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, drawE.Color);
             }
 
-            if (Program.Config.Item("DrawHarassToggleStatus").GetValue<bool>())
-            {
-                DrawHarassToggleStatus();
-            }
+            //if (Program.Config.Item("DrawHarassToggleStatus").GetValue<bool>())
+           // {
+           //     DrawHarassToggleStatus();
+          //  }
 
             var drawRMin = Program.Config.SubMenu("Combo").Item("DrawRMin").GetValue<Circle>();
             if (drawRMin.Active)
