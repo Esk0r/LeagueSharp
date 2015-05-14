@@ -119,10 +119,6 @@ namespace Marksman
         {
             if (!ComboActive)
             {
-                if (ObjectManager.Player.HasBuff("AsheQCastReady", true))
-                    Console.WriteLine("Ashe Buff Ready");
-                
-
                 var t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
                 if (!t.IsValidTarget() || !W.IsReady())
                     return;
