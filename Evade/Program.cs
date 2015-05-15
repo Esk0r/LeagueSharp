@@ -395,7 +395,7 @@ namespace Evade
 
                         if (endPos.IsValid())
                         {
-                            skillshot = new Skillshot(DetectionType.ProcessSpell, SpellDatabase.GetByName("JarvanIVEQ"), Environment.TickCount, skillshot.Start, endPos, skillshot.Unit);
+                            skillshot = new Skillshot(DetectionType.ProcessSpell, SpellDatabase.GetByName("JarvanIVEQ"), Utils.TickCount, skillshot.Start, endPos, skillshot.Unit);
                             skillshot.End = endPos + 200 * (endPos - skillshot.Start).Normalized();
                             skillshot.Direction = (skillshot.End - skillshot.Start).Normalized();
                         }
