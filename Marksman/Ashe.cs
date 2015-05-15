@@ -1,5 +1,6 @@
 #region
 using System;
+using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using Color = System.Drawing.Color;
@@ -117,7 +118,12 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            if (!ComboActive)
+            if (LaneClearActive)
+            {
+                if (Program.Config.Item("UseQForBigBoys").GetValue<bool>())
+                    JungleFarm();
+            }
+            else if (!ComboActive)
             {
                 var t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
                 if (!t.IsValidTarget() || !W.IsReady())
@@ -233,7 +239,7 @@ namespace Marksman
 
         public override bool LaneClearMenu(Menu config)
         {
-
+            config.AddItem(new MenuItem("UseQForBigBoys", "Use Q For Baron/Dragon/Red/Blue").SetValue(true));
             return true;
         }
 
@@ -294,6 +300,27 @@ namespace Marksman
             }
         }
 
+        private static void JungleFarm()
+        {
+            var mobs = MinionManager.GetMinions(ObjectManager.Player.ServerPosition,
+                Orbwalking.GetRealAutoAttackRange(null) + 65, MinionTypes.All,
+                MinionTeam.Neutral, MinionOrderTypes.MaxHealth);
+
+            if (mobs == null)
+                return;
+
+            var mob = mobs[0];
+
+            string[] bigBoys = {"Baron", "Dragon", "Red", "Blue"};
+
+            foreach (
+                var xbigBoys in
+                    bigBoys.Where(xbigBoys => mob.Name.Contains(xbigBoys))
+                        .Where(xbigBoys => Q.IsReady() && AsheQCastReady))
+            {
+                Q.Cast();
+            }
+        }
         public override bool ExtrasMenu(Menu config)
         {
 
