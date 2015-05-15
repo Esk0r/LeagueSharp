@@ -323,7 +323,7 @@ namespace Syndra
                     //WObject
                     var gObjectPos = GetGrabableObjectPos(wTarget == null);
 
-                    if (gObjectPos.To2D().IsValid() && Utils.TickCount - W.LastCastAttemptT > Game.Ping + 100 && Utils.TickCount - E.LastCastAttemptT > Game.Ping + 100)
+                    if (gObjectPos.To2D().IsValid() && Utils.TickCount - W.LastCastAttemptT > Game.Ping + 300 && Utils.TickCount - E.LastCastAttemptT > Game.Ping + 300)
                     {
                         W.Cast(gObjectPos);
                         W.LastCastAttemptT = Utils.TickCount;
@@ -555,7 +555,7 @@ namespace Syndra
                     Render.Circle.DrawCircle(Player.Position, spell.Range, menuItem.Color);
             }
             //if (OrbManager.WObject(false) != null)
-            //    Render.Circle.DrawCircle(OrbManager.WObject(false).Position, 100, Color.White);
+                //Render.Circle.DrawCircle(OrbManager.WObject(false).Position, 100, Color.White);
         }
     }
 }
