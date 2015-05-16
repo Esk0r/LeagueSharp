@@ -10,6 +10,7 @@ namespace Marksman
     internal class Program
     {
         public static Menu Config;
+        public static Menu OrbWalking;
         public static Menu QuickSilverMenu;
 //        public static Menu MenuInterruptableSpell;
         public static Champion CClass;
@@ -108,9 +109,10 @@ namespace Marksman
             TargetSelector.AddToMenu(targetSelectorMenu);
             Config.AddSubMenu(targetSelectorMenu);
 
-            var orbwalking = Config.AddSubMenu(new Menu("Orbwalking", "Orbwalking"));
-            CClass.Orbwalker = new Orbwalking.Orbwalker(orbwalking);
+            OrbWalking = Config.AddSubMenu(new Menu("Orbwalking", "Orbwalking"));
+            CClass.Orbwalker = new Orbwalking.Orbwalker(OrbWalking);
 
+            OrbWalking.AddItem(new MenuItem("Orb.AutoWindUp", "Marksman - Auto Windup").SetValue(false));
             /* Menu Summoners */
             var summoners = Config.AddSubMenu(new Menu("Summoners", "Summoners"));
             var summonersHeal = summoners.AddSubMenu(new Menu("Heal", "Heal"));
@@ -296,6 +298,30 @@ namespace Marksman
 
         }
 
+        private static void CheckAutoWindUp()
+        {
+            var additional = 0;
+
+            if (Game.Ping >= 100)
+            {
+                additional = Game.Ping/100*10;
+            }
+            else if (Game.Ping > 40 && Game.Ping < 100)
+            {
+                additional = Game.Ping/100*20;
+            }
+            else if (Game.Ping <= 40)
+            {
+                additional = +20;
+            }
+            var windUp = Game.Ping + additional;
+            if (windUp < 40)
+            {
+                windUp = 40;
+            }
+            OrbWalking.Item("ExtraWindup").SetValue(windUp < 200 ? new Slider(windUp, 200, 0) : new Slider(200, 200, 0));
+        }
+
         private static void Drawing_OnDraw(EventArgs args)
         {
             var t = TargetSelector.SelectedTarget;
@@ -353,6 +379,10 @@ namespace Marksman
         private static void Game_OnGameUpdate(EventArgs args)
         {
             CheckChampionBuff();
+            
+            if (Config.Item("Orb.AutoWindUp").GetValue<bool>())
+                CheckAutoWindUp();
+
             //Update the combo and harass values.
             CClass.ComboActive = CClass.Config.Item("Orbwalk").GetValue<KeyBind>().Active;
 
