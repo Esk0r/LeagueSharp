@@ -41,7 +41,7 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { W };
+            Spell[] spellList = {W};
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -72,7 +72,7 @@ namespace Marksman
                         foreach (
                             var buff in
                                 eTarget.Buffs.Where(buff => buff.DisplayName.ToLower() == "twitchdeadlyvenom")
-                                    .Where(buff => buff.Count == 6)) 
+                                    .Where(buff => buff.Count == 6))
                         {
                             E.Cast();
                         }
@@ -104,7 +104,7 @@ namespace Marksman
 
             if (ObjectManager.Player.GetSpellSlot("summonerdot") != SpellSlot.Unknown &&
                 ObjectManager.Player.Spellbook.CanUseSpell(ObjectManager.Player.GetSpellSlot("summonerdot")) ==
-                SpellState.Ready && ObjectManager.Player.Distance(t) < 550) 
+                SpellState.Ready && ObjectManager.Player.Distance(t) < 550)
                 fComboDamage += (float) ObjectManager.Player.GetSummonerSpellDamage(t, Damage.SummonerSpell.Ignite);
 
             if (Items.CanUseItem(3144) && ObjectManager.Player.Distance(t) < 550)
@@ -134,7 +134,7 @@ namespace Marksman
         {
             config.AddItem(
                 new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
-            
+
             var dmgAfterComboItem = new MenuItem("DamageAfterCombo", "Damage After Combo").SetValue(true);
             Config.AddItem(dmgAfterComboItem);
 
@@ -149,7 +149,6 @@ namespace Marksman
 
         public override bool ExtrasMenu(Menu config)
         {
-
             return true;
         }
 
@@ -157,6 +156,5 @@ namespace Marksman
         {
             return true;
         }
-
     }
 }

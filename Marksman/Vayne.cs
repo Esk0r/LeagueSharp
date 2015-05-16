@@ -1,8 +1,10 @@
 #region
+
 using System;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
+
 #endregion
 
 namespace Marksman
@@ -56,7 +58,7 @@ namespace Marksman
                             .FirstOrDefault(
                                 enemy => enemy.Buffs.Any(buff => buff.Name == "vaynesilvereddebuff" && buff.Count > 0));
                 }
-            }            
+            }
         }
 
         public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
@@ -116,7 +118,7 @@ namespace Marksman
                                 prediction.UnitPosition.To2D()
                                     .Extend(
                                         ObjectManager.Player.ServerPosition.To2D(),
-                                        -(GetValue<Slider>("PushDistance").Value / 2))
+                                        -(GetValue<Slider>("PushDistance").Value/2))
                                     .To3D()).HasFlag(CollisionFlags.Wall)
                         select hero)
                     {
@@ -169,7 +171,9 @@ namespace Marksman
 
         public override bool MiscMenu(Menu config)
         {
-            config.AddItem(new MenuItem("UseET" + Id, "Use E (Toggle)").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Toggle)));
+            config.AddItem(
+                new MenuItem("UseET" + Id, "Use E (Toggle)").SetValue(new KeyBind("T".ToCharArray()[0],
+                    KeyBindType.Toggle)));
             config.AddItem(new MenuItem("UseEInterrupt" + Id, "Use E To Interrupt").SetValue(true));
             config.AddItem(new MenuItem("UseEGapcloser" + Id, "Use E To Gapcloser").SetValue(true));
             config.AddItem(new MenuItem("PushDistance" + Id, "E Push Distance").SetValue(new Slider(425, 475, 300)));
@@ -179,7 +183,6 @@ namespace Marksman
 
         public override bool ExtrasMenu(Menu config)
         {
-
             return true;
         }
 

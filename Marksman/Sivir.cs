@@ -1,4 +1,5 @@
 #region
+
 using System;
 using System.Drawing;
 using System.Linq;
@@ -91,7 +92,7 @@ namespace Marksman
                 var hithere = Qpredict.CastPosition.Extend(ObjectManager.Player.Position, -140);
 
                 var Hitchance = HitChance.High;
-                if(ObjectManager.Player.Distance(t) >= 850)
+                if (ObjectManager.Player.Distance(t) >= 850)
                     Hitchance = HitChance.VeryHigh;
                 else if (ObjectManager.Player.Distance(t) < 850 && ObjectManager.Player.Distance(t) > 600)
                     Hitchance = HitChance.High;
@@ -104,7 +105,7 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { Q };
+            Spell[] spellList = {Q};
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -155,7 +156,6 @@ namespace Marksman
 
         public override bool ExtrasMenu(Menu config)
         {
-
             return true;
         }
 
@@ -207,6 +207,5 @@ namespace Marksman
                 }
             }
         }
-
     }
 }

@@ -1,10 +1,12 @@
 #region
+
 using System;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
+
 #endregion
 
 namespace Marksman
@@ -17,7 +19,7 @@ namespace Marksman
         public Varus()
         {
             Utils.PrintMessage("Varus loaded!");
-           
+
             Q = new Spell(SpellSlot.Q, 1600f);
             W = new Spell(SpellSlot.W);
             E = new Spell(SpellSlot.E, 925f);
@@ -28,7 +30,7 @@ namespace Marksman
             R.SetSkillshot(.25f, 120f, 1950f, false, SkillshotType.SkillshotLine);
 
             Q.SetCharged("VarusQ", "VarusQ", 250, 1600, 1.2f);
-             
+
             Utility.HpBarDamageIndicator.DamageToUnit = GetComboDamage;
             Utility.HpBarDamageIndicator.Enabled = true;
 
@@ -40,11 +42,11 @@ namespace Marksman
             float fComboDamage = 0f;
 
             if (Q.IsReady())
-                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q); 
+                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q);
             //fComboDamage += CalcQDamage;
 
-            if (W.Level >0)
-                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
+            if (W.Level > 0)
+                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
 
             if (E.IsReady())
                 fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.E);
@@ -102,7 +104,7 @@ namespace Marksman
 
             if (drawR.Active)
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, drawR.Color);
-            
+
             if (GetValue<KeyBind>("CastR").Active && drawRs.Active)
             {
                 Vector3 drawPosition;
@@ -117,25 +119,25 @@ namespace Marksman
             }
         }
 
-        static float CalcWDamage
+        private static float CalcWDamage
         {
             get
             {
                 var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                 var xEnemyWStackCount = EnemyWStackCount(t);
-                var wExplodePerStack = ObjectManager.Player.GetSpellDamage(t, SpellSlot.W, 1) * xEnemyWStackCount > 0
+                var wExplodePerStack = ObjectManager.Player.GetSpellDamage(t, SpellSlot.W, 1)*xEnemyWStackCount > 0
                     ? xEnemyWStackCount
                     : 1;
                 return (float) wExplodePerStack;
             }
         }
 
-        static float CalcQDamage
+        private static float CalcQDamage
         {
             get
             {
                 var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
-                
+
                 if (!Q.IsReady())
                     return 0;
 
@@ -159,16 +161,16 @@ namespace Marksman
                 return;
 
             var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
-            if (!t.IsValidTarget(Q.Range)) 
+            if (!t.IsValidTarget(Q.Range))
                 return;
 
             var qMinCharge = Program.Config.Item("QMinChargeC").GetValue<Slider>().Value;
             ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
-            
+
             if (Q.IsCharging)
             {
                 if (Q.Range >= qMinCharge)
-                Q.Cast(t, false, true);
+                    Q.Cast(t, false, true);
             }
             else
             {
@@ -208,19 +210,19 @@ namespace Marksman
 
             if (E.IsReady() && GetValue<KeyBind>("UseETH").Active)
             {
-                if(ObjectManager.Player.HasBuff("Recall"))
+                if (ObjectManager.Player.HasBuff("Recall"))
                     return;
                 t = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
                 if (t != null)
                     E.Cast(t, false, true);
-            }           
+            }
 
             if (!ComboActive && !HarassActive) return;
 
             var useQ = GetValue<StringList>("UseQ" + (ComboActive ? "C" : "H"));
             var useE = GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
             var useR = GetValue<bool>("UseRC");
-            
+
             t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
 
             if (t.IsValidTarget(Q.Range) && t.Health <= CalcQDamage + CalcWDamage)
@@ -229,16 +231,16 @@ namespace Marksman
             switch (useQ.SelectedIndex)
             {
                 case 1:
-                    {
-                        CastSpellQ();
-                        break;
-                    }
+                {
+                    CastSpellQ();
+                    break;
+                }
                 case 2:
-                    {
-                        if (EnemyWStackCount(t) > 2 || W.Level == 0)
-                            CastSpellQ();
-                        break;
-                    }
+                {
+                    if (EnemyWStackCount(t) > 2 || W.Level == 0)
+                        CastSpellQ();
+                    break;
+                }
             }
 
             if (useE && E.IsReady())
@@ -251,7 +253,7 @@ namespace Marksman
             if (useR && R.IsReady())
             {
                 t = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
-                if (t.IsValidTarget(R.Range) && t.Health <= ObjectManager.Player.GetSpellDamage(t, SpellSlot.R) - 30f) 
+                if (t.IsValidTarget(R.Range) && t.Health <= ObjectManager.Player.GetSpellDamage(t, SpellSlot.R) - 30f)
                     R.Cast(t);
             }
         }
@@ -264,7 +266,8 @@ namespace Marksman
         public override bool ComboMenu(Menu config)
         {
             config.AddItem(
-                new MenuItem("UseQC" + Id, "Q Mode").SetValue(new StringList(new[] {"Off", "Use Allways", "Max W Stack = 3"}, 0)));
+                new MenuItem("UseQC" + Id, "Q Mode").SetValue(
+                    new StringList(new[] {"Off", "Use Allways", "Max W Stack = 3"}, 0)));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
             config.AddItem(new MenuItem("UseRC" + Id, "Use R").SetValue(true));
 
@@ -318,6 +321,5 @@ namespace Marksman
         {
             return true;
         }
-
     }
 }

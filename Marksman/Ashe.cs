@@ -1,4 +1,5 @@
 #region
+
 using System;
 using System.Linq;
 using LeagueSharp;
@@ -26,7 +27,7 @@ namespace Marksman
             E = new Spell(SpellSlot.E);
             R = new Spell(SpellSlot.R, 20000);
 
-            W.SetSkillshot(250f, (float)(24.32f * Math.PI / 180), 902f, true, SkillshotType.SkillshotCone);
+            W.SetSkillshot(250f, (float) (24.32f*Math.PI/180), 902f, true, SkillshotType.SkillshotCone);
             E.SetSkillshot(377f, 299f, 1400f, false, SkillshotType.SkillshotLine);
             R.SetSkillshot(250f, 130f, 1600f, false, SkillshotType.SkillshotLine);
 
@@ -62,21 +63,21 @@ namespace Marksman
             var fComboDamage = 0f;
 
             if (W.IsReady())
-                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
+                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
 
             if (R.IsReady())
-                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
+                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
 
             if (ObjectManager.Player.GetSpellSlot("summonerdot") != SpellSlot.Unknown &&
                 ObjectManager.Player.Spellbook.CanUseSpell(ObjectManager.Player.GetSpellSlot("summonerdot")) ==
                 SpellState.Ready && ObjectManager.Player.Distance(t) < 550)
-                fComboDamage += (float)ObjectManager.Player.GetSummonerSpellDamage(t, Damage.SummonerSpell.Ignite);
+                fComboDamage += (float) ObjectManager.Player.GetSummonerSpellDamage(t, Damage.SummonerSpell.Ignite);
 
             if (Items.CanUseItem(3144) && ObjectManager.Player.Distance(t) < 550)
-                fComboDamage += (float)ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Bilgewater);
+                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Bilgewater);
 
             if (Items.CanUseItem(3153) && ObjectManager.Player.Distance(t) < 550)
-                fComboDamage += (float)ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Botrk);
+                fComboDamage += (float) ObjectManager.Player.GetItemDamage(t, Damage.DamageItems.Botrk);
 
             return fComboDamage;
         }
@@ -99,8 +100,8 @@ namespace Marksman
             xHarassStatus = xHarassStatus.Substring(0, xHarassStatus.Length - 3);
 
             Utils.DrawText(
-                vText, xHarassStatus, (int)ObjectManager.Player.HPBarPosition.X + 145,
-                (int)ObjectManager.Player.HPBarPosition.Y + 5, SharpDX.Color.White);
+                vText, xHarassStatus, (int) ObjectManager.Player.HPBarPosition.X + 145,
+                (int) ObjectManager.Player.HPBarPosition.Y + 5, SharpDX.Color.White);
         }
 
         public void Game_OnProcessSpell(Obj_AI_Base unit, GameObjectProcessSpellCastEventArgs spell)
@@ -111,6 +112,7 @@ namespace Marksman
             if (spell.SData.Name.ToLower() == "summonerflash")
                 E.Cast(spell.End);
         }
+
         private static bool AsheQCastReady
         {
             get { return ObjectManager.Player.HasBuff("AsheQCastReady", true); }
@@ -157,7 +159,7 @@ namespace Marksman
                 {
                     if (t.IsValidTarget(Orbwalking.GetRealAutoAttackRange(null) + 90))
                     {
-                            Q.Cast();
+                        Q.Cast();
                     }
                 }
 
@@ -281,9 +283,9 @@ namespace Marksman
             }
 
             //if (Program.Config.Item("DrawHarassToggleStatus").GetValue<bool>())
-           // {
-           //     DrawHarassToggleStatus();
-          //  }
+            // {
+            //     DrawHarassToggleStatus();
+            //  }
 
             var drawRMin = Program.Config.SubMenu("Combo").Item("DrawRMin").GetValue<Circle>();
             if (drawRMin.Active)
@@ -321,9 +323,9 @@ namespace Marksman
                 Q.Cast();
             }
         }
+
         public override bool ExtrasMenu(Menu config)
         {
-
             return true;
         }
     }

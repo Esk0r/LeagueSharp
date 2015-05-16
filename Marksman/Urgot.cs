@@ -1,10 +1,12 @@
 #region
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
+
 #endregion
 
 namespace Marksman
@@ -37,7 +39,7 @@ namespace Marksman
             if (W.IsReady() && gapcloser.Sender.IsValidTarget(250f))
                 W.Cast();
         }
-        
+
         public static bool UnderAllyTurret(Obj_AI_Base unit)
         {
             return ObjectManager.Get<Obj_AI_Turret>().Where<Obj_AI_Turret>((turret) =>
@@ -160,7 +162,6 @@ namespace Marksman
 
                 if (Ally.Count() >= Program.CClass.GetValue<Slider>("UltOp2Count").Value)
                     R.CastOnUnit(t);
-
             }
 
             UseSpells(Program.CClass.GetValue<bool>("UseQC"), Program.CClass.GetValue<bool>("UseWC"),
@@ -210,7 +211,6 @@ namespace Marksman
 
             if (ComboActive)
             {
-
                 var t = TargetSelector.GetTarget(QEx.Range, TargetSelector.DamageType.Physical);
 
                 if (E.IsReady() && GetValue<bool>("UseEC"))
@@ -315,6 +315,5 @@ namespace Marksman
             config.AddItem(new MenuItem("UseQL" + Id, "Use Q").SetValue(true));
             return true;
         }
-
     }
 }

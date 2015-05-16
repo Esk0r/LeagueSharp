@@ -1,8 +1,10 @@
 #region
+
 using System;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
+
 #endregion
 
 namespace Marksman
@@ -15,6 +17,7 @@ namespace Marksman
 //        public static Menu MenuInterruptableSpell;
         public static Champion CClass;
         public static Activator AActivator;
+
         public static double ActivatorTime;
         private static Obj_AI_Hero xSelectedTarget;
 
@@ -28,6 +31,7 @@ namespace Marksman
             Config = new Menu("Marksman", "Marksman", true);
             CClass = new Champion();
             AActivator = new Activator();
+
 
             var BaseType = CClass.GetType();
 
@@ -228,13 +232,12 @@ namespace Marksman
 
                     Config.AddSubMenu(drawing);
                 }
-
             }
 
 
             CClass.MainMenu(Config);
-
             Config.AddToMainMenu();
+            Sprite.Load();
 
             Drawing.OnDraw += Drawing_OnDraw;
             Game.OnUpdate += Game_OnGameUpdate;
@@ -276,11 +279,10 @@ namespace Marksman
 
         private static void Game_OnWndProc(WndEventArgs args)
         {
-
             if (args.Msg != 0x201)
                 return;
 
-            foreach (var objAiHero in from hero in ObjectManager.Get<Obj_AI_Hero>()
+            foreach (var objAiHero in (from hero in ObjectManager.Get<Obj_AI_Hero>()
                 where hero.IsValidTarget()
                 select hero
                 into h
@@ -288,16 +290,12 @@ namespace Marksman
                 select h
                 into enemy
                 where enemy.Distance(Game.CursorPos) < 150f
-                select enemy)
+                select enemy).Where(objAiHero => objAiHero != null && objAiHero != xSelectedTarget))
             {
-                if (objAiHero != null && objAiHero != xSelectedTarget)
-                {
-                    xSelectedTarget = objAiHero;
-                    TargetSelector.SetTarget(objAiHero);
-                    Utils.PrintMessage(string.Format("{0} selected.", objAiHero.BaseSkinName));
-                }
+                xSelectedTarget = objAiHero;
+                TargetSelector.SetTarget(objAiHero);
+                Utils.PrintMessage(string.Format("{0} selected.", objAiHero.BaseSkinName));
             }
-
         }
 
         private static void CheckAutoWindUp()
@@ -556,7 +554,6 @@ namespace Marksman
                                     if (Items.HasItem(3139)) Items.UseItem(3139);
                                     if (Items.HasItem(3140)) Items.UseItem(3140);
                                 }
-
                             }
                         }
                     }

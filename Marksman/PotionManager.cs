@@ -9,9 +9,11 @@ namespace Marksman
     internal class PotionManager
     {
         private Menu ExtrasMenu;
+
         private enum PotionType
         {
-            Health, Mana
+            Health,
+            Mana
         };
 
         private class Potion
@@ -92,9 +94,10 @@ namespace Marksman
 
         private void OnGameUpdate(EventArgs args)
         {
-            if(ObjectManager.Player.HasBuff("Recall") || ObjectManager.Player.InFountain() && ObjectManager.Player.InShop())
+            if (ObjectManager.Player.HasBuff("Recall") ||
+                ObjectManager.Player.InFountain() && ObjectManager.Player.InShop())
                 return;
-                
+
             try
             {
                 if (ExtrasMenu.Item("HealthPotion").GetValue<bool>())
@@ -119,26 +122,25 @@ namespace Marksman
 
             catch (Exception)
             {
-
             }
         }
 
         private InventorySlot GetPotionSlot(PotionType type)
         {
             return (from potion in potions
-                    where potion.TypeList.Contains(type)
-                    from item in ObjectManager.Player.InventoryItems
-                    where item.Id == potion.ItemId && item.Charges >= potion.MinCharges
-                    select item).FirstOrDefault();
+                where potion.TypeList.Contains(type)
+                from item in ObjectManager.Player.InventoryItems
+                where item.Id == potion.ItemId && item.Charges >= potion.MinCharges
+                select item).FirstOrDefault();
         }
 
         private bool IsBuffActive(PotionType type)
         {
             return (from potion in potions
-                    where potion.TypeList.Contains(type)
-                    from buff in ObjectManager.Player.Buffs
-                    where buff.Name == potion.Name && buff.IsActive
-                    select potion).Any();
+                where potion.TypeList.Contains(type)
+                from buff in ObjectManager.Player.Buffs
+                where buff.Name == potion.Name && buff.IsActive
+                select potion).Any();
         }
     }
 }

@@ -26,14 +26,14 @@ namespace Marksman
             R2 = new Spell(SpellSlot.R, 1500f);
 
             Q.SetSkillshot(0.35f, 250f, 1500f, false, SkillshotType.SkillshotCircle);
-            E.SetSkillshot(0f, (float)(45 * Math.PI / 180), 1500, false, SkillshotType.SkillshotCone);
+            E.SetSkillshot(0f, (float) (45*Math.PI/180), 1500, false, SkillshotType.SkillshotCone);
             R1.SetSkillshot(0.2f, 40f, 2000f, true, SkillshotType.SkillshotLine);
             R2.SetSkillshot(0.2f, 40f, 2000f, true, SkillshotType.SkillshotLine);
         }
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { Q, E, R1 };
+            Spell[] spellList = {Q, E, R1};
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -53,7 +53,7 @@ namespace Marksman
                             .Where(
                                 hero =>
                                     hero.IsValidTarget(bigRocket ? R2.Range : R1.Range) &&
-                                    R1.GetDamage(hero) * (bigRocket ? 1.5f : 1f) > hero.Health))
+                                    R1.GetDamage(hero)*(bigRocket ? 1.5f : 1f) > hero.Health))
                 {
                     if (bigRocket)
                         R2.Cast(hero, false, true);
@@ -100,7 +100,7 @@ namespace Marksman
         public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
             var t = target as Obj_AI_Hero;
-            if (t == null || (!ComboActive && !HarassActive) || !unit.IsMe) 
+            if (t == null || (!ComboActive && !HarassActive) || !unit.IsMe)
                 return;
 
             var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
@@ -168,14 +168,12 @@ namespace Marksman
 
         public override bool ExtrasMenu(Menu config)
         {
-
             return true;
         }
+
         public override bool LaneClearMenu(Menu config)
         {
-
-             return true;
+            return true;
         }
-
     }
 }

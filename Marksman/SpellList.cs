@@ -28,7 +28,7 @@ namespace Marksman
         public SpellSlot Slot { get; set; }
         public SkillShotType SkillType { get; set; }
 
-        public BlockableSpells[] CanBlockWith = { };
+        public BlockableSpells[] CanBlockWith = {};
         public bool DefaultMenuValue { get; set; }
         public int Delay { get; set; }
 
@@ -37,7 +37,6 @@ namespace Marksman
 
         static SpellList()
         {
-
             BuffList.Add(
                 new SpellList
                 {
@@ -46,7 +45,7 @@ namespace Marksman
                     BuffName = "DariusNoxianTacticsONH",
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotUnknown,
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -58,7 +57,7 @@ namespace Marksman
                     BuffName = "DianaArc",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotCircle,
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -70,7 +69,7 @@ namespace Marksman
                     BuffName = "fizzmarinerdoombomb",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -99,7 +98,7 @@ namespace Marksman
                     BuffName = "LeblancSoulShackle",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -128,7 +127,7 @@ namespace Marksman
                     BuffName = "MordekaiserChildrenOfTheGrave",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotTargeted,
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -140,7 +139,7 @@ namespace Marksman
                     BuffName = "NocturneParanoia",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotTargeted,
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -152,7 +151,7 @@ namespace Marksman
                     BuffName = "PoppyDiplomaticImmunity",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotTargeted,
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -164,7 +163,7 @@ namespace Marksman
                     BuffName = "PuncturingTaunt",
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotTargeted,
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true
                 });
             BuffList.Add(
@@ -175,7 +174,7 @@ namespace Marksman
                     BuffName = "Destiny",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotUnknown,
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -187,7 +186,7 @@ namespace Marksman
                     BuffName = "SkarnerImpale",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotTargeted,
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -199,7 +198,7 @@ namespace Marksman
                     BuffName = "UrgotSwap2",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotTargeted,
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -211,7 +210,7 @@ namespace Marksman
                     BuffName = "VladimirHemoplague",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -223,7 +222,7 @@ namespace Marksman
                     BuffName = "suppression",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotTargeted,
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -235,7 +234,7 @@ namespace Marksman
                     BuffName = "DarkBindingMissile",
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -247,7 +246,7 @@ namespace Marksman
                     BuffName = "SoulShackless",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -259,7 +258,7 @@ namespace Marksman
                     BuffName = "timebombenemybuff",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotTargeted,
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = false,
                     Delay = 0
                 });
@@ -271,7 +270,7 @@ namespace Marksman
                     BuffName = "zedulttargetmark",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotTargeted,
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 3
                 });
@@ -283,7 +282,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "AatroxQ",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -295,7 +294,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "AhriSeduce",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -307,7 +306,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "Pulverize",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -318,7 +317,7 @@ namespace Marksman
                     DisplayName = "Alistar (W)",
                     Slot = SpellSlot.W,
                     BuffName = "Headbutt",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -330,7 +329,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "BandageToss",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -342,7 +341,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "CurseoftheSadMummy",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -354,7 +353,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "InfernalGuardian",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -366,7 +365,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "AzirR",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -378,7 +377,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "RocketGrab",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -389,7 +388,7 @@ namespace Marksman
                     DisplayName = "Power Fist",
                     Slot = SpellSlot.E,
                     BuffName = "PowerFist",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -401,7 +400,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "BrandBlazeMissile",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -413,7 +412,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "BraumQ",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -425,7 +424,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "BraumR",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -437,7 +436,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "CaitlynEntrapment",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -449,7 +448,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "caitlynaceinthehole",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -461,7 +460,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCone,
                     BuffName = "CassiopeiaPetrifyingGaze",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -473,7 +472,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "Rupture",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -485,7 +484,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCone,
                     BuffName = "DariusAxeGrabCone",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -497,7 +496,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "DianaVortex",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -509,7 +508,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "InfectedCleaverMissileCast",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -521,7 +520,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "DravenDoubleShot",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -533,7 +532,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "EliseHumanE",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -545,7 +544,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "EvelynnR",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -557,7 +556,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "FizzMarinerDoomMissile",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -569,7 +568,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "GalioResoluteSmite",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -581,7 +580,7 @@ namespace Marksman
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "GnarBigW",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -593,7 +592,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "GnarR",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -605,7 +604,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "GragasQ",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -617,7 +616,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "GragasE",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -629,7 +628,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "GragasR",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -641,7 +640,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "HeimerdingerE",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -662,7 +661,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "HecarimRamp",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -674,7 +673,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "HowlingGale",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -685,7 +684,7 @@ namespace Marksman
                     DisplayName = "Janna (W)",
                     Slot = SpellSlot.W,
                     BuffName = "ReapTheWhirlwind",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -697,7 +696,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "JaxCounterStrike",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 2
                 });
@@ -709,7 +708,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "JarvanIVDragonStrike",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -720,7 +719,7 @@ namespace Marksman
                     DisplayName = "Jayce (Melee-E)",
                     Slot = SpellSlot.E,
                     BuffName = "JayceThunderingBlow",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -732,7 +731,7 @@ namespace Marksman
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "JinxW",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -744,7 +743,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "JinxE",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -756,7 +755,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "KarmaQMantra",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -767,7 +766,7 @@ namespace Marksman
                     DisplayName = "Karma (W)",
                     Slot = SpellSlot.W,
                     BuffName = "KarmaQMantra",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -779,7 +778,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCone,
                     BuffName = "ForcePulse",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -791,7 +790,7 @@ namespace Marksman
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "KhazixW",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -802,7 +801,7 @@ namespace Marksman
                     DisplayName = "Kayle (Q)",
                     Slot = SpellSlot.Q,
                     BuffName = "JudicatorReckoning",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -814,7 +813,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "KogMawVoidOoze",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -826,7 +825,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LeblancSoulShackle",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -838,7 +837,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LeblancSoulShackleM",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -849,7 +848,7 @@ namespace Marksman
                     DisplayName = "LeeSin (R)",
                     Slot = SpellSlot.R,
                     BuffName = "BlindMonkRKick",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -861,7 +860,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LeonaZenithBlade",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -872,7 +871,7 @@ namespace Marksman
                     DisplayName = "Leona (Q)",
                     Slot = SpellSlot.Q,
                     BuffName = "LeonaShieldOfDaybreak",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -884,7 +883,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "LeonaSolarFlare",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -896,7 +895,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LissandraQ",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -908,7 +907,7 @@ namespace Marksman
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LissandraW",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -920,7 +919,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LuluQ",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -932,7 +931,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LuluQMissileTwo",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -944,7 +943,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LuxLightBinding",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -956,7 +955,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "LuxLightStrikeKugel",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -968,7 +967,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "LuxMaliceCannon",
-                    CanBlockWith = new[] { BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -980,7 +979,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "UFSlash",
-                    CanBlockWith = new[] { BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -992,7 +991,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "SismicShard",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1003,7 +1002,7 @@ namespace Marksman
                     DisplayName = "Malzahar (R)",
                     Slot = SpellSlot.R,
                     BuffName = "AlZaharNetherGrasp",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1014,7 +1013,7 @@ namespace Marksman
                     DisplayName = "Maokai (W)",
                     Slot = SpellSlot.W,
                     BuffName = "MaokaiUnstableGrowth",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1025,7 +1024,7 @@ namespace Marksman
                     DisplayName = "MaoKai (Q)",
                     Slot = SpellSlot.Q,
                     BuffName = "MaokaiTrunkLine",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1036,7 +1035,7 @@ namespace Marksman
                     DisplayName = "Mordekaiser (Q)",
                     Slot = SpellSlot.Q,
                     BuffName = "MordekaiserChildrenOfTheGrave",
-                    CanBlockWith = new[] { BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1048,7 +1047,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "MonkeyKingSpinToWin",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1060,7 +1059,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "NamiQ",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1072,7 +1071,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "NamiR",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1083,7 +1082,7 @@ namespace Marksman
                     DisplayName = "Nasus (Q)",
                     Slot = SpellSlot.Q,
                     BuffName = "NasusW",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1095,7 +1094,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "KarthusWallOfPain",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 3
                 });
@@ -1107,7 +1106,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "NautilusAnchorDragMissile",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1119,7 +1118,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "NautilusSplashZone",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1130,7 +1129,7 @@ namespace Marksman
                     DisplayName = "Nautilus (R)",
                     Slot = SpellSlot.R,
                     BuffName = "NautilusGrandLine",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1142,7 +1141,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "JavelinToss",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1154,7 +1153,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "OlafAxeThrowCast",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1166,7 +1165,7 @@ namespace Marksman
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "OrianaDissonanceCommand",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1178,7 +1177,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "OrianaDetonateCommand",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1190,7 +1189,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "QuinnQ",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1202,7 +1201,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "PuncturingTaunt",
-                    CanBlockWith = new[] { BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1214,7 +1213,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "RengarEFinal",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1225,7 +1224,7 @@ namespace Marksman
                     DisplayName = "Fiddle (Q)",
                     Slot = SpellSlot.Q,
                     BuffName = "Terrify",
-                    CanBlockWith = new[] { BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1236,7 +1235,7 @@ namespace Marksman
                     DisplayName = "Renekton (W)",
                     Slot = SpellSlot.W,
                     BuffName = "RenektonPreExecute",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1248,7 +1247,7 @@ namespace Marksman
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "RivenMartyr",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1260,7 +1259,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "RumbleGrenade",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1272,7 +1271,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "RumbleCarpetBombMissile",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1283,7 +1282,7 @@ namespace Marksman
                     DisplayName = "Ryze (W)",
                     Slot = SpellSlot.W,
                     BuffName = "RunePrison",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1295,7 +1294,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "SejuaniArcticAssault",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1307,7 +1306,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "SejuaniGlacialPrisonStart",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1319,7 +1318,7 @@ namespace Marksman
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "MegaAdhesive",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1330,7 +1329,7 @@ namespace Marksman
                     DisplayName = "Singed (E)",
                     Slot = SpellSlot.E,
                     BuffName = "Fling",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1341,7 +1340,7 @@ namespace Marksman
                     DisplayName = "Nocturne (E)",
                     Slot = SpellSlot.E,
                     BuffName = "NocturneUnspeakableHorror",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1353,7 +1352,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "ShenShadowDash",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1365,7 +1364,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "ShyvanaTransformCast",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1377,7 +1376,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "SkarnerFractureMissile",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1389,7 +1388,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "SkarnerFractureMissile",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1400,7 +1399,7 @@ namespace Marksman
                     DisplayName = "Pantheon (W)",
                     Slot = SpellSlot.W,
                     BuffName = "PantheonW",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1411,7 +1410,7 @@ namespace Marksman
                     DisplayName = "Nunu (E)",
                     Slot = SpellSlot.E,
                     BuffName = "Ice Blast",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1423,7 +1422,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "SonaCrescendo",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1435,7 +1434,7 @@ namespace Marksman
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "SwainShadowGrasp",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1447,7 +1446,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCone,
                     BuffName = "SyndraE",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1459,7 +1458,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "ThreshQ",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1471,7 +1470,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "ThreshEFlay",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1482,7 +1481,7 @@ namespace Marksman
                     DisplayName = "Tristana (R)",
                     Slot = SpellSlot.R,
                     BuffName = "BusterShot",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1493,7 +1492,7 @@ namespace Marksman
                     DisplayName = "Trundle (E)",
                     Slot = SpellSlot.E,
                     BuffName = "TrundleCircle",
-                    CanBlockWith = new[] { BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1504,7 +1503,7 @@ namespace Marksman
                     DisplayName = "Trundle (R)",
                     Slot = SpellSlot.R,
                     BuffName = "TrundlePain",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1515,7 +1514,7 @@ namespace Marksman
                     DisplayName = "Tryndamere (W)",
                     Slot = SpellSlot.W,
                     BuffName = "MockingShout",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1528,7 +1527,7 @@ namespace Marksman
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "TwitchVenomCaskMissile",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1540,7 +1539,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "UrgotPlasmaGrenadeBoom",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1552,7 +1551,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "VarusE",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1564,7 +1563,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "VarusR",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1576,7 +1575,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "VeigarEventHorizon",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1588,7 +1587,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "VelkozQ",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1600,7 +1599,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "VelkozQSplit",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1612,7 +1611,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "VelkozE",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1624,7 +1623,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "ViQ",
-                    CanBlockWith = new[] { BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1635,7 +1634,7 @@ namespace Marksman
                     DisplayName = "Vi (R)",
                     Slot = SpellSlot.R,
                     BuffName = "ViR",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1647,7 +1646,7 @@ namespace Marksman
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "ViktorGravitonField",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1658,7 +1657,7 @@ namespace Marksman
                     DisplayName = "Vayne (E)",
                     Slot = SpellSlot.E,
                     BuffName = "Vayne Condemn",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1669,7 +1668,7 @@ namespace Marksman
                     DisplayName = "Warwick (R)",
                     Slot = SpellSlot.R,
                     BuffName = "InfiniteDuress",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1681,7 +1680,7 @@ namespace Marksman
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "XerathArcaneBarrage2",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1693,7 +1692,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "XerathMageSpearMissile",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1704,7 +1703,7 @@ namespace Marksman
                     DisplayName = "XinZhao (Q)",
                     Slot = SpellSlot.Q,
                     BuffName = "XenZhaoComboTarget",
-                    CanBlockWith = new[] { BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1716,7 +1715,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "XenZhaoParry",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1728,7 +1727,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "yasuoq2",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1740,7 +1739,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "yasuoq3w",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1752,7 +1751,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "yasuoq",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1764,7 +1763,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "ZacQ",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1775,7 +1774,7 @@ namespace Marksman
                     DisplayName = "Zac (R)",
                     Slot = SpellSlot.R,
                     BuffName = "ZacR",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1787,7 +1786,7 @@ namespace Marksman
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "ZiggsW",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1799,7 +1798,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "ZyraGraspingRoots",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1811,7 +1810,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "ZyraBrambleZone",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1822,7 +1821,7 @@ namespace Marksman
                     DisplayName = "Taric (E)",
                     Slot = SpellSlot.E,
                     BuffName = "Dazzle",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1833,7 +1832,7 @@ namespace Marksman
                     DisplayName = "Yoric (W)",
                     Slot = SpellSlot.W,
                     BuffName = "YorickDecayed",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1845,7 +1844,7 @@ namespace Marksman
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "StaticField",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1857,7 +1856,7 @@ namespace Marksman
                     Slot = SpellSlot.W,
                     SkillType = SkillShotType.SkillshotCone,
                     BuffName = "FeralScream",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1869,7 +1868,7 @@ namespace Marksman
                     Slot = SpellSlot.Q,
                     SkillType = SkillShotType.SkillshotLine,
                     BuffName = "AlZaharCalloftheVoid",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1880,7 +1879,7 @@ namespace Marksman
                     DisplayName = "Garen (Q)",
                     Slot = SpellSlot.Q,
                     BuffName = "GarenQ",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1891,7 +1890,7 @@ namespace Marksman
                     DisplayName = "Viktor (R)",
                     Slot = SpellSlot.R,
                     BuffName = "ViktorChaosStorm",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });
@@ -1903,7 +1902,7 @@ namespace Marksman
                     Slot = SpellSlot.E,
                     SkillType = SkillShotType.SkillshotCircle,
                     BuffName = "SorakaE",
-                    CanBlockWith = new[] { BlockableSpells.QuickSilverSash, BlockableSpells.SivirE },
+                    CanBlockWith = new[] {BlockableSpells.QuickSilverSash, BlockableSpells.SivirE},
                     DefaultMenuValue = true,
                     Delay = 0
                 });

@@ -18,6 +18,7 @@ namespace Marksman
     internal class Activator
     {
         public readonly List<BuffList> BuffList = new List<BuffList>();
+
         public Activator()
         {
             BuffList.Add(new BuffList
@@ -125,7 +126,7 @@ namespace Marksman
                 DefaultValue = true,
                 Delay = 0
             });
-         BuffList.Add(new BuffList
+            BuffList.Add(new BuffList
             {
                 ChampionName = "Warwick",
                 DisplayName = "Warwick (R)",
@@ -165,5 +166,4 @@ namespace Marksman
             });
         }
     }
-    
 }

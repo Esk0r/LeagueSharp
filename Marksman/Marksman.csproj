@@ -51,7 +51,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\favicon.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LeagueSharp">
@@ -64,7 +65,7 @@
       <HintPath>C:\Program Files (x86)\LeagueSharp\System\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D9">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\LeagueSharp\System\SharpDX.Direct3D9.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\LeagueSharp\System\SharpDX.Direct3D9.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -81,6 +82,7 @@
     <Compile Include="Caitlyn.cs" />
     <Compile Include="Champion.cs" />
     <Compile Include="Corki.cs" />
+    <Compile Include="Sprite.cs" />
     <Compile Include="Draven.cs" />
     <Compile Include="Ezreal.cs" />
     <Compile Include="Gnar.cs" />
@@ -91,13 +93,13 @@
     <Compile Include="PotionManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Lucian.cs" />
+    <Compile Include="MissFortune.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Lucian.cs" />
-    <Compile Include="MissFortune.cs" />
     <Compile Include="SpellList.cs" />
     <Compile Include="Quinn.cs" />
     <Compile Include="Sivir.cs" />
@@ -135,13 +137,14 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Marksman_icon.jpg" />
+    <None Include="Resources\selectedchampion.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\favicon.ico" />
+    <None Include="Resources\selectedminion.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

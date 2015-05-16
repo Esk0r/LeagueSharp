@@ -1,8 +1,10 @@
 #region
+
 using System;
 using System.Drawing;
 using LeagueSharp;
 using LeagueSharp.Common;
+
 #endregion
 
 namespace Marksman
@@ -67,7 +69,7 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { Q, W, E };
+            Spell[] spellList = {Q, W, E};
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -100,16 +102,15 @@ namespace Marksman
                 new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
             return true;
         }
+
         public override bool ExtrasMenu(Menu config)
         {
-
             return true;
         }
 
         public override bool LaneClearMenu(Menu config)
         {
-
-             return true;
+            return true;
         }
     }
 }

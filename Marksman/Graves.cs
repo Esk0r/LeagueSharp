@@ -37,13 +37,13 @@ namespace Marksman
             float fComboDamage = 0f;
 
             if (Q.IsReady())
-                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q);
+                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q);
 
             if (W.IsReady())
-                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
+                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.W);
 
             if (R.IsReady())
-                fComboDamage += (float)ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
+                fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
 
             if (ObjectManager.Player.GetSpellSlot("summonerdot") != SpellSlot.Unknown &&
                 ObjectManager.Player.Spellbook.CanUseSpell(ObjectManager.Player.GetSpellSlot("summonerdot")) ==
@@ -64,13 +64,13 @@ namespace Marksman
         {
             if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active)
             {
-                if(ObjectManager.Player.HasBuff("Recall"))
+                if (ObjectManager.Player.HasBuff("Recall"))
                     return;
                 var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                 if (t != null)
                     Q.Cast(t, false, true);
             }
-            
+
             if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100)) return;
             var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
             var useW = GetValue<bool>("UseW" + (ComboActive ? "C" : "H"));
@@ -130,7 +130,7 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { Q };
+            Spell[] spellList = {Q};
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -153,8 +153,8 @@ namespace Marksman
             config.AddItem(new MenuItem("UseWH" + Id, "Use W").SetValue(false));
             config.AddItem(
                 new MenuItem("UseQTH" + Id, "Use Q (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
-                    KeyBindType.Toggle)));           
-            
+                    KeyBindType.Toggle)));
+
             return true;
         }
 
@@ -168,15 +168,12 @@ namespace Marksman
 
         public override bool ExtrasMenu(Menu config)
         {
-
             return true;
         }
+
         public override bool LaneClearMenu(Menu config)
         {
-
-             return true;
+            return true;
         }
-
-
     }
 }

@@ -1,10 +1,13 @@
 #region
+
 using System;
+using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX.Direct3D9;
 using Font = SharpDX.Direct3D9.Font;
+
 #endregion
 
 namespace Marksman
@@ -26,7 +29,7 @@ namespace Marksman
             W.SetSkillshot(0.25f, 80f, 1600f, false, SkillshotType.SkillshotLine);
 
             E = new Spell(SpellSlot.E);
-            
+
             R = new Spell(SpellSlot.R, 2500);
             R.SetSkillshot(1f, 160f, 2000f, false, SkillshotType.SkillshotLine);
 
@@ -40,7 +43,7 @@ namespace Marksman
                     FaceName = "Courier new",
                     Height = 15,
                     OutputPrecision = FontPrecision.Default,
-                    Quality = FontQuality.Default,
+                    Quality = FontQuality.Default
                 });
 
             Utils.PrintMessage("Ezreal loaded.");
@@ -64,6 +67,7 @@ namespace Marksman
                 }
             }
         }
+
         private static void CastQ()
         {
             var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
@@ -71,7 +75,7 @@ namespace Marksman
             if (t.IsValidTarget() && Q.IsReady() &&
                 ObjectManager.Player.Distance(t.ServerPosition) <= Q.Range)
             {
-                PredictionOutput Qpredict = Q.GetPrediction(t);
+                var Qpredict = Q.GetPrediction(t);
                 var hithere = Qpredict.CastPosition.Extend(ObjectManager.Player.Position, -140);
                 if (Qpredict.Hitchance >= HitChance.High)
                     Q.Cast(hithere);
@@ -80,7 +84,7 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { Q, W };
+            Spell[] spellList = {Q, W};
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -101,12 +105,12 @@ namespace Marksman
                 var maxRRange = Program.Config.SubMenu("Combo").Item("UseRCMaxRange").GetValue<Slider>().Value;
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, maxRRange, drawRMax.Color, 2);
             }
-
+            /*
             if (Program.Config.Item("DrawHarassToggleStatus").GetValue<bool>())
             {
                 DrawHarassToggleStatus();
             }
-
+            */
             if (Program.Config.Item("ShowKillableStatus").GetValue<bool>())
             {
                 ShowKillableStatus();
@@ -173,7 +177,7 @@ namespace Marksman
                         if (Q.IsReady() && t.IsValidTarget(Q.Range) && Q.GetPrediction(t).CollisionObjects.Count == 0 &&
                             t.Health < ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q))
                             return;
-                        
+
                         if (t.IsValidTarget() && ObjectManager.Player.Distance(t) >= minRRange &&
                             t.Health <= ObjectManager.Player.GetSpellDamage(t, SpellSlot.R))
                         {
@@ -190,7 +194,7 @@ namespace Marksman
                 if (Q.IsReady() && useQ)
                 {
                     var vMinions = MinionManager.GetMinions(ObjectManager.Player.Position, Q.Range);
-                    foreach (Obj_AI_Base minions in
+                    foreach (var minions in
                         vMinions.Where(
                             minions => minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q)))
                         Q.Cast(minions);
@@ -247,10 +251,10 @@ namespace Marksman
                 xRMenu.AddItem(new MenuItem("UseRCMaxRange", "Max. Range").SetValue(new Slider(500, 500, 2000)));
                 xRMenu.AddItem(
                     new MenuItem("DrawRMin", "Draw Min. R Range").SetValue(
-                        new Circle(true, System.Drawing.Color.DarkRed)));
+                        new Circle(true, Color.DarkRed)));
                 xRMenu.AddItem(
                     new MenuItem("DrawRMax", "Draw Max. R Range").SetValue(
-                        new Circle(true, System.Drawing.Color.DarkMagenta)));
+                        new Circle(true, Color.DarkMagenta)));
 
                 config.AddSubMenu(xRMenu);
             }
@@ -282,7 +286,7 @@ namespace Marksman
                 new MenuItem("UseQTH", "Q (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0], KeyBindType.Toggle)));
             config.AddItem(
                 new MenuItem("UseWTH", "W (Toggle)").SetValue(new KeyBind("J".ToCharArray()[0], KeyBindType.Toggle)));
-            config.AddItem(new MenuItem("DrawHarassToggleStatus", "Draw Toggle Status").SetValue(true));
+            //config.AddItem(new MenuItem("DrawHarassToggleStatus", "Draw Toggle Status").SetValue(true));
             return true;
         }
 
@@ -294,6 +298,7 @@ namespace Marksman
             return true;
         }
 
+        /*
         private static void DrawHarassToggleStatus()
         {
             var xHarassStatus = "";
@@ -318,6 +323,7 @@ namespace Marksman
                 vText, xHarassStatus, (int) ObjectManager.Player.HPBarPosition.X + 145,
                 (int) ObjectManager.Player.HPBarPosition.Y + 5, SharpDX.Color.White);
         }
+        */
 
         private static void ShowKillableStatus()
         {
@@ -334,10 +340,10 @@ namespace Marksman
         {
             config.AddItem(
                 new MenuItem("DrawQ" + Id, "Q range").SetValue(
-                    new Circle(true, System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                    new Circle(true, Color.FromArgb(100, 255, 0, 255))));
             config.AddItem(
                 new MenuItem("DrawW" + Id, "W range").SetValue(
-                    new Circle(false, System.Drawing.Color.FromArgb(100, 255, 255, 255))));
+                    new Circle(false, Color.FromArgb(100, 255, 255, 255))));
             config.AddItem(new MenuItem("ShowKillableStatus", "Show Killable Status").SetValue(true));
 
             var dmgAfterComboItem = new MenuItem("DamageAfterCombo", "Damage After Combo").SetValue(true);
@@ -348,7 +354,6 @@ namespace Marksman
 
         public override bool ExtrasMenu(Menu config)
         {
-
             return true;
         }
 
@@ -357,6 +362,5 @@ namespace Marksman
             config.AddItem(new MenuItem("UseQL" + Id, "Use Q").SetValue(true));
             return true;
         }
-
     }
 }

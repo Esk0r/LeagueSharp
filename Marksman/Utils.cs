@@ -1,4 +1,5 @@
 #region
+
 using System;
 using System.Linq;
 using LeagueSharp;
@@ -6,6 +7,7 @@ using LeagueSharp.Common;
 using SharpDX;
 using Color = SharpDX.Color;
 using Font = SharpDX.Direct3D9.Font;
+
 #endregion
 
 namespace Marksman
@@ -22,7 +24,7 @@ namespace Marksman
         {
             Notifications.AddNotification("Marksman: " + message, 4000);
             return;
-            
+
             Game.PrintChat("<font color='#70DBDB'>Marksman:</font> <font color='#FFFFFF'>" + message + "</font>");
 
             foreach (
@@ -39,34 +41,45 @@ namespace Marksman
         {
             public static void DrawJunglePosition()
             {
-                if (Game.MapId == (GameMapId)11)
+                if (Game.MapId == (GameMapId) 11)
                 {
                     const float circleRange = 100f;
 
                     Render.Circle.DrawCircle(
-                        new Vector3(7461.018f, 3253.575f, 52.57141f), circleRange, System.Drawing.Color.Blue); // blue team :red
+                        new Vector3(7461.018f, 3253.575f, 52.57141f), circleRange, System.Drawing.Color.Blue);
+                        // blue team :red
                     Render.Circle.DrawCircle(
-                        new Vector3(3511.601f, 8745.617f, 52.57141f), circleRange, System.Drawing.Color.Blue); // blue team :blue
+                        new Vector3(3511.601f, 8745.617f, 52.57141f), circleRange, System.Drawing.Color.Blue);
+                        // blue team :blue
                     Render.Circle.DrawCircle(
-                        new Vector3(7462.053f, 2489.813f, 52.57141f), circleRange, System.Drawing.Color.Blue); // blue team :golems
+                        new Vector3(7462.053f, 2489.813f, 52.57141f), circleRange, System.Drawing.Color.Blue);
+                        // blue team :golems
                     Render.Circle.DrawCircle(
-                        new Vector3(3144.897f, 7106.449f, 51.89026f), circleRange, System.Drawing.Color.Blue); // blue team :wolfs
+                        new Vector3(3144.897f, 7106.449f, 51.89026f), circleRange, System.Drawing.Color.Blue);
+                        // blue team :wolfs
                     Render.Circle.DrawCircle(
-                        new Vector3(7770.341f, 5061.238f, 49.26587f), circleRange, System.Drawing.Color.Blue); // blue team :wariaths
+                        new Vector3(7770.341f, 5061.238f, 49.26587f), circleRange, System.Drawing.Color.Blue);
+                        // blue team :wariaths
 
                     Render.Circle.DrawCircle(
-                        new Vector3(10930.93f, 5405.83f, -68.72192f), circleRange, System.Drawing.Color.Yellow); // Dragon
+                        new Vector3(10930.93f, 5405.83f, -68.72192f), circleRange, System.Drawing.Color.Yellow);
+                        // Dragon
 
                     Render.Circle.DrawCircle(
-                        new Vector3(7326.056f, 11643.01f, 50.21985f), circleRange, System.Drawing.Color.Red); // red team :red
+                        new Vector3(7326.056f, 11643.01f, 50.21985f), circleRange, System.Drawing.Color.Red);
+                        // red team :red
                     Render.Circle.DrawCircle(
-                        new Vector3(11417.6f, 6216.028f, 51.00244f), circleRange, System.Drawing.Color.Red); // red team :blue
+                        new Vector3(11417.6f, 6216.028f, 51.00244f), circleRange, System.Drawing.Color.Red);
+                        // red team :blue
                     Render.Circle.DrawCircle(
-                        new Vector3(7368.408f, 12488.37f, 56.47668f), circleRange, System.Drawing.Color.Red); // red team :golems
+                        new Vector3(7368.408f, 12488.37f, 56.47668f), circleRange, System.Drawing.Color.Red);
+                        // red team :golems
                     Render.Circle.DrawCircle(
-                        new Vector3(10342.77f, 8896.083f, 51.72742f), circleRange, System.Drawing.Color.Red); // red team :wolfs
+                        new Vector3(10342.77f, 8896.083f, 51.72742f), circleRange, System.Drawing.Color.Red);
+                        // red team :wolfs
                     Render.Circle.DrawCircle(
-                        new Vector3(7001.741f, 9915.717f, 54.02466f), circleRange, System.Drawing.Color.Red); // red team :wariaths                    
+                        new Vector3(7001.741f, 9915.717f, 54.02466f), circleRange, System.Drawing.Color.Red);
+                        // red team :wariaths                    
                 }
             }
         }

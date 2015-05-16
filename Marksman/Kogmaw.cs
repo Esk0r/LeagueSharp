@@ -33,7 +33,7 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { Q, W, E, R };
+            Spell[] spellList = {Q, W, E, R};
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -47,8 +47,8 @@ namespace Marksman
         public override void Game_OnGameUpdate(EventArgs args)
         {
             UltimateBuffStacks = GetUltimateBuffStacks();
-            W.Range = 110 + 20 * ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Level;
-            R.Range = 900 + 300 * ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Level;
+            W.Range = 110 + 20*ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Level;
+            R.Range = 900 + 300*ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Level;
 
             if (R.IsReady() && GetValue<bool>("UseRM"))
                 foreach (
@@ -101,7 +101,7 @@ namespace Marksman
 
         public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
-            if (target != null && (!ComboActive && !HarassActive) || !unit.IsMe || !(target is Obj_AI_Hero)) 
+            if (target != null && (!ComboActive && !HarassActive) || !unit.IsMe || !(target is Obj_AI_Hero))
                 return;
 
             var t = target as Obj_AI_Hero;
@@ -178,14 +178,12 @@ namespace Marksman
 
         public override bool ExtrasMenu(Menu config)
         {
-
             return true;
         }
+
         public override bool LaneClearMenu(Menu config)
         {
-
-             return true;
+            return true;
         }
-
     }
 }

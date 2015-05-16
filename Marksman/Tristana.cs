@@ -1,4 +1,5 @@
 #region
+
 using LeagueSharp;
 using LeagueSharp.Common;
 using System;
@@ -6,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using SharpDX.Direct3D9;
 using Font = SharpDX.Direct3D9.Font;
+
 #endregion
 
 namespace Marksman
@@ -59,18 +61,18 @@ namespace Marksman
                 {
                     if (W.IsReady())
                     {
-                        var wDamage = new double[] { 80, 105, 130, 155, 180 }[W.Level - 1] +
-                                      0.5 * Player.FlatMagicDamageMod;
+                        var wDamage = new double[] {80, 105, 130, 155, 180}[W.Level - 1] +
+                                      0.5*Player.FlatMagicDamageMod;
                         if (GetEMarkedCount > 0 && GetEMarkedCount < 4)
                         {
-                            return wDamage + (wDamage * GetEMarkedCount * .20);
+                            return wDamage + (wDamage*GetEMarkedCount*.20);
                         }
                         switch (GetEMarkedCount)
                         {
                             case 0:
                                 return wDamage;
                             case 4:
-                                return wDamage * 2;
+                                return wDamage*2;
                         }
                     }
                     return 0;
@@ -82,7 +84,7 @@ namespace Marksman
                 get
                 {
                     var fComboDamage = 0d;
-                    var t = GetTarget(W.Range * 2);
+                    var t = GetTarget(W.Range*2);
                     if (!t.IsValidTarget())
                         return 0;
                     /*
@@ -105,13 +107,13 @@ namespace Marksman
 
                     if (E.IsReady())
                     {
-                        fComboDamage += new double[] { 60, 70, 80, 90, 100 }[E.Level - 1] * 2 *
+                        fComboDamage += new double[] {60, 70, 80, 90, 100}[E.Level - 1]*2*
                                         Player.FlatMagicDamageMod;
                     }
 
                     if (R.IsReady())
                     {
-                        fComboDamage += new double[] { 300, 400, 500 }[R.Level - 1] + Player.FlatMagicDamageMod;
+                        fComboDamage += new double[] {300, 400, 500}[R.Level - 1] + Player.FlatMagicDamageMod;
                     }
                     return (float) fComboDamage;
                 }
@@ -176,7 +178,7 @@ namespace Marksman
 
         private static bool canUseE(Obj_AI_Hero t)
         {
-            if (Player.CountEnemiesInRange(W.Range + (E.Range / 2)) == 1)
+            if (Player.CountEnemiesInRange(W.Range + (E.Range/2)) == 1)
                 return true;
 
             return (Program.Config.Item("DontUseE" + t.ChampionName) != null &&
@@ -199,9 +201,9 @@ namespace Marksman
                 TargetSelector.SetTarget(TargetSelector.GetTarget(attackRange, TargetSelector.DamageType.Physical));
             }
 
-            Q.Range = 600 + 5 * (Player.Level - 1);
-            E.Range = 630 + 7 * (Player.Level - 1);
-            R.Range = 630 + 7 * (Player.Level - 1);
+            Q.Range = 600 + 5*(Player.Level - 1);
+            E.Range = 630 + 7*(Player.Level - 1);
+            R.Range = 630 + 7*(Player.Level - 1);
 
             if (GetValue<KeyBind>("UseETH").Active)
             {
@@ -294,7 +296,7 @@ namespace Marksman
                             LastTickTime = Environment.TickCount + 5000;
                         var xTime = LastTickTime - Environment.TickCount;
 
-                        var timer = string.Format("0:{0:D2}", xTime / 1000);
+                        var timer = string.Format("0:{0:D2}", xTime/1000);
                         Utils.DrawText(
                             vText1, timer + " : 4 / " + TristanaData.GetEMarkedCount,
                             (int) getEMarkedEnemy.HPBarPosition.X + 145, (int) getEMarkedEnemy.HPBarPosition.Y + 5,
@@ -308,7 +310,7 @@ namespace Marksman
                 }
             }
 
-            Spell[] spellList = { W };
+            Spell[] spellList = {W};
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -383,7 +385,6 @@ namespace Marksman
 
         public override bool ExtrasMenu(Menu config)
         {
-
             return true;
         }
 

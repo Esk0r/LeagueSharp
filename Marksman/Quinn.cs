@@ -1,10 +1,12 @@
 #region
+
 using System;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
+
 #endregion
 
 namespace Marksman
@@ -73,7 +75,7 @@ namespace Marksman
 
             foreach (var tower in ObjectManager.Get<Obj_Turret>()
                 .Where(tower => tower.IsValid && !tower.IsDead && Math.Abs(tower.Health) > float.Epsilon)
-                .Where(tower => Vector3.Distance(tower.Position, ObjectManager.Player.Position) < 1450)) 
+                .Where(tower => Vector3.Distance(tower.Position, ObjectManager.Player.Position) < 1450))
             {
                 closestTower = tower;
             }
@@ -114,13 +116,13 @@ namespace Marksman
         {
             if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active)
             {
-                if(ObjectManager.Player.HasBuff("Recall"))
+                if (ObjectManager.Player.HasBuff("Recall"))
                     return;
                 var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                 if (t != null)
                     Q.Cast(t, false, true);
-            }           
-            
+            }
+
             if (ComboActive || HarassActive)
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
@@ -181,7 +183,7 @@ namespace Marksman
             config.AddItem(new MenuItem("UseETH" + Id, "Do not Under Turret E").SetValue(true));
             config.AddItem(
                 new MenuItem("UseQTH" + Id, "Use Q (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
-                    KeyBindType.Toggle)));             
+                    KeyBindType.Toggle)));
             return true;
         }
 
@@ -198,9 +200,9 @@ namespace Marksman
 
         public override bool ExtrasMenu(Menu config)
         {
-
             return true;
         }
+
         public override bool LaneClearMenu(Menu config)
         {
             return true;

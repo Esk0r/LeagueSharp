@@ -1,10 +1,12 @@
 #region
+
 using System;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
+
 #endregion
 
 namespace Marksman
@@ -31,7 +33,7 @@ namespace Marksman
             Q.SetSkillshot(0.25f, 65f, 1100f, false, SkillshotType.SkillshotLine);
             W.SetSkillshot(0.30f, 80f, 1600f, true, SkillshotType.SkillshotLine);
             E = new Spell(SpellSlot.E, 475);
-            
+
             xPassiveUsedTime = Game.Time;
 
             Obj_AI_Base.OnProcessSpellCast += Game_OnProcessSpell;
@@ -44,7 +46,7 @@ namespace Marksman
             var newPos = (target.Position.To2D() - myPos);
             newPos.Normalize();
 
-            var checkPos = predPos + newPos * (spell.Range - Vector2.Distance(predPos, myPos));
+            var checkPos = predPos + newPos*(spell.Range - Vector2.Distance(predPos, myPos));
             Obj_Turret closestTower = null;
 
             foreach (var tower in ObjectManager.Get<Obj_Turret>()
@@ -73,21 +75,21 @@ namespace Marksman
                     MinionOrderTypes.None);
 
                 return (from vMinion in vMinions.Where(vMinion => vMinion.IsValidTarget(Q.Range))
-                        let endPoint =
-                            vMinion.ServerPosition.To2D()
-                                .Extend(ObjectManager.Player.ServerPosition.To2D(), -Q2.Range)
-                                .To3D()
-                        where
-                            vMinion.Distance(vTarget) <= vTarget.Distance(ObjectManager.Player) &&
-                            Intersection(ObjectManager.Player.ServerPosition.To2D(), endPoint.To2D(),
-                                vTarget.ServerPosition.To2D(), vTarget.BoundingRadius + Q.Width / 4)
-                        select vMinion).FirstOrDefault();
+                    let endPoint =
+                        vMinion.ServerPosition.To2D()
+                            .Extend(ObjectManager.Player.ServerPosition.To2D(), -Q2.Range)
+                            .To3D()
+                    where
+                        vMinion.Distance(vTarget) <= vTarget.Distance(ObjectManager.Player) &&
+                        Intersection(ObjectManager.Player.ServerPosition.To2D(), endPoint.To2D(),
+                            vTarget.ServerPosition.To2D(), vTarget.BoundingRadius + Q.Width/4)
+                    select vMinion).FirstOrDefault();
             }
         }
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { Q, Q2, W, E };
+            Spell[] spellList = {Q, Q2, W, E};
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -101,12 +103,12 @@ namespace Marksman
         {
             var p3 = new Vector2(pC.X + radius, pC.Y + radius);
 
-            var m = ((p2.Y - p1.Y) / (p2.X - p1.X));
-            var constant = (m * p1.X) - p1.Y;
-            var b = -(2f * ((m * constant) + p3.X + (m * p3.Y)));
-            var a = (1 + (m * m));
-            var c = ((p3.X * p3.X) + (p3.Y * p3.Y) - (radius * radius) + (2f * constant * p3.Y) + (constant * constant));
-            var d = ((b * b) - (4f * a * c));
+            var m = ((p2.Y - p1.Y)/(p2.X - p1.X));
+            var constant = (m*p1.X) - p1.Y;
+            var b = -(2f*((m*constant) + p3.X + (m*p3.Y)));
+            var a = (1 + (m*m));
+            var c = ((p3.X*p3.X) + (p3.Y*p3.Y) - (radius*radius) + (2f*constant*p3.Y) + (constant*constant));
+            var d = ((b*b) - (4f*a*c));
 
             return d > 0;
         }
@@ -116,7 +118,7 @@ namespace Marksman
             if (!unit.IsMe) return;
             if (spell.SData.Name.Contains("summoner")) return;
             if (!Config.Item("Passive" + Id).GetValue<bool>()) return;
-            
+
             if (spell.SData.Name.ToLower().Contains("lucianq") || spell.SData.Name.ToLower().Contains("lucianw") ||
                 spell.SData.Name.ToLower().Contains("luciane") || spell.SData.Name.ToLower().Contains("lucianr"))
             {
@@ -126,10 +128,7 @@ namespace Marksman
 
             if (spell.SData.Name.ToLower().Contains("lucianpassiveattack"))
             {
-                Utility.DelayAction.Add(500, () =>
-                {
-                    xAttackLeft -= 1;
-                });
+                Utility.DelayAction.Add(500, () => { xAttackLeft -= 1; });
             }
         }
 
@@ -140,7 +139,7 @@ namespace Marksman
                 xAttackLeft = 0;
                 return;
             }
-            
+
             if (Game.Time > xPassiveUsedTime + 3 && xAttackLeft == 1)
             {
                 xAttackLeft = 0;
@@ -236,7 +235,7 @@ namespace Marksman
             config.AddItem(
                 new MenuItem("UseQTH" + Id, "Use Q (Toggle)").SetValue(new KeyBind("T".ToCharArray()[0],
                     KeyBindType.Toggle)));
-            config.AddItem(new MenuItem("Cx",""));
+            config.AddItem(new MenuItem("Cx", ""));
             config.AddItem(new MenuItem("UseQExtendedH" + Id, "Use Extended Q").SetValue(true));
             config.AddItem(
                 new MenuItem("UseQExtendedTH" + Id, "Use Ext. Q (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
@@ -265,14 +264,12 @@ namespace Marksman
 
         public override bool ExtrasMenu(Menu config)
         {
-
             return true;
         }
 
         public override bool LaneClearMenu(Menu config)
         {
-
-             return true;
+            return true;
         }
     }
 }

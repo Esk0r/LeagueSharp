@@ -204,7 +204,7 @@ namespace Marksman
                     let direction =
                         (enemy.ServerPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized()
                     let pos = ObjectManager.Player.ServerPosition.To2D()
-                    select pos + Math.Min(200, Math.Max(50, enemy.Distance(ObjectManager.Player) / 2)) * direction)
+                    select pos + Math.Min(200, Math.Max(50, enemy.Distance(ObjectManager.Player)/2))*direction)
                 {
                     E.Cast(pos.To3D());
                 }
@@ -291,7 +291,7 @@ namespace Marksman
                         reticle =>
                             reticle.ReticlePos.Distance(cursor) <= Config.Item("CatchRadius").GetValue<Slider>().Value &&
                             reticle.Object.IsValid &&
-                            myHero.GetPath(reticle.ReticlePos).ToList().To2D().PathLength() / myHero.MoveSpeed + Game.Time <
+                            myHero.GetPath(reticle.ReticlePos).ToList().To2D().PathLength()/myHero.MoveSpeed + Game.Time <
                             reticle.ExpireTime);
 
             return reticles != null && myHero.Distance(reticles.ReticlePos) >= 100 ? reticles.ReticlePos : cursor;
@@ -307,14 +307,12 @@ namespace Marksman
 
         public override bool ExtrasMenu(Menu config)
         {
-
             return true;
         }
+
         public override bool LaneClearMenu(Menu config)
         {
-
-             return true;
+            return true;
         }
-
     }
 }

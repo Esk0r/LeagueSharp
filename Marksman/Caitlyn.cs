@@ -43,7 +43,7 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { Q, E, R };
+            Spell[] spellList = {Q, E, R};
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -62,20 +62,20 @@ namespace Marksman
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            R.Range = 500 * R.Level + 1500;
+            R.Range = 500*R.Level + 1500;
 
             Obj_AI_Hero t;
-            
+
             if (W.IsReady() && GetValue<bool>("AutoWI"))
             {
                 t = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
                 if (t.IsValidTarget(W.Range) &&
                     (t.HasBuffOfType(BuffType.Stun) || t.HasBuffOfType(BuffType.Snare) ||
-                    t.HasBuffOfType(BuffType.Taunt) || t.HasBuff("zhonyasringshield") ||
-                    t.HasBuff("Recall")))
+                     t.HasBuffOfType(BuffType.Taunt) || t.HasBuff("zhonyasringshield") ||
+                     t.HasBuff("Recall")))
                 {
                     W.Cast(t.Position);
-                }                
+                }
             }
 
             if (Q.IsReady() && GetValue<bool>("AutoQI"))
@@ -83,7 +83,7 @@ namespace Marksman
                 t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                 if (t.IsValidTarget(Q.Range) &&
                     (t.HasBuffOfType(BuffType.Stun) || t.HasBuffOfType(BuffType.Snare) ||
-                     t.HasBuffOfType(BuffType.Taunt) || t.HasBuffOfType(BuffType.Slow))) 
+                     t.HasBuffOfType(BuffType.Taunt) || t.HasBuffOfType(BuffType.Slow)))
                 {
                     Q.Cast(t, false, true);
                 }
@@ -112,7 +112,7 @@ namespace Marksman
 
             if (GetValue<KeyBind>("Dash").Active && E.IsReady())
             {
-                var pos = ObjectManager.Player.ServerPosition.To2D().Extend(Game.CursorPos.To2D(), - 300).To3D();
+                var pos = ObjectManager.Player.ServerPosition.To2D().Extend(Game.CursorPos.To2D(), -300).To3D();
                 E.Cast(pos, true);
             }
 
@@ -159,7 +159,7 @@ namespace Marksman
         public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
             var t = target as Obj_AI_Hero;
-            if (t != null || (!ComboActive && !HarassActive) || unit.IsMe) 
+            if (t != null || (!ComboActive && !HarassActive) || unit.IsMe)
                 return;
 
             var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
@@ -213,10 +213,10 @@ namespace Marksman
             config.AddItem(new MenuItem("AutoWI" + Id, "Auto W (Stun/Snare/Taunt)").SetValue(true));
             return true;
         }
+
         public override bool LaneClearMenu(Menu config)
         {
-
-             return true;
+            return true;
         }
     }
 }

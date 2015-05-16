@@ -1,4 +1,5 @@
 #region
+
 using System;
 using System.Drawing;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace Marksman
 
         public float QAddRange
         {
-            get { return 50 + 25 * ObjectManager.Player.Spellbook.GetSpell(SpellSlot.Q).Level; }
+            get { return 50 + 25*ObjectManager.Player.Spellbook.GetSpell(SpellSlot.Q).Level; }
         }
 
         private static bool FishBoneActive
@@ -53,7 +54,7 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { W };
+            Spell[] spellList = {W};
             var drawQbound = GetValue<Circle>("DrawQBound");
 
             foreach (var spell in spellList)
@@ -270,7 +271,7 @@ namespace Marksman
                         var rDamage = ObjectManager.Player.GetSpellDamage(t, SpellSlot.R);
                         var powPowRange = GetRealPowPowRange(t);
 
-                        if (distance < (powPowRange + QAddRange) && !(aDamage * 3.5 > t.Health))
+                        if (distance < (powPowRange + QAddRange) && !(aDamage*3.5 > t.Health))
                         {
                             if (!W.IsReady() || !(wDamage > t.Health) || W.GetPrediction(t).CollisionObjects.Count > 0)
                             {
@@ -329,7 +330,6 @@ namespace Marksman
 
                 if (useQ)
                 {
-
                     foreach (var t in
                         ObjectManager.Get<Obj_AI_Hero>()
                             .Where(t => t.IsValidTarget(GetRealPowPowRange(t) + QAddRange + 20f)))
@@ -438,7 +438,7 @@ namespace Marksman
         {
             config.AddItem(new MenuItem("SwapDistance" + Id, "Swap Q for distance").SetValue(true));
             config.AddItem(new MenuItem("SwapAOE" + Id, "Swap Q for AOE").SetValue(false));
-            config.AddItem(new MenuItem("MinWRange" + Id, "Min W range").SetValue(new Slider(525 + 65 * 2, 0, 1200)));
+            config.AddItem(new MenuItem("MinWRange" + Id, "Min W range").SetValue(new Slider(525 + 65*2, 0, 1200)));
             config.AddItem(new MenuItem("AutoEI" + Id, "Auto-E on immobile").SetValue(true));
             config.AddItem(new MenuItem("AutoES" + Id, "Auto-E on slowed").SetValue(true));
             config.AddItem(new MenuItem("AutoED" + Id, "Auto-E on dashing").SetValue(false));
@@ -463,9 +463,7 @@ namespace Marksman
 
         public override bool ExtrasMenu(Menu config)
         {
-
             return true;
         }
-
     }
 }

@@ -39,7 +39,7 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { Q };
+            Spell[] spellList = {Q};
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -52,13 +52,13 @@ namespace Marksman
         {
             if (Q.IsReady() && GetValue<KeyBind>("UseQTH").Active && ToggleActive)
             {
-                if(ObjectManager.Player.HasBuff("Recall"))
+                if (ObjectManager.Player.HasBuff("Recall"))
                     return;
                 var qTarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                 if (Q.IsReady() && qTarget.IsValidTarget())
                     Q.CastOnUnit(qTarget);
-            }           
-                        
+            }
+
             if (Orbwalking.CanMove(100) && (ComboActive || HarassActive))
             {
                 var useQ = GetValue<bool>("UseQ" + (ComboActive ? "C" : "H"));
@@ -86,25 +86,25 @@ namespace Marksman
             {
                 foreach (
                     var hero in
-                    ObjectManager.Get<Obj_AI_Hero>()
-                        .Where(
-                            hero =>
-                                hero.IsValidTarget(R.Range)))
+                        ObjectManager.Get<Obj_AI_Hero>()
+                            .Where(
+                                hero =>
+                                    hero.IsValidTarget(R.Range)))
                     R.Cast(hero, false, true);
-                
+
                 if (R.IsReady() && GetValue<bool>("AutoRI"))
                 {
                     var t = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
                     if (t.IsValidTarget(R.Range) &&
                         (t.HasBuffOfType(BuffType.Stun) || t.HasBuffOfType(BuffType.Snare) ||
-                        t.HasBuffOfType(BuffType.Taunt) || t.HasBuff("zhonyasringshield") ||
-                        t.HasBuff("Recall")))
+                         t.HasBuffOfType(BuffType.Taunt) || t.HasBuff("zhonyasringshield") ||
+                         t.HasBuff("Recall")))
                     {
                         R.Cast(t.Position);
-                    }                
-                }                    
+                    }
+                }
             }
-            
+
 
             if (LaneClearActive)
             {
@@ -134,7 +134,7 @@ namespace Marksman
             config.AddItem(new MenuItem("UseQH" + Id, "Use Q").SetValue(false));
             config.AddItem(
                 new MenuItem("UseQTH" + Id, "Use Q (Toggle)").SetValue(new KeyBind("H".ToCharArray()[0],
-                    KeyBindType.Toggle)));             
+                    KeyBindType.Toggle)));
             return true;
         }
 

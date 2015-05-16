@@ -1,4 +1,5 @@
 #region
+
 using System;
 using System.Linq;
 using LeagueSharp;
@@ -43,7 +44,7 @@ namespace Marksman
 
         public override void Drawing_OnDraw(EventArgs args)
         {
-            Spell[] spellList = { Q, E };
+            Spell[] spellList = {Q, E};
             foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
@@ -117,11 +118,11 @@ namespace Marksman
                     foreach (
                         Obj_AI_Base minions in
                             vMinions.Where(
-                                minions => minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q) - 20))
+                                minions =>
+                                    minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q) - 20))
                         Q.Cast(minions);
                 }
             }
-            
         }
 
         public override bool ComboMenu(Menu config)
@@ -163,14 +164,13 @@ namespace Marksman
 
         public override bool ExtrasMenu(Menu config)
         {
-
             return true;
         }
+
         public override bool LaneClearMenu(Menu config)
         {
             config.AddItem(new MenuItem("UseQL" + Id, "Use Q").SetValue(true));
             return true;
         }
-
     }
 }
