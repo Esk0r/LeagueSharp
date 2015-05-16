@@ -20,6 +20,7 @@ namespace Marksman
 
         public static double ActivatorTime;
         private static Obj_AI_Hero xSelectedTarget;
+        private const string xMenuSpace = "       ";
 
         private static void Main(string[] args)
         {
@@ -222,14 +223,20 @@ namespace Marksman
                 var drawing = new Menu("Drawings", "Drawings");
                 if (CClass.DrawingMenu(drawing))
                 {
+                    drawing.AddItem(new MenuItem("Marksman.Drawings", "Marksman Default Draw Options"));
                     drawing.AddItem(
-                        new MenuItem("drawMinionLastHit", "Minion Last Hit").SetValue(new Circle(false,
+                        new MenuItem("drawMinionLastHit", xMenuSpace + "Minion Last Hit").SetValue(new Circle(false,
                             System.Drawing.Color.GreenYellow)));
                     drawing.AddItem(
-                        new MenuItem("drawMinionNearKill", "Minion Near Kill").SetValue(new Circle(false,
+                        new MenuItem("drawMinionNearKill", xMenuSpace + "Minion Near Kill").SetValue(new Circle(false,
                             System.Drawing.Color.Gray)));
-                    drawing.AddItem(new MenuItem("drawJunglePosition", "JunglePosition").SetValue(true));
-
+                    drawing.AddItem(
+                        new MenuItem("drawJunglePosition", xMenuSpace + "Jungle Farm Position").SetValue(true));
+                    drawing.AddItem(
+                        new MenuItem("Draw.DrawMinions", xMenuSpace + "Draw Minions Sprite", true).SetValue(false));
+                    drawing.AddItem(
+                        new MenuItem("Draw.DrawTarget", xMenuSpace + "Draw Target Sprite", true).SetValue(true));
+                    drawing.AddItem(new MenuItem("Marksman.Drawings", "Champion Draws"));
                     Config.AddSubMenu(drawing);
                 }
             }
