@@ -94,8 +94,7 @@ namespace Marksman
                 VisibleCondition = sender => DrawSprite
             }.Add();
 
-            Program.Config.SubMenu("Drawings")
-                .AddItem(new MenuItem("Draw.DrawMinions", "Draw Minions", true).SetValue(false));
+            
 
             new Render.Sprite(Resources.selectedchampion, new Vector2())
             {
@@ -104,8 +103,7 @@ namespace Marksman
                 VisibleCondition = sender => DrawSprite
             }.Add();
 
-            Program.Config.SubMenu("Drawings")
-                .AddItem(new MenuItem("Draw.DrawTarget", "Draw Target", true).SetValue(true));
+            
         }
     }
 }

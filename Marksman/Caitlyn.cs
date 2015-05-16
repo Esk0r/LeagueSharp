@@ -15,7 +15,7 @@ namespace Marksman
         public Spell Q;
         public Spell W;
         public Spell E;
-        public Spell R;
+        public static Spell R;
 
         public bool ShowUlt;
         public string UltTarget;
@@ -33,6 +33,7 @@ namespace Marksman
             E.SetSkillshot(0.25f, 80f, 1600f, true, SkillshotType.SkillshotLine);
 
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
+            Drawing.OnEndScene += DrawingOnOnEndScene;
         }
 
         public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
@@ -52,7 +53,6 @@ namespace Marksman
             }
 
             var drawUlt = GetValue<Circle>("DrawUlt");
-
             if (drawUlt.Active && ShowUlt)
             {
                 //var playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
@@ -60,9 +60,19 @@ namespace Marksman
             }
         }
 
+        private static void DrawingOnOnEndScene(EventArgs args)
+        {
+            var rCircle2 = Program.Config.Item("Draw.UltiMiniMap").GetValue<Circle>();
+            if (rCircle2.Active)
+            {
+                Utility.DrawCircle(ObjectManager.Player.Position, R.Range, rCircle2.Color, 1, 23, true);
+            }
+        }
+
+
         public override void Game_OnGameUpdate(EventArgs args)
         {
-            R.Range = 500*R.Level + 1500;
+            R.Range = 500*(R.Level == 0 ? 1 : R.Level) + 1500;
 
             Obj_AI_Hero t;
 
@@ -183,14 +193,22 @@ namespace Marksman
 
         public override bool DrawingMenu(Menu config)
         {
+            config.AddItem(new MenuItem("Champion.Drawings", ObjectManager.Player.ChampionName + " Draw Options"));
             config.AddItem(
-                new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
+                new MenuItem("DrawQ" + Id, Program.MenuSpace + "Q range").SetValue(new Circle(true,
+                    Color.FromArgb(100, 255, 0, 255))));
             config.AddItem(
-                new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(false, Color.FromArgb(100, 255, 255, 255))));
+                new MenuItem("DrawE" + Id, Program.MenuSpace + "E range").SetValue(new Circle(false,
+                    Color.FromArgb(100, 255, 255, 255))));
             config.AddItem(
-                new MenuItem("DrawR" + Id, "R range").SetValue(new Circle(false, Color.FromArgb(100, 255, 255, 255))));
+                new MenuItem("DrawR" + Id, Program.MenuSpace + "R range").SetValue(new Circle(false,
+                    Color.FromArgb(100, 255, 255, 255))));
             config.AddItem(
-                new MenuItem("DrawUlt" + Id, "Ult Text").SetValue(new Circle(true, Color.FromArgb(255, 255, 255, 255))));
+                new MenuItem("DrawUlt" + Id, Program.MenuSpace + "Ult Text").SetValue(new Circle(true,
+                    Color.FromArgb(255, 255, 255, 255))));
+            config.AddItem(
+                new MenuItem("Draw.UltiMiniMap", Program.MenuSpace + "Draw Ulti Minimap").SetValue(new Circle(true,
+                    Color.FromArgb(255, 255, 255, 255))));
             return true;
         }
 
