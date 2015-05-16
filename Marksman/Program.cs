@@ -112,7 +112,9 @@ namespace Marksman
             OrbWalking = Config.AddSubMenu(new Menu("Orbwalking", "Orbwalking"));
             CClass.Orbwalker = new Orbwalking.Orbwalker(OrbWalking);
 
-            OrbWalking.AddItem(new MenuItem("Orb.AutoWindUp", "Marksman - Auto Windup").SetValue(false));
+            OrbWalking.AddItem(new MenuItem("Orb.AutoWindUp", "Marksman - Auto Windup").SetValue(false)).ValueChanged +=
+                (sender, argsEvent) => { if (argsEvent.GetNewValue<bool>()) CheckAutoWindUp(); };
+
             /* Menu Summoners */
             var summoners = Config.AddSubMenu(new Menu("Summoners", "Summoners"));
             var summonersHeal = summoners.AddSubMenu(new Menu("Heal", "Heal"));
@@ -379,9 +381,6 @@ namespace Marksman
         private static void Game_OnGameUpdate(EventArgs args)
         {
             CheckChampionBuff();
-            
-            if (Config.Item("Orb.AutoWindUp").GetValue<bool>())
-                CheckAutoWindUp();
 
             //Update the combo and harass values.
             CClass.ComboActive = CClass.Config.Item("Orbwalk").GetValue<KeyBind>().Active;
