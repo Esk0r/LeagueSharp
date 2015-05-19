@@ -1,13 +1,14 @@
 #region
 
 using System;
+using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class MissFortune : Champion
     {
@@ -15,8 +16,6 @@ namespace Marksman
 
         public MissFortune()
         {
-            Utils.PrintMessage("MissFortune loaded.");
-
             Q = new Spell(SpellSlot.Q, 650);
             Q.SetTargetted(0.29f, 1400f);
 
@@ -24,6 +23,7 @@ namespace Marksman
 
             E = new Spell(SpellSlot.E, 800);
             E.SetSkillshot(0.5f, 100f, float.MaxValue, false, SkillshotType.SkillshotCircle);
+            Utils.Utils.PrintMessage("MissFortune loaded.");
         }
 
         public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit vTarget)
@@ -110,13 +110,13 @@ namespace Marksman
 
             if (LaneClearActive)
             {
-                bool useQ = GetValue<bool>("UseQL");
+                var useQ = GetValue<bool>("UseQL");
 
                 if (Q.IsReady() && useQ)
                 {
                     var vMinions = MinionManager.GetMinions(ObjectManager.Player.Position, Q.Range);
                     foreach (
-                        Obj_AI_Base minions in
+                        var minions in
                             vMinions.Where(
                                 minions =>
                                     minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q) - 20))
@@ -153,11 +153,11 @@ namespace Marksman
         {
             config.AddItem(
                 new MenuItem("DrawQ" + Id, "Q range").SetValue(
-                    new Circle(true, System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                    new Circle(true, Color.FromArgb(100, 255, 0, 255))));
 
             config.AddItem(
                 new MenuItem("DrawE" + Id, "E range").SetValue(
-                    new Circle(false, System.Drawing.Color.FromArgb(100, 255, 255, 255))));
+                    new Circle(false, Color.FromArgb(100, 255, 255, 255))));
 
             return true;
         }

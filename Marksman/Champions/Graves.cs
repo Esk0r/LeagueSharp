@@ -1,19 +1,20 @@
 #region
 
 using System;
+using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class Graves : Champion
     {
         public Spell Q;
-        public Spell W;
         public Spell R;
+        public Spell W;
 
         public Graves()
         {
@@ -29,12 +30,12 @@ namespace Marksman
             Utility.HpBarDamageIndicator.DamageToUnit = GetComboDamage;
             Utility.HpBarDamageIndicator.Enabled = true;
 
-            Utils.PrintMessage("Graves loaded.");
+            Utils.Utils.PrintMessage("Graves loaded.");
         }
 
         private float GetComboDamage(Obj_AI_Hero t)
         {
-            float fComboDamage = 0f;
+            var fComboDamage = 0f;
 
             if (Q.IsReady())
                 fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q);
@@ -58,7 +59,6 @@ namespace Marksman
 
             return fComboDamage;
         }
-
 
         public override void Game_OnGameUpdate(EventArgs args)
         {
@@ -162,7 +162,7 @@ namespace Marksman
         {
             config.AddItem(
                 new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true,
-                    System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                    Color.FromArgb(100, 255, 0, 255))));
             return true;
         }
 

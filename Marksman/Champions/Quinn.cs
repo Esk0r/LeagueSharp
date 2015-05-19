@@ -9,19 +9,19 @@ using Color = System.Drawing.Color;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class Quinn : Champion
     {
-        public static float ValorMinDamage = 0;
-        public static float ValorMaxDamage = 0;
+        public static float ValorMinDamage;
+        public static float ValorMaxDamage;
         public Spell E;
         public Spell Q;
         public Spell R;
 
         public Quinn()
         {
-            Utils.PrintMessage("Quinn loaded.");
+            Utils.Utils.PrintMessage("Quinn loaded.");
 
             Q = new Spell(SpellSlot.Q, 1010);
             E = new Spell(SpellSlot.E, 800);
@@ -51,7 +51,7 @@ namespace Marksman
         public override void Drawing_OnDraw(EventArgs args)
         {
             Spell[] spellList = {Q, E};
-            foreach (Spell spell in spellList)
+            foreach (var spell in spellList)
             {
                 var menuItem = GetValue<Circle>("Draw" + spell.Slot);
                 if (menuItem.Active && spell.Level > 0)
@@ -140,7 +140,7 @@ namespace Marksman
                                 E.CastOnUnit(vTarget);
                             else if (!useET)
                                 E.CastOnUnit(vTarget);
-                            else if (!Utility.UnderTurret(vTarget))
+                            else if (!vTarget.UnderTurret())
                                 E.CastOnUnit(vTarget);
                         }
                     }

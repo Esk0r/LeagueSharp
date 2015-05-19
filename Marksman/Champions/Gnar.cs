@@ -7,18 +7,18 @@ using LeagueSharp.Common;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class Gnar : Champion
     {
         private static readonly Obj_AI_Hero vGnar = ObjectManager.Player;
+        public Spell E;
         public Spell Q;
         public Spell W;
-        public Spell E;
 
         public Gnar()
         {
-            Utils.PrintMessage("Gnar loaded.");
+            Utils.Utils.PrintMessage("Gnar loaded.");
 
             Q = new Spell(SpellSlot.Q, 1100);
             Q.SetSkillshot(0.5f, 50f, 1200f, false, SkillshotType.SkillshotLine);

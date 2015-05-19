@@ -1,13 +1,14 @@
 ﻿#region
 
 using System;
+using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class Corki : Champion
     {
@@ -18,7 +19,7 @@ namespace Marksman
 
         public Corki()
         {
-            Utils.PrintMessage("Corki loaded");
+            Utils.Utils.PrintMessage("Corki loaded");
 
             Q = new Spell(SpellSlot.Q, 825f);
             E = new Spell(SpellSlot.E, 600f);
@@ -150,13 +151,13 @@ namespace Marksman
         {
             config.AddItem(
                 new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true,
-                    System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                    Color.FromArgb(100, 255, 0, 255))));
             config.AddItem(
                 new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(false,
-                    System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                    Color.FromArgb(100, 255, 0, 255))));
             config.AddItem(
                 new MenuItem("DrawR" + Id, "R range").SetValue(new Circle(false,
-                    System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                    Color.FromArgb(100, 255, 0, 255))));
             return true;
         }
 

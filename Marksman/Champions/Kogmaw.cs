@@ -1,25 +1,26 @@
 ﻿#region
 
 using System;
+using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class Kogmaw : Champion
     {
         public Spell E;
         public Spell Q;
         public Spell R;
-        public int UltimateBuffStacks = 0;
+        public int UltimateBuffStacks;
         public Spell W;
 
         public Kogmaw()
         {
-            Utils.PrintMessage("KogMaw loaded.");
+            Utils.Utils.PrintMessage("KogMaw loaded.");
 
             Q = new Spell(SpellSlot.Q, 1000f);
             W = new Spell(SpellSlot.W, float.MaxValue);
@@ -157,16 +158,16 @@ namespace Marksman
         {
             config.AddItem(
                 new MenuItem("DrawQ" + Id, "Q range").SetValue(new Circle(true,
-                    System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                    Color.FromArgb(100, 255, 0, 255))));
             config.AddItem(
                 new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(true,
-                    System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                    Color.FromArgb(100, 255, 0, 255))));
             config.AddItem(
                 new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(false,
-                    System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                    Color.FromArgb(100, 255, 0, 255))));
             config.AddItem(
                 new MenuItem("DrawR" + Id, "R range").SetValue(new Circle(false,
-                    System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                    Color.FromArgb(100, 255, 0, 255))));
             return true;
         }
 

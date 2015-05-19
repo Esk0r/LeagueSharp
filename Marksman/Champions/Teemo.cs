@@ -8,7 +8,7 @@ using LeagueSharp.Common;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class Teemo : Champion
     {
@@ -17,7 +17,7 @@ namespace Marksman
 
         public Teemo()
         {
-            Utils.PrintMessage("Teemo loaded.");
+            Utils.Utils.PrintMessage("Teemo loaded.");
 
             Q = new Spell(SpellSlot.Q, 680);
             R = new Spell(SpellSlot.R, 230);
@@ -108,13 +108,13 @@ namespace Marksman
 
             if (LaneClearActive)
             {
-                bool useQ = GetValue<bool>("UseQL");
+                var useQ = GetValue<bool>("UseQL");
 
                 if (Q.IsReady() && useQ)
                 {
                     var vMinions = MinionManager.GetMinions(ObjectManager.Player.Position, Q.Range);
                     foreach (
-                        Obj_AI_Base minions in
+                        var minions in
                             vMinions.Where(
                                 minions => minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q)))
                         Q.Cast(minions);

@@ -15,8 +15,8 @@ namespace Marksman
         public bool HarassActive;
         public string Id = "";
         public bool LaneClearActive;
-        public bool ToggleActive;
         public Orbwalking.Orbwalker Orbwalker;
+        public bool ToggleActive;
 
         public T GetValue<T>(string item)
         {

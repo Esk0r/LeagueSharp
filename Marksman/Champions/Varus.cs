@@ -9,7 +9,7 @@ using Color = System.Drawing.Color;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class Varus : Champion
     {
@@ -18,7 +18,7 @@ namespace Marksman
 
         public Varus()
         {
-            Utils.PrintMessage("Varus loaded!");
+            Utils.Utils.PrintMessage("Varus loaded!");
 
             Q = new Spell(SpellSlot.Q, 1600f);
             W = new Spell(SpellSlot.W);
@@ -37,9 +37,45 @@ namespace Marksman
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
         }
 
+        private static float CalcWDamage
+        {
+            get
+            {
+                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
+                var xEnemyWStackCount = EnemyWStackCount(t);
+                var wExplodePerStack = ObjectManager.Player.GetSpellDamage(t, SpellSlot.W, 1)*xEnemyWStackCount > 0
+                    ? xEnemyWStackCount
+                    : 1;
+                return wExplodePerStack;
+            }
+        }
+
+        private static float CalcQDamage
+        {
+            get
+            {
+                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
+
+                if (!Q.IsReady())
+                    return 0;
+
+                /*
+                var qDamageMaxPerLevel = new[] {15f, 70f, 125f, 180f, 235f};
+                var fxQDamage2 = qDamageMaxPerLevel[Q.Level - 1] +
+                                 1.6*
+                                 (ObjectManager.Player.BaseAttackDamage + ObjectManager.Player.FlatPhysicalDamageMod);
+
+                var xDis = ObjectManager.Player.Distance(t)/Q.ChargedMaxRange;
+                return (float) fxQDamage2*xDis;
+                */
+                var fxQDamage2 = ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q, 1);
+                return (float) fxQDamage2;
+            }
+        }
+
         private float GetComboDamage(Obj_AI_Hero t)
         {
-            float fComboDamage = 0f;
+            var fComboDamage = 0f;
 
             if (Q.IsReady())
                 fComboDamage += (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q);
@@ -116,42 +152,6 @@ namespace Marksman
                                    Vector3.Normalize(Game.CursorPos - ObjectManager.Player.Position)*(R.Range - 300f);
 
                 Render.Circle.DrawCircle(drawPosition, 300f, drawRs.Color);
-            }
-        }
-
-        private static float CalcWDamage
-        {
-            get
-            {
-                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
-                var xEnemyWStackCount = EnemyWStackCount(t);
-                var wExplodePerStack = ObjectManager.Player.GetSpellDamage(t, SpellSlot.W, 1)*xEnemyWStackCount > 0
-                    ? xEnemyWStackCount
-                    : 1;
-                return (float) wExplodePerStack;
-            }
-        }
-
-        private static float CalcQDamage
-        {
-            get
-            {
-                var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
-
-                if (!Q.IsReady())
-                    return 0;
-
-                /*
-                var qDamageMaxPerLevel = new[] {15f, 70f, 125f, 180f, 235f};
-                var fxQDamage2 = qDamageMaxPerLevel[Q.Level - 1] +
-                                 1.6*
-                                 (ObjectManager.Player.BaseAttackDamage + ObjectManager.Player.FlatPhysicalDamageMod);
-
-                var xDis = ObjectManager.Player.Distance(t)/Q.ChargedMaxRange;
-                return (float) fxQDamage2*xDis;
-                */
-                var fxQDamage2 = ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q, 1);
-                return (float) fxQDamage2;
             }
         }
 

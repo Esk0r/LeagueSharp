@@ -77,39 +77,39 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activator.cs" />
-    <Compile Include="Ashe.cs" />
-    <Compile Include="Caitlyn.cs" />
+    <Compile Include="Utils\Activator.cs" />
+    <Compile Include="Champions\Ashe.cs" />
+    <Compile Include="Champions\Caitlyn.cs" />
     <Compile Include="Champion.cs" />
-    <Compile Include="Corki.cs" />
-    <Compile Include="Sprite.cs" />
-    <Compile Include="Draven.cs" />
-    <Compile Include="Ezreal.cs" />
-    <Compile Include="Gnar.cs" />
-    <Compile Include="Graves.cs" />
-    <Compile Include="Jinx.cs" />
-    <Compile Include="Kalista.cs" />
-    <Compile Include="Kogmaw.cs" />
-    <Compile Include="PotionManager.cs" />
+    <Compile Include="Champions\Corki.cs" />
+    <Compile Include="Utils\Sprite.cs" />
+    <Compile Include="Champions\Draven.cs" />
+    <Compile Include="Champions\Ezreal.cs" />
+    <Compile Include="Champions\Gnar.cs" />
+    <Compile Include="Champions\Graves.cs" />
+    <Compile Include="Champions\Jinx.cs" />
+    <Compile Include="Champions\Kalista.cs" />
+    <Compile Include="Champions\Kogmaw.cs" />
+    <Compile Include="Utils\PotionManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Lucian.cs" />
-    <Compile Include="MissFortune.cs" />
+    <Compile Include="Champions\Lucian.cs" />
+    <Compile Include="Champions\MissFortune.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SpellList.cs" />
-    <Compile Include="Quinn.cs" />
-    <Compile Include="Sivir.cs" />
-    <Compile Include="Teemo.cs" />
-    <Compile Include="Tristana.cs" />
-    <Compile Include="Twitch.cs" />
-    <Compile Include="Utils.cs" />
-    <Compile Include="Urgot.cs" />
-    <Compile Include="Varus.cs" />
-    <Compile Include="Vayne.cs" />
+    <Compile Include="Utils\SpellList.cs" />
+    <Compile Include="Champions\Quinn.cs" />
+    <Compile Include="Champions\Sivir.cs" />
+    <Compile Include="Champions\Teemo.cs" />
+    <Compile Include="Champions\Tristana.cs" />
+    <Compile Include="Champions\Twitch.cs" />
+    <Compile Include="Utils\Utils.cs" />
+    <Compile Include="Champions\Urgot.cs" />
+    <Compile Include="Champions\Varus.cs" />
+    <Compile Include="Champions\Vayne.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

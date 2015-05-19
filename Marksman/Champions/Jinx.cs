@@ -8,14 +8,14 @@ using LeagueSharp.Common;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class Jinx : Champion
     {
-        public Spell Q;
-        public Spell W;
         public Spell E;
+        public Spell Q;
         public Spell R;
+        public Spell W;
 
         public Jinx()
         {
@@ -28,7 +28,7 @@ namespace Marksman
             E.SetSkillshot(0.7f, 120f, 1750f, false, SkillshotType.SkillshotCircle);
             R.SetSkillshot(0.6f, 140f, 1700f, false, SkillshotType.SkillshotLine);
 
-            Utils.PrintMessage("Jinx loaded.");
+            Utils.Utils.PrintMessage("Jinx loaded.");
         }
 
         public float QAddRange
@@ -131,7 +131,7 @@ namespace Marksman
                                     Radius = 120f,
                                     Speed = 1750f,
                                     Range = 900f,
-                                    Type = SkillshotType.SkillshotCircle,
+                                    Type = SkillshotType.SkillshotCircle
                                 }).CastPosition;
 
 

@@ -1,9 +1,13 @@
 #region
 
 using System;
+using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
+using Marksman.Champions;
+using Marksman.Utils;
+using Activator = Marksman.Utils.Activator;
 
 #endregion
 
@@ -11,16 +15,15 @@ namespace Marksman
 {
     internal class Program
     {
+        public const string MenuSpace = "       ";
         public static Menu Config;
         public static Menu OrbWalking;
         public static Menu QuickSilverMenu;
 //        public static Menu MenuInterruptableSpell;
         public static Champion CClass;
         public static Activator AActivator;
-
         public static double ActivatorTime;
         private static Obj_AI_Hero xSelectedTarget;
-        public const string MenuSpace = "       ";
 
         private static void Main(string[] args)
         {
@@ -226,10 +229,10 @@ namespace Marksman
                     drawing.AddItem(new MenuItem("Marksman.Drawings", "Marksman Default Draw Options"));
                     drawing.AddItem(
                         new MenuItem("drawMinionLastHit", MenuSpace + "Minion Last Hit").SetValue(new Circle(false,
-                            System.Drawing.Color.GreenYellow)));
+                            Color.GreenYellow)));
                     drawing.AddItem(
                         new MenuItem("drawMinionNearKill", MenuSpace + "Minion Near Kill").SetValue(new Circle(false,
-                            System.Drawing.Color.Gray)));
+                            Color.Gray)));
                     drawing.AddItem(
                         new MenuItem("drawJunglePosition", MenuSpace + "Jungle Farm Position").SetValue(true));
                     drawing.AddItem(
@@ -301,7 +304,7 @@ namespace Marksman
             {
                 xSelectedTarget = objAiHero;
                 TargetSelector.SetTarget(objAiHero);
-                Utils.PrintMessage(string.Format("{0} selected.", objAiHero.BaseSkinName));
+                Utils.Utils.PrintMessage(string.Format("{0} selected.", objAiHero.BaseSkinName));
             }
         }
 
@@ -338,7 +341,7 @@ namespace Marksman
 
             if (t.IsValidTarget() && ObjectManager.Player.Distance(t) < 1200)
             {
-                Render.Circle.DrawCircle(t.Position, 150, System.Drawing.Color.Goldenrod);
+                Render.Circle.DrawCircle(t.Position, 150, Color.Goldenrod);
             }
 
             /* 
@@ -350,7 +353,7 @@ namespace Marksman
             var drawJunglePosition = CClass.Config.SubMenu("Drawings").Item("drawJunglePosition").GetValue<bool>();
             {
                 if (drawJunglePosition)
-                    Utils.Jungle.DrawJunglePosition();
+                    Utils.Utils.Jungle.DrawJunglePosition();
             }
 
             var drawMinionLastHit = CClass.Config.SubMenu("Drawings").Item("drawMinionLastHit").GetValue<Circle>();
@@ -392,13 +395,13 @@ namespace Marksman
 
             var vHarassManaPer = Config.Item("HarassMana").GetValue<Slider>().Value;
             CClass.HarassActive = CClass.Config.Item("Farm").GetValue<KeyBind>().Active &&
-                                  ObjectManager.Player.ManaPercentage() >= vHarassManaPer;
+                                  ObjectManager.Player.ManaPercent >= vHarassManaPer;
 
-            CClass.ToggleActive = ObjectManager.Player.ManaPercentage() >= vHarassManaPer;
+            CClass.ToggleActive = ObjectManager.Player.ManaPercent >= vHarassManaPer;
 
             var vLaneClearManaPer = Config.Item("LaneClearMana").GetValue<Slider>().Value;
             CClass.LaneClearActive = CClass.Config.Item("LaneClear").GetValue<KeyBind>().Active &
-                                     ObjectManager.Player.ManaPercentage() >= vLaneClearManaPer;
+                                     ObjectManager.Player.ManaPercent >= vLaneClearManaPer;
 
             CClass.Game_OnGameUpdate(args);
 

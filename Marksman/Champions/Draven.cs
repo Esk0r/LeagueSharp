@@ -6,16 +6,7 @@ using LeagueSharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
 
-/*Credits:
- * andreluis034
- * 
- * 
- */
-/*TODO:
- * Mana manager
- */
-
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class Reticles
     {
@@ -43,7 +34,7 @@ namespace Marksman
             GameObject.OnDelete += OnDeleteObject;
             AntiGapcloser.OnEnemyGapcloser += OnEnemyGapcloser;
             Interrupter.OnPossibleToInterrupt += OnPossibleToInterrupt;
-            Utils.PrintMessage("Draven loaded.");
+            Utils.Utils.PrintMessage("Draven loaded.");
         }
 
         public void OnEnemyGapcloser(ActiveGapcloser gapcloser)

@@ -1,28 +1,26 @@
 #region
 
 using System;
+using System.Drawing;
 using LeagueSharp;
 using LeagueSharp.Common;
-using SharpDX;
-using Color = System.Drawing.Color;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class Caitlyn : Champion // Base done by xQx, Drawings and improvements added by Dibes.
     {
-        public Spell Q;
-        public Spell W;
-        public Spell E;
         public static Spell R;
-
+        public Spell E;
+        public Spell Q;
         public bool ShowUlt;
         public string UltTarget;
+        public Spell W;
 
         public Caitlyn()
         {
-            Utils.PrintMessage("Caitlyn loaded.");
+            Utils.Utils.PrintMessage("Caitlyn loaded.");
 
             Q = new Spell(SpellSlot.Q, 1240);
             W = new Spell(SpellSlot.W, 820);
@@ -68,7 +66,6 @@ namespace Marksman
                 Utility.DrawCircle(ObjectManager.Player.Position, R.Range, rCircle2.Color, 1, 23, true);
             }
         }
-
 
         public override void Game_OnGameUpdate(EventArgs args)
         {

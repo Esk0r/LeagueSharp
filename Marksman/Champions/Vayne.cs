@@ -1,13 +1,14 @@
 #region
 
 using System;
+using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class Vayne : Champion
     {
@@ -24,41 +25,7 @@ namespace Marksman
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
 
-            Utils.PrintMessage("Vayne loaded");
-        }
-
-        public class VayneData
-        {
-            public static int GetSilverBuffMarkedCount
-            {
-                get
-                {
-                    if (GetSilverBuffMarkedEnemy == null)
-                        return 0;
-
-                    return
-                        GetSilverBuffMarkedEnemy.Buffs.Where(buff => buff.Name == "vaynesilvereddebuff")
-                            .Select(xBuff => xBuff.Count)
-                            .FirstOrDefault();
-                }
-            }
-
-            public static Obj_AI_Hero GetSilverBuffMarkedEnemy
-            {
-                get
-                {
-                    return
-                        ObjectManager.Get<Obj_AI_Hero>()
-                            .Where(
-                                enemy =>
-                                    !enemy.IsDead &&
-                                    enemy.IsValidTarget(
-                                        (Q.IsReady() ? Q.Range : 0) +
-                                        Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)))
-                            .FirstOrDefault(
-                                enemy => enemy.Buffs.Any(buff => buff.Name == "vaynesilvereddebuff" && buff.Count > 0));
-                }
-            }
+            Utils.Utils.PrintMessage("Vayne loaded");
         }
 
         public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
@@ -196,7 +163,7 @@ namespace Marksman
         {
             config.AddItem(
                 new MenuItem("DrawE" + Id, "E range").SetValue(
-                    new Circle(true, System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                    new Circle(true, Color.FromArgb(100, 255, 0, 255))));
 
             return true;
         }
@@ -207,6 +174,40 @@ namespace Marksman
             if (menuItem.Active)
             {
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, menuItem.Color, 1);
+            }
+        }
+
+        public class VayneData
+        {
+            public static int GetSilverBuffMarkedCount
+            {
+                get
+                {
+                    if (GetSilverBuffMarkedEnemy == null)
+                        return 0;
+
+                    return
+                        GetSilverBuffMarkedEnemy.Buffs.Where(buff => buff.Name == "vaynesilvereddebuff")
+                            .Select(xBuff => xBuff.Count)
+                            .FirstOrDefault();
+                }
+            }
+
+            public static Obj_AI_Hero GetSilverBuffMarkedEnemy
+            {
+                get
+                {
+                    return
+                        ObjectManager.Get<Obj_AI_Hero>()
+                            .Where(
+                                enemy =>
+                                    !enemy.IsDead &&
+                                    enemy.IsValidTarget(
+                                        (Q.IsReady() ? Q.Range : 0) +
+                                        Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)))
+                            .FirstOrDefault(
+                                enemy => enemy.Buffs.Any(buff => buff.Name == "vaynesilvereddebuff" && buff.Count > 0));
+                }
             }
         }
     }

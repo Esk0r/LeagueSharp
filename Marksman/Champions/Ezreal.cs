@@ -10,7 +10,7 @@ using Font = SharpDX.Direct3D9.Font;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class Ezreal : Champion
     {
@@ -46,7 +46,7 @@ namespace Marksman
                     Quality = FontQuality.Default
                 });
 
-            Utils.PrintMessage("Ezreal loaded.");
+            Utils.Utils.PrintMessage("Ezreal loaded.");
         }
 
         public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
@@ -331,7 +331,7 @@ namespace Marksman
             if (t.IsValidTarget(2000) && t.Health < GetComboDamage(t))
             {
                 const string xComboText = ">> Kill <<";
-                Utils.DrawText(
+                Utils.Utils.DrawText(
                     vText, xComboText, (int) t.HPBarPosition.X + 145, (int) t.HPBarPosition.Y + 5, SharpDX.Color.White);
             }
         }

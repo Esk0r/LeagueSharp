@@ -4,27 +4,11 @@ using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 
-namespace Marksman
+namespace Marksman.Utils
 {
     internal class PotionManager
     {
-        private Menu ExtrasMenu;
-
-        private enum PotionType
-        {
-            Health,
-            Mana
-        };
-
-        private class Potion
-        {
-            public string Name { get; set; }
-            public int MinCharges { get; set; }
-            public ItemId ItemId { get; set; }
-            public int Priority { get; set; }
-            public List<PotionType> TypeList { get; set; }
-        }
-
+        private readonly Menu ExtrasMenu;
         private List<Potion> potions;
 
         public PotionManager(Menu extrasMenu)
@@ -141,6 +125,21 @@ namespace Marksman
                 from buff in ObjectManager.Player.Buffs
                 where buff.Name == potion.Name && buff.IsActive
                 select potion).Any();
+        }
+
+        private enum PotionType
+        {
+            Health,
+            Mana
+        };
+
+        private class Potion
+        {
+            public string Name { get; set; }
+            public int MinCharges { get; set; }
+            public ItemId ItemId { get; set; }
+            public int Priority { get; set; }
+            public List<PotionType> TypeList { get; set; }
         }
     }
 }

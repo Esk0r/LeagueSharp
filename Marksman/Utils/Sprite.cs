@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using LeagueSharp;
 using LeagueSharp.Common;
 using Marksman.Properties;
@@ -94,7 +93,6 @@ namespace Marksman
                 VisibleCondition = sender => DrawSprite
             }.Add();
 
-            
 
             new Render.Sprite(Resources.selectedchampion, new Vector2())
             {
@@ -102,8 +100,6 @@ namespace Marksman
                 Scale = new Vector2(1f, 1f),
                 VisibleCondition = sender => DrawSprite
             }.Add();
-
-            
         }
     }
 }

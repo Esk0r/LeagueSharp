@@ -1,17 +1,16 @@
 #region
 
 using System;
-using System.IO;
-using LeagueSharp;
-using LeagueSharp.Common;
 using System.Collections.Generic;
 using System.Linq;
+using LeagueSharp;
+using LeagueSharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class EnemyMarker
     {
@@ -22,21 +21,19 @@ namespace Marksman
 
     internal class Kalista : Champion
     {
-        public Spell Q;
-        public Spell W;
         public static Spell E;
-        public Spell R;
-
-        public static Dictionary<Vector3, Vector3> jumpPos;
-
+        public static Dictionary<Vector3, Vector3> JumpPos = new Dictionary<Vector3, Vector3>();
+        private static readonly List<EnemyMarker> xEnemyMarker = new List<EnemyMarker>();
         public Obj_AI_Hero CoopStrikeAlly;
         public float CoopStrikeAllyRange = 1250f;
         public Dictionary<String, int> MarkedChampions = new Dictionary<String, int>();
-        private static readonly List<EnemyMarker> xEnemyMarker = new List<EnemyMarker>();
+        public Spell Q;
+        public Spell R;
+        public Spell W;
 
         public Kalista()
         {
-            Utils.PrintMessage("Kalista loaded.");
+            Utils.Utils.PrintMessage("Kalista loaded.");
 
             Q = new Spell(SpellSlot.Q, 1150);
             W = new Spell(SpellSlot.W, 5500);
@@ -46,6 +43,24 @@ namespace Marksman
             Q.SetSkillshot(0.25f, 40f, 1300f, true, SkillshotType.SkillshotLine);
             W.SetSkillshot(0.25f, 80f, 1600f, false, SkillshotType.SkillshotLine);
             R.SetSkillshot(1f, 160f, 2000f, false, SkillshotType.SkillshotLine);
+        }
+
+        public int KalistaMarkerCount
+        {
+            get
+            {
+                var xbuffCount = 0;
+                foreach (
+                    var buff in from enemy in ObjectManager.Get<Obj_AI_Hero>().Where(tx => tx.IsEnemy && !tx.IsDead)
+                        where ObjectManager.Player.Distance(enemy) < E.Range
+                        from buff in enemy.Buffs
+                        where buff.Name.Contains("kalistaexpungemarker")
+                        select buff)
+                {
+                    xbuffCount = buff.Count;
+                }
+                return xbuffCount;
+            }
         }
 
         public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
@@ -69,7 +84,7 @@ namespace Marksman
             var drawJumpPos = GetValue<Circle>("DrawJumpPos");
             if (drawJumpPos.Active)
             {
-                foreach (KeyValuePair<Vector3, Vector3> pos in jumpPos)
+                foreach (var pos in JumpPos)
                 {
                     if (ObjectManager.Player.Distance(pos.Key) <= 500f ||
                         ObjectManager.Player.Distance(pos.Value) <= 500f)
@@ -100,7 +115,7 @@ namespace Marksman
             Drawing.DrawText(Drawing.Width*0.39f, Drawing.Height*0.80f, Color.White,
                 "Jumping Mode is Active! Go to the nearest jump point!");
 
-            foreach (var xTo in from pos in jumpPos
+            foreach (var xTo in from pos in JumpPos
                 where ObjectManager.Player.Distance(pos.Key) <= 35f ||
                       ObjectManager.Player.Distance(pos.Value) <= 35f
                 let xTo = pos.Value
@@ -114,43 +129,11 @@ namespace Marksman
             }
         }
 
-        public int KalistaMarkerCount
-        {
-            get
-            {
-                var xbuffCount = 0;
-                foreach (
-                    var buff in from enemy in ObjectManager.Get<Obj_AI_Hero>().Where(tx => tx.IsEnemy && !tx.IsDead)
-                        where ObjectManager.Player.Distance(enemy) < E.Range
-                        from buff in enemy.Buffs
-                        where buff.Name.Contains("kalistaexpungemarker")
-                        select buff)
-                {
-                    xbuffCount = buff.Count;
-                }
-                return xbuffCount;
-            }
-        }
-
         private static float GetEDamage(Obj_AI_Base t)
         {
             if (!E.IsReady())
                 return 0f;
             return (float) ObjectManager.Player.GetSpellDamage(t, SpellSlot.E);
-
-            /* I think this calculation working good but i cant check now. after I'll do */
-            var buff = t.Buffs.FirstOrDefault(xBuff => xBuff.DisplayName.ToLower() == "kalistaexpungemarker");
-            if (buff.Count == 0)
-                return 0f;
-
-            double damage = ObjectManager.Player.FlatPhysicalDamageMod + ObjectManager.Player.BaseAttackDamage;
-            double eDmg = damage*0.60 + new double[] {0, 20, 30, 40, 50, 60}[E.Level];
-
-            if (buff.Count == 1)
-                return (float) eDmg;
-
-            damage += buff.Count*0.003*damage + eDmg;
-            return (float) ObjectManager.Player.CalcDamage(t, Damage.DamageType.Physical, damage);
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
@@ -370,7 +353,6 @@ namespace Marksman
         {
             return true;
         }
-
 
         public override bool LaneClearMenu(Menu config)
         {

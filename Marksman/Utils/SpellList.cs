@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using LeagueSharp;
 
-namespace Marksman
+namespace Marksman.Utils
 {
     public enum BlockableSpells
     {
@@ -22,18 +22,8 @@ namespace Marksman
 
     public class SpellList
     {
-        public string ChampionName { get; set; }
-        public string DisplayName { get; set; }
-        public string BuffName { get; set; }
-        public SpellSlot Slot { get; set; }
-        public SkillShotType SkillType { get; set; }
-
-        public BlockableSpells[] CanBlockWith = {};
-        public bool DefaultMenuValue { get; set; }
-        public int Delay { get; set; }
-
-
         public static List<SpellList> BuffList = new List<SpellList>();
+        public BlockableSpells[] CanBlockWith = {};
 
         static SpellList()
         {
@@ -651,7 +641,7 @@ namespace Marksman
                     DisplayName = "Hecarim (R)",
                     Slot = SpellSlot.R,
                     SkillType = SkillShotType.SkillshotCircle,
-                    BuffName = "HecarimUlt",
+                    BuffName = "HecarimUlt"
                 });
             BuffList.Add(
                 new SpellList
@@ -1907,5 +1897,13 @@ namespace Marksman
                     Delay = 0
                 });
         }
+
+        public string ChampionName { get; set; }
+        public string DisplayName { get; set; }
+        public string BuffName { get; set; }
+        public SpellSlot Slot { get; set; }
+        public SkillShotType SkillType { get; set; }
+        public bool DefaultMenuValue { get; set; }
+        public int Delay { get; set; }
     }
 }

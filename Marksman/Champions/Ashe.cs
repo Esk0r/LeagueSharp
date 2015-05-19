@@ -4,13 +4,12 @@ using System;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-using Color = System.Drawing.Color;
+using SharpDX;
 using SharpDX.Direct3D9;
-using Font = SharpDX.Direct3D9.Font;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class Ashe : Champion
     {
@@ -44,10 +43,20 @@ namespace Marksman
                     FaceName = "Courier new",
                     Height = 15,
                     OutputPrecision = FontPrecision.Default,
-                    Quality = FontQuality.Default,
+                    Quality = FontQuality.Default
                 });
 
-            Utils.PrintMessage("Ashe loaded.");
+            Utils.Utils.PrintMessage("Ashe loaded.");
+        }
+
+        private static bool AsheQCastReady
+        {
+            get { return ObjectManager.Player.HasBuff("AsheQCastReady", true); }
+        }
+
+        public bool IsQActive
+        {
+            get { return ObjectManager.Player.HasBuff("FrostShot"); }
         }
 
         public void Game_OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
@@ -99,9 +108,9 @@ namespace Marksman
 
             xHarassStatus = xHarassStatus.Substring(0, xHarassStatus.Length - 3);
 
-            Utils.DrawText(
+            Utils.Utils.DrawText(
                 vText, xHarassStatus, (int) ObjectManager.Player.HPBarPosition.X + 145,
-                (int) ObjectManager.Player.HPBarPosition.Y + 5, SharpDX.Color.White);
+                (int) ObjectManager.Player.HPBarPosition.Y + 5, Color.White);
         }
 
         public void Game_OnProcessSpell(Obj_AI_Base unit, GameObjectProcessSpellCastEventArgs spell)
@@ -111,11 +120,6 @@ namespace Marksman
 
             if (spell.SData.Name.ToLower() == "summonerflash")
                 E.Cast(spell.End);
-        }
-
-        private static bool AsheQCastReady
-        {
-            get { return ObjectManager.Player.HasBuff("AsheQCastReady", true); }
         }
 
         public override void Game_OnGameUpdate(EventArgs args)
@@ -247,9 +251,11 @@ namespace Marksman
 
         public override bool DrawingMenu(Menu config)
         {
-            config.AddItem(new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(true, Color.CornflowerBlue)));
             config.AddItem(
-                new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
+                new MenuItem("DrawW" + Id, "W range").SetValue(new Circle(true, System.Drawing.Color.CornflowerBlue)));
+            config.AddItem(
+                new MenuItem("DrawE" + Id, "E range").SetValue(new Circle(true,
+                    System.Drawing.Color.FromArgb(100, 255, 0, 255))));
             config.AddItem(new MenuItem("DrawHarassToggleStatus", "Draw Toggle Status").SetValue(true));
             return true;
         }
@@ -261,11 +267,6 @@ namespace Marksman
             config.AddItem(new MenuItem("RManualCast" + Id, "Cast R Manually(2000 range)"))
                 .SetValue(new KeyBind('T', KeyBindType.Press));
             return true;
-        }
-
-        public bool IsQActive
-        {
-            get { return ObjectManager.Player.HasBuff("FrostShot"); }
         }
 
         public override void Drawing_OnDraw(EventArgs args)

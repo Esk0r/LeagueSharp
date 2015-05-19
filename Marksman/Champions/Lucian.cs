@@ -9,7 +9,7 @@ using Color = System.Drawing.Color;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class Lucian : Champion
     {
@@ -17,14 +17,13 @@ namespace Marksman
         public static Spell Q2;
         public static Spell W;
         public static Spell E;
-
         public static bool DoubleHit = false;
-        private static int xAttackLeft = 0;
+        private static int xAttackLeft;
         private static float xPassiveUsedTime;
 
         public Lucian()
         {
-            Utils.PrintMessage("Lucian loaded.");
+            Utils.Utils.PrintMessage("Lucian loaded.");
 
             Q = new Spell(SpellSlot.Q, 675);
             Q2 = new Spell(SpellSlot.Q, 1100);
@@ -37,6 +36,28 @@ namespace Marksman
             xPassiveUsedTime = Game.Time;
 
             Obj_AI_Base.OnProcessSpellCast += Game_OnProcessSpell;
+        }
+
+        public static Obj_AI_Base QMinion
+        {
+            get
+            {
+                var vTarget = TargetSelector.GetTarget(Q2.Range, TargetSelector.DamageType.Physical);
+                var vMinions = MinionManager.GetMinions(
+                    ObjectManager.Player.ServerPosition, Q.Range, MinionTypes.All, MinionTeam.NotAlly,
+                    MinionOrderTypes.None);
+
+                return (from vMinion in vMinions.Where(vMinion => vMinion.IsValidTarget(Q.Range))
+                    let endPoint =
+                        vMinion.ServerPosition.To2D()
+                            .Extend(ObjectManager.Player.ServerPosition.To2D(), -Q2.Range)
+                            .To3D()
+                    where
+                        vMinion.Distance(vTarget) <= vTarget.Distance(ObjectManager.Player) &&
+                        Intersection(ObjectManager.Player.ServerPosition.To2D(), endPoint.To2D(),
+                            vTarget.ServerPosition.To2D(), vTarget.BoundingRadius + Q.Width/4)
+                    select vMinion).FirstOrDefault();
+            }
         }
 
         public static bool IsPositionSafeForE(Obj_AI_Hero target, Spell spell)
@@ -63,28 +84,6 @@ namespace Marksman
                 return false;
 
             return true;
-        }
-
-        public static Obj_AI_Base QMinion
-        {
-            get
-            {
-                var vTarget = TargetSelector.GetTarget(Q2.Range, TargetSelector.DamageType.Physical);
-                var vMinions = MinionManager.GetMinions(
-                    ObjectManager.Player.ServerPosition, Q.Range, MinionTypes.All, MinionTeam.NotAlly,
-                    MinionOrderTypes.None);
-
-                return (from vMinion in vMinions.Where(vMinion => vMinion.IsValidTarget(Q.Range))
-                    let endPoint =
-                        vMinion.ServerPosition.To2D()
-                            .Extend(ObjectManager.Player.ServerPosition.To2D(), -Q2.Range)
-                            .To3D()
-                    where
-                        vMinion.Distance(vTarget) <= vTarget.Distance(ObjectManager.Player) &&
-                        Intersection(ObjectManager.Player.ServerPosition.To2D(), endPoint.To2D(),
-                            vTarget.ServerPosition.To2D(), vTarget.BoundingRadius + Q.Width/4)
-                    select vMinion).FirstOrDefault();
-            }
         }
 
         public override void Drawing_OnDraw(EventArgs args)

@@ -1,24 +1,24 @@
 #region
 
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
+using SharpDX;
+using Color = System.Drawing.Color;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class Urgot : Champion
     {
-        public static Spell Q, QEx, W, E, R;
         private const string vSpace = "     ";
+        public static Spell Q, QEx, W, E, R;
 
         public Urgot()
         {
-            Utils.PrintMessage("Urgot loaded.");
+            Utils.Utils.PrintMessage("Urgot loaded.");
 
             Q = new Spell(SpellSlot.Q, 1000);
             QEx = new Spell(SpellSlot.Q, 1200);
@@ -32,38 +32,6 @@ namespace Marksman
             E.SetSkillshot(0.25f, 120f, 1500f, false, SkillshotType.SkillshotCircle);
 
             R.SetTargetted(1f, 100f);
-        }
-
-        public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
-        {
-            if (W.IsReady() && gapcloser.Sender.IsValidTarget(250f))
-                W.Cast();
-        }
-
-        public static bool UnderAllyTurret(Obj_AI_Base unit)
-        {
-            return ObjectManager.Get<Obj_AI_Turret>().Where<Obj_AI_Turret>((turret) =>
-            {
-                if (turret == null || !turret.IsValid || turret.Health <= 0f)
-                {
-                    return false;
-                }
-                if (!turret.IsEnemy)
-                {
-                    return true;
-                }
-                return false;
-            })
-                .Any<Obj_AI_Turret>(
-                    (turret) =>
-                        SharpDX.Vector2.Distance(unit.Position.To2D(), turret.Position.To2D()) < 900f && turret.IsAlly);
-        }
-
-        public static bool TeleportTurret(Obj_AI_Hero vTarget)
-        {
-            return
-                ObjectManager.Get<Obj_AI_Hero>()
-                    .Any(player => !player.IsDead && player.IsMe && UnderAllyTurret(ObjectManager.Player));
         }
 
         public static int UnderTurretEnemyMinion
@@ -87,6 +55,38 @@ namespace Marksman
                                     enemy.HasBuff("urgotcorrosivedebuff", true))
                         select enemy).FirstOrDefault();
             }
+        }
+
+        public void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
+        {
+            if (W.IsReady() && gapcloser.Sender.IsValidTarget(250f))
+                W.Cast();
+        }
+
+        public static bool UnderAllyTurret(Obj_AI_Base unit)
+        {
+            return ObjectManager.Get<Obj_AI_Turret>().Where<Obj_AI_Turret>(turret =>
+            {
+                if (turret == null || !turret.IsValid || turret.Health <= 0f)
+                {
+                    return false;
+                }
+                if (!turret.IsEnemy)
+                {
+                    return true;
+                }
+                return false;
+            })
+                .Any<Obj_AI_Turret>(
+                    turret =>
+                        Vector2.Distance(unit.Position.To2D(), turret.Position.To2D()) < 900f && turret.IsAlly);
+        }
+
+        public static bool TeleportTurret(Obj_AI_Hero vTarget)
+        {
+            return
+                ObjectManager.Get<Obj_AI_Hero>()
+                    .Any(player => !player.IsDead && player.IsMe && UnderAllyTurret(ObjectManager.Player));
         }
 
         public override void Drawing_OnDraw(EventArgs args)
@@ -153,7 +153,7 @@ namespace Marksman
             var t = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Physical);
             if (R.IsReady() && t != null)
             {
-                IEnumerable<Obj_AI_Hero> Ally =
+                var Ally =
                     ObjectManager.Get<Obj_AI_Hero>()
                         .Where(
                             ally =>
@@ -170,7 +170,7 @@ namespace Marksman
 
         private static void CastQ(Obj_AI_Hero t)
         {
-            PredictionOutput Qpredict = Q.GetPrediction(t);
+            var Qpredict = Q.GetPrediction(t);
             var hithere = Qpredict.CastPosition.Extend(ObjectManager.Player.Position, -20);
 
             if (Qpredict.Hitchance >= HitChance.High)
@@ -239,13 +239,13 @@ namespace Marksman
 
             if (LaneClearActive)
             {
-                bool useQ = GetValue<bool>("UseQL");
+                var useQ = GetValue<bool>("UseQL");
 
                 if (Q.IsReady() && useQ)
                 {
                     var vMinions = MinionManager.GetMinions(ObjectManager.Player.Position, Q.Range);
                     foreach (
-                        Obj_AI_Base minions in
+                        var minions in
                             vMinions.Where(
                                 minions => minions.Health < ObjectManager.Player.GetSpellDamage(minions, SpellSlot.Q)))
                         Q.Cast(minions);

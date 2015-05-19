@@ -5,21 +5,22 @@ using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
+using Marksman.Utils;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class Sivir : Champion
     {
         public static Spell Q;
-        public Spell W;
-        public Spell E;
         private Menu _menuSupportedSpells;
+        public Spell E;
+        public Spell W;
 
         public Sivir()
         {
-            Utils.PrintMessage("Sivir loaded.");
+            Utils.Utils.PrintMessage("Sivir loaded.");
 
             Q = new Spell(SpellSlot.Q, 1250);
             Q.SetSkillshot(0.25f, 90f, 1350f, false, SkillshotType.SkillshotLine);
@@ -37,7 +38,6 @@ namespace Marksman
                 var t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                 if (Q.IsReady() && t.IsValidTarget())
                 {
-                    int xDelay = 0;
                     if ((t.HasBuffOfType(BuffType.Slow) || t.HasBuffOfType(BuffType.Stun) ||
                          t.HasBuffOfType(BuffType.Snare) || t.HasBuffOfType(BuffType.Fear) ||
                          t.HasBuffOfType(BuffType.Taunt)))
@@ -88,7 +88,7 @@ namespace Marksman
             if (t.IsValidTarget() && Q.IsReady() &&
                 ObjectManager.Player.Distance(t.ServerPosition) <= Q.Range)
             {
-                PredictionOutput Qpredict = Q.GetPrediction(t);
+                var Qpredict = Q.GetPrediction(t);
                 var hithere = Qpredict.CastPosition.Extend(ObjectManager.Player.Position, -140);
 
                 var Hitchance = HitChance.High;
@@ -136,7 +136,7 @@ namespace Marksman
 
             foreach (var xEnemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsEnemy))
             {
-                Obj_AI_Hero enemy = xEnemy;
+                var enemy = xEnemy;
                 foreach (var ccList in SpellList.BuffList.Where(xList => xList.ChampionName == enemy.ChampionName))
                 {
                     _menuSupportedSpells.AddItem(new MenuItem(ccList.BuffName, ccList.DisplayName)).SetValue(true);

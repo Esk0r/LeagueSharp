@@ -8,7 +8,7 @@ using LeagueSharp.Common;
 
 #endregion
 
-namespace Marksman
+namespace Marksman.Champions
 {
     internal class Twitch : Champion
     {
@@ -17,14 +17,14 @@ namespace Marksman
 
         public Twitch()
         {
-            Utils.PrintMessage("Twitch loaded.");
-
             W = new Spell(SpellSlot.W, 950);
             W.SetSkillshot(0.25f, 120f, 1400f, false, SkillshotType.SkillshotCircle);
             E = new Spell(SpellSlot.E, 1200);
 
             Utility.HpBarDamageIndicator.DamageToUnit = GetComboDamage;
             Utility.HpBarDamageIndicator.Enabled = true;
+
+            Utils.Utils.PrintMessage("Twitch loaded.");
         }
 
         public override void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
@@ -75,6 +75,36 @@ namespace Marksman
                                     .Where(buff => buff.Count == 6))
                         {
                             E.Cast();
+                        }
+                    }
+                    // credits iMeh
+                    var minions = MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.NotAlly);
+                    foreach (var m in minions)
+                    {
+                        switch (GetValue<StringList>("E.Mobs").SelectedIndex)
+                        {
+                            case 0:
+                                if ((m.BaseSkinName.Contains("MinionSiege") || m.BaseSkinName.Contains("Dragon") ||
+                                     m.BaseSkinName.Contains("Baron")) && E.IsKillable(m))
+                                {
+                                    E.Cast();
+                                }
+                                break;
+
+                            case 1:
+                                if ((m.BaseSkinName.Contains("Dragon") || m.BaseSkinName.Contains("Baron")) &&
+                                    E.IsKillable(m))
+                                {
+                                    E.Cast();
+                                }
+                                break;
+                            case 2:
+                                if (m.BaseSkinName.Contains("MinionSiege") &&
+                                    E.IsKillable(m))
+                                {
+                                    E.Cast();
+                                }
+                                break;
                         }
                     }
                 }
@@ -154,6 +184,10 @@ namespace Marksman
 
         public override bool LaneClearMenu(Menu config)
         {
+            config.AddItem(
+                new MenuItem("E.Mobs" + Id, "Kill mobs with E").SetValue(
+                    new StringList(new[] {"All Mobs", "Baron + Dragon", "Siege Minion", "None"})));
+
             return true;
         }
     }
