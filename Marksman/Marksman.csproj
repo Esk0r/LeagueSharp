@@ -80,7 +80,7 @@
     <Compile Include="Utils\Activator.cs" />
     <Compile Include="Champions\Ashe.cs" />
     <Compile Include="Champions\Caitlyn.cs" />
-    <Compile Include="Champion.cs" />
+    <Compile Include="Champions\Champion.cs" />
     <Compile Include="Champions\Corki.cs" />
     <Compile Include="Utils\Sprite.cs" />
     <Compile Include="Champions\Draven.cs" />

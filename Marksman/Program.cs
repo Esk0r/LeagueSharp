@@ -233,12 +233,13 @@ namespace Marksman
                     drawing.AddItem(
                         new MenuItem("drawMinionNearKill", MenuSpace + "Minion Near Kill").SetValue(new Circle(false,
                             Color.Gray)));
-                    drawing.AddItem(
-                        new MenuItem("drawJunglePosition", MenuSpace + "Jungle Farm Position").SetValue(true));
+                    drawing.AddItem(new MenuItem("drawJunglePosition", MenuSpace + "Jungle Farm Position").SetValue(true));
                     drawing.AddItem(
                         new MenuItem("Draw.DrawMinions", MenuSpace + "Draw Minions Sprite", true).SetValue(false));
                     drawing.AddItem(
                         new MenuItem("Draw.DrawTarget", MenuSpace + "Draw Target Sprite", true).SetValue(true));
+                    drawing.AddItem(
+                        new MenuItem("Draw.DrawSTarget", MenuSpace + "Draw Selected Target", true).SetValue(true));
                     drawing.AddItem(new MenuItem("Marksman.Drawings", "Champion Draws"));
                     Config.AddSubMenu(drawing);
                 }
@@ -334,14 +335,17 @@ namespace Marksman
 
         private static void Drawing_OnDraw(EventArgs args)
         {
-            var t = TargetSelector.SelectedTarget;
-            ;
-            if (!t.IsValidTarget())
-                t = TargetSelector.GetTarget(1100, TargetSelector.DamageType.Physical);
-
-            if (t.IsValidTarget() && ObjectManager.Player.Distance(t) < 1200)
+            var drawSelectedTarget = CClass.Config.SubMenu("Drawings").Item("Draw.DrawSTarget").GetValue<Circle>();
+            if (drawSelectedTarget.Active)
             {
-                Render.Circle.DrawCircle(t.Position, 150, Color.Goldenrod);
+                var t = TargetSelector.SelectedTarget;
+                if (!t.IsValidTarget())
+                    t = TargetSelector.GetTarget(1100, TargetSelector.DamageType.Physical);
+
+                if (t.IsValidTarget() && ObjectManager.Player.Distance(t) < 1200)
+                {
+                    Render.Circle.DrawCircle(t.Position, 150, drawSelectedTarget.Color);
+                }
             }
 
             /* 
