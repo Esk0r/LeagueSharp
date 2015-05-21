@@ -334,7 +334,7 @@ namespace Marksman
 
         private static void Drawing_OnDraw(EventArgs args)
         {
-            /*
+
             var drawSelectedTarget = CClass.Config.SubMenu("Drawings").Item("Draw.DrawSTarget").GetValue<Circle>();
             if (drawSelectedTarget.Active)
             {
@@ -353,7 +353,7 @@ namespace Marksman
                 if (drawJunglePosition)
                     Utils.Utils.Jungle.DrawJunglePosition();
             }
-            */
+
             var drawMinionLastHit = CClass.Config.SubMenu("Drawings").Item("drawMinionLastHit").GetValue<Circle>();
             var drawMinionNearKill = CClass.Config.SubMenu("Drawings").Item("drawMinionNearKill").GetValue<Circle>();
             if (drawMinionLastHit.Active || drawMinionNearKill.Active)
