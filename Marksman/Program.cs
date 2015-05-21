@@ -233,14 +233,13 @@ namespace Marksman
                     drawing.AddItem(
                         new MenuItem("drawMinionNearKill", MenuSpace + "Minion Near Kill").SetValue(new Circle(false,
                             Color.Gray)));
-                    drawing.AddItem(new MenuItem("drawJunglePosition", MenuSpace + "Jungle Farm Position").SetValue(true));
+                    drawing.AddItem(new MenuItem("drawJunglePosition", MenuSpace + "Jungle Farm Position").SetValue(false));
                     drawing.AddItem(
                         new MenuItem("Draw.DrawMinions", MenuSpace + "Draw Minions Sprite", true).SetValue(false));
                     drawing.AddItem(
-                        new MenuItem("Draw.DrawTarget", MenuSpace + "Draw Target Sprite", true).SetValue(true));
+                        new MenuItem("Draw.DrawTarget", MenuSpace + "Draw Target Sprite", true).SetValue(false));
                     drawing.AddItem(
-                        new MenuItem("Draw.DrawSTarget", MenuSpace + "Draw Selected Target", true).SetValue(true));
-                    drawing.AddItem(new MenuItem("Marksman.Drawings", "Champion Draws"));
+                        new MenuItem("Draw.DrawSTarget", MenuSpace + "Draw Selected Target", true).SetValue(false));
                     Config.AddSubMenu(drawing);
                 }
             }
@@ -248,7 +247,7 @@ namespace Marksman
 
             CClass.MainMenu(Config);
             Config.AddToMainMenu();
-            Sprite.Load();
+            //Sprite.Load();
 
             Drawing.OnDraw += Drawing_OnDraw;
             Game.OnUpdate += Game_OnGameUpdate;
@@ -335,6 +334,7 @@ namespace Marksman
 
         private static void Drawing_OnDraw(EventArgs args)
         {
+            /*
             var drawSelectedTarget = CClass.Config.SubMenu("Drawings").Item("Draw.DrawSTarget").GetValue<Circle>();
             if (drawSelectedTarget.Active)
             {
@@ -348,12 +348,6 @@ namespace Marksman
                 }
             }
 
-            /* 
-            if (xSelectedTarget != null && xSelectedTarget.IsValidTarget())
-             {
-                 Render.Circle.DrawCircle(xSelectedTarget.Position, xSelectedTarget.BoundingRadius * 1.5f, System.Drawing.Color.Red);
-             }
-             */
             var drawJunglePosition = CClass.Config.SubMenu("Drawings").Item("drawJunglePosition").GetValue<bool>();
             {
                 if (drawJunglePosition)
@@ -383,7 +377,7 @@ namespace Marksman
                     }
                 }
             }
-
+            */
             if (CClass != null)
             {
                 CClass.Drawing_OnDraw(args);
