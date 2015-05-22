@@ -115,6 +115,7 @@ namespace Marksman.Champions
 
             var useW = W.IsReady() && GetValue<bool>("UseWC");
             var useWc = W.IsReady() && GetValue<bool>("UseWCS");
+            var useWks = W.IsReady() && GetValue<bool>("UseWKs");
             var useE = E.IsReady() && GetValue<bool>("UseE" + (ComboActive ? "C" : "H"));
             var useR = R.IsReady() && GetValue<bool>("UseRM") && R.IsReady();
 
@@ -140,12 +141,16 @@ namespace Marksman.Champions
                 if (useW)
                 {
                     t = TristanaData.GetTarget(W.Range);
+                    if (t.IsValidTarget())
+                        W.Cast(t);
+                }
+                else if (useWks)
+                {
+                    t = TristanaData.GetTarget(W.Range);
                     if (t.IsValidTarget() && t.Health < TristanaData.GetWDamage)
                         W.Cast(t);
                 }
-
-
-                if (useWc)
+                else if (useWc)
                 {
                     t = TristanaData.GetTarget(W.Range);
                     if (t.IsValidTarget() && TristanaData.GetEMarkedCount == 4)
@@ -228,6 +233,7 @@ namespace Marksman.Champions
         {
             config.AddItem(new MenuItem("UseQC" + Id, "Use Q").SetValue(true));
             config.AddItem(new MenuItem("UseWC" + Id, "Use W").SetValue(true));
+            config.AddItem(new MenuItem("UseWKs" + Id, "Use W Kill Steal").SetValue(true));
             config.AddItem(new MenuItem("UseWCS" + Id, "Complete E stacks with W").SetValue(true));
             config.AddItem(new MenuItem("UseEC" + Id, "Use E").SetValue(true));
 
