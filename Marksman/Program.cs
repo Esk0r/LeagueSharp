@@ -239,7 +239,8 @@ namespace Marksman
                     drawing.AddItem(
                         new MenuItem("Draw.DrawTarget", MenuSpace + "Draw Target Sprite", true).SetValue(false));
                     drawing.AddItem(
-                        new MenuItem("Draw.DrawSTarget", MenuSpace + "Draw Selected Target", true).SetValue(false));
+                        new MenuItem("Draw.DrawSTarget", MenuSpace + "Draw Selected Target", true).SetValue(new Circle(false,
+                            Color.GreenYellow)));
                     Config.AddSubMenu(drawing);
                 }
             }
