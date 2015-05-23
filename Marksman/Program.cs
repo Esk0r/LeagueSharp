@@ -333,20 +333,18 @@ namespace Marksman
 
         private static void Drawing_OnDraw(EventArgs args)
         {
-/*
-            var drawSelectedTarget = CClass.Config.SubMenu("Drawings").Item("Draw.DrawSTarget").GetValue<Circle>();
-            if (drawSelectedTarget.Active)
+            var t = TargetSelector.SelectedTarget;
+            if (!t.IsValidTarget())
             {
-                var t = TargetSelector.SelectedTarget;
-                if (!t.IsValidTarget())
-                    t = TargetSelector.GetTarget(1100, TargetSelector.DamageType.Physical);
-
-                if (t.IsValidTarget() && ObjectManager.Player.Distance(t) < 1200)
-                {
-                    Render.Circle.DrawCircle(t.Position, 150, drawSelectedTarget.Color);
-                }
+                t = TargetSelector.GetTarget(1100, TargetSelector.DamageType.Physical);
+                TargetSelector.SetTarget(t);
             }
-*/
+
+            if (t.IsValidTarget() && ObjectManager.Player.Distance(t) < 1110)
+            {
+                Render.Circle.DrawCircle(t.Position, 150, drawSelectedTarget.Color);
+            }
+
             var drawJunglePosition = CClass.Config.SubMenu("Drawings").Item("drawJunglePosition").GetValue<bool>();
             {
                 if (drawJunglePosition)
