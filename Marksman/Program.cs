@@ -238,9 +238,7 @@ namespace Marksman
                         new MenuItem("Draw.DrawMinions", MenuSpace + "Draw Minions Sprite", true).SetValue(false));
                     drawing.AddItem(
                         new MenuItem("Draw.DrawTarget", MenuSpace + "Draw Target Sprite", true).SetValue(false));
-                    drawing.AddItem(
-                        new MenuItem("Draw.DrawSTarget", MenuSpace + "Draw Selected Target", true).SetValue(new Circle(false,
-                            Color.GreenYellow)));
+                    //drawing.AddItem(new MenuItem("Draw.DrawSTarget", MenuSpace + "Draw Selected Target", true).SetValue(new Circle(false,Color.GreenYellow)));
                     Config.AddSubMenu(drawing);
                 }
             }
@@ -335,7 +333,7 @@ namespace Marksman
 
         private static void Drawing_OnDraw(EventArgs args)
         {
-
+/*
             var drawSelectedTarget = CClass.Config.SubMenu("Drawings").Item("Draw.DrawSTarget").GetValue<Circle>();
             if (drawSelectedTarget.Active)
             {
@@ -348,7 +346,7 @@ namespace Marksman
                     Render.Circle.DrawCircle(t.Position, 150, drawSelectedTarget.Color);
                 }
             }
-
+*/
             var drawJunglePosition = CClass.Config.SubMenu("Drawings").Item("drawJunglePosition").GetValue<bool>();
             {
                 if (drawJunglePosition)
