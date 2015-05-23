@@ -86,6 +86,7 @@ namespace Marksman.Champions
             }
 
 
+
             if (Q.IsReady() && GetValue<bool>("AutoQI"))
             {
                 t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
@@ -93,7 +94,7 @@ namespace Marksman.Champions
                     (t.HasBuffOfType(BuffType.Stun) || t.HasBuffOfType(BuffType.Snare) ||
                      t.HasBuffOfType(BuffType.Taunt) &&
                     (t.Health <= ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q) ||
-                     ObjectManager.Player.Distance(t) > Orbwalking.GetRealAutoAttackRange(null) + 65)))
+                     !Orbwalking.InAutoAttackRange(t))))
                 {
                     Q.Cast(t, false, true);
                 }
@@ -129,12 +130,16 @@ namespace Marksman.Champions
             if (GetValue<KeyBind>("UseEQC").Active && E.IsReady() && Q.IsReady())
             {
                 t = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
-                if (t.IsValidTarget(E.Range))
+                if (t.IsValidTarget(E.Range) &&
+                    t.Health <
+                    ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q) +
+                    ObjectManager.Player.GetSpellDamage(t, SpellSlot.E) + 20 && E.CanCast(t))
                 {
                     E.Cast(t);
                     Q.Cast(t, false, true);
                 }
             }
+
             // PQ you broke it D:
             if ((!ComboActive && !HarassActive) || !Orbwalking.CanMove(100)) return;
 
