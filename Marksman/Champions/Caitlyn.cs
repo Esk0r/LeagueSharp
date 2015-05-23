@@ -90,7 +90,9 @@ namespace Marksman.Champions
                 t = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
                 if (t.IsValidTarget(Q.Range) &&
                     (t.HasBuffOfType(BuffType.Stun) || t.HasBuffOfType(BuffType.Snare) ||
-                     t.HasBuffOfType(BuffType.Taunt) || t.HasBuffOfType(BuffType.Slow)))
+                     t.HasBuffOfType(BuffType.Taunt)) &&
+                    (t.Health <= ObjectManager.Player.GetSpellDamage(t, SpellSlot.Q) ||
+                     ObjectManager.Player.Distance(t) > Orbwalking.GetRealAutoAttackRange(null) + 65))
                 {
                     Q.Cast(t, false, true);
                 }
