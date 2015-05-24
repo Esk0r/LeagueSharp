@@ -342,7 +342,7 @@ namespace Marksman
 
             if (t.IsValidTarget() && ObjectManager.Player.Distance(t) < 1110)
             {
-                Render.Circle.DrawCircle(t.Position, 150, drawSelectedTarget.Color);
+                //Render.Circle.DrawCircle(t.Position, 150, drawSelectedTarget.Color);
             }
 
             var drawJunglePosition = CClass.Config.SubMenu("Drawings").Item("drawJunglePosition").GetValue<bool>();
