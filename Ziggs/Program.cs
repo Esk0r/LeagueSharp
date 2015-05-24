@@ -335,7 +335,7 @@ namespace Ziggs
             }
 
             //W to mouse
-            var castToMouse = Config.Item("WToMouse").GetValue<KeyBind>().Active && !Keyboard.IsKeyDown(Key.LeftCtrl);
+            var castToMouse = Config.Item("WToMouse").GetValue<KeyBind>().Active;
             if (castToMouse || Utils.TickCount - LastWToMouseT < 400)
             {
                 var pos = ObjectManager.Player.ServerPosition.To2D().Extend(Game.CursorPos.To2D(), -150).To3D();
