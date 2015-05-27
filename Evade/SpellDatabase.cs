@@ -369,7 +369,7 @@ namespace Evade
 
             #endregion
 
-            #region Blitzcrank
+            #region Blatzcrink
 
             Spells.Add(
                 new SpellData
@@ -411,7 +411,7 @@ namespace Evade
                     MissileSpellName = "",
                 });
 
-            #endregion Blitzcrank
+            #endregion Blatzcrink
 
             #region Brand
 
