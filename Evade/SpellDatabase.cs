@@ -790,6 +790,31 @@ namespace Evade
 
             #endregion Draven
 
+            #region Ekko
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Ekko",
+                    SpellName = "EkkoQ",
+                    Slot = SpellSlot.E,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 250,
+                    Range = 950,
+                    Radius = 60,
+                    MissileSpeed = 1650,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 4,
+                    IsDangerous = true,
+                    MissileSpellName = "ekkoqmis",
+                    CanBeRemoved = true,
+                    CollisionObjects =
+                        new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.YasuoWall }
+                });
+
+            #endregion Ekko
+
             #region Elise
 
             Spells.Add(
