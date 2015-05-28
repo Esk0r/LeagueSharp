@@ -797,7 +797,7 @@ namespace Evade
                 {
                     ChampionName = "Ekko",
                     SpellName = "EkkoQ",
-                    Slot = SpellSlot.E,
+                    Slot = SpellSlot.Q,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 250,
                     Range = 950,
