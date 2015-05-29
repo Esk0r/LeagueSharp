@@ -2120,7 +2120,7 @@ namespace Evade
                     IsDangerous = false,
                     MissileSpellName = "LuxLightStrikeKugel",
                     ExtraDuration = 5500,
-                    ToggleParticleName = "LuxLightstrike_tar",
+                    ToggleParticleName = "Lux_.+_E_tar_aoe_green",
                     DontCross = true,
                     CanBeRemoved = true,
                     CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },

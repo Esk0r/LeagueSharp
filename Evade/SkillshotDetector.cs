@@ -18,6 +18,7 @@
 
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
@@ -72,8 +73,7 @@ namespace Evade
             for (var i = Program.DetectedSkillshots.Count - 1; i >= 0; i--)
             {
                 var skillshot = Program.DetectedSkillshots[i];
-                if (skillshot.SpellData.ToggleParticleName != "" &&
-                    sender.Name.Contains(skillshot.SpellData.ToggleParticleName))
+                if (skillshot.SpellData.ToggleParticleName != "" && new Regex(skillshot.SpellData.ToggleParticleName).IsMatch(sender.Name))
                 {
                     Program.DetectedSkillshots.RemoveAt(i);
                 }
@@ -97,10 +97,10 @@ namespace Evade
             }
 
 
-     /*     Console.WriteLine(
+        /*Console.WriteLine(
                 Utils.TickCount + " Projectile Created: " + missile.SData.Name + " distance: " +
-                missile.StartPosition.Distance(missile.EndPosition) + "Radius: " +
-                missile.SData.LineWidth + " Speed: " + missile.SData.MissileSpeed); */
+                missile.SData.CastRange + "Radius: " +
+                missile.SData.LineWidth + " Speed: " + missile.SData.MissileSpeed);  */
 
 
             var spellData = SpellDatabase.GetByMissileName(missile.SData.Name);
