@@ -2035,6 +2035,7 @@ namespace Evade
                     MissileSpellName = "lucianrmissileoffhand",
                     ExtraMissileNames = new[] { "lucianrmissile" },
                     DontCheckForDuplicates = true,
+                    DisabledByDefault = true,
                 });
 
             #endregion Lucian

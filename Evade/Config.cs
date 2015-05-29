@@ -95,7 +95,7 @@ namespace Evade
                                     spell.IsDangerous));
 
                             subMenu.AddItem(new MenuItem("Draw" + spell.MenuItemName, "Draw").SetValue(true));
-                            subMenu.AddItem(new MenuItem("Enabled" + spell.MenuItemName, "Enabled").SetValue(true));
+                            subMenu.AddItem(new MenuItem("Enabled" + spell.MenuItemName, "Enabled").SetValue(!spell.DisabledByDefault));
 
                             skillShots.AddSubMenu(subMenu);
                         }

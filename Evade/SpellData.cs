@@ -31,6 +31,7 @@ namespace Evade
         public CollisionObjectTypes[] CollisionObjects = { };
         public int DangerValue;
         public int Delay;
+        public bool DisabledByDefault = false;
         public bool DisableFowDetection = false;
         public bool DontAddExtraDuration;
         public bool DontCheckForDuplicates = false;
