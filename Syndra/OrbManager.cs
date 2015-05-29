@@ -38,8 +38,16 @@ namespace Syndra
 
         static OrbManager()
         {
-            Game.OnProcessPacket += Game_OnGameProcessPacket;
+            Obj_AI_Base.OnPauseAnimation += Obj_AI_Base_OnPauseAnimation;
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
+        }
+
+        static void Obj_AI_Base_OnPauseAnimation(Obj_AI_Base sender, Obj_AI_BasePauseAnimationEventArgs args)
+        {
+            if (sender.Name == "Seed" && sender.IsAlly)
+            {
+                WObjectNetworkId = sender.NetworkId;  
+            }
         }
 
         private static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
@@ -63,17 +71,6 @@ namespace Syndra
             var obj = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>(WObjectNetworkId);
             if (obj != null && obj.IsValid<Obj_AI_Minion>() && (obj.Name == "Seed" && onlyOrb || !onlyOrb)) return (Obj_AI_Minion)obj;
             return null;
-        }
-
-        private static void Game_OnGameProcessPacket(GamePacketEventArgs args)
-        {
-            if (args.PacketData[0] == 0x0D)
-            {
-                var packet = new GamePacket(args.PacketData);
-                packet.Position = 2;
-                var networkId = packet.ReadInteger();
-                WObjectNetworkId = networkId;
-            }
         }
 
         public static List<Vector3> GetOrbs(bool toGrab = false)
