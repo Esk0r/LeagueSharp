@@ -1176,7 +1176,7 @@ namespace Evade
                     IsDangerous = false,
                     MissileSpellName = "GragasQMissile",
                     ExtraDuration = 4500,
-                    ToggleParticleName = "Gragas_",
+                    ToggleParticleName = "Gragas_.+_Q_(Enemy|Ally)",
                     DontCross = true,
                 });
 
@@ -2120,7 +2120,7 @@ namespace Evade
                     IsDangerous = false,
                     MissileSpellName = "LuxLightStrikeKugel",
                     ExtraDuration = 5500,
-                    ToggleParticleName = "Lux_.+_E_tar_aoe_green",
+                    ToggleParticleName = "Lux_.+_E_tar_aoe_",
                     DontCross = true,
                     CanBeRemoved = true,
                     CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
