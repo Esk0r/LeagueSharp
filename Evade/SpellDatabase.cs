@@ -1793,7 +1793,7 @@ namespace Evade
                 {
                     ChampionName = "Leblanc",
                     SpellName = "LeblancSlideM",
-                    Slot = SpellSlot.W,
+                    Slot = SpellSlot.R,
                     Type = SkillShotType.SkillshotCircle,
                     Delay = 0,
                     Range = 600,
@@ -1833,7 +1833,7 @@ namespace Evade
                 {
                     ChampionName = "Leblanc",
                     SpellName = "LeblancSoulShackleM",
-                    Slot = SpellSlot.E,
+                    Slot = SpellSlot.R,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 250,
                     Range = 950,
