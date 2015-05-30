@@ -597,6 +597,9 @@ namespace Orianna
 
         static void Harass()
         {
+            if (Player.ManaPercent < Config.Item("HarassManaCheck").GetValue<Slider>().Value)
+            	return;
+           	
             var target = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Magical);
             if (target != null)
             {
@@ -656,8 +659,8 @@ namespace Orianna
             }
             else
             {
-                if ((Config.Item("HarassActive").GetValue<KeyBind>().Active ||
-                    Config.Item("HarassActiveT").GetValue<KeyBind>().Active) && (Player.ManaPercentage() >= Config.Item("HarassManaCheck").GetValue<Slider>().Value))
+                if (Config.Item("HarassActive").GetValue<KeyBind>().Active ||
+                    (Config.Item("HarassActiveT").GetValue<KeyBind>().Active && !Player.HasBuff("Recall")))
                     Harass();
 
                 var lc = Config.Item("LaneClearActive").GetValue<KeyBind>().Active;
