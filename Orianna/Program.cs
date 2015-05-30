@@ -238,6 +238,8 @@ namespace Orianna
             Drawing.OnDraw += Drawing_OnDraw;
             Spellbook.OnCastSpell += Spellbook_OnCastSpell;
             Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
+            
+            Notifications.AddNotification("Orianna Loaded", 4000);
         }
 
         static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
