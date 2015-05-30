@@ -44,7 +44,7 @@ namespace Syndra
 
         static void Obj_AI_Base_OnPauseAnimation(Obj_AI_Base sender, Obj_AI_BasePauseAnimationEventArgs args)
         {
-            if (sender.Name == "Seed" && sender.IsAlly)
+            if (sender is Obj_AI_Minion && sender.IsAlly)
             {
                 WObjectNetworkId = sender.NetworkId;  
             }
