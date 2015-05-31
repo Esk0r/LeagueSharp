@@ -2088,7 +2088,7 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Lux",
-                    SpellName = "LuxLightBinding",
+                    SpellName = "LuxLightBinding (Q)",
                     Slot = SpellSlot.Q,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 250,
@@ -2108,7 +2108,7 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Lux",
-                    SpellName = "LuxLightStrikeKugel",
+                    SpellName = "LuxLightStrikeKugel (E)",
                     Slot = SpellSlot.E,
                     Type = SkillShotType.SkillshotCircle,
                     Delay = 250,
@@ -2121,7 +2121,7 @@ namespace Evade
                     IsDangerous = false,
                     MissileSpellName = "LuxLightStrikeKugel",
                     ExtraDuration = 5500,
-                    ToggleParticleName = "Lux_Base_E_tar_hit.troy",//Lux_.+_E_tar_aoe_",
+                    ToggleParticleName = "Lux_Base_E_tar_nova.troy",//Lux_.+_E_tar_aoe_",
                     DontCross = true,
                     CanBeRemoved = true,
                     CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
@@ -2131,7 +2131,7 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Lux",
-                    SpellName = "LuxMaliceCannon",
+                    SpellName = "LuxMaliceCannon (R)",
                     Slot = SpellSlot.R,
                     Type = SkillShotType.SkillshotLine,
                     Delay = 1000,
