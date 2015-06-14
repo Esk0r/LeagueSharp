@@ -53,6 +53,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="SharpDX.Direct3D9">
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BallManager.cs" />
