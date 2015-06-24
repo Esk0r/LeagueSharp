@@ -2695,7 +2695,7 @@ namespace Evade
                     IsDangerous = true,
                     MissileSpellName = "SionEMissile",
                     CollisionObjects =
-                        new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.Minion, CollisionObjectTypes.YasuoWall },
+                        new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.YasuoWall },
                 });
 
             Spells.Add(
