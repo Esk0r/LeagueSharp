@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using LeagueSharp;
@@ -13,16 +14,6 @@ namespace Syndra
     public static class OrbManager
     {
         private static int _wobjectnetworkid = -1;
-        public static int tmpQOrbT;
-        public static Vector3 tmpQOrbPos;
-        public static int tmpWOrbT;
-        public static Vector3 tmpWOrbPos;
-
-        static OrbManager()
-        {
-            Obj_AI_Base.OnPauseAnimation += Obj_AI_Base_OnPauseAnimation;
-            Obj_AI_Base.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
-        }
 
         public static int WObjectNetworkId
         {
@@ -33,14 +24,29 @@ namespace Syndra
 
                 return _wobjectnetworkid;
             }
-            set { _wobjectnetworkid = value; }
+            set
+            {
+                _wobjectnetworkid = value;
+            }
         }
 
-        private static void Obj_AI_Base_OnPauseAnimation(Obj_AI_Base sender, Obj_AI_BasePauseAnimationEventArgs args)
+        public static int tmpQOrbT;
+        public static Vector3 tmpQOrbPos = new Vector3();
+
+        public static int tmpWOrbT;
+        public static Vector3 tmpWOrbPos = new Vector3();
+
+        static OrbManager()
+        {
+            Obj_AI_Base.OnPauseAnimation += Obj_AI_Base_OnPauseAnimation;
+            Obj_AI_Base.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
+        }
+
+        static void Obj_AI_Base_OnPauseAnimation(Obj_AI_Base sender, Obj_AI_BasePauseAnimationEventArgs args)
         {
             if (sender is Obj_AI_Minion)
             {
-                WObjectNetworkId = sender.NetworkId;
+                WObjectNetworkId = sender.NetworkId;  
             }
         }
 
@@ -63,8 +69,7 @@ namespace Syndra
         {
             if (WObjectNetworkId == -1) return null;
             var obj = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>(WObjectNetworkId);
-            if (obj != null && obj.IsValid<Obj_AI_Minion>() && (obj.Name == "Seed" && onlyOrb || !onlyOrb))
-                return (Obj_AI_Minion) obj;
+            if (obj != null && obj.IsValid<Obj_AI_Minion>() && (obj.Name == "Seed" && onlyOrb || !onlyOrb)) return (Obj_AI_Minion)obj;
             return null;
         }
 
@@ -76,6 +81,7 @@ namespace Syndra
                     ObjectManager.Get<Obj_AI_Minion>()
                         .Where(obj => obj.IsValid && obj.Team == ObjectManager.Player.Team && obj.Name == "Seed"))
             {
+                
                 var valid = false;
                 if (obj.NetworkId != WObjectNetworkId)
                     if (

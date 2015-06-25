@@ -6,7 +6,6 @@ using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
-using SharpDX.Direct3D9;
 using Color = System.Drawing.Color;
 
 #endregion
@@ -16,21 +15,26 @@ namespace Syndra
     internal class Program
     {
         public const string ChampionName = "Syndra";
+
         //Orbwalker instance
         public static Orbwalking.Orbwalker Orbwalker;
-        public static Font Text;
+
         //Spells
         public static List<Spell> SpellList = new List<Spell>();
+
         public static Spell Q;
         public static Spell W;
         public static Spell E;
         public static Spell EQ;
         public static Spell R;
+
         public static SpellSlot IgniteSlot;
+
         //Menu
         public static Menu Config;
         private static int QEComboT;
         private static int WEComboT;
+
         private static Obj_AI_Hero Player;
 
         private static void Main(string[] args)
@@ -57,7 +61,7 @@ namespace Syndra
 
             Q.SetSkillshot(0.6f, 125f, float.MaxValue, false, SkillshotType.SkillshotCircle);
             W.SetSkillshot(0.25f, 140f, 1600f, false, SkillshotType.SkillshotCircle);
-            E.SetSkillshot(0.25f, (float) (45*0.5), 2500f, false, SkillshotType.SkillshotCircle);
+            E.SetSkillshot(0.25f, (float)(45 * 0.5), 2500f, false, SkillshotType.SkillshotCircle);
             EQ.SetSkillshot(float.MaxValue, 55f, 2000f, false, SkillshotType.SkillshotCircle);
 
             SpellList.Add(Q);
@@ -78,7 +82,7 @@ namespace Syndra
 
             //Load the orbwalker and add it to the menu as submenu.
             Orbwalker = new Orbwalking.Orbwalker(Config.SubMenu("Orbwalking"));
-
+            
             //Combo menu:
             Config.AddSubMenu(new Menu("Combo", "Combo"));
             Config.SubMenu("Combo").AddItem(new MenuItem("UseQCombo", "Use Q").SetValue(true));
@@ -106,27 +110,21 @@ namespace Syndra
                 .AddItem(
                     new MenuItem("HarassActiveT", "Harass (toggle)!").SetValue(new KeyBind("Y".ToCharArray()[0],
                         KeyBindType.Toggle)));
-            Config.SubMenu("Harass")
-                .AddItem(new MenuItem("HarassNotification", "Show Harass Toggle Notification").SetValue(true));
-
 
             //Farming menu:
             Config.AddSubMenu(new Menu("Farm", "Farm"));
-            Config.SubMenu("Farm").AddItem(new MenuItem("EnableFarm", "Enable! (Key: Mouse Scroll)").SetValue(true));
-            Config.SubMenu("Farm")
-                .AddItem(new MenuItem("EnableFarmNot", "Show Farm Status Notification").SetValue(true));
             Config.SubMenu("Farm")
                 .AddItem(
                     new MenuItem("UseQFarm", "Use Q").SetValue(
-                        new StringList(new[] {"Freeze", "LaneClear", "Both", "No"}, 2)));
+                        new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 2)));
             Config.SubMenu("Farm")
                 .AddItem(
                     new MenuItem("UseWFarm", "Use W").SetValue(
-                        new StringList(new[] {"Freeze", "LaneClear", "Both", "No"}, 1)));
+                        new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 1)));
             Config.SubMenu("Farm")
                 .AddItem(
                     new MenuItem("UseEFarm", "Use E").SetValue(
-                        new StringList(new[] {"Freeze", "LaneClear", "Both", "No"}, 3)));
+                        new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 3)));
             Config.SubMenu("Farm")
                 .AddItem(
                     new MenuItem("FreezeActive", "Freeze!").SetValue(
@@ -159,16 +157,15 @@ namespace Syndra
                 Config.SubMenu("Misc")
                     .SubMenu("DontUlt")
                     .AddItem(new MenuItem("DontUlt" + enemy.BaseSkinName, enemy.BaseSkinName).SetValue(false));
-
+            
             //Damage after combo:
-            var dmgAfterComboItem = new MenuItem("DamageAfterCombo", "Draw damage after combo").SetValue(true);
+            var dmgAfterComboItem =  new MenuItem("DamageAfterCombo", "Draw damage after combo").SetValue(true);
             Utility.HpBarDamageIndicator.DamageToUnit = GetComboDamage;
             Utility.HpBarDamageIndicator.Enabled = dmgAfterComboItem.GetValue<bool>();
-            dmgAfterComboItem.ValueChanged +=
-                delegate(object sender, OnValueChangeEventArgs eventArgs)
-                {
-                    Utility.HpBarDamageIndicator.Enabled = eventArgs.GetNewValue<bool>();
-                };
+            dmgAfterComboItem.ValueChanged += delegate(object sender, OnValueChangeEventArgs eventArgs)
+            {
+                Utility.HpBarDamageIndicator.Enabled = eventArgs.GetNewValue<bool>();
+            };
 
             //Drawings menu:
             Config.AddSubMenu(new Menu("Drawings", "Drawings"));
@@ -186,39 +183,16 @@ namespace Syndra
                 .AddItem(dmgAfterComboItem);
             Config.AddToMainMenu();
 
-            Text = new Font(
-                Drawing.Direct3DDevice,
-                new FontDescription
-                {
-                    FaceName = "Calibri",
-                    Height = 17,
-                    OutputPrecision = FontPrecision.Default,
-                    Quality = FontQuality.ClearType
-                });
-
             //Add the events we are going to use:
             Game.OnUpdate += Game_OnGameUpdate;
-            Game.OnWndProc += Game_OnWndProc;
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
             Drawing.OnDraw += Drawing_OnDraw;
             Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
             Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
-
-            Notifications.AddNotification(ChampionName + " Loaded!", 4000);
+            Game.PrintChat(ChampionName + " Loaded!");
         }
 
-        private static void Game_OnWndProc(WndEventArgs args)
-        {
-            if (args.Msg != 0x20a)
-                return;
-
-            Config.SubMenu("Farm")
-                .Item("EnableFarm")
-                .SetValue(!Config.SubMenu("Farm").Item("EnableFarm").GetValue<bool>());
-        }
-
-        private static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender,
-            Interrupter2.InterruptableTargetEventArgs args)
+        static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
         {
             if (!Config.Item("InterruptSpells").GetValue<bool>()) return;
 
@@ -233,11 +207,13 @@ namespace Syndra
             }
         }
 
-        private static void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        static void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
         {
             if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
                 args.Process = !(Q.IsReady() || W.IsReady());
         }
+
+
 
         private static void Combo()
         {
@@ -249,8 +225,7 @@ namespace Syndra
         private static void Harass()
         {
             UseSpells(Config.Item("UseQHarass").GetValue<bool>(), Config.Item("UseWHarass").GetValue<bool>(),
-                Config.Item("UseEHarass").GetValue<bool>(), false, Config.Item("UseQEHarass").GetValue<bool>(), false,
-                true);
+                Config.Item("UseEHarass").GetValue<bool>(), false, Config.Item("UseQEHarass").GetValue<bool>(), false, true);
         }
 
         private static void UseE(Obj_AI_Base enemy)
@@ -261,7 +236,7 @@ namespace Syndra
                     var startPoint = orb.To2D().Extend(Player.ServerPosition.To2D(), 100);
                     var endPoint = Player.ServerPosition.To2D()
                         .Extend(orb.To2D(), Player.Distance(orb) > 200 ? 1300 : 1000);
-                    EQ.Delay = E.Delay + Player.Distance(orb)/E.Speed;
+                    EQ.Delay = E.Delay + Player.Distance(orb) / E.Speed;
                     EQ.From = orb;
                     var enemyPred = EQ.GetPrediction(enemy);
                     if (enemyPred.Hitchance >= HitChance.High &&
@@ -277,7 +252,7 @@ namespace Syndra
 
         private static void UseQE(Obj_AI_Base enemy)
         {
-            EQ.Delay = E.Delay + Q.Range/E.Speed;
+            EQ.Delay = E.Delay + Q.Range / E.Speed;
             EQ.From = Player.ServerPosition.To2D().Extend(enemy.ServerPosition.To2D(), Q.Range).To3D();
 
             var prediction = EQ.GetPrediction(enemy);
@@ -296,7 +271,7 @@ namespace Syndra
                     )
                     return minion.ServerPosition;
 
-            return OrbManager.GetOrbToGrab((int) W.Range);
+            return OrbManager.GetOrbToGrab((int)W.Range);
         }
 
         private static float GetComboDamage(Obj_AI_Base enemy)
@@ -316,17 +291,14 @@ namespace Syndra
                 damage += ObjectManager.Player.GetSummonerSpellDamage(enemy, Damage.SummonerSpell.Ignite);
 
             if (R.IsReady())
-                damage += Math.Min(7, Player.Spellbook.GetSpell(SpellSlot.R).Ammo)*
-                          Player.GetSpellDamage(enemy, SpellSlot.R, 1);
+                damage += Math.Min(7, Player.Spellbook.GetSpell(SpellSlot.R).Ammo) * Player.GetSpellDamage(enemy, SpellSlot.R, 1);
 
-            return (float) damage;
+            return (float)damage;
         }
 
-        private static void UseSpells(bool useQ, bool useW, bool useE, bool useR, bool useQE, bool useIgnite,
-            bool isHarass)
+        private static void UseSpells(bool useQ, bool useW, bool useE, bool useR, bool useQE, bool useIgnite, bool isHarass)
         {
-            var qTarget = TargetSelector.GetTarget(Q.Range + (isHarass ? Q.Width/3 : Q.Width),
-                TargetSelector.DamageType.Magical);
+            var qTarget = TargetSelector.GetTarget(Q.Range + (isHarass ? Q.Width / 3 : Q.Width), TargetSelector.DamageType.Magical);
             var wTarget = TargetSelector.GetTarget(W.Range + W.Width, TargetSelector.DamageType.Magical);
             var rTarget = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Magical);
             var qeTarget = TargetSelector.GetTarget(EQ.Range, TargetSelector.DamageType.Magical);
@@ -351,8 +323,7 @@ namespace Syndra
                     //WObject
                     var gObjectPos = GetGrabableObjectPos(wTarget == null);
 
-                    if (gObjectPos.To2D().IsValid() && Utils.TickCount - W.LastCastAttemptT > Game.Ping + 300 &&
-                        Utils.TickCount - E.LastCastAttemptT > Game.Ping + 300)
+                    if (gObjectPos.To2D().IsValid() && Utils.TickCount - W.LastCastAttemptT > Game.Ping + 300 && Utils.TickCount - E.LastCastAttemptT > Game.Ping + 300)
                     {
                         W.Cast(gObjectPos);
                         W.LastCastAttemptT = Utils.TickCount;
@@ -406,7 +377,7 @@ namespace Syndra
             //WE
             if (wTarget == null && qeTarget != null && E.IsReady() && useE && OrbManager.WObject(true) != null)
             {
-                EQ.Delay = E.Delay + Q.Range/W.Speed;
+                EQ.Delay = E.Delay + Q.Range / W.Speed;
                 EQ.From = Player.ServerPosition.To2D().Extend(qeTarget.ServerPosition.To2D(), Q.Range).To3D();
                 var prediction = EQ.GetPrediction(qeTarget);
                 if (prediction.Hitchance >= HitChance.High)
@@ -437,10 +408,6 @@ namespace Syndra
         private static void Farm(bool laneClear)
         {
             if (!Orbwalking.CanMove(40)) return;
-
-            if (!Config.Item("EnableFarm").GetValue<bool>())
-                return;
-
 
             var rangedMinionsQ = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range + Q.Width + 30,
                 MinionTypes.Ranged);
@@ -477,7 +444,7 @@ namespace Syndra
                 else
                     foreach (var minion in allMinionsQ)
                         if (!Orbwalking.InAutoAttackRange(minion) &&
-                            minion.Health < 0.75*Player.GetSpellDamage(minion, SpellSlot.Q))
+                            minion.Health < 0.75 * Player.GetSpellDamage(minion, SpellSlot.Q))
                             Q.Cast(minion);
 
             if (useW && W.IsReady() && allMinionsW.Count > 3)
@@ -543,13 +510,14 @@ namespace Syndra
             }
         }
 
+
         private static void Game_OnGameUpdate(EventArgs args)
         {
             if (Player.IsDead) return;
 
             //Update the R range
             R.Range = R.Level == 3 ? 750 : 675;
-
+           
             if (Config.Item("CastQE").GetValue<KeyBind>().Active && E.IsReady() && Q.IsReady())
                 foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
                     if (enemy.IsValidTarget(EQ.Range) && Game.CursorPos.Distance(enemy.ServerPosition) < 300)
@@ -586,38 +554,8 @@ namespace Syndra
                 if (menuItem.Active)
                     Render.Circle.DrawCircle(Player.Position, spell.Range, menuItem.Color);
             }
-
-            if (Config.Item("EnableFarmNot").GetValue<bool>())
-            {
-                var vFarmNotification = Config.Item("EnableFarm").GetValue<bool>() ? "Enabled" : "Disabled";
-                var vFarmNotificationColor = Config.Item("EnableFarm").GetValue<bool>()
-                    ? SharpDX.Color.LightGreen
-                    : SharpDX.Color.DarkRed;
-
-                DrawText(Text, String.Format("Farm Mode: {0}", vFarmNotification), Drawing.Width*0.89f,
-                    Drawing.Height*0.58f,
-                    vFarmNotificationColor);
-            }
-
-            if (Config.Item("HarassNotification").GetValue<bool>())
-            {
-                var vFarmNotification = Config.Item("HarassActiveT").GetValue<KeyBind>().Active ? "Enabled" : "Disabled";
-                var vFarmNotificationColor = Config.Item("HarassActiveT").GetValue<KeyBind>().Active
-                    ? SharpDX.Color.LightGreen
-                    : SharpDX.Color.DarkRed;
-
-                DrawText(Text, String.Format("Toggle Harass: {0}", vFarmNotification), Drawing.Width*0.89f,
-                    Drawing.Height*0.60f,
-                    vFarmNotificationColor);
-            }
-
             //if (OrbManager.WObject(false) != null)
-            //Render.Circle.DrawCircle(OrbManager.WObject(false).Position, 100, Color.White);
-        }
-
-        public static void DrawText(Font vFont, String vText, float vPosX, float vPosY, ColorBGRA vColor)
-        {
-            vFont.DrawText(null, vText, (int) vPosX, (int) vPosY, vColor);
+                //Render.Circle.DrawCircle(OrbManager.WObject(false).Position, 100, Color.White);
         }
     }
 }
