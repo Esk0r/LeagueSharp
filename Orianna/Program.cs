@@ -252,9 +252,36 @@ namespace Orianna
             Game.OnUpdate += Game_OnGameUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
             Spellbook.OnCastSpell += Spellbook_OnCastSpell;
-            Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
+            Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
             
             Notifications.AddNotification("Orianna Loaded", 4000);
+        }
+
+        static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
+        {
+            if (!Config.Item("InterruptSpells").GetValue<bool>())
+            {
+                return;
+            }
+
+            if (args.DangerLevel <= Interrupter2.DangerLevel.Medium)
+            {
+                return;
+            }
+
+            if (sender.IsAlly)
+            {
+                return;
+            }
+
+            if (RIsReady)
+            {
+                Q.Cast(sender, true);
+                if (BallManager.BallPosition.Distance(sender.ServerPosition, true) < R.Range * R.Range)
+                {
+                    R.Cast(Player.ServerPosition, true);
+                }
+            }
         }
 
         static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
@@ -302,28 +329,6 @@ namespace Orianna
             if (args.Slot == SpellSlot.R && GetHits(R).Item1 == 0)
             {
                 args.Process = false;
-            }
-        }
-
-        static void Interrupter_OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
-        {
-            if (!Config.Item("InterruptSpells").GetValue<bool>())
-            {
-                return;
-            }
-
-            if (spell.DangerLevel <= InterruptableDangerLevel.Medium)
-            {
-                return;
-            }
-
-            if (RIsReady)
-            {
-                Q.Cast(unit, true);
-                if (BallManager.BallPosition.Distance(unit.ServerPosition, true) < R.Range * R.Range)
-                {
-                    R.Cast(Player.ServerPosition, true);
-                }
             }
         }
 
