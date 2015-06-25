@@ -181,6 +181,22 @@ namespace Syndra
                 .AddItem(new MenuItem("QERange", "QE range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
             Config.SubMenu("Drawings")
                 .AddItem(dmgAfterComboItem);
+            Config.SubMenu("Drawings")
+                .AddItem(
+                    new MenuItem("HarassActiveTPermashow", "Show harass permashow").SetValue(true)).ValueChanged += (s, ar) =>
+                    {
+                        if (ar.GetNewValue<bool>())
+                        {
+                            Config.Item("HarassActiveT").Permashow(true, "HarassActive");
+                        }
+                        else
+                        {
+                            Config.Item("HarassActiveT").Permashow(false);
+                        }
+                    };
+
+            Config.Item("HarassActiveT").Permashow(Config.Item("HarassActiveTPermashow").GetValue<bool>(), "HarassActive");
+
             Config.AddToMainMenu();
 
             //Add the events we are going to use:
