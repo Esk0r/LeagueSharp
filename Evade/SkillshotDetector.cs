@@ -82,7 +82,7 @@ namespace Evade
 
         private static void ObjSpellMissileOnOnCreate(GameObject sender, EventArgs args)
         {
-            var missile = sender as Obj_SpellMissile;
+            var missile = sender as MissileClient;
 
             if (missile == null || !missile.IsValid)
             {
