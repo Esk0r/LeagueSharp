@@ -1061,6 +1061,7 @@ namespace Evade
                     ForceRemove = true,
                     MissileSpellName = "GnarQMissileReturn",
                     DisableFowDetection = false,
+                    DisabledByDefault = true,
                     CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
                 });
 
