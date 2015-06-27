@@ -89,6 +89,7 @@ namespace Orianna
 
         private static void Main(string[] args)
         {
+            ItemData.Entries.GetEnumerator().Current.RecipeItem
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
         }
 
@@ -462,12 +463,12 @@ namespace Orianna
             {
                 var mecResult = MEC.GetMec(points);
                 
-                if (mecResult.Radius < R.Range && points.Count >= 3 && RIsReady)
+                if (mecResult.Radius < (R.Range - 75) && points.Count >= 3 && RIsReady)
                 {
                     return new Tuple<int, Vector3>(3, mecResult.Center.To3D());
                 }
 
-                if (mecResult.Radius < W.Range && points.Count >= 2 && WIsReady)
+                if (mecResult.Radius < (W.Range - 75) && points.Count >= 2 && WIsReady)
                 {
                     return new Tuple<int, Vector3>(2, mecResult.Center.To3D());
                 }
@@ -477,7 +478,7 @@ namespace Orianna
                     return new Tuple<int, Vector3>(1, mecResult.Center.To3D());
                 }
 
-                if (mecResult.Radius < (Q.Width + 50) && points.Count == 2)
+                if (mecResult.Radius < Q.Width && points.Count == 2)
                 {
                     return new Tuple<int, Vector3>(2, mecResult.Center.To3D());
                 }
