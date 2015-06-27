@@ -89,7 +89,6 @@ namespace Orianna
 
         private static void Main(string[] args)
         {
-            ItemData.Entries.GetEnumerator().Current.RecipeItem
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
         }
 
