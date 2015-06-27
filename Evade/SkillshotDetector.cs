@@ -139,7 +139,7 @@ namespace Evade
         /// </summary>
         private static void ObjSpellMissileOnOnDelete(GameObject sender, EventArgs args)
         {
-            var missile = sender as Obj_SpellMissile;
+            var missile = sender as MissileClient;
 
             if (missile == null || !missile.IsValid)
             {
