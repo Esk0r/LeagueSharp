@@ -171,7 +171,7 @@ namespace Evade
             Evading = false;
         }
 
-        private static void SkillshotDetectorOnOnDeleteMissile(Skillshot skillshot, Obj_SpellMissile missile)
+        private static void SkillshotDetectorOnOnDeleteMissile(Skillshot skillshot, MissileClient missile)
         {
             if (skillshot.SpellData.SpellName == "VelkozQ")
             {

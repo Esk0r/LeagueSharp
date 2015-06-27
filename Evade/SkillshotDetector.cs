@@ -29,7 +29,7 @@ namespace Evade
 {
     internal static class SkillshotDetector
     {
-        public delegate void OnDeleteMissileH(Skillshot skillshot, Obj_SpellMissile missile);
+        public delegate void OnDeleteMissileH(Skillshot skillshot, MissileClient missile);
 
         public delegate void OnDetectSkillshotH(Skillshot skillshot);
 
