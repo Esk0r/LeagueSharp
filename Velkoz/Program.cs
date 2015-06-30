@@ -51,7 +51,7 @@ namespace Velkoz
 
         public static SpellSlot IgniteSlot;
 
-        public static Obj_SpellMissile QMissile;
+        public static MissileClient QMissile;
 
         //Menu
         public static Menu Config;
@@ -192,8 +192,8 @@ namespace Velkoz
 
         private static void Obj_SpellMissile_OnCreate(GameObject sender, EventArgs args)
         {
-            if (!(sender is Obj_SpellMissile)) return;
-            var missile = (Obj_SpellMissile)sender;
+            if (!(sender is MissileClient)) return;
+            var missile = (MissileClient)sender;
             if (missile.SpellCaster != null && missile.SpellCaster.IsValid && missile.SpellCaster.IsMe &&
                 missile.SData.Name == "VelkozQMissile")
             {
