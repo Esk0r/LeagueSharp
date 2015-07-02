@@ -2288,26 +2288,6 @@ namespace Evade
 
             #endregion Nautilus
 
-            #region Nocturne
-
-            Spells.Add(
-                new SpellData
-                {
-                    ChampionName = "Nocturne",
-                    SpellName = "NocturneDuskbringe",
-                    Slot = SpellSlot.Q,
-                    Type = SkillShotType.SkillshotMissileLine,
-                    Delay = 250,
-                    Range = 1125,
-                    Radius = 60,
-                    MissileSpeed = 1400,
-                    DangerValue = 2,
-                    IsDangerous = false,
-                    MissileSpellName = "NocturneDuskbringe",
-                    CollisionObjects = new[] {CollisionObjectTypes.YasuoWall}
-                });
-            #endregion Nocturne
-
             #region Nidalee
 
             Spells.Add(
@@ -2333,6 +2313,26 @@ namespace Evade
                 });
 
             #endregion Nidalee
+
+            #region Nocturne
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Nocturne",
+                    SpellName = "NocturneDuskbringe",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 250,
+                    Range = 1125,
+                    Radius = 60,
+                    MissileSpeed = 1400,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "NocturneDuskbringe",
+                    CollisionObjects = new[] {CollisionObjectTypes.YasuoWall}
+                });
+            #endregion Nocturne
 
             #region Olaf
 
