@@ -2320,7 +2320,7 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Nocturne",
-                    SpellName = "NocturneDuskbringe",
+                    SpellName = "NocturneDuskbringer",
                     Slot = SpellSlot.Q,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 250,
@@ -2329,7 +2329,7 @@ namespace Evade
                     MissileSpeed = 1400,
                     DangerValue = 2,
                     IsDangerous = false,
-                    MissileSpellName = "NocturneDuskbringe",
+                    MissileSpellName = "NocturneDuskbringer",
                     CollisionObjects = new[] {CollisionObjectTypes.YasuoWall}
                 });
             #endregion Nocturne
