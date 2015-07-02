@@ -1,4 +1,4 @@
-﻿// Copyright 2014 - 2014 Esk0r
+// Copyright 2014 - 2014 Esk0r
 // SpellDatabase.cs is part of Evade.
 // 
 // Evade is free software: you can redistribute it and/or modify
@@ -811,6 +811,44 @@ namespace Evade
                     CanBeRemoved = true,
                     CollisionObjects =
                         new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.YasuoWall }
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Ekko",
+                    SpellName = "EkkoW",
+                    Slot = SpellSlot.W,
+                    Type = SkillShotType.SkillshotMissileCone,
+                    Delay = 3750,
+                    Range = 1600,
+                    Radius = 375,
+                    MissileSpeed = 1650,
+                    FixedRange = true,
+                    AddHitbox = false,
+                    DangerValue = 3,
+                    IsDangerous = false,
+                    MissileSpellName = "EkkoW",
+                    CanBeRemoved = true
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Ekko",
+                    SpellName = "EkkoR",
+                    Slot = SpellSlot.R,
+                    Type = SkillShotType.SkillshotMissileCone,
+                    Delay = 250,
+                    Range = 1600,
+                    Radius = 375,
+                    MissileSpeed = 1650,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 3,
+                    IsDangerous = false,
+                    MissileSpellName = "EkkoR",
+                    CanBeRemoved = true
                 });
 
             #endregion Ekko
@@ -2288,6 +2326,26 @@ namespace Evade
 
             #endregion Nautilus
 
+            #region Nocturne
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Nocturne",
+                    SpellName = "NocturneDuskbringer",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 250,
+                    Range = 1125,
+                    Radius = 60,
+                    MissileSpeed = 1400,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "NocturneDuskbringer",
+                    CollisionObjects = new[] {CollisionObjectTypes.YasuoWall}
+                });
+            #endregion Nocturne
+
             #region Nidalee
 
             Spells.Add(
@@ -2313,26 +2371,6 @@ namespace Evade
                 });
 
             #endregion Nidalee
-
-            #region Nocturne
-
-            Spells.Add(
-                new SpellData
-                {
-                    ChampionName = "Nocturne",
-                    SpellName = "NocturneDuskbringer",
-                    Slot = SpellSlot.Q,
-                    Type = SkillShotType.SkillshotMissileLine,
-                    Delay = 250,
-                    Range = 1125,
-                    Radius = 60,
-                    MissileSpeed = 1400,
-                    DangerValue = 2,
-                    IsDangerous = false,
-                    MissileSpellName = "NocturneDuskbringer",
-                    CollisionObjects = new[] {CollisionObjectTypes.YasuoWall}
-                });
-            #endregion Nocturne
 
             #region Olaf
 
