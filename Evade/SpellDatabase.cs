@@ -848,7 +848,8 @@ namespace Evade
                     DangerValue = 3,
                     IsDangerous = false,
                     MissileSpellName = "EkkoR",
-                    CanBeRemoved = true
+                    CanBeRemoved = true,
+                    FromObjects = new[] { "Ekko_Base_R_TrailEnd.troy" }
                 });
 
             #endregion Ekko
