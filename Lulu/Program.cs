@@ -233,7 +233,7 @@ namespace Lulu
                     {
                         var eTarget =
                             ObjectManager.Get<Obj_AI_Base>()
-                                .Where(t => t.IsValidTarget(E.Range) && t.Distance(eqTarget, true) < Q.RangeSqr).MinOrDefault(t => t.Distance(eqTarget, true));
+                                .Where(t => t.IsValidTarget(E.Range) && t.Distance(eqTarget, true) < Q.RangeSqr && !E.IsKillable(eqTarget)).MinOrDefault(t => t.Distance(eqTarget, true));
                         if (eTarget != null)
                         {
                             E.Cast(eTarget);
