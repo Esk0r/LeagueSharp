@@ -170,16 +170,16 @@ namespace Lulu
                 {
                     if (ally.IsValidTarget(R.Range, false))
                     {
-                        var c = ally.GetEnemiesInRange(300);
-                        if (c.Count >= 1 + 1 + 1 || ally.HealthPercent <= 15 && c.Count >= 1)
+                        var c = ally.CountEnemiesInRange(300);
+                        if (c >= 1 + 1 + 1 || ally.HealthPercent <= 15 && c >= 1)
                         {
                             R.Cast(ally);
                         }
                     }
                 }
 
-                var ec = Player.GetEnemiesInRange(300);
-                if (ec.Count >= 1 + 1 + 1 || Player.HealthPercent <= 15 && ec.Count >= 1)
+                var ec = Player.CountEnemiesInRange(300);
+                if (ec >= 1 + 1 + 1 || Player.HealthPercent <= 15 && ec >= 1)
                 {
                     R.Cast(Player);
                 }    
