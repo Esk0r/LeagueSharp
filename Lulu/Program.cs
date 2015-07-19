@@ -99,8 +99,8 @@ namespace Lulu
                 if (W.IsReady() && sender.IsValidTarget(W.Range))
                 {
                     W.Cast(sender);
+                    return;
                 }
-                return;
             }
 
             if (Config.SubMenu("R").Item("InterruptSpellsR").GetValue<bool>() && args.DangerLevel > Interrupter2.DangerLevel.Medium)
