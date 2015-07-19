@@ -110,9 +110,46 @@ namespace Evade
                 return;
             }
 
+            Utility.DelayAction.Add(0, delegate
+            {
+                ObjSpellMissionOnOnCreateDelayed(sender, args);
+            });
+        }
+
+        private static void ObjSpellMissionOnOnCreateDelayed(GameObject sender, EventArgs args)
+        {
+            var missile = sender as MissileClient;
+
+            if (missile == null || !missile.IsValid)
+            {
+                return;
+            }
+
+            var unit = missile.SpellCaster as Obj_AI_Hero;
+
+            if (unit == null || !unit.IsValid || (unit.Team == ObjectManager.Player.Team && !Config.TestOnAllies))
+            {
+                return;
+            }
+
+
+            /*Console.WriteLine(
+                    Utils.TickCount + " Projectile Created: " + missile.SData.Name + " distance: " +
+                    missile.SData.CastRange + "Radius: " +
+                    missile.SData.LineWidth + " Speed: " + missile.SData.MissileSpeed);  */
+
+
+            var spellData = SpellDatabase.GetByMissileName(missile.SData.Name);
+
+            if (spellData == null)
+            {
+                return;
+            }
+
             var missilePosition = missile.Position.To2D();
             var unitPosition = missile.StartPosition.To2D();
             var endPos = missile.EndPosition.To2D();
+
 
             //Calculate the real end Point:
             var direction = (endPos - unitPosition).Normalized();
@@ -128,7 +165,7 @@ namespace Evade
             }
 
             var castTime = Utils.TickCount - Game.Ping / 2 - (spellData.MissileDelayed ? 0 : spellData.Delay) -
-                           (int)(1000 * missilePosition.Distance(unitPosition) / spellData.MissileSpeed);
+                           (int)(1000f * missilePosition.Distance(unitPosition) / spellData.MissileSpeed);
 
             //Trigger the skillshot detection callbacks.
             TriggerOnDetectSkillshot(DetectionType.RecvPacket, spellData, castTime, unitPosition, endPos, unit);
