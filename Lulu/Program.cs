@@ -145,7 +145,6 @@ namespace Lulu
                 }
             }
 
-
             if (Config.SubMenu("E").Item("AutoE").GetValue<bool>()) 
             {
                 ImABitch();
@@ -262,10 +261,10 @@ namespace Lulu
 
             var comboDamage = GetComboDamage(eTarget);
 
-            if (eTarget != null && IgniteSlot != SpellSlot.Unknown &&
+            if (eTarget != null && Player.Distance(eTarget) < 600 && IgniteSlot != SpellSlot.Unknown &&
                 Player.Spellbook.CanUseSpell(IgniteSlot) == SpellState.Ready)
             {
-                if (comboDamage > eTarget.Health)
+                if ( comboDamage > eTarget.Health)
                 {
                     Player.Spellbook.CastSpell(IgniteSlot, eTarget);
                 }
@@ -312,7 +311,7 @@ namespace Lulu
                 var mob = mobs[0];
                 if (useQ && Q.IsReady())
                 {
-                    Q.Cast(mob);
+                    Q.Cast(mob.Position);
                 }
                 else if (useE && E.IsReady())
                 {
