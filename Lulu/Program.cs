@@ -281,6 +281,9 @@ namespace Lulu
 
             if (useQ)
             {
+                Q.From = Player.ServerPosition;
+                Q.RangeCheckFrom = Player.ServerPosition;
+
                 var fl = Q.GetLineFarmLocation(allMinions);
                 if (fl.MinionsHit >= 2)
                 {
