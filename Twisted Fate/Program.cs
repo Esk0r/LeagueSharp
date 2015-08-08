@@ -32,7 +32,11 @@ namespace TwistedFate
 
         private static void Ping(Vector2 position)
         {
-            if (Utils.TickCount - LastPingT < 30*1000) return;
+            if (Utils.TickCount - LastPingT < 30*1000) 
+            {
+                return;
+            }
+            
             LastPingT = Utils.TickCount;
             PingLocation = position;
             SimplePing();
@@ -45,7 +49,7 @@ namespace TwistedFate
 
         private static void SimplePing()
         {
-            //Packet.S2C.Ping.Encoded(new Packet.S2C.Ping.Struct(PingLocation.X, PingLocation.Y, 0, 0, Packet.PingType.Fallback)).Process();
+            Game.ShowPing(PingCategory.Fallback, PingLocation, true);
         }
 
         private static void Game_OnGameLoad(EventArgs args)
