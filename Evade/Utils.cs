@@ -18,11 +18,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
+using Path = System.Collections.Generic.List<ClipperLib.IntPoint>;
+using Paths = System.Collections.Generic.List<System.Collections.Generic.List<ClipperLib.IntPoint>>;
 
 #endregion
 
@@ -30,11 +31,19 @@ namespace Evade
 {
     public static class Utils
     {
-        public static int TickCount => (int)(Game.Time * 1000f);
+        public static int TickCount
+        {
+            get { return (int) (Game.Time*1000f); }
+        }
 
         public static List<Vector2> To2DList(this Vector3[] v)
         {
-            return v.Select(point => point.To2D()).ToList();
+            var result = new List<Vector2>();
+            foreach (var point in v)
+            {
+                result.Add(point.To2D());
+            }
+            return result;
         }
 
         public static void SendMovePacket(this Obj_AI_Base v, Vector2 point)
@@ -50,9 +59,11 @@ namespace Evade
             foreach (var target in targetList)
             {
                 var distance = Vector2.DistanceSquared(from, target.ServerPosition.To2D());
-                if (!(distance < dist)) continue;
-                dist = distance;
-                result = target;
+                if (distance < dist)
+                {
+                    dist = distance;
+                    result = target;
+                }
             }
 
             return result;
@@ -63,10 +74,19 @@ namespace Evade
         /// </summary>
         public static int ImmobileTime(Obj_AI_Base unit)
         {
-            var result = (from buff in unit.Buffs where buff.IsActive && Game.Time <= buff.EndTime && (buff.Type == BuffType.Charm || buff.Type == BuffType.Knockup || buff.Type == BuffType.Stun || buff.Type == BuffType.Suppression || buff.Type == BuffType.Snare) select buff.EndTime).Concat(new[] {0f}).Max();
+            var result = 0f;
 
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
-            return (result == 0f) ? -1 : (int) (TickCount + (result - Game.Time) * 1000);
+            foreach (var buff in unit.Buffs)
+            {
+                if (buff.IsActive && Game.Time <= buff.EndTime &&
+                    (buff.Type == BuffType.Charm || buff.Type == BuffType.Knockup || buff.Type == BuffType.Stun ||
+                     buff.Type == BuffType.Suppression || buff.Type == BuffType.Snare))
+                {
+                    result = Math.Max(result, buff.EndTime);
+                }
+            }
+
+            return (result == 0f) ? -1 : (int) (Utils.TickCount + (result - Game.Time)*1000);
         }
 
 
@@ -85,7 +105,10 @@ namespace Evade
 
         public new void Add(T item)
         {
-            OnAdd?.Invoke(this, null);
+            if (OnAdd != null)
+            {
+                OnAdd(this, null);
+            }
 
             base.Add(item);
         }

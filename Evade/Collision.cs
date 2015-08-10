@@ -23,8 +23,6 @@ using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
 
-// ReSharper disable InconsistentNaming
-
 #endregion
 
 namespace Evade
@@ -85,7 +83,7 @@ namespace Evade
                 {
                     IsMoving = true,
                     CurrentPos = unit.ServerPosition.To2D(),
-                    PredictedPos = path.CutPath((int) d)[0],
+                    PredictedPos = path.CutPath((int)d)[0],
                 };
             }
             return new FastPredResult

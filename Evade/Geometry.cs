@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using ClipperLib;
 using LeagueSharp.Common;
 using SharpDX;
@@ -26,8 +25,6 @@ using Color = System.Drawing.Color;
 using Path = System.Collections.Generic.List<ClipperLib.IntPoint>;
 using Paths = System.Collections.Generic.List<System.Collections.Generic.List<ClipperLib.IntPoint>>;
 using GamePath = System.Collections.Generic.List<SharpDX.Vector2>;
-
-// ReSharper disable InconsistentNaming
 
 #endregion
 
@@ -50,7 +47,6 @@ namespace Evade
         {
             var result = new List<Polygon>();
 
-            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var path in v)
             {
                 result.Add(path.ToPolygon());
@@ -69,7 +65,7 @@ namespace Evade
             {
                 var from = self[i];
                 var to = self[i + 1];
-                var d = (int) to.Distance(from);
+                var d = (int)to.Distance(from);
                 if (d > distance)
                 {
                     return from + distance * (to - from).Normalized();
@@ -127,13 +123,13 @@ namespace Evade
                 var result = new Polygon();
                 var outRadius = (overrideWidth > 0
                     ? overrideWidth
-                    : (offset + Radius) / (float) Math.Cos(2 * Math.PI / CircleLineSegmentN));
+                    : (offset + Radius) / (float)Math.Cos(2 * Math.PI / CircleLineSegmentN));
 
                 for (var i = 1; i <= CircleLineSegmentN; i++)
                 {
                     var angle = i * 2 * Math.PI / CircleLineSegmentN;
                     var point = new Vector2(
-                        Center.X + outRadius * (float) Math.Cos(angle), Center.Y + outRadius * (float) Math.Sin(angle));
+                        Center.X + outRadius * (float)Math.Cos(angle), Center.Y + outRadius * (float)Math.Sin(angle));
                     result.Add(point);
                 }
 
@@ -153,7 +149,11 @@ namespace Evade
             public Path ToClipperPath()
             {
                 var result = new Path(Points.Count);
-                result.AddRange(Points.Select(point => new IntPoint(point.X, point.Y)));
+
+                foreach (var point in Points)
+                {
+                    result.Add(new IntPoint(point.X, point.Y));
+                }
 
                 return result;
             }
@@ -226,14 +226,14 @@ namespace Evade
             {
                 var result = new Polygon();
 
-                var outRadius = (offset + Radius + RingRadius) / (float) Math.Cos(2 * Math.PI / CircleLineSegmentN);
+                var outRadius = (offset + Radius + RingRadius) / (float)Math.Cos(2 * Math.PI / CircleLineSegmentN);
                 var innerRadius = Radius - RingRadius - offset;
 
                 for (var i = 0; i <= CircleLineSegmentN; i++)
                 {
                     var angle = i * 2 * Math.PI / CircleLineSegmentN;
                     var point = new Vector2(
-                        Center.X - outRadius * (float) Math.Cos(angle), Center.Y - outRadius * (float) Math.Sin(angle));
+                        Center.X - outRadius * (float)Math.Cos(angle), Center.Y - outRadius * (float)Math.Sin(angle));
                     result.Add(point);
                 }
 
@@ -241,8 +241,8 @@ namespace Evade
                 {
                     var angle = i * 2 * Math.PI / CircleLineSegmentN;
                     var point = new Vector2(
-                        Center.X + innerRadius * (float) Math.Cos(angle),
-                        Center.Y - innerRadius * (float) Math.Sin(angle));
+                        Center.X + innerRadius * (float)Math.Cos(angle),
+                        Center.Y - innerRadius * (float)Math.Sin(angle));
                     result.Add(point);
                 }
 
@@ -269,7 +269,7 @@ namespace Evade
             public Polygon ToPolygon(int offset = 0)
             {
                 var result = new Polygon();
-                var outRadius = (Radius + offset) / (float) Math.Cos(2 * Math.PI / CircleLineSegmentN);
+                var outRadius = (Radius + offset) / (float)Math.Cos(2 * Math.PI / CircleLineSegmentN);
 
                 result.Add(Center);
                 var Side1 = Direction.Rotated(-Angle * 0.5f);

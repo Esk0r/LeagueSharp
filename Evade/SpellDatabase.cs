@@ -1283,7 +1283,7 @@ namespace Evade
                     MissileSpellName = "GravesClusterShotAttack",
                     CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
                     MultipleNumber = 3,
-                    MultipleAngle = 15 * (float) Math.PI / 180,
+                    MultipleAngle = 15 * (float)Math.PI / 180,
                 });
 
             Spells.Add(
@@ -1720,7 +1720,7 @@ namespace Evade
                     MissileSpellName = "KhazixWMissile",
                     CanBeRemoved = true,
                     MultipleNumber = 3,
-                    MultipleAngle = 22f * (float) Math.PI / 180,
+                    MultipleAngle = 22f * (float)Math.PI / 180,
                     CollisionObjects =
                         new[]
                         { CollisionObjectTypes.Champions, CollisionObjectTypes.Minion, CollisionObjectTypes.YasuoWall },
@@ -2344,7 +2344,7 @@ namespace Evade
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "NocturneDuskbringer",
-                    CollisionObjects = new[] {CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] { CollisionObjectTypes.YasuoWall }
                 });
             #endregion Nocturne
 
@@ -2549,7 +2549,7 @@ namespace Evade
                 });
 
             #endregion Rengar
-            
+
             #region RekSai
 
             Spells.Add(
@@ -2593,7 +2593,7 @@ namespace Evade
                     DangerValue = 5,
                     IsDangerous = true,
                     MultipleNumber = 3,
-                    MultipleAngle = 15 * (float) Math.PI / 180,
+                    MultipleAngle = 15 * (float)Math.PI / 180,
                     MissileSpellName = "RivenLightsaberMissile",
                     ExtraMissileNames = new[] { "RivenLightsaberMissileSide" }
                 });
@@ -3081,7 +3081,7 @@ namespace Evade
                     DangerValue = 2,
                     IsDangerous = true,
                     MultipleNumber = 3,
-                    MultipleAngle = 20 * (float) Math.PI / 180,
+                    MultipleAngle = 20 * (float)Math.PI / 180,
                     MissileSpellName = "talonrakemissileone",
                 });
 
@@ -3101,14 +3101,14 @@ namespace Evade
                     DangerValue = 2,
                     IsDangerous = true,
                     MultipleNumber = 3,
-                    MultipleAngle = 20 * (float) Math.PI / 180,
+                    MultipleAngle = 20 * (float)Math.PI / 180,
                     MissileSpellName = "talonrakemissiletwo",
                 });
 
             #endregion Riven
 
             #region Tahm Kench
-            
+
             Spells.Add(
                 new SpellData
                 {
@@ -3128,7 +3128,7 @@ namespace Evade
                     CanBeRemoved = true,
                     CollisionObjects =
                         new[] { CollisionObjectTypes.Minion, CollisionObjectTypes.Champions, CollisionObjectTypes.YasuoWall },
-                });         
+                });
 
             #endregion Tahm Kench
 
@@ -3240,7 +3240,7 @@ namespace Evade
                     IsDangerous = false,
                     MissileSpellName = "SealFateMissile",
                     MultipleNumber = 3,
-                    MultipleAngle = 28 * (float) Math.PI / 180,
+                    MultipleAngle = 28 * (float)Math.PI / 180,
                     CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
                 });
 
@@ -3965,18 +3965,44 @@ namespace Evade
         public static SpellData GetByName(string spellName)
         {
             spellName = spellName.ToLower();
-            return Spells.FirstOrDefault(spellData => spellData.SpellName.ToLower() == spellName || spellData.ExtraSpellNames.Contains(spellName));
+            foreach (var spellData in Spells)
+            {
+                if (spellData.SpellName.ToLower() == spellName || spellData.ExtraSpellNames.Contains(spellName))
+                {
+                    return spellData;
+                }
+            }
+
+            return null;
         }
 
         public static SpellData GetByMissileName(string missileSpellName)
         {
             missileSpellName = missileSpellName.ToLower();
-            return Spells.FirstOrDefault(spellData => spellData.MissileSpellName != null && spellData.MissileSpellName.ToLower() == missileSpellName || spellData.ExtraMissileNames.Contains(missileSpellName));
+            foreach (var spellData in Spells)
+            {
+                if (spellData.MissileSpellName != null && spellData.MissileSpellName.ToLower() == missileSpellName ||
+                    spellData.ExtraMissileNames.Contains(missileSpellName))
+                {
+                    return spellData;
+                }
+            }
+
+            return null;
         }
 
         public static SpellData GetBySpeed(string ChampionName, int speed, int id = -1)
         {
-            return Spells.FirstOrDefault(spellData => spellData.ChampionName == ChampionName && spellData.MissileSpeed == speed && (spellData.Id == -1 || id == spellData.Id));
+            foreach (var spellData in Spells)
+            {
+                if (spellData.ChampionName == ChampionName && spellData.MissileSpeed == speed &&
+                    (spellData.Id == -1 || id == spellData.Id))
+                {
+                    return spellData;
+                }
+            }
+
+            return null;
         }
     }
 }
