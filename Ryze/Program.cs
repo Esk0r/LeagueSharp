@@ -3,9 +3,9 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
+// ReSharper disable InconsistentNaming
 
 #endregion
 
@@ -30,6 +30,7 @@ namespace Ryze
 
         private static Obj_AI_Hero Player;
 
+        // ReSharper disable once UnusedParameter.Local
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -38,7 +39,7 @@ namespace Ryze
         private static void Game_OnGameLoad(EventArgs args)
         {
             Player = ObjectManager.Player;
-            if (Player.BaseSkinName != ChampionName) return;
+            if (Player.CharData.BaseSkinName != ChampionName) return;
 
             //Create the spells
             Q = new Spell(SpellSlot.Q, 900);

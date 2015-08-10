@@ -2,14 +2,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.Linq;
-using System.Reflection.Emit;
-using System.Security.AccessControl;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
+
+// ReSharper disable InconsistentNaming
 
 #endregion
 
@@ -35,7 +34,7 @@ namespace Orianna
 
         private static Obj_AI_Hero Player;
 
-        private static Dictionary<string, string> InitiatorsList = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> InitiatorsList = new Dictionary<string, string>
         {
             {"aatroxq", "Aatrox"},
             {"akalishadowdance", "Akali"},
@@ -87,6 +86,7 @@ namespace Orianna
             {"zace", "Zac"}
         };
 
+        // ReSharper disable once UnusedParameter.Local
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -118,7 +118,7 @@ namespace Orianna
             Config.SubMenu("Combo").AddItem(new MenuItem("UseWCombo", "Use W").SetValue(true));
             Config.SubMenu("Combo").AddItem(new MenuItem("UseECombo", "Use E").SetValue(true));
             Config.SubMenu("Combo").AddItem(new MenuItem("UseRCombo", "Use R").SetValue(true));
-            Config.SubMenu("Combo").AddItem(new MenuItem("UseRNCombo", "Use R on at least").SetValue(new StringList(new string[]{"1 target", "2 target", "3 target", "4 target", "5 target"}, 0)));
+            Config.SubMenu("Combo").AddItem(new MenuItem("UseRNCombo", "Use R on at least").SetValue(new StringList(new[]{"1 target", "2 target", "3 target", "4 target", "5 target"})));
             Config.SubMenu("Combo")
                 .AddItem(
                     new MenuItem("ComboActive", "Combo!").SetValue(
@@ -126,8 +126,8 @@ namespace Orianna
             #endregion
 
             #region Misc
-            Config.SubMenu("Misc").AddItem(new MenuItem("AutoW", "Auto W if it'll hit").SetValue(new StringList(new string[] { "No", ">=1 target", ">=2 target", ">=3 target", ">=4 target", ">=5 target" }, 2)));
-            Config.SubMenu("Misc").AddItem(new MenuItem("AutoR", "Auto R if it'll hit").SetValue(new StringList(new string[] { "No", ">=1 target", ">=2 target", ">=3 target", ">=4 target", ">=5 target" }, 3)));
+            Config.SubMenu("Misc").AddItem(new MenuItem("AutoW", "Auto W if it'll hit").SetValue(new StringList(new[] { "No", ">=1 target", ">=2 target", ">=3 target", ">=4 target", ">=5 target" }, 2)));
+            Config.SubMenu("Misc").AddItem(new MenuItem("AutoR", "Auto R if it'll hit").SetValue(new StringList(new[] { "No", ">=1 target", ">=2 target", ">=3 target", ">=4 target", ">=5 target" }, 3)));
             Config.SubMenu("Misc").AddItem(new MenuItem("AutoEInitiators", "Auto E initiators").SetValue(true));
 
             HeroManager.Allies.ForEach(
@@ -153,7 +153,7 @@ namespace Orianna
             //Harass menu:
             Config.SubMenu("Harass").AddItem(new MenuItem("UseQHarass", "Use Q").SetValue(true));
             Config.SubMenu("Harass").AddItem(new MenuItem("UseWHarass", "Use W").SetValue(false));
-            Config.SubMenu("Harass").AddItem(new MenuItem("HarassManaCheck", "Don't harass if mana < %").SetValue(new Slider(0, 0, 100)));
+            Config.SubMenu("Harass").AddItem(new MenuItem("HarassManaCheck", "Don't harass if mana < %").SetValue(new Slider(0)));
             Config.SubMenu("Harass")
                 .AddItem(
                     new MenuItem("HarassActive", "Harass!").SetValue(
@@ -178,7 +178,7 @@ namespace Orianna
                 .AddItem(
                     new MenuItem("UseEFarm", "Use E").SetValue(
                         new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 1)));
-            Config.SubMenu("Farm").AddItem(new MenuItem("LaneClearManaCheck", "Don't LaneClear if mana < %").SetValue(new Slider(0, 0, 100)));
+            Config.SubMenu("Farm").AddItem(new MenuItem("LaneClearManaCheck", "Don't LaneClear if mana < %").SetValue(new Slider(0)));
             
             Config.SubMenu("Farm")
                 .AddItem(
@@ -203,7 +203,7 @@ namespace Orianna
             #region Drawings
             //Damage after combo:
             var dmgAfterComboItem = new MenuItem("DamageAfterR", "Draw damage after combo").SetValue(true);
-            Utility.HpBarDamageIndicator.DamageToUnit += hero => GetComboDamage(hero);
+            Utility.HpBarDamageIndicator.DamageToUnit += GetComboDamage;
             Utility.HpBarDamageIndicator.Enabled = dmgAfterComboItem.GetValue<bool>();
             dmgAfterComboItem.ValueChanged += delegate(object sender, OnValueChangeEventArgs eventArgs)
             {
@@ -274,13 +274,11 @@ namespace Orianna
                 return;
             }
 
-            if (RIsReady)
+            if (!RIsReady) return;
+            Q.Cast(sender, true);
+            if (BallManager.BallPosition.Distance(sender.ServerPosition, true) < R.Range * R.Range)
             {
-                Q.Cast(sender, true);
-                if (BallManager.BallPosition.Distance(sender.ServerPosition, true) < R.Range * R.Range)
-                {
-                    R.Cast(Player.ServerPosition, true);
-                }
+                R.Cast(Player.ServerPosition, true);
             }
         }
 
@@ -334,8 +332,7 @@ namespace Orianna
 
         private static void Farm(bool laneClear)
         {
-            var allMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range + W.Width,
-                MinionTypes.All);
+            var allMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range + W.Width);
             var rangedMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range + W.Width,
                 MinionTypes.Ranged);
 
@@ -363,13 +360,13 @@ namespace Orianna
                 }
                 else
                 {
-                    foreach (var minion in allMinions.FindAll(m => !Orbwalking.InAutoAttackRange(m)))
+                    foreach (var minion in allMinions.FindAll(m => !Orbwalking.InAutoAttackRange(m)).Where(minion => HealthPrediction.GetHealthPrediction(minion,
+                        Math.Max(
+                            (int) (minion.ServerPosition.Distance(BallManager.BallPosition)/Q.Speed*1000) - 100,
+                            0)) < 50))
                     {
-                        if (HealthPrediction.GetHealthPrediction(minion, Math.Max((int)(minion.ServerPosition.Distance(BallManager.BallPosition) / Q.Speed * 1000) - 100, 0)) < 50)
-                        {
-                            Q.Cast(minion.ServerPosition, true);
-                            return;
-                        }
+                        Q.Cast(minion.ServerPosition, true);
+                        return;
                     }
                 }
             }
@@ -396,14 +393,8 @@ namespace Orianna
                 }
             }
 
-            if (useE && EIsReady)
-            {
-                if (W.CountHits(allMinions, Player.ServerPosition) >= 3)
-                {
-                    E.CastOnUnit(Player, true);
-                    return;
-                }
-            }
+            if (!useE || !EIsReady || W.CountHits(allMinions, Player.ServerPosition) < 3) return;
+            E.CastOnUnit(Player, true);
         }
 
         private static void JungleFarm()
@@ -415,26 +406,24 @@ namespace Orianna
             var mobs = MinionManager.GetMinions(Player.ServerPosition, Q.Range, MinionTypes.All,
                 MinionTeam.Neutral, MinionOrderTypes.MaxHealth);
 
-            if (mobs.Count > 0)
+            if (mobs.Count <= 0) return;
+            var mob = mobs[0];
+            if (useW && WIsReady && W.WillHit(mob.ServerPosition, BallManager.BallPosition))
             {
-                var mob = mobs[0];
-                if (useW && WIsReady && W.WillHit(mob.ServerPosition, BallManager.BallPosition))
+                W.Cast(Player.ServerPosition, true);
+            }
+            else if (useQ && QIsReady)
+            {
+                Q.Cast(mob, true);
+            }
+            else if (useE && EIsReady && (!WIsReady || !useW))
+            {
+                var closestAlly = HeroManager.Allies
+                    .Where(h =>  h.IsValidTarget(E.Range, false))
+                    .MinOrDefault(h => h.Distance(mob));
+                if (closestAlly != null)
                 {
-                    W.Cast(Player.ServerPosition, true);
-                }
-                else if (useQ && QIsReady)
-                {
-                    Q.Cast(mob, true);
-                }
-                else if (useE && EIsReady && (!WIsReady || !useW))
-                {
-                    var closestAlly = HeroManager.Allies
-                        .Where(h =>  h.IsValidTarget(E.Range, false))
-                        .MinOrDefault(h => h.Distance(mob));
-                    if (closestAlly != null)
-                    {
-                        E.CastOnUnit(closestAlly, true);
-                    }
+                    E.CastOnUnit(closestAlly, true);
                 }
             }
         }
@@ -449,16 +438,9 @@ namespace Orianna
             }
             points.Add(qPrediction.UnitPosition.To2D());
 
-            foreach (var enemy in HeroManager.Enemies.Where(h => h.IsValidTarget(Q.Range + R.Range)))
-            {
-                var prediction = Q.GetPrediction(enemy);
-                if (prediction.Hitchance >= HitChance.High)
-                {
-                   points.Add(prediction.UnitPosition.To2D()); 
-                }
-            }
+            points.AddRange(from enemy in HeroManager.Enemies.Where(h => h.IsValidTarget(Q.Range + R.Range)) select Q.GetPrediction(enemy) into prediction where prediction.Hitchance >= HitChance.High select prediction.UnitPosition.To2D());
 
-            for (int j = 0; j < 5; j++)
+            for (var j = 0; j < 5; j++)
             {
                 var mecResult = MEC.GetMec(points);
                 
@@ -487,11 +469,9 @@ namespace Orianna
                 for (var i = 1; i < points.Count; i++)
                 {
                     var distance = Vector2.DistanceSquared(points[i], points[0]);
-                    if (distance > maxdist || maxdist.CompareTo(-1) == 0)
-                    {
-                        maxdistindex = i;
-                        maxdist = distance;
-                    }
+                    if (!(distance > maxdist) && maxdist.CompareTo(-1) != 0) continue;
+                    maxdistindex = i;
+                    maxdist = distance;
                 }
                 points.RemoveAt(maxdistindex);
             }
@@ -531,20 +511,18 @@ namespace Orianna
                     CastQ(target);
                 }
 
-                if(useE)
+                if (!useE) return;
+                foreach (var ally in HeroManager.Allies.Where(h => h.IsValidTarget(E.Range, false)))
                 {
-                    foreach (var ally in HeroManager.Allies.Where(h => h.IsValidTarget(E.Range, false)))
+                    if (ally.Position.CountEnemiesInRange(300) >= 1)
                     {
-                        if (ally.Position.CountEnemiesInRange(300) >= 1)
-                        {
-                            E.CastOnUnit(ally, true);
-                        }
-
-                        CastE(ally, 1);
+                        E.CastOnUnit(ally, true);
                     }
 
-                    CastE(Player, 1);
+                    CastE(ally, 1);
                 }
+
+                CastE(Player, 1);
             }
             else
             {
@@ -599,24 +577,12 @@ namespace Orianna
                     }
                 }
 
-                if(useE && EIsReady)
-                {
-                    if (BallManager.BallPosition.CountEnemiesInRange(800) <= 2)
-                    {
-                        CastE(Player, 1);
-                    }
-                    else
-                    {
-                        CastE(Player, 2);
-                    }
+                if (!useE || !EIsReady) return;
+                CastE(Player, BallManager.BallPosition.CountEnemiesInRange(800) <= 2 ? 1 : 2);
 
-                    foreach (var ally in HeroManager.Allies.Where(h => h.IsValidTarget(E.Range, false)))
-                    {
-                        if (ally.Position.CountEnemiesInRange(300) >= 2)
-                        {
-                            E.CastOnUnit(ally, true);
-                        }
-                    }
+                foreach (var ally in HeroManager.Allies.Where(h => h.IsValidTarget(E.Range, false)).Where(ally => ally.Position.CountEnemiesInRange(300) >= 2))
+                {
+                    E.CastOnUnit(ally, true);
                 }
             }
         }
@@ -627,18 +593,16 @@ namespace Orianna
             	return;
            	
             var target = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Magical);
-            if (target != null)
+            if (target == null) return;
+            if (Config.Item("UseQHarass").GetValue<bool>() && QIsReady)
             {
-                if (Config.Item("UseQHarass").GetValue<bool>() && QIsReady)
-                {
-                    CastQ(target);
-                    return;
-                }
+                CastQ(target);
+                return;
+            }
 
-                if (Config.Item("UseWHarass").GetValue<bool>() && WIsReady)
-                {
-                    CastW(1);
-                }
+            if (Config.Item("UseWHarass").GetValue<bool>() && WIsReady)
+            {
+                CastW(1);
             }
         }
 
@@ -723,30 +687,16 @@ namespace Orianna
 
         public static Tuple<int, List<Obj_AI_Hero>> GetHits(Spell spell)
         {
-            var hits = new List<Obj_AI_Hero>();
             var range = spell.Range * spell.Range;
-            foreach (var enemy in HeroManager.Enemies.Where(h => h.IsValidTarget() && BallManager.BallPosition.Distance(h.ServerPosition, true) < range))
-	        {
-                if (spell.WillHit(enemy, BallManager.BallPosition) && BallManager.BallPosition.Distance(enemy.ServerPosition, true) < spell.Width * spell.Width)
-                {
-                    hits.Add(enemy);
-                }
-	        }
+            var hits = HeroManager.Enemies.Where(h => h.IsValidTarget() && BallManager.BallPosition.Distance(h.ServerPosition, true) < range).Where(enemy => spell.WillHit(enemy, BallManager.BallPosition) && BallManager.BallPosition.Distance(enemy.ServerPosition, true) < spell.Width*spell.Width).ToList();
             return new Tuple<int,List<Obj_AI_Hero>>(hits.Count, hits);
         }
 
         public static Tuple<int, List<Obj_AI_Hero>> GetEHits(Vector3 to)
         {
-            var hits = new List<Obj_AI_Hero>();
             var oldERange = E.Range;
             E.Range = 10000; //avoid the range check
-            foreach (var enemy in HeroManager.Enemies.Where(h => h.IsValidTarget(2000)))
-            {
-                if (E.WillHit(enemy, to))
-                {
-                    hits.Add(enemy);
-                }
-            }
+            var hits = HeroManager.Enemies.Where(h => h.IsValidTarget(2000)).Where(enemy => E.WillHit(enemy, to)).ToList();
             E.Range = oldERange;
             return new Tuple<int, List<Obj_AI_Hero>>(hits.Count, hits);
         }
@@ -770,11 +720,9 @@ namespace Orianna
                 foreach (var ally in HeroManager.Allies.Where(h => h.IsValidTarget(E.Range, false)))
                 {
                     var t = BallManager.BallPosition.Distance(ally.ServerPosition) / E.Speed + ally.Distance(qPrediction.CastPosition) / Q.Speed;
-                    if(t < bestEQTravelTime)
-                    {
-                        eqTarget = ally;
-                        bestEQTravelTime = t;
-                    }
+                    if (!(t < bestEQTravelTime)) continue;
+                    eqTarget = ally;
+                    bestEQTravelTime = t;
                 }
 
                 if (eqTarget != null && bestEQTravelTime < directTravelTime * 1.3f && (BallManager.BallPosition.Distance(eqTarget.ServerPosition, true) > 10000))
@@ -791,32 +739,23 @@ namespace Orianna
         public static bool CastW(int minTargets)
         {
             var hits = GetHits(W);
-            if(hits.Item1 >= minTargets)
-            {
-                W.Cast(Player.ServerPosition, true);
-                return true;
-            }
-            return false;
+            if (hits.Item1 < minTargets) return false;
+            W.Cast(Player.ServerPosition, true);
+            return true;
         }
 
         public static bool CastE(Obj_AI_Hero target, int minTargets)
         {
-            if (GetEHits(target.ServerPosition).Item1 >= minTargets)
-            {
-                E.CastOnUnit(target, true);
-                return true;
-            }
-            return false;
+            if (GetEHits(target.ServerPosition).Item1 < minTargets) return false;
+            E.CastOnUnit(target, true);
+            return true;
         }
 
         public static bool CastR(int minTargets)
         {
-            if (GetHits(R).Item1 >= minTargets)
-            {
-                R.Cast(Player.ServerPosition, true);
-                return true;
-            }
-            return false;
+            if (GetHits(R).Item1 < minTargets) return false;
+            R.Cast(Player.ServerPosition, true);
+            return true;
         }
 
         public static int GetNumberOfMinionsHitByE(Obj_AI_Hero target)

@@ -23,6 +23,8 @@ using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
 
+// ReSharper disable InconsistentNaming
+
 #endregion
 
 namespace Evade

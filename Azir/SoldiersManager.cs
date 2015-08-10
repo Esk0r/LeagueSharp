@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LeagueSharp;
 using LeagueSharp.Common;
+
+// ReSharper disable InconsistentNaming
 
 namespace Azir
 {
     internal static class SoldiersManager
     {
-        private static List<Obj_AI_Minion> _soldiers = new List<Obj_AI_Minion>();
-        private static Dictionary<int, string> Animations = new Dictionary<int, string>();
-        private const bool DrawSoldiers = true;
+        private static readonly List<Obj_AI_Minion> _soldiers = new List<Obj_AI_Minion>();
+        private static readonly Dictionary<int, string> Animations = new Dictionary<int, string>();
+//        private const bool DrawSoldiers = true;
 
         public static List<Obj_AI_Minion> ActiveSoldiers
         {
@@ -35,17 +35,18 @@ namespace Azir
             Obj_AI_Minion.OnDelete += Obj_AI_Minion_OnDelete;
             Obj_AI_Minion.OnPlayAnimation += Obj_AI_Minion_OnPlayAnimation;
 
-            if(DrawSoldiers)
-            {
+//            if(DrawSoldiers)
+//            {
                 Drawing.OnDraw += Drawing_OnDraw;
-            }
+//            }
         }
 
         static void Obj_AI_Minion_OnPlayAnimation(GameObject sender, GameObjectPlayAnimationEventArgs args)
         {
-            if(sender is Obj_AI_Minion && ((Obj_AI_Minion)sender).IsSoldier())
+            var minion = sender as Obj_AI_Minion;
+            if(minion != null && minion.IsSoldier())
             {
-                Animations[sender.NetworkId] = args.Animation;
+                Animations[minion.NetworkId] = args.Animation;
             }
         }
 
@@ -57,9 +58,9 @@ namespace Azir
             }
         }
 
-        private static bool IsSoldier(this Obj_AI_Minion soldier)
+        private static bool IsSoldier(this Obj_AI_Base soldier)
         {
-            return soldier.IsAlly && soldier.BaseSkinName == "AzirSoldier";
+            return soldier.IsAlly && soldier.CharData.BaseSkinName == "AzirSoldier";
         }
 
         static void Obj_AI_Minion_OnCreate(GameObject sender, EventArgs args)

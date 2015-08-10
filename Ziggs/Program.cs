@@ -3,11 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Input;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
+
+// ReSharper disable InconsistentNaming
 
 #endregion
 
@@ -26,9 +27,10 @@ namespace Ziggs
         public static Spell R;
         public static Menu Config;
 
-        public static int LastWToMouseT = 0;
-        public static int UseSecondWT = 0;
+        public static int LastWToMouseT;
+        public static int UseSecondWT;
 
+        // ReSharper disable once UnusedParameter.Local
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -203,10 +205,14 @@ namespace Ziggs
             var rValueM = Config.Item("DrawRRangeM").GetValue<Circle>();
             if (rValueM.Active)
             {
+
+#pragma warning disable 618
                 Utility.DrawCircle(ObjectManager.Player.Position, R.Range, rValueM.Color, 2, 30, true);
+#pragma warning restore 618
             }
         }
 
+        // ReSharper disable once FunctionComplexityOverflow
         private static void Game_OnGameUpdate(EventArgs args)
         {
             //Combo & Harass
@@ -347,22 +353,23 @@ namespace Ziggs
             }
 
             //Peel from melees
-            if (Config.Item("Peel").GetValue<bool>())
+            if (!Config.Item("Peel").GetValue<bool>())
             {
-                foreach (var pos in from enemy in ObjectManager.Get<Obj_AI_Hero>()
-                    where
-                        enemy.IsValidTarget() &&
-                        enemy.Distance(ObjectManager.Player) <=
-                        enemy.BoundingRadius + enemy.AttackRange + ObjectManager.Player.BoundingRadius &&
-                        enemy.IsMelee()
-                    let direction =
-                        (enemy.ServerPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized()
-                    let pos = ObjectManager.Player.ServerPosition.To2D()
-                    select pos + Math.Min(200, Math.Max(50, enemy.Distance(ObjectManager.Player) / 2)) * direction)
-                {
-                    W.Cast(pos.To3D(), true);
-                    UseSecondWT = Utils.TickCount;
-                }
+                return;
+            }
+            foreach (var pos in from enemy in ObjectManager.Get<Obj_AI_Hero>()
+                where
+                    enemy.IsValidTarget() &&
+                    enemy.Distance(ObjectManager.Player) <=
+                    enemy.BoundingRadius + enemy.AttackRange + ObjectManager.Player.BoundingRadius &&
+                    enemy.IsMelee()
+                let direction =
+                    (enemy.ServerPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized()
+                let pos = ObjectManager.Player.ServerPosition.To2D()
+                select pos + Math.Min(200, Math.Max(50, enemy.Distance(ObjectManager.Player) / 2)) * direction)
+            {
+                W.Cast(pos.To3D(), true);
+                UseSecondWT = Utils.TickCount;
             }
         }
 
@@ -453,41 +460,17 @@ namespace Ziggs
             if (thirdBouncePosition.Distance(targetPosition.To2D()) < Q1.Width + target.BoundingRadius)
             {
                 //Check the second one.
-                foreach (var minion in ObjectManager.Get<Obj_AI_Minion>())
+                if ((from minion in ObjectManager.Get<Obj_AI_Minion>() where minion.IsValidTarget(3000) let predictedPos = Q2.GetPrediction(minion) where predictedPos.UnitPosition.To2D().Distance(secondBouncePosition) <
+                                                                                                                                                          Q2.Width + minion.BoundingRadius select minion).Any())
                 {
-                    if (minion.IsValidTarget(3000))
-                    {
-                        var predictedPos = Q2.GetPrediction(minion);
-                        if (predictedPos.UnitPosition.To2D().Distance(secondBouncePosition) <
-                            Q2.Width + minion.BoundingRadius)
-                        {
-                            return true;
-                        }
-                    }
+                    return true;
                 }
             }
 
-            if (secondBouncePosition.Distance(targetPosition.To2D()) < Q1.Width + target.BoundingRadius ||
-                thirdBouncePosition.Distance(targetPosition.To2D()) < Q1.Width + target.BoundingRadius)
-            {
-                //Check the first one
-                foreach (var minion in ObjectManager.Get<Obj_AI_Minion>())
-                {
-                    if (minion.IsValidTarget(3000))
-                    {
-                        var predictedPos = Q1.GetPrediction(minion);
-                        if (predictedPos.UnitPosition.To2D().Distance(firstBouncePosition) <
-                            Q1.Width + minion.BoundingRadius)
-                        {
-                            return true;
-                        }
-                    }
-                }
-
-                return false;
-            }
-
-            return true;
+            if (!(secondBouncePosition.Distance(targetPosition.To2D()) < Q1.Width + target.BoundingRadius) &&
+                !(thirdBouncePosition.Distance(targetPosition.To2D()) < Q1.Width + target.BoundingRadius)) return true;
+            //Check the first one
+            return (from minion in ObjectManager.Get<Obj_AI_Minion>() where minion.IsValidTarget(3000) let predictedPos = Q1.GetPrediction(minion) where predictedPos.UnitPosition.To2D().Distance(firstBouncePosition) < Q1.Width + minion.BoundingRadius select minion).Any();
         }
 
         private static void Farm(bool laneClear)
@@ -543,31 +526,21 @@ namespace Ziggs
             {
                 if (useQ && Q1.IsReady())
                 {
-                    foreach (var minion in allMinions)
+                    foreach (var minion in from minion in allMinions where !Orbwalking.InAutoAttackRange(minion) let Qdamage = ObjectManager.Player.GetSpellDamage(minion, SpellSlot.Q) * 0.75 where Qdamage > Q1.GetHealthPrediction(minion) select minion)
                     {
-                        if (!Orbwalking.InAutoAttackRange(minion))
-                        {
-                            var Qdamage = ObjectManager.Player.GetSpellDamage(minion, SpellSlot.Q) * 0.75;
-
-                            if (Qdamage > Q1.GetHealthPrediction(minion))
-                            {
-                                Q2.Cast(minion);
-                            }
-                        }
+                        Q2.Cast(minion);
                     }
                 }
 
-                if (E.IsReady() && useE)
+                if (!E.IsReady() || !useE) return;
+                var rangedLocation = E.GetCircularFarmLocation(rangedMinions, E.Width * 2);
+                var location = E.GetCircularFarmLocation(allMinions, E.Width * 2);
+
+                var bLocation = (location.MinionsHit > rangedLocation.MinionsHit + 1) ? location : rangedLocation;
+
+                if (bLocation.MinionsHit > 2)
                 {
-                    var rangedLocation = E.GetCircularFarmLocation(rangedMinions, E.Width * 2);
-                    var location = E.GetCircularFarmLocation(allMinions, E.Width * 2);
-
-                    var bLocation = (location.MinionsHit > rangedLocation.MinionsHit + 1) ? location : rangedLocation;
-
-                    if (bLocation.MinionsHit > 2)
-                    {
-                        E.Cast(bLocation.Position.To3D());
-                    }
+                    E.Cast(bLocation.Position.To3D());
                 }
             }
         }
@@ -581,20 +554,21 @@ namespace Ziggs
                 ObjectManager.Player.ServerPosition, Q1.Range, MinionTypes.All, MinionTeam.Neutral,
                 MinionOrderTypes.MaxHealth);
 
-            if (mobs.Count > 0)
+            if (mobs.Count <= 0)
             {
-                var mob = mobs[0];
+                return;
+            }
+            var mob = mobs[0];
 
-                if (useQ && Q1.IsReady())
-                {
-                    Q1.Cast(mob);
-                }
+            if (useQ && Q1.IsReady())
+            {
+                Q1.Cast(mob);
+            }
 
 
-                if (useE)
-                {
-                    E.Cast(mob);
-                }
+            if (useE)
+            {
+                E.Cast(mob);
             }
         }
     }

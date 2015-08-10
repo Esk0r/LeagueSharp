@@ -8,6 +8,8 @@ using LeagueSharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
 
+// ReSharper disable InconsistentNaming
+
 #endregion
 
 namespace Syndra
@@ -37,6 +39,7 @@ namespace Syndra
 
         private static Obj_AI_Hero Player;
 
+        // ReSharper disable once UnusedParameter.Local
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -46,7 +49,7 @@ namespace Syndra
         {
             Player = ObjectManager.Player;
 
-            if (Player.BaseSkinName != ChampionName) return;
+            if (Player.CharData.BaseSkinName != ChampionName) return;
 
             //Create the spells
             Q = new Spell(SpellSlot.Q, 790);
@@ -156,7 +159,7 @@ namespace Syndra
             foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != Player.Team))
                 Config.SubMenu("Misc")
                     .SubMenu("DontUlt")
-                    .AddItem(new MenuItem("DontUlt" + enemy.BaseSkinName, enemy.BaseSkinName).SetValue(false));
+                    .AddItem(new MenuItem("DontUlt" + enemy.CharData.BaseSkinName, enemy.CharData.BaseSkinName).SetValue(false));
             
             //Damage after combo:
             var dmgAfterComboItem =  new MenuItem("DamageAfterCombo", "Draw damage after combo").SetValue(true);
@@ -255,14 +258,12 @@ namespace Syndra
                     EQ.Delay = E.Delay + Player.Distance(orb) / E.Speed;
                     EQ.From = orb;
                     var enemyPred = EQ.GetPrediction(enemy);
-                    if (enemyPred.Hitchance >= HitChance.High &&
-                        enemyPred.UnitPosition.To2D().Distance(startPoint, endPoint, false) <
-                        EQ.Width + enemy.BoundingRadius)
-                    {
-                        E.Cast(orb, true);
-                        W.LastCastAttemptT = Utils.TickCount;
-                        return;
-                    }
+                    if (enemyPred.Hitchance < HitChance.High ||
+                        !(enemyPred.UnitPosition.To2D().Distance(startPoint, endPoint, false) <
+                          EQ.Width + enemy.BoundingRadius)) continue;
+                    E.Cast(orb, true);
+                    W.LastCastAttemptT = Utils.TickCount;
+                    return;
                 }
         }
 
@@ -272,20 +273,18 @@ namespace Syndra
             EQ.From = Player.ServerPosition.To2D().Extend(enemy.ServerPosition.To2D(), Q.Range).To3D();
 
             var prediction = EQ.GetPrediction(enemy);
-            if (prediction.Hitchance >= HitChance.High)
-            {
-                Q.Cast(Player.ServerPosition.To2D().Extend(prediction.CastPosition.To2D(), Q.Range - 100));
-                QEComboT = Utils.TickCount;
-                W.LastCastAttemptT = Utils.TickCount;
-            }
+            if (prediction.Hitchance < HitChance.High) return;
+            Q.Cast(Player.ServerPosition.To2D().Extend(prediction.CastPosition.To2D(), Q.Range - 100));
+            QEComboT = Utils.TickCount;
+            W.LastCastAttemptT = Utils.TickCount;
         }
 
         private static Vector3 GetGrabableObjectPos(bool onlyOrbs)
         {
-            if (!onlyOrbs)
-                foreach (var minion in ObjectManager.Get<Obj_AI_Minion>().Where(minion => minion.IsValidTarget(W.Range))
-                    )
-                    return minion.ServerPosition;
+            if (onlyOrbs) return OrbManager.GetOrbToGrab((int) W.Range);
+            foreach (var minion in ObjectManager.Get<Obj_AI_Minion>().Where(minion => minion.IsValidTarget(W.Range))
+                )
+                return minion.ServerPosition;
 
             return OrbManager.GetOrbToGrab((int)W.Range);
         }
@@ -312,6 +311,7 @@ namespace Syndra
             return (float)damage;
         }
 
+        // ReSharper disable once FunctionComplexityOverflow
         private static void UseSpells(bool useQ, bool useW, bool useE, bool useR, bool useQE, bool useIgnite, bool isHarass)
         {
             var qTarget = TargetSelector.GetTarget(Q.Range + (isHarass ? Q.Width / 3 : Q.Width), TargetSelector.DamageType.Magical);
@@ -326,10 +326,9 @@ namespace Syndra
 
             //E
             if (Utils.TickCount - W.LastCastAttemptT > Game.Ping + 150 && E.IsReady() && useE)
-                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
+                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsValidTarget(EQ.Range)))
                 {
-                    if (enemy.IsValidTarget(EQ.Range))
-                        UseE(enemy);
+                    UseE(enemy);
                 }
 
             //W
@@ -356,8 +355,8 @@ namespace Syndra
                 }
 
             if (rTarget != null)
-                useR = (Config.Item("DontUlt" + rTarget.BaseSkinName) != null &&
-                        Config.Item("DontUlt" + rTarget.BaseSkinName).GetValue<bool>() == false) && useR;
+                useR = (Config.Item("DontUlt" + rTarget.CharData.BaseSkinName) != null &&
+                        Config.Item("DontUlt" + rTarget.CharData.BaseSkinName).GetValue<bool>() == false) && useR;
 
             if (rTarget != null && useR && comboDamage > rTarget.Health)
             {
@@ -391,17 +390,14 @@ namespace Syndra
                 UseQE(qeTarget);
 
             //WE
-            if (wTarget == null && qeTarget != null && E.IsReady() && useE && OrbManager.WObject(true) != null)
-            {
-                EQ.Delay = E.Delay + Q.Range / W.Speed;
-                EQ.From = Player.ServerPosition.To2D().Extend(qeTarget.ServerPosition.To2D(), Q.Range).To3D();
-                var prediction = EQ.GetPrediction(qeTarget);
-                if (prediction.Hitchance >= HitChance.High)
-                {
-                    W.Cast(Player.ServerPosition.To2D().Extend(prediction.CastPosition.To2D(), Q.Range - 100));
-                    WEComboT = Utils.TickCount;
-                }
-            }
+            if (wTarget != null || qeTarget == null || !E.IsReady() || !useE || OrbManager.WObject(true) == null)
+                return;
+            EQ.Delay = E.Delay + Q.Range / W.Speed;
+            EQ.From = Player.ServerPosition.To2D().Extend(qeTarget.ServerPosition.To2D(), Q.Range).To3D();
+            var prediction = EQ.GetPrediction(qeTarget);
+            if (prediction.Hitchance < HitChance.High) return;
+            W.Cast(Player.ServerPosition.To2D().Extend(prediction.CastPosition.To2D(), Q.Range - 100));
+            WEComboT = Utils.TickCount;
         }
 
         private static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
@@ -413,12 +409,10 @@ namespace Syndra
                 E.Cast(args.End, true);
             }
 
-            if (sender.IsMe && Utils.TickCount - WEComboT < 500 &&
-                (args.SData.Name == "SyndraW" || args.SData.Name == "syndrawcast"))
-            {
-                W.LastCastAttemptT = Utils.TickCount + 400;
-                E.Cast(args.End, true);
-            }
+            if (!sender.IsMe || Utils.TickCount - WEComboT >= 500 ||
+                (args.SData.Name != "SyndraW" && args.SData.Name != "syndrawcast")) return;
+            W.LastCastAttemptT = Utils.TickCount + 400;
+            E.Cast(args.End, true);
         }
 
         private static void Farm(bool laneClear)
@@ -427,19 +421,17 @@ namespace Syndra
 
             var rangedMinionsQ = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range + Q.Width + 30,
                 MinionTypes.Ranged);
-            var allMinionsQ = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range + Q.Width + 30,
-                MinionTypes.All);
+            var allMinionsQ = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range + Q.Width + 30);
             var rangedMinionsW = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, W.Range + W.Width + 30,
                 MinionTypes.Ranged);
-            var allMinionsW = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, W.Range + W.Width + 30,
-                MinionTypes.All);
+            var allMinionsW = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, W.Range + W.Width + 30);
 
             var useQi = Config.Item("UseQFarm").GetValue<StringList>().SelectedIndex;
             var useWi = Config.Item("UseWFarm").GetValue<StringList>().SelectedIndex;
-            var useEi = Config.Item("UseEFarm").GetValue<StringList>().SelectedIndex;
+            //var useEi = Config.Item("UseEFarm").GetValue<StringList>().SelectedIndex;
             var useQ = (laneClear && (useQi == 1 || useQi == 2)) || (!laneClear && (useQi == 0 || useQi == 2));
             var useW = (laneClear && (useWi == 1 || useWi == 2)) || (!laneClear && (useWi == 0 || useWi == 2));
-            var useE = (laneClear && (useEi == 1 || useEi == 2)) || (!laneClear && (useEi == 0 || useEi == 2));
+            //var useE = (laneClear && (useEi == 1 || useEi == 2)) || (!laneClear && (useEi == 0 || useEi == 2));
 
             if (useQ && Q.IsReady())
                 if (laneClear)
@@ -458,40 +450,34 @@ namespace Syndra
                     }
                 }
                 else
-                    foreach (var minion in allMinionsQ)
-                        if (!Orbwalking.InAutoAttackRange(minion) &&
-                            minion.Health < 0.75 * Player.GetSpellDamage(minion, SpellSlot.Q))
-                            Q.Cast(minion);
+                    foreach (var minion in allMinionsQ.Where(minion => !Orbwalking.InAutoAttackRange(minion) &&
+                                                                       minion.Health < 0.75 * Player.GetSpellDamage(minion, SpellSlot.Q)))
+                        Q.Cast(minion);
 
-            if (useW && W.IsReady() && allMinionsW.Count > 3)
+            if (!useW || !W.IsReady() || allMinionsW.Count <= 3 || !laneClear) return;
+            if (Player.Spellbook.GetSpell(SpellSlot.W).ToggleState == 1)
             {
-                if (laneClear)
+                //WObject
+                var gObjectPos = GetGrabableObjectPos(false);
+
+                if (gObjectPos.To2D().IsValid() && Utils.TickCount - W.LastCastAttemptT > Game.Ping + 150)
                 {
-                    if (Player.Spellbook.GetSpell(SpellSlot.W).ToggleState == 1)
-                    {
-                        //WObject
-                        var gObjectPos = GetGrabableObjectPos(false);
+                    W.Cast(gObjectPos);
+                }
+            }
+            else if (Player.Spellbook.GetSpell(SpellSlot.W).ToggleState != 1)
+            {
+                var fl1 = Q.GetCircularFarmLocation(rangedMinionsW, W.Width);
+                var fl2 = Q.GetCircularFarmLocation(allMinionsW, W.Width);
 
-                        if (gObjectPos.To2D().IsValid() && Utils.TickCount - W.LastCastAttemptT > Game.Ping + 150)
-                        {
-                            W.Cast(gObjectPos);
-                        }
-                    }
-                    else if (Player.Spellbook.GetSpell(SpellSlot.W).ToggleState != 1)
-                    {
-                        var fl1 = Q.GetCircularFarmLocation(rangedMinionsW, W.Width);
-                        var fl2 = Q.GetCircularFarmLocation(allMinionsW, W.Width);
+                if (fl1.MinionsHit >= 3 && W.IsInRange(fl1.Position.To3D()))
+                {
+                    W.Cast(fl1.Position);
+                }
 
-                        if (fl1.MinionsHit >= 3 && W.IsInRange(fl1.Position.To3D()))
-                        {
-                            W.Cast(fl1.Position);
-                        }
-
-                        else if (fl2.MinionsHit >= 1 && W.IsInRange(fl2.Position.To3D()) && fl1.MinionsHit <= 2)
-                        {
-                            W.Cast(fl2.Position);
-                        }
-                    }
+                else if (fl2.MinionsHit >= 1 && W.IsInRange(fl2.Position.To3D()) && fl1.MinionsHit <= 2)
+                {
+                    W.Cast(fl2.Position);
                 }
             }
         }
@@ -505,24 +491,22 @@ namespace Syndra
             var mobs = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, W.Range, MinionTypes.All,
                 MinionTeam.Neutral, MinionOrderTypes.MaxHealth);
 
-            if (mobs.Count > 0)
+            if (mobs.Count <= 0) return;
+            var mob = mobs[0];
+
+            if (Q.IsReady() && useQ)
             {
-                var mob = mobs[0];
+                Q.Cast(mob);
+            }
 
-                if (Q.IsReady() && useQ)
-                {
-                    Q.Cast(mob);
-                }
+            if (W.IsReady() && useW && Utils.TickCount - Q.LastCastAttemptT > 800)
+            {
+                W.Cast(mob);
+            }
 
-                if (W.IsReady() && useW && Utils.TickCount - Q.LastCastAttemptT > 800)
-                {
-                    W.Cast(mob);
-                }
-
-                if (useE && E.IsReady())
-                {
-                    E.Cast(mob);
-                }
+            if (useE && E.IsReady())
+            {
+                E.Cast(mob);
             }
         }
 
@@ -535,9 +519,8 @@ namespace Syndra
             R.Range = R.Level == 3 ? 750 : 675;
            
             if (Config.Item("CastQE").GetValue<KeyBind>().Active && E.IsReady() && Q.IsReady())
-                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
-                    if (enemy.IsValidTarget(EQ.Range) && Game.CursorPos.Distance(enemy.ServerPosition) < 300)
-                        UseQE(enemy);
+                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsValidTarget(EQ.Range) && Game.CursorPos.Distance(enemy.ServerPosition) < 300))
+                    UseQE(enemy);
 
             if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
             {

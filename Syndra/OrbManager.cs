@@ -1,11 +1,12 @@
 ﻿#region
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
+
+// ReSharper disable InconsistentNaming
 
 #endregion
 
@@ -31,10 +32,10 @@ namespace Syndra
         }
 
         public static int tmpQOrbT;
-        public static Vector3 tmpQOrbPos = new Vector3();
+        public static Vector3 tmpQOrbPos;
 
         public static int tmpWOrbT;
-        public static Vector3 tmpWOrbPos = new Vector3();
+        public static Vector3 tmpWOrbPos;
 
         static OrbManager()
         {
@@ -58,11 +59,10 @@ namespace Syndra
                 tmpQOrbPos = args.End;
             }
 
-            if (sender.IsMe && WObject(true) != null && (args.SData.Name == "SyndraW" || args.SData.Name == "syndraw2"))
-            {
-                tmpWOrbT = Utils.TickCount + 250;
-                tmpWOrbPos = args.End;
-            }
+            if (!sender.IsMe || WObject(true) == null || (args.SData.Name != "SyndraW" && args.SData.Name != "syndraw2"))
+                return;
+            tmpWOrbT = Utils.TickCount + 250;
+            tmpWOrbPos = args.End;
         }
 
         public static Obj_AI_Minion WObject(bool onlyOrb)

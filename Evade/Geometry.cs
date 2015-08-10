@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ClipperLib;
 using LeagueSharp.Common;
 using SharpDX;
@@ -25,6 +26,8 @@ using Color = System.Drawing.Color;
 using Path = System.Collections.Generic.List<ClipperLib.IntPoint>;
 using Paths = System.Collections.Generic.List<System.Collections.Generic.List<ClipperLib.IntPoint>>;
 using GamePath = System.Collections.Generic.List<SharpDX.Vector2>;
+
+// ReSharper disable InconsistentNaming
 
 #endregion
 
@@ -47,6 +50,7 @@ namespace Evade
         {
             var result = new List<Polygon>();
 
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var path in v)
             {
                 result.Add(path.ToPolygon());
@@ -149,11 +153,7 @@ namespace Evade
             public Path ToClipperPath()
             {
                 var result = new Path(Points.Count);
-
-                foreach (var point in Points)
-                {
-                    result.Add(new IntPoint(point.X, point.Y));
-                }
+                result.AddRange(Points.Select(point => new IntPoint(point.X, point.Y)));
 
                 return result;
             }

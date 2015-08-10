@@ -62,8 +62,6 @@ namespace Evade
         public string SpellName;
         public string ToggleParticleName = "";
         public SkillShotType Type;
-        private int _radius;
-        private int _range;
 
         public SpellData() { }
 
@@ -85,49 +83,40 @@ namespace Evade
             Type = type;
             Delay = delay;
             Range = range;
-            _radius = radius;
+            RawRadius = radius;
             MissileSpeed = missileSpeed;
             AddHitbox = addHitbox;
             FixedRange = fixedRange;
             DangerValue = defaultDangerValue;
         }
 
-        public string MenuItemName
-        {
-            get { return ChampionName + " - " + SpellName; }
-        }
+        public string MenuItemName => ChampionName + " - " + SpellName;
 
         public int Radius
         {
             get
             {
                 return (!AddHitbox)
-                    ? _radius + Config.SkillShotsExtraRadius
-                    : Config.SkillShotsExtraRadius + _radius + (int) ObjectManager.Player.BoundingRadius;
+                    ? RawRadius + Config.SkillShotsExtraRadius
+                    : Config.SkillShotsExtraRadius + RawRadius + (int) ObjectManager.Player.BoundingRadius;
             }
-            set { _radius = value; }
+            set { RawRadius = value; }
         }
 
-        public int RawRadius
-        {
-            get { return _radius; }
-        }
+        public int RawRadius { get; private set; }
 
-        public int RawRange
-        {
-            get { return _range; }
-        }
+        public int RawRange { get; private set; }
 
         public int Range
         {
             get
             {
-                return _range +
+                return RawRange +
                        ((Type == SkillShotType.SkillshotLine || Type == SkillShotType.SkillshotMissileLine)
                            ? Config.SkillShotsExtraRange
                            : 0);
             }
-            set { _range = value; }
+            set { RawRange = value; }
         }
     }
 }

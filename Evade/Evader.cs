@@ -16,13 +16,13 @@
 
 #region
 
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
-using Path = System.Collections.Generic.List<ClipperLib.IntPoint>;
-using Paths = System.Collections.Generic.List<System.Collections.Generic.List<ClipperLib.IntPoint>>;
+
+// ReSharper disable InconsistentNaming
 
 #endregion
 
@@ -43,15 +43,7 @@ namespace Evade
             var goodCandidates = new List<Vector2>();
             var badCandidates = new List<Vector2>();
 
-            var polygonList = new List<Geometry.Polygon>();
-
-            foreach (var skillshot in Program.DetectedSkillshots)
-            {
-                if (skillshot.Evade())
-                {
-                    polygonList.Add(skillshot.EvadePolygon);
-                }
-            }
+            var polygonList = (from skillshot in Program.DetectedSkillshots where skillshot.Evade() select skillshot.EvadePolygon).ToList();
 
             //Create the danger polygon:
             var dangerPolygons = Geometry.ClipPolygons(polygonList).ToPolygons();
@@ -69,46 +61,44 @@ namespace Evade
                     var distanceToEvadePoint = Vector2.DistanceSquared(originalCandidate, myPosition);
 
 
-                    if (distanceToEvadePoint < 600 * 600)
+                    if (!(distanceToEvadePoint < 600*600)) continue;
+                    var sideDistance = Vector2.DistanceSquared(sideEnd, sideStart);
+                    var direction = (sideEnd - sideStart).Normalized();
+
+                    var s = (distanceToEvadePoint < 200 * 200 && sideDistance > 90 * 90)
+                        ? Config.DiagonalEvadePointsCount
+                        : 0;
+                    for (var j = -s; j <= s; j++)
                     {
-                        var sideDistance = Vector2.DistanceSquared(sideEnd, sideStart);
-                        var direction = (sideEnd - sideStart).Normalized();
+                        var candidate = originalCandidate + j * Config.DiagonalEvadePointsStep * direction;
+                        var pathToPoint = ObjectManager.Player.GetPath(candidate.To3D()).To2DList();
 
-                        var s = (distanceToEvadePoint < 200 * 200 && sideDistance > 90 * 90)
-                            ? Config.DiagonalEvadePointsCount
-                            : 0;
-                        for (var j = -s; j <= s; j++)
+                        if (!isBlink)
                         {
-                            var candidate = originalCandidate + j * Config.DiagonalEvadePointsStep * direction;
-                            var pathToPoint = ObjectManager.Player.GetPath(candidate.To3D()).To2DList();
-
-                            if (!isBlink)
+                            if (Program.IsSafePath(pathToPoint, Config.EvadingFirstTimeOffset, speed, delay).IsSafe)
                             {
-                                if (Program.IsSafePath(pathToPoint, Config.EvadingFirstTimeOffset, speed, delay).IsSafe)
-                                {
-                                    goodCandidates.Add(candidate);
-                                }
-
-                                if (
-                                    Program.IsSafePath(pathToPoint, Config.EvadingSecondTimeOffset, speed, delay).IsSafe &&
-                                    j == 0)
-                                {
-                                    badCandidates.Add(candidate);
-                                }
+                                goodCandidates.Add(candidate);
                             }
-                            else
-                            {
-                                if (Program.IsSafeToBlink(
-                                    pathToPoint[pathToPoint.Count - 1], Config.EvadingFirstTimeOffset, delay))
-                                {
-                                    goodCandidates.Add(candidate);
-                                }
 
-                                if (Program.IsSafeToBlink(
-                                    pathToPoint[pathToPoint.Count - 1], Config.EvadingSecondTimeOffset, delay))
-                                {
-                                    badCandidates.Add(candidate);
-                                }
+                            if (
+                                Program.IsSafePath(pathToPoint, Config.EvadingSecondTimeOffset, speed, delay).IsSafe &&
+                                j == 0)
+                            {
+                                badCandidates.Add(candidate);
+                            }
+                        }
+                        else
+                        {
+                            if (Program.IsSafeToBlink(
+                                pathToPoint[pathToPoint.Count - 1], Config.EvadingFirstTimeOffset, delay))
+                            {
+                                goodCandidates.Add(candidate);
+                            }
+
+                            if (Program.IsSafeToBlink(
+                                pathToPoint[pathToPoint.Count - 1], Config.EvadingSecondTimeOffset, delay))
+                            {
+                                badCandidates.Add(candidate);
                             }
                         }
                     }
@@ -139,13 +129,7 @@ namespace Evade
                 {
                     case SpellValidTargets.AllyChampions:
 
-                        foreach (var ally in ObjectManager.Get<Obj_AI_Hero>())
-                        {
-                            if (ally.IsValidTarget(range, false) && !ally.IsMe && ally.IsAlly)
-                            {
-                                allTargets.Add(ally);
-                            }
-                        }
+                        allTargets.AddRange(ObjectManager.Get<Obj_AI_Hero>().Where(ally => ally.IsValidTarget(range, false) && !ally.IsMe && ally.IsAlly));
                         break;
 
 
@@ -157,24 +141,11 @@ namespace Evade
 
                     case SpellValidTargets.AllyWards:
 
-                        foreach (var gameObject in ObjectManager.Get<Obj_AI_Minion>())
-                        {
-                            if (gameObject.Name.ToLower().Contains("ward") && gameObject.IsValidTarget(range, false) &&
-                                gameObject.Team == ObjectManager.Player.Team)
-                            {
-                                allTargets.Add(gameObject);
-                            }
-                        }
+                        allTargets.AddRange(ObjectManager.Get<Obj_AI_Minion>().Where(gameObject => gameObject.Name.ToLower().Contains("ward") && gameObject.IsValidTarget(range, false) && gameObject.Team == ObjectManager.Player.Team));
                         break;
 
                     case SpellValidTargets.EnemyChampions:
-                        foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
-                        {
-                            if (enemy.IsValidTarget(range))
-                            {
-                                allTargets.Add(enemy);
-                            }
-                        }
+                        allTargets.AddRange(ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.IsValidTarget(range)));
 
                         break;
 
@@ -186,52 +157,45 @@ namespace Evade
 
                     case SpellValidTargets.EnemyWards:
 
-                        foreach (var gameObject in ObjectManager.Get<Obj_AI_Minion>())
-                        {
-                            if (gameObject.Name.ToLower().Contains("ward") && gameObject.IsValidTarget(range))
-                            {
-                                allTargets.Add(gameObject);
-                            }
-                        }
+                        allTargets.AddRange(ObjectManager.Get<Obj_AI_Minion>().Where(gameObject => gameObject.Name.ToLower().Contains("ward") && gameObject.IsValidTarget(range)));
                         break;
                 }
             }
 
-            foreach (var target in allTargets)
+            foreach (var target in allTargets.Where(target => DontCheckForSafety || Program.IsSafe(target.ServerPosition.To2D()).IsSafe))
             {
-                if (DontCheckForSafety || Program.IsSafe(target.ServerPosition.To2D()).IsSafe)
+                if (isBlink)
                 {
-                    if (isBlink)
+                    if (Utils.TickCount - Program.LastWardJumpAttempt < 250 ||
+                        Program.IsSafeToBlink(target.ServerPosition.To2D(), Config.EvadingFirstTimeOffset, delay))
                     {
-                        if (Utils.TickCount - Program.LastWardJumpAttempt < 250 ||
-                            Program.IsSafeToBlink(target.ServerPosition.To2D(), Config.EvadingFirstTimeOffset, delay))
-                        {
-                            goodTargets.Add(target);
-                        }
-
-                        if (Utils.TickCount - Program.LastWardJumpAttempt < 250 ||
-                            Program.IsSafeToBlink(target.ServerPosition.To2D(), Config.EvadingSecondTimeOffset, delay))
-                        {
-                            badTargets.Add(target);
-                        }
+                        goodTargets.Add(target);
                     }
-                    else
+
+                    if (Utils.TickCount - Program.LastWardJumpAttempt < 250 ||
+                        Program.IsSafeToBlink(target.ServerPosition.To2D(), Config.EvadingSecondTimeOffset, delay))
                     {
-                        var pathToTarget = new List<Vector2>();
-                        pathToTarget.Add(ObjectManager.Player.ServerPosition.To2D());
-                        pathToTarget.Add(target.ServerPosition.To2D());
+                        badTargets.Add(target);
+                    }
+                }
+                else
+                {
+                    var pathToTarget = new List<Vector2>
+                    {
+                        ObjectManager.Player.ServerPosition.To2D(),
+                        target.ServerPosition.To2D()
+                    };
 
-                        if (Utils.TickCount - Program.LastWardJumpAttempt < 250 ||
-                            Program.IsSafePath(pathToTarget, Config.EvadingFirstTimeOffset, speed, delay).IsSafe)
-                        {
-                            goodTargets.Add(target);
-                        }
+                    if (Utils.TickCount - Program.LastWardJumpAttempt < 250 ||
+                        Program.IsSafePath(pathToTarget, Config.EvadingFirstTimeOffset, speed, delay).IsSafe)
+                    {
+                        goodTargets.Add(target);
+                    }
 
-                        if (Utils.TickCount - Program.LastWardJumpAttempt < 250 ||
-                            Program.IsSafePath(pathToTarget, Config.EvadingSecondTimeOffset, speed, delay).IsSafe)
-                        {
-                            badTargets.Add(target);
-                        }
+                    if (Utils.TickCount - Program.LastWardJumpAttempt < 250 ||
+                        Program.IsSafePath(pathToTarget, Config.EvadingSecondTimeOffset, speed, delay).IsSafe)
+                    {
+                        badTargets.Add(target);
                     }
                 }
             }

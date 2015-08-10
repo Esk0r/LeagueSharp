@@ -16,6 +16,7 @@
 
 #region
 
+using System;
 using System.Drawing;
 using System.Linq;
 using LeagueSharp;
@@ -82,7 +83,7 @@ namespace Evade
                 {
                     foreach (var spell in SpellDatabase.Spells)
                     {
-                        if (spell.ChampionName.ToLower() == hero.ChampionName.ToLower())
+                        if (String.Equals(spell.ChampionName, hero.ChampionName, StringComparison.CurrentCultureIgnoreCase))
                         {
                             var subMenu = new Menu(spell.MenuItemName, spell.MenuItemName);
 
@@ -107,13 +108,10 @@ namespace Evade
 
             var shielding = new Menu("Ally shielding", "Shielding");
 
-            foreach (var ally in ObjectManager.Get<Obj_AI_Hero>())
+            foreach (var ally in ObjectManager.Get<Obj_AI_Hero>().Where(ally => ally.IsAlly && !ally.IsMe))
             {
-                if (ally.IsAlly && !ally.IsMe)
-                {
-                    shielding.AddItem(
-                        new MenuItem("shield" + ally.ChampionName, "Shield " + ally.ChampionName).SetValue(true));
-                }
+                shielding.AddItem(
+                    new MenuItem("shield" + ally.ChampionName, "Shield " + ally.ChampionName).SetValue(true));
             }
             Menu.AddSubMenu(shielding);
 

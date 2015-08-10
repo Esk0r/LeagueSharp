@@ -19,6 +19,8 @@
 using LeagueSharp;
 using LeagueSharp.Common;
 
+// ReSharper disable InconsistentNaming
+
 #endregion
 
 namespace Evade
@@ -76,34 +78,11 @@ namespace Evade
             _dangerLevel = dangerLevel;
         }
 
-        public bool IsTargetted
-        {
-            get { return ValidTargets != null; }
-        }
+        public bool IsTargetted => ValidTargets != null;
 
-        public int DangerLevel
-        {
-            get
-            {
-                if (Config.Menu.Item("DangerLevel" + Name) != null)
-                {
-                    return Config.Menu.Item("DangerLevel" + Name).GetValue<Slider>().Value;
-                }
-                return _dangerLevel;
-            }
-        }
+        public int DangerLevel => Config.Menu.Item("DangerLevel" + Name) != null ? Config.Menu.Item("DangerLevel" + Name).GetValue<Slider>().Value : _dangerLevel;
 
-        public bool Enabled
-        {
-            get
-            {
-                if (Config.Menu.Item("Enabled" + Name) != null)
-                {
-                    return Config.Menu.Item("Enabled" + Name).GetValue<bool>();
-                }
-                return true;
-            }
-        }
+        public bool Enabled => Config.Menu.Item("Enabled" + Name) == null || Config.Menu.Item("Enabled" + Name).GetValue<bool>();
 
         public bool IsReady()
         {
