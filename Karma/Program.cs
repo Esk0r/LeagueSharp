@@ -27,7 +27,10 @@ namespace Karma
 
         private static Menu _config;
 
-        private static bool MantraIsActive => ObjectManager.Player.HasBuff("KarmaMantra");
+        private static bool MantraIsActive
+        {
+            get { return ObjectManager.Player.HasBuff("KarmaMantra"); }
+        }
 
         // ReSharper disable once UnusedParameter.Local
         private static void Main(string[] args)

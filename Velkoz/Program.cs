@@ -195,8 +195,12 @@ namespace Velkoz
 
         private static void Obj_SpellMissile_OnCreate(GameObject sender, EventArgs args)
         {
-            var missile = sender as MissileClient;
-            if (missile?.SpellCaster != null && missile.SpellCaster.IsValid && missile.SpellCaster.IsMe &&
+            if (!(sender is MissileClient))
+            {
+                return; 
+            }
+            var missile = (MissileClient)sender;
+            if (missile.SpellCaster != null && missile.SpellCaster.IsValid && missile.SpellCaster.IsMe &&
                 missile.SData.Name == "VelkozQMissile")
             {
                 QMissile = missile;
@@ -343,7 +347,10 @@ namespace Velkoz
                     W.Cast(wPos.Position);
             }
 
-            if (!useE || !E.IsReady()) return;
+            if (!useE || !E.IsReady())
+            {
+                return;
+            }
             var ePos = E.GetCircularFarmLocation(rangedMinionsE);
             if (ePos.MinionsHit >= 3)
                 E.Cast(ePos.Position);
@@ -358,18 +365,16 @@ namespace Velkoz
             var mobs = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, W.Range, MinionTypes.All,
                 MinionTeam.Neutral, MinionOrderTypes.MaxHealth);
 
-            if (mobs.Count > 0)
-            {
-                var mob = mobs[0];
-                if (useQ && Q.Instance.Name == "VelkozQ" && Q.IsReady())
-                    Q.Cast(mob);
+            if (mobs.Count <= 0) return;
+            var mob = mobs[0];
+            if (useQ && Q.Instance.Name == "VelkozQ" && Q.IsReady())
+                Q.Cast(mob);
 
-                if (useW && W.IsReady())
-                    W.Cast(mob);
+            if (useW && W.IsReady())
+                W.Cast(mob);
 
-                if (useE && E.IsReady())
-                    E.Cast(mob);
-            }
+            if (useE && E.IsReady())
+                E.Cast(mob);
         }
 
         private static void Game_OnGameUpdate(EventArgs args)
@@ -378,15 +383,12 @@ namespace Velkoz
             if (Player.IsChannelingImportantSpell())
             {
                 var endPoint = new Vector2();
-                foreach (var obj in ObjectManager.Get<GameObject>())
+                foreach (var obj in ObjectManager.Get<GameObject>().Where(obj => obj != null && obj.IsValid && obj.Name.Contains("Velkoz_") &&
+                                                                                 obj.Name.Contains("_R_Beam_End")))
                 {
-                    if (obj != null && obj.IsValid && obj.Name.Contains("Velkoz_") &&
-                        obj.Name.Contains("_R_Beam_End"))
-                    {
-                        endPoint = Player.ServerPosition.To2D() +
-                                   R.Range * (obj.Position - Player.ServerPosition).To2D().Normalized();
-                        break;
-                    }
+                    endPoint = Player.ServerPosition.To2D() +
+                               R.Range * (obj.Position - Player.ServerPosition).To2D().Normalized();
+                    break;
                 }
 
                 if (!endPoint.IsValid()) return;
