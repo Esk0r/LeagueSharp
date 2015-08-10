@@ -230,7 +230,7 @@ namespace Evade
                     Range = 1100,
                     Radius = 110,
                     MissileSpeed = 850,
-                    FixedRange = false,
+                    FixedRange = true,
                     AddHitbox = true,
                     DangerValue = 3,
                     IsDangerous = true,
@@ -969,6 +969,29 @@ namespace Evade
                 });
 
             #endregion Ezreal
+
+            #region Fiora
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Fiora",
+                    SpellName = "FioraW",
+                    Slot = SpellSlot.W,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 700,
+                    Range = 800,
+                    Radius = 70,
+                    MissileSpeed = 3200,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "FioraWMissile",
+                    CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
+                });
+
+            #endregion Fiora
 
             #region Fizz
 
@@ -2357,7 +2380,7 @@ namespace Evade
                     SpellName = "JavelinToss",
                     Slot = SpellSlot.Q,
                     Type = SkillShotType.SkillshotMissileLine,
-                    Delay = 125,
+                    Delay = 250,
                     Range = 1500,
                     Radius = 40,
                     MissileSpeed = 1300,
