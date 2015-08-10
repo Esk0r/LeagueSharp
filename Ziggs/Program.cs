@@ -279,16 +279,13 @@ namespace Ziggs
                     {
                         var alliesarround = 0;
                         var n = 0;
-                        foreach (var ally in ObjectManager.Get<Obj_AI_Hero>())
+                        foreach (var ally in ObjectManager.Get<Obj_AI_Hero>().Where(ally => ally.IsAlly && !ally.IsMe && ally.IsValidTarget(float.MaxValue, false) &&
+                                                                                            ally.Distance(target) < 700))
                         {
-                            if (ally.IsAlly && !ally.IsMe && ally.IsValidTarget(float.MaxValue, false) &&
-                                ally.Distance(target) < 700)
+                            alliesarround++;
+                            if (Utils.TickCount - ally.LastCastedSpellT() < 1500)
                             {
-                                alliesarround++;
-                                if (Utils.TickCount - ally.LastCastedSpellT() < 1500)
-                                {
-                                    n++;
-                                }
+                                n++;
                             }
                         }
 
@@ -353,10 +350,7 @@ namespace Ziggs
             }
 
             //Peel from melees
-            if (!Config.Item("Peel").GetValue<bool>())
-            {
-                return;
-            }
+            if (!Config.Item("Peel").GetValue<bool>()) return;
             foreach (var pos in from enemy in ObjectManager.Get<Obj_AI_Hero>()
                 where
                     enemy.IsValidTarget() &&
@@ -400,52 +394,50 @@ namespace Ziggs
                 return;
             }
 
-            if (prediction.Hitchance >= HitChance.High)
+            if (prediction.Hitchance < HitChance.High) return;
+            if (ObjectManager.Player.ServerPosition.Distance(prediction.CastPosition) <= Q1.Range + Q1.Width)
             {
-                if (ObjectManager.Player.ServerPosition.Distance(prediction.CastPosition) <= Q1.Range + Q1.Width)
+                Vector3 p;
+                if (ObjectManager.Player.ServerPosition.Distance(prediction.CastPosition) > 300)
                 {
-                    Vector3 p;
-                    if (ObjectManager.Player.ServerPosition.Distance(prediction.CastPosition) > 300)
-                    {
-                        p = prediction.CastPosition -
-                            100 *
-                            (prediction.CastPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized()
-                                .To3D();
-                    }
-                    else
-                    {
-                        p = prediction.CastPosition;
-                    }
-
-                    Q1.Cast(p);
-                }
-                else if (ObjectManager.Player.ServerPosition.Distance(prediction.CastPosition) <=
-                         ((Q1.Range + Q2.Range) / 2))
-                {
-                    var p = ObjectManager.Player.ServerPosition.To2D()
-                        .Extend(prediction.CastPosition.To2D(), Q1.Range - 100);
-
-                    if (!CheckQCollision(target, prediction.UnitPosition, p.To3D()))
-                    {
-                        Q1.Cast(p.To3D());
-                    }
+                    p = prediction.CastPosition -
+                        100 *
+                        (prediction.CastPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized()
+                            .To3D();
                 }
                 else
                 {
-                    var p = ObjectManager.Player.ServerPosition.To2D() +
-                            Q1.Range *
-                            (prediction.CastPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized
-                                ();
+                    p = prediction.CastPosition;
+                }
 
-                    if (!CheckQCollision(target, prediction.UnitPosition, p.To3D()))
-                    {
-                        Q1.Cast(p.To3D());
-                    }
+                Q1.Cast(p);
+            }
+            else if (ObjectManager.Player.ServerPosition.Distance(prediction.CastPosition) <=
+                     ((Q1.Range + Q2.Range) / 2))
+            {
+                var p = ObjectManager.Player.ServerPosition.To2D()
+                    .Extend(prediction.CastPosition.To2D(), Q1.Range - 100);
+
+                if (!CheckQCollision(target, prediction.UnitPosition, p.To3D()))
+                {
+                    Q1.Cast(p.To3D());
+                }
+            }
+            else
+            {
+                var p = ObjectManager.Player.ServerPosition.To2D() +
+                        Q1.Range *
+                        (prediction.CastPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized
+                            ();
+
+                if (!CheckQCollision(target, prediction.UnitPosition, p.To3D()))
+                {
+                    Q1.Cast(p.To3D());
                 }
             }
         }
 
-        private static bool CheckQCollision(Obj_AI_Base target, Vector3 targetPosition, Vector3 castPosition)
+        private static bool CheckQCollision(GameObject target, Vector3 targetPosition, Vector3 castPosition)
         {
             var direction = (castPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized();
             var firstBouncePosition = castPosition.To2D();
@@ -554,10 +546,7 @@ namespace Ziggs
                 ObjectManager.Player.ServerPosition, Q1.Range, MinionTypes.All, MinionTeam.Neutral,
                 MinionOrderTypes.MaxHealth);
 
-            if (mobs.Count <= 0)
-            {
-                return;
-            }
+            if (mobs.Count <= 0) return;
             var mob = mobs[0];
 
             if (useQ && Q1.IsReady())
