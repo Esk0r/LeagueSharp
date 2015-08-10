@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LeagueSharp;
 using LeagueSharp.Common;
+
+// ReSharper disable InconsistentNaming
 
 namespace Lulu
 {
     class Program
     {
-        private static string ChampionName = "Lulu";
+        private const string ChampionName = "Lulu";
         private static Obj_AI_Hero Player;
         public static Menu Config;
         public static Orbwalking.Orbwalker Orbwalker;
@@ -22,9 +21,10 @@ namespace Lulu
 
         public static SpellSlot IgniteSlot;
 
-        public static int nextJungleScan = 0;
-        public static string[] jungleMobNames = new[] { "sru_blue", "sru_dragon", "sru_baron" };
+        public static int nextJungleScan;
+        public static string[] jungleMobNames = { "sru_blue", "sru_dragon", "sru_baron" };
 
+        // ReSharper disable once UnusedParameter.Local
         static void Main(string[] args)
         {
             if (Game.Mode == GameMode.Running)
@@ -103,27 +103,17 @@ namespace Lulu
                 }
             }
 
-            if (Config.SubMenu("R").Item("InterruptSpellsR").GetValue<bool>() && args.DangerLevel > Interrupter2.DangerLevel.Medium)
+            if (!Config.SubMenu("R").Item("InterruptSpellsR").GetValue<bool>() ||
+                args.DangerLevel <= Interrupter2.DangerLevel.Medium) return;
+            if (!R.IsReady()) return;
+            foreach (var ally in HeroManager.Allies.Where(ally => ally.IsValidTarget(R.Range, false)).Where(ally => ally.Distance(sender, true) < 300 * 300))
             {
-                if (R.IsReady())
-                {
-                    foreach (var ally in HeroManager.Allies)
-                    {
-                        if (ally.IsValidTarget(R.Range, false))
-                        {
-                            if (ally.Distance(sender, true) < 300 * 300)
-                            {
-                                R.Cast(ally);
-                            }
-                        }
-                    }
+                R.Cast(ally);
+            }
 
-                    if (Player.Distance(sender, true) < 300 * 300)
-                    {
-                        R.Cast(Player);
-                    }
-                }
-                return;
+            if (Player.Distance(sender, true) < 300 * 300)
+            {
+                R.Cast(Player);
             }
         }
 
@@ -164,25 +154,16 @@ namespace Lulu
                 }
             }
 
-            if (Config.SubMenu("R").Item("AutoR").GetValue<bool>())
+            if (!Config.SubMenu("R").Item("AutoR").GetValue<bool>()) return;
+            foreach (var ally in from ally in HeroManager.Allies where ally.IsValidTarget(R.Range, false) let c = ally.CountEnemiesInRange(300) where c >= 1 + 1 + 1 || ally.HealthPercent <= 15 && c >= 1 select ally)
             {
-                foreach (var ally in HeroManager.Allies)
-                {
-                    if (ally.IsValidTarget(R.Range, false))
-                    {
-                        var c = ally.CountEnemiesInRange(300);
-                        if (c >= 1 + 1 + 1 || ally.HealthPercent <= 15 && c >= 1)
-                        {
-                            R.Cast(ally);
-                        }
-                    }
-                }
+                R.Cast(ally);
+            }
 
-                var ec = Player.CountEnemiesInRange(300);
-                if (ec >= 1 + 1 + 1 || Player.HealthPercent <= 15 && ec >= 1)
-                {
-                    R.Cast(Player);
-                }    
+            var ec = Player.CountEnemiesInRange(300);
+            if (ec >= 1 + 1 + 1 || Player.HealthPercent <= 15 && ec >= 1)
+            {
+                R.Cast(Player);
             }
         }
 
@@ -201,15 +182,12 @@ namespace Lulu
 
             Obj_AI_Base luluTarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Magical);
 
-            var pixTargetEffectiveHealth = pixTarget != null ? pixTarget.Health * (1 + pixTarget.SpellBlock / 100f)  :
-            float.MaxValue;
-            var luluTargetEffectiveHealth = luluTarget != null ? luluTarget.Health * (1 + luluTarget.SpellBlock / 100f) :
-            float.MaxValue;
+            if (pixTarget == null || luluTarget == null) return;
+            var pixTargetEffectiveHealth = pixTarget.Health * (1 + pixTarget.SpellBlock / 100f);
+            var luluTargetEffectiveHealth = luluTarget.Health * (1 + luluTarget.SpellBlock / 100f);
 
             var target = pixTargetEffectiveHealth * 1.2f > luluTargetEffectiveHealth ? luluTarget : pixTarget;
-            var flag = false;
-            Spell.CastStates qCastState = Spell.CastStates.OutOfRange;
-            if (target != null)
+            var qCastState = Spell.CastStates.OutOfRange;
             {
                 var distanceToTargetFromPlayer = Player.Distance(target, true);
                 var distanceToTargetFromPix = PixManager.Pix != null ? PixManager.Pix.Distance(target, true) : float.MaxValue;
@@ -221,32 +199,28 @@ namespace Lulu
                 {
                     qCastState = Q.Cast(target);
                 }
-                flag = true;
             }
 
-            if (qCastState == Spell.CastStates.OutOfRange)   //or outofrange
+            if (qCastState != Spell.CastStates.OutOfRange) return;
+            if (useE && E.IsReady())
             {
-                if (useE && E.IsReady())
+                var eqTarget = TargetSelector.GetTarget(Q.Range + E.Range, TargetSelector.DamageType.Magical);
+                if (eqTarget != null)
                 {
-                    var eqTarget = TargetSelector.GetTarget(Q.Range + E.Range, TargetSelector.DamageType.Magical);
-                    if (eqTarget != null)
+                    var eTarget =
+                        ObjectManager.Get<Obj_AI_Base>()
+                            .Where(
+                                t =>
+                                    t.IsValidTarget(E.Range) && t.Distance(eqTarget, true) < Q.RangeSqr &&
+                                    !E.IsKillable(eqTarget)).MinOrDefault(t => t.Distance(eqTarget, true));
+                    if (eTarget != null)
                     {
-                        var eTarget =
-                            ObjectManager.Get<Obj_AI_Base>()
-                                .Where(t => t.IsValidTarget(E.Range) && t.Distance(eqTarget, true) < Q.RangeSqr && !E.IsKillable(eqTarget)).MinOrDefault(t => t.Distance(eqTarget, true));
-                        if (eTarget != null)
-                        {
-                            E.Cast(eTarget);
-                            return;
-                        }
+                        E.Cast(eTarget);
+                        return;
                     }
                 }
-
-                if (flag)
-                {
-                    qCastState = Q.Cast(target);
-                }
             }
+            Q.Cast(target);
         }                                                                
 
         static void Combo()
@@ -261,13 +235,11 @@ namespace Lulu
 
             var comboDamage = GetComboDamage(eTarget);
 
-            if (eTarget != null && Player.Distance(eTarget) < 600 && IgniteSlot != SpellSlot.Unknown &&
-                Player.Spellbook.CanUseSpell(IgniteSlot) == SpellState.Ready)
+            if (eTarget == null || !(Player.Distance(eTarget) < 600) || IgniteSlot == SpellSlot.Unknown ||
+                Player.Spellbook.CanUseSpell(IgniteSlot) != SpellState.Ready) return;
+            if ( comboDamage > eTarget.Health)
             {
-                if ( comboDamage > eTarget.Health)
-                {
-                    Player.Spellbook.CastSpell(IgniteSlot, eTarget);
-                }
+                Player.Spellbook.CastSpell(IgniteSlot, eTarget);
             }
         }
 
@@ -276,8 +248,7 @@ namespace Lulu
             var useQ = Config.Item("UseQFarm").GetValue<bool>();
             var useE = Config.Item("UseEFarm").GetValue<bool>();
 
-            var allMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range,
-                MinionTypes.All);
+            var allMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range);
 
             if (useQ)
             {
@@ -291,12 +262,10 @@ namespace Lulu
                 }    
             }
 
-            if (useE)
+            if (!useE) return;
+            foreach (var minion in allMinions.Where(m => m.CharData.BaseSkinName.EndsWith("MinionSiege") && E.IsKillable(m)))
             {
-                foreach (var minion in allMinions.Where(m => m.BaseSkinName.EndsWith("MinionSiege") && E.IsKillable(m)))
-                {
-                    E.Cast(minion);
-                }
+                E.Cast(minion);
             }
         }
 
@@ -309,18 +278,16 @@ namespace Lulu
             var mobs = MinionManager.GetMinions(Player.ServerPosition, E.Range, MinionTypes.All,
                 MinionTeam.Neutral, MinionOrderTypes.MaxHealth);
 
-            if (mobs.Count > 0)
+            if (mobs.Count <= 0) return;
+            var mob = mobs[0];
+            if (useQ && Q.IsReady())
             {
-                var mob = mobs[0];
-                if (useQ && Q.IsReady())
-                {
-                    Q.Cast(mob.Position);
-                }
-                else if (useE && E.IsReady())
-                {
-                    E.Cast(mob);
-                }
-            }    
+                Q.Cast(mob.Position);
+            }
+            else if (useE && E.IsReady())
+            {
+                E.Cast(mob);
+            }
         }
 
         static void JungleKS()
@@ -335,7 +302,7 @@ namespace Lulu
                     .Where(m => m.Team == GameObjectTeam.Neutral && m.IsValidTarget(E.Range))
                     .MaxOrDefault(m => m.MaxHealth);
 
-            if (mob != null && jungleMobNames.Contains(mob.BaseSkinName.ToLowerInvariant()) && E.IsKillable(mob))
+            if (mob != null && jungleMobNames.Contains(mob.CharData.BaseSkinName.ToLowerInvariant()) && E.IsKillable(mob))
             {
                 E.Cast(mob);
             }

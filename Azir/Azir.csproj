@@ -37,15 +37,15 @@
   <ItemGroup>
     <Reference Include="LeagueSharp, Version=1.0.0.25, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\LeagueSharp\\System\LeagueSharp.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\LeagueSharp\System\LeagueSharp.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Common, Version=1.0.0.28, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\LeagueSharp\\System\LeagueSharp.Common.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\LeagueSharp\System\LeagueSharp.Common.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\LeagueSharp\\System\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\LeagueSharp\System\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -28,6 +28,8 @@ using LeagueSharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
 
+// ReSharper disable InconsistentNaming
+
 #endregion
 
 namespace Velkoz
@@ -57,6 +59,7 @@ namespace Velkoz
         public static Menu Config;
 
         private static Obj_AI_Hero Player;
+        // ReSharper disable once UnusedParameter.Local
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -66,7 +69,7 @@ namespace Velkoz
         {
             Player = ObjectManager.Player;
 
-            if (Player.BaseSkinName != ChampionName) return;
+            if (Player.CharData.BaseSkinName != ChampionName) return;
 
             //Create the spells
             Q = new Spell(SpellSlot.Q, 1200);
@@ -161,7 +164,7 @@ namespace Velkoz
             foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != Player.Team))
                 Config.SubMenu("Misc")
                     .SubMenu("DontUlt")
-                    .AddItem(new MenuItem("DontUlt" + enemy.BaseSkinName, enemy.BaseSkinName).SetValue(false));
+                    .AddItem(new MenuItem("DontUlt" + enemy.CharData.BaseSkinName, enemy.CharData.BaseSkinName).SetValue(false));
 
             //Drawings menu:
             Config.AddSubMenu(new Menu("Drawings", "Drawings"));
@@ -192,9 +195,8 @@ namespace Velkoz
 
         private static void Obj_SpellMissile_OnCreate(GameObject sender, EventArgs args)
         {
-            if (!(sender is MissileClient)) return;
-            var missile = (MissileClient)sender;
-            if (missile.SpellCaster != null && missile.SpellCaster.IsValid && missile.SpellCaster.IsMe &&
+            var missile = sender as MissileClient;
+            if (missile?.SpellCaster != null && missile.SpellCaster.IsValid && missile.SpellCaster.IsMe &&
                 missile.SData.Name == "VelkozQMissile")
             {
                 QMissile = missile;
@@ -247,6 +249,7 @@ namespace Velkoz
             return (float)damage;
         }
 
+        // ReSharper disable once FunctionComplexityOverflow
         private static void UseSpells(bool useQ, bool useW, bool useE, bool useR, bool useIgnite)
         {
             var qTarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Magical);
@@ -283,18 +286,16 @@ namespace Velkoz
                 {
                     for (var i = -1; i < 1; i = i + 2)
                     {
-                        var alpha = 28 * (float)Math.PI / 180;
+                        const float alpha = 28 * (float)Math.PI / 180;
                         var cp = ObjectManager.Player.ServerPosition.To2D() +
                                  (predictedPos.CastPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Rotated
                                      (i * alpha);
-                        if (
-                            Q.GetCollision(ObjectManager.Player.ServerPosition.To2D(), new List<Vector2> { cp }).Count ==
-                            0 &&
-                            QSplit.GetCollision(cp, new List<Vector2> { predictedPos.CastPosition.To2D() }).Count == 0)
-                        {
-                            Q.Cast(cp);
-                            return;
-                        }
+                        if (Q.GetCollision(ObjectManager.Player.ServerPosition.To2D(), new List<Vector2> {cp}).Count !=
+                            0 ||
+                            QSplit.GetCollision(cp, new List<Vector2> {predictedPos.CastPosition.To2D()}).Count != 0)
+                            continue;
+                        Q.Cast(cp);
+                        return;
                     }
                 }
             }
@@ -323,7 +324,7 @@ namespace Velkoz
 
             var rangedMinionsE = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, E.Range + E.Width,
                 MinionTypes.Ranged);
-            var allMinionsW = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, W.Range, MinionTypes.All);
+            var allMinionsW = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, W.Range);
 
             var useQ = Config.Item("UseQFarm").GetValue<bool>();
             var useW = Config.Item("UseWFarm").GetValue<bool>();
@@ -342,12 +343,10 @@ namespace Velkoz
                     W.Cast(wPos.Position);
             }
 
-            if (useE && E.IsReady())
-            {
-                var ePos = E.GetCircularFarmLocation(rangedMinionsE);
-                if (ePos.MinionsHit >= 3)
-                    E.Cast(ePos.Position);
-            }
+            if (!useE || !E.IsReady()) return;
+            var ePos = E.GetCircularFarmLocation(rangedMinionsE);
+            if (ePos.MinionsHit >= 3)
+                E.Cast(ePos.Position);
         }
 
         private static void JungleFarm()
@@ -390,24 +389,17 @@ namespace Velkoz
                     }
                 }
 
-                if (endPoint.IsValid())
-                {
-                    var targets = new List<Obj_AI_Base>();
+                if (!endPoint.IsValid()) return;
+                var targets = ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsValidTarget(R.Range)).Where(enemy => enemy.ServerPosition.To2D().Distance(Player.ServerPosition.To2D(), endPoint, true) < 400).Cast<Obj_AI_Base>().ToList();
 
-                    foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsValidTarget(R.Range)))
-                    {
-                        if (enemy.ServerPosition.To2D().Distance(Player.ServerPosition.To2D(), endPoint, true) < 400)
-                            targets.Add(enemy);
-                    }
-                    if (targets.Count > 0)
-                    {
-                        var target = targets.OrderBy(t => t.Health / Q.GetDamage(t)).ToList()[0];
-                        ObjectManager.Player.Spellbook.UpdateChargedSpell(SpellSlot.R, target.ServerPosition, false, false);
-                    }
-                    else
-                    {
-                        ObjectManager.Player.Spellbook.UpdateChargedSpell(SpellSlot.R, Game.CursorPos, false, false);
-                    }
+                if (targets.Count > 0)
+                {
+                    var target = targets.OrderBy(t => t.Health / Q.GetDamage(t)).ToList()[0];
+                    ObjectManager.Player.Spellbook.UpdateChargedSpell(SpellSlot.R, target.ServerPosition, false, false);
+                }
+                else
+                {
+                    ObjectManager.Player.Spellbook.UpdateChargedSpell(SpellSlot.R, Game.CursorPos, false, false);
                 }
 
                 return;
@@ -423,39 +415,21 @@ namespace Velkoz
                 var lineSegment1End = qMissilePosition + perpendicular * QSplit.Range;
                 var lineSegment2End = qMissilePosition - perpendicular * QSplit.Range;
 
-                var potentialTargets = new List<Obj_AI_Base>();
-                foreach (
-                    var enemy in
-                        ObjectManager.Get<Obj_AI_Hero>()
-                            .Where(
-                                h =>
-                                    h.IsValidTarget() &&
-                                    h.ServerPosition.To2D()
-                                        .Distance(qMissilePosition, QMissile.EndPosition.To2D(), true) < 700))
-                {
-                    potentialTargets.Add(enemy);
-                }
+                var potentialTargets = ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsValidTarget() && h.ServerPosition.To2D().Distance(qMissilePosition, QMissile.EndPosition.To2D(), true) < 700).Cast<Obj_AI_Base>().ToList();
 
                 QSplit.UpdateSourcePosition(qMissilePosition.To3D(), qMissilePosition.To3D());
 
-                foreach (
-                    var enemy in
-                        ObjectManager.Get<Obj_AI_Hero>()
-                            .Where(
-                                h =>
-                                    h.IsValidTarget() &&
-                                    (potentialTargets.Count == 0 ||
-                                     h.NetworkId == potentialTargets.OrderBy(t => t.Health / Q.GetDamage(t)).ToList()[0].NetworkId) &&
-                                    (h.ServerPosition.To2D().Distance(qMissilePosition, QMissile.EndPosition.To2D(), true) > Q.Width + h.BoundingRadius)))
+                // ReSharper disable once UnusedVariable
+                foreach (var enemy in from enemy in ObjectManager.Get<Obj_AI_Hero>()
+                    .Where(
+                        h =>
+                            h.IsValidTarget() &&
+                            (potentialTargets.Count == 0 ||
+                             h.NetworkId == potentialTargets.OrderBy(t => t.Health / Q.GetDamage(t)).ToList()[0].NetworkId) &&
+                            (h.ServerPosition.To2D().Distance(qMissilePosition, QMissile.EndPosition.To2D(), true) > Q.Width + h.BoundingRadius)) let prediction = QSplit.GetPrediction(enemy) let d1 = prediction.UnitPosition.To2D().Distance(qMissilePosition, lineSegment1End, true) let d2 = prediction.UnitPosition.To2D().Distance(qMissilePosition, lineSegment2End, true) where prediction.Hitchance >= HitChance.High &&
+                                                                                                                                                                                                                                                                                                                                                                                         (d1 < QSplit.Width + enemy.BoundingRadius || d2 < QSplit.Width + enemy.BoundingRadius) select enemy)
                 {
-                    var prediction = QSplit.GetPrediction(enemy);
-                    var d1 = prediction.UnitPosition.To2D().Distance(qMissilePosition, lineSegment1End, true);
-                    var d2 = prediction.UnitPosition.To2D().Distance(qMissilePosition, lineSegment2End, true);
-                    if (prediction.Hitchance >= HitChance.High &&
-                        (d1 < QSplit.Width + enemy.BoundingRadius || d2 < QSplit.Width + enemy.BoundingRadius))
-                    {
-                        Q.Cast();
-                    }
+                    Q.Cast();
                 }
             }
 

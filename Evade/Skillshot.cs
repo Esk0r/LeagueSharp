@@ -25,6 +25,8 @@ using SharpDX;
 using Color = System.Drawing.Color;
 using GamePath = System.Collections.Generic.List<SharpDX.Vector2>;
 
+// ReSharper disable InconsistentNaming
+
 #endregion
 
 namespace Evade
@@ -143,10 +145,7 @@ namespace Evade
             UpdatePolygon(); //Create the polygon.
         }
 
-        public Vector2 Perpendicular
-        {
-            get { return Direction.Perpendicular(); }
-        }
+        public Vector2 Perpendicular => Direction.Perpendicular();
 
         public Vector2 CollisionEnd
         {
@@ -168,10 +167,7 @@ namespace Evade
             }
         }
 
-        public bool IsGlobal
-        {
-            get { return SpellData.RawRange == 20000; }
-        }
+        public bool IsGlobal => SpellData.RawRange == 20000;
 
         public Geometry.Polygon EvadePolygon { get; set; }
         public Obj_AI_Base Unit { get; set; }
@@ -252,33 +248,31 @@ namespace Evade
                 }
             }
 
-            if (SpellData.SpellName == "SionR")
+            if (SpellData.SpellName != "SionR") return;
+            if (_helperTick == 0)
             {
-                if (_helperTick == 0)
-                {
-                    _helperTick = StartTick;
-                }
+                _helperTick = StartTick;
+            }
 
-                SpellData.MissileSpeed = (int)Unit.MoveSpeed;
-                if (Unit.IsValidTarget(float.MaxValue, false))
-                {
-                    if (!Unit.HasBuff("SionR") && Utils.TickCount - _helperTick > 600)
-                    {
-                        StartTick = 0;
-                    }
-                    else
-                    {
-                        StartTick = Utils.TickCount - SpellData.Delay;
-                        Start = Unit.ServerPosition.To2D();
-                        End = Unit.ServerPosition.To2D() + 1000 * Unit.Direction.To2D().Perpendicular();
-                        Direction = (End - Start).Normalized();
-                        UpdatePolygon();
-                    }
-                }
-                else
+            SpellData.MissileSpeed = (int)Unit.MoveSpeed;
+            if (Unit.IsValidTarget(float.MaxValue, false))
+            {
+                if (!Unit.HasBuff("SionR") && Utils.TickCount - _helperTick > 600)
                 {
                     StartTick = 0;
                 }
+                else
+                {
+                    StartTick = Utils.TickCount - SpellData.Delay;
+                    Start = Unit.ServerPosition.To2D();
+                    End = Unit.ServerPosition.To2D() + 1000 * Unit.Direction.To2D().Perpendicular();
+                    Direction = (End - Start).Normalized();
+                    UpdatePolygon();
+                }
+            }
+            else
+            {
+                StartTick = 0;
             }
         }
 
@@ -342,9 +336,7 @@ namespace Evade
         public Vector2 GetMissilePosition(int time)
         {
             var t = Math.Max(0, Utils.TickCount + time - StartTick - SpellData.Delay);
-
-
-            var x = 0;
+            int x;
 
             //Missile with acceleration = 0.
             if (SpellData.MissileAccel == 0)
@@ -399,12 +391,7 @@ namespace Evade
                 var missilePositionAfterBlink = GetMissilePosition(delay + timeOffset);
                 var myPositionProjection = ObjectManager.Player.ServerPosition.To2D().ProjectOn(Start, End);
 
-                if (missilePositionAfterBlink.Distance(End) < myPositionProjection.SegmentPoint.Distance(End))
-                {
-                    return false;
-                }
-
-                return true;
+                return !(missilePositionAfterBlink.Distance(End) < myPositionProjection.SegmentPoint.Distance(End));
             }
 
             //skillshots without missile
@@ -429,10 +416,14 @@ namespace Evade
 
             speed = (speed == -1) ? (int) ObjectManager.Player.MoveSpeed : speed;
 
+            /*
             if (unit == null)
             {
+            
                 unit = ObjectManager.Player;
+            
             }
+            */
 
             var allIntersections = new List<FoundIntersection>();
             for (var i = 0; i <= path.Count - 2; i++)
@@ -501,12 +492,11 @@ namespace Evade
                         var missilePosOnExit = GetMissilePosition(exitIntersection.Time + timeOffset);
 
                         //Missile didnt pass.
-                        if (missilePosOnEnter.Distance(End) + 50 > enterIntersectionProjection.Distance(End))
+                        if (!(missilePosOnEnter.Distance(End) + 50 > enterIntersectionProjection.Distance(End)))
+                            continue;
+                        if (missilePosOnExit.Distance(End) <= exitIntersectionProjection.Distance(End))
                         {
-                            if (missilePosOnExit.Distance(End) <= exitIntersectionProjection.Distance(End))
-                            {
-                                return new SafePathResult(false, allIntersections[0]);
-                            }
+                            return new SafePathResult(false, allIntersections[0]);
                         }
                     }
 
@@ -591,26 +581,14 @@ namespace Evade
                 //TODO: Check for minion collision etc.. in the future.
                 var projection = unit.ServerPosition.To2D().ProjectOn(missilePos, missilePosAfterT);
 
-                if (projection.IsOnSegment && projection.SegmentPoint.Distance(unit.ServerPosition) < SpellData.Radius)
-                {
-                    return true;
-                }
-
-                return false;
+                return projection.IsOnSegment && projection.SegmentPoint.Distance(unit.ServerPosition) < SpellData.Radius;
             }
 
-            if (!IsSafe(unit.ServerPosition.To2D()))
-            {
-                var timeToExplode = SpellData.ExtraDuration + SpellData.Delay +
-                                    (int) ((1000 * Start.Distance(End)) / SpellData.MissileSpeed) -
-                                    (Utils.TickCount - StartTick);
-                if (timeToExplode <= time)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            if (IsSafe(unit.ServerPosition.To2D())) return false;
+            var timeToExplode = SpellData.ExtraDuration + SpellData.Delay +
+                                (int) ((1000 * Start.Distance(End)) / SpellData.MissileSpeed) -
+                                (Utils.TickCount - StartTick);
+            return timeToExplode <= time;
         }
 
         public void Draw(Color color, Color missileColor, int width = 1)
@@ -621,13 +599,11 @@ namespace Evade
             }
             DrawingPolygon.Draw(color, width);
 
-            if (SpellData.Type == SkillShotType.SkillshotMissileLine)
-            {
-                var position = GetMissilePosition(0);
-                Utils.DrawLineInWorld(
-                    (position + SpellData.Radius * Direction.Perpendicular()).To3D(),
-                    (position - SpellData.Radius * Direction.Perpendicular()).To3D(), 2, missileColor);
-            }
+            if (SpellData.Type != SkillShotType.SkillshotMissileLine) return;
+            var position = GetMissilePosition(0);
+            Utils.DrawLineInWorld(
+                (position + SpellData.Radius * Direction.Perpendicular()).To3D(),
+                (position - SpellData.Radius * Direction.Perpendicular()).To3D(), 2, missileColor);
         }
     }
 }

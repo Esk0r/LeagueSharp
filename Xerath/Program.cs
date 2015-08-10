@@ -3,11 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.AccessControl;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
+
+// ReSharper disable InconsistentNaming
 
 #endregion
 
@@ -33,8 +34,9 @@ namespace Xerath
 
         private static Obj_AI_Hero Player;
 
+        // ReSharper disable once NotAccessedField.Local
         private static Vector2 PingLocation;
-        private static int LastPingT = 0;
+        private static int LastPingT;
         private static bool AttacksEnabled
         {
             get
@@ -52,20 +54,11 @@ namespace Xerath
             }
         }
 
-        public static bool IsPassiveUp
-        {
-            get { return ObjectManager.Player.HasBuff("xerathascended2onhit", true); }
-        }
+        public static bool IsPassiveUp => ObjectManager.Player.HasBuff("xerathascended2onhit");
 
-        public static bool IsCastingR
-        {
-            get
-            {
-                return ObjectManager.Player.HasBuff("XerathLocusOfPower2", true) ||
-                       (ObjectManager.Player.LastCastedSpellName() == "XerathLocusOfPower2" &&
-                        Utils.TickCount - ObjectManager.Player.LastCastedSpellT() < 500);
-            }
-        }
+        public static bool IsCastingR => ObjectManager.Player.HasBuff("XerathLocusOfPower2") ||
+                                         (ObjectManager.Player.LastCastedSpellName() == "XerathLocusOfPower2" &&
+                                          Utils.TickCount - ObjectManager.Player.LastCastedSpellT() < 500);
 
         public static class RCharge
         {
@@ -75,6 +68,7 @@ namespace Xerath
             public static bool TapKeyPressed;
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -325,7 +319,7 @@ namespace Xerath
             {
                 if (Q.IsCharging)
                 {
-                    Q.Cast(qTarget, false, false);
+                    Q.Cast(qTarget);
                 }
                 else if (!useW || !W.IsReady() || Player.Distance(qTarget) > W.Range)
                 {
@@ -342,7 +336,7 @@ namespace Xerath
             Obj_AI_Hero bestTarget = null;
             var bestRatio = 0f;
 
-            if (TargetSelector.SelectedTarget.IsValidTarget() && !TargetSelector.IsInvulnerable(TargetSelector.SelectedTarget, TargetSelector.DamageType.Magical, true) &&
+            if (TargetSelector.SelectedTarget.IsValidTarget() && !TargetSelector.IsInvulnerable(TargetSelector.SelectedTarget, TargetSelector.DamageType.Magical) &&
                 (Game.CursorPos.Distance(TargetSelector.SelectedTarget.ServerPosition) < distance && ObjectManager.Player.Distance(TargetSelector.SelectedTarget) < R.Range))
             {
                 return TargetSelector.SelectedTarget;
@@ -350,7 +344,7 @@ namespace Xerath
 
             foreach (var hero in ObjectManager.Get<Obj_AI_Hero>())
             {
-                if (!hero.IsValidTarget(R.Range) || TargetSelector.IsInvulnerable(hero, TargetSelector.DamageType.Magical, true) || Game.CursorPos.Distance(hero.ServerPosition) > distance)
+                if (!hero.IsValidTarget(R.Range) || TargetSelector.IsInvulnerable(hero, TargetSelector.DamageType.Magical) || Game.CursorPos.Distance(hero.ServerPosition) > distance)
                 {
                     continue;
                 }
@@ -406,8 +400,7 @@ namespace Xerath
 
         private static void Farm(bool laneClear)
         {
-            var allMinionsQ = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.ChargedMaxRange,
-                MinionTypes.All);
+            var allMinionsQ = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.ChargedMaxRange);
             var rangedMinionsW = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, W.Range + W.Width + 30,
                 MinionTypes.Ranged);
 

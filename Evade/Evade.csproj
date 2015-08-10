@@ -37,13 +37,13 @@
       <HintPath>.\References\clipper_library.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp">
-      <HintPath>C:\Program Files (x86)\LeagueSharp\Assemblies\System\LeagueSharp.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\LeagueSharp\System\LeagueSharp.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Common">
-      <HintPath>C:\Program Files (x86)\LeagueSharp\Assemblies\System\LeagueSharp.Common.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\LeagueSharp\System\LeagueSharp.Common.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>C:\Program Files (x86)\LeagueSharp\Assemblies\System\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\LeagueSharp\System\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

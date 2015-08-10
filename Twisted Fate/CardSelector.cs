@@ -28,7 +28,7 @@ namespace TwistedFate
     public static class CardSelector
     {
         public static Cards Select;
-        public static int LastWSent = 0;
+        public static int LastWSent;
         public static int LastSendWSent = 0;
 
 
@@ -47,15 +47,12 @@ namespace TwistedFate
 
         public static void StartSelecting(Cards card)
         {
-            if (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name == "PickACard" && Status == SelectStatus.Ready)
-            {
-                Select = card;
-                if (Utils.TickCount - LastWSent > 170 + Game.Ping / 2)
-                {
-                    ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W, ObjectManager.Player);
-                    LastWSent = Utils.TickCount;
-                }
-            }
+            if (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name != "PickACard" || Status != SelectStatus.Ready)
+                return;
+            Select = card;
+            if (Utils.TickCount - LastWSent <= 170 + Game.Ping/2) return;
+            ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W, ObjectManager.Player);
+            LastWSent = Utils.TickCount;
         }
 
         private static void Game_OnGameUpdate(EventArgs args)
