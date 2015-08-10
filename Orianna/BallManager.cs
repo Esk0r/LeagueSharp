@@ -20,21 +20,19 @@ namespace Orianna
 
         static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (sender.IsMe)
+            if (!sender.IsMe) return;
+            switch (args.SData.Name)
             {
-                switch (args.SData.Name)
-                {
-                    case "OrianaIzunaCommand":
-                        Utility.DelayAction.Add((int)(BallPosition.Distance(args.End) / 1.2 - 70 - Game.Ping), () => BallPosition = args.End);
-                        BallPosition = Vector3.Zero;
-                        _sTick = Utils.GameTimeTickCount;
-                        break;
-
-                    case "OrianaRedactCommand":
-                        BallPosition = Vector3.Zero;
-                        _sTick = Utils.GameTimeTickCount;
+                case "OrianaIzunaCommand":
+                    Utility.DelayAction.Add((int)(BallPosition.Distance(args.End) / 1.2 - 70 - Game.Ping), () => BallPosition = args.End);
+                    BallPosition = Vector3.Zero;
+                    _sTick = Utils.GameTimeTickCount;
                     break;
-                }
+
+                case "OrianaRedactCommand":
+                    BallPosition = Vector3.Zero;
+                    _sTick = Utils.GameTimeTickCount;
+                    break;
             }
         }
 
@@ -45,12 +43,9 @@ namespace Orianna
                 BallPosition = ObjectManager.Player.Position;
             }
 
-            foreach (var ally in HeroManager.Allies)
+            foreach (var ally in HeroManager.Allies.Where(ally => ally.HasBuff("OrianaGhost")))
             {
-                if (ally.HasBuff("OrianaGhost"))
-                {
-                    BallPosition = ally.Position;
-                }
+                BallPosition = ally.Position;
             }
         }
     }

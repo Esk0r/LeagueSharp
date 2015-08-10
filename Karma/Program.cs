@@ -15,6 +15,7 @@ namespace Karma
     {
         private const string ChampionName = "Karma";
 
+        // ReSharper disable once NotAccessedField.Local
         private static Orbwalking.Orbwalker _orbwalker;
 
         private static readonly List<Spell> SpellList = new List<Spell>();
@@ -31,6 +32,7 @@ namespace Karma
             get { return ObjectManager.Player.HasBuff("KarmaMantra"); }
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -110,24 +112,21 @@ namespace Karma
 
         static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
         {
-            if (sender.IsValidTarget(1000f) && args.DangerLevel == Interrupter2.DangerLevel.High && _e.IsReady())
-            {
-                _r.Cast();
+            if (!sender.IsValidTarget(1000f) || args.DangerLevel != Interrupter2.DangerLevel.High || !_e.IsReady())
+                return;
+            _r.Cast();
 
-                if (!_r.IsReady())
-                {
-                    _e.Cast(ObjectManager.Player);
-                }
+            if (!_r.IsReady())
+            {
+                _e.Cast(ObjectManager.Player);
             }
         }
 
         private static void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
         {
-            if (gapcloser.Sender.IsValidTarget(300f))
-            {
-                _e.Cast(ObjectManager.Player);
-                _q.Cast(gapcloser.Sender);
-            }
+            if (!gapcloser.Sender.IsValidTarget(300f)) return;
+            _e.Cast(ObjectManager.Player);
+            _q.Cast(gapcloser.Sender);
         }
 
         private static void Drawing_OnDraw(EventArgs args)
@@ -135,17 +134,14 @@ namespace Karma
             var menuItem = _config.Item("WRootRange").GetValue<Circle>();
             if (menuItem.Active)
             {
-                foreach (var enemy in
-                    ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsValidTarget() && h.HasBuff("KarmaSpiritBind")))
+                foreach (var distance in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsValidTarget() && h.HasBuff("KarmaSpiritBind")).Select(enemy => (1 - Math.Min(Math.Max(850 - ObjectManager.Player.Distance(enemy), 0), 450) / 450)))
                 {
-                    var distance = (1 - Math.Min(Math.Max(850 - ObjectManager.Player.Distance(enemy), 0), 450) / 450);
-                
                     Render.Circle.DrawCircle(
                         ObjectManager.Player.Position, 850, Color.FromArgb((int)(50 * distance), menuItem.Color), -420,
                         true);
-                        Render.Circle.DrawCircle(
+                    Render.Circle.DrawCircle(
                         ObjectManager.Player.Position, 850, Color.FromArgb((int)(255 * distance), menuItem.Color), 10);
-                
+
                     break;
                 }
             }
@@ -191,7 +187,7 @@ namespace Karma
                 return;
             }
 
-            
+
             var qTarget = TargetSelector.GetTarget(_q.Range, TargetSelector.DamageType.Magical);
             var wTarget = TargetSelector.GetTarget(_w.Range, TargetSelector.DamageType.Magical);
 

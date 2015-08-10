@@ -1306,7 +1306,7 @@ namespace Evade
                     MissileSpellName = "GravesClusterShotAttack",
                     CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
                     MultipleNumber = 3,
-                    MultipleAngle = 15 * (float) Math.PI / 180,
+                    MultipleAngle = 15 * (float)Math.PI / 180,
                 });
 
             Spells.Add(
@@ -1743,7 +1743,7 @@ namespace Evade
                     MissileSpellName = "KhazixWMissile",
                     CanBeRemoved = true,
                     MultipleNumber = 3,
-                    MultipleAngle = 22f * (float) Math.PI / 180,
+                    MultipleAngle = 22f * (float)Math.PI / 180,
                     CollisionObjects =
                         new[]
                         { CollisionObjectTypes.Champions, CollisionObjectTypes.Minion, CollisionObjectTypes.YasuoWall },
@@ -2367,7 +2367,7 @@ namespace Evade
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "NocturneDuskbringer",
-                    CollisionObjects = new[] {CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] { CollisionObjectTypes.YasuoWall }
                 });
             #endregion Nocturne
 
@@ -2572,7 +2572,7 @@ namespace Evade
                 });
 
             #endregion Rengar
-            
+
             #region RekSai
 
             Spells.Add(
@@ -2616,7 +2616,7 @@ namespace Evade
                     DangerValue = 5,
                     IsDangerous = true,
                     MultipleNumber = 3,
-                    MultipleAngle = 15 * (float) Math.PI / 180,
+                    MultipleAngle = 15 * (float)Math.PI / 180,
                     MissileSpellName = "RivenLightsaberMissile",
                     ExtraMissileNames = new[] { "RivenLightsaberMissileSide" }
                 });
@@ -3104,7 +3104,7 @@ namespace Evade
                     DangerValue = 2,
                     IsDangerous = true,
                     MultipleNumber = 3,
-                    MultipleAngle = 20 * (float) Math.PI / 180,
+                    MultipleAngle = 20 * (float)Math.PI / 180,
                     MissileSpellName = "talonrakemissileone",
                 });
 
@@ -3124,14 +3124,14 @@ namespace Evade
                     DangerValue = 2,
                     IsDangerous = true,
                     MultipleNumber = 3,
-                    MultipleAngle = 20 * (float) Math.PI / 180,
+                    MultipleAngle = 20 * (float)Math.PI / 180,
                     MissileSpellName = "talonrakemissiletwo",
                 });
 
             #endregion Riven
 
             #region Tahm Kench
-            
+
             Spells.Add(
                 new SpellData
                 {
@@ -3151,7 +3151,7 @@ namespace Evade
                     CanBeRemoved = true,
                     CollisionObjects =
                         new[] { CollisionObjectTypes.Minion, CollisionObjectTypes.Champions, CollisionObjectTypes.YasuoWall },
-                });         
+                });
 
             #endregion Tahm Kench
 
@@ -3263,7 +3263,7 @@ namespace Evade
                     IsDangerous = false,
                     MissileSpellName = "SealFateMissile",
                     MultipleNumber = 3,
-                    MultipleAngle = 28 * (float) Math.PI / 180,
+                    MultipleAngle = 28 * (float)Math.PI / 180,
                     CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
                 });
 

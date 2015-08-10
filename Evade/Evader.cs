@@ -38,7 +38,7 @@ namespace Evade
             bool isBlink = false,
             bool onlyGood = false)
         {
-            speed = speed == -1 ? (int) ObjectManager.Player.MoveSpeed : speed;
+            speed = speed == -1 ? (int)ObjectManager.Player.MoveSpeed : speed;
 
             var goodCandidates = new List<Vector2>();
             var badCandidates = new List<Vector2>();

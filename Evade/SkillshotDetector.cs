@@ -97,10 +97,10 @@ namespace Evade
             }
 
 
-        /*Console.WriteLine(
-                Utils.TickCount + " Projectile Created: " + missile.SData.Name + " distance: " +
-                missile.SData.CastRange + "Radius: " +
-                missile.SData.LineWidth + " Speed: " + missile.SData.MissileSpeed);  */
+            /*Console.WriteLine(
+                    Utils.TickCount + " Projectile Created: " + missile.SData.Name + " distance: " +
+                    missile.SData.CastRange + "Radius: " +
+                    missile.SData.LineWidth + " Speed: " + missile.SData.MissileSpeed);  */
 
 
             var spellData = SpellDatabase.GetByMissileName(missile.SData.Name);

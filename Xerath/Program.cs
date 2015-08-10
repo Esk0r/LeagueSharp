@@ -3,11 +3,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.AccessControl;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
+
+// ReSharper disable NotAccessedField.Local
+// ReSharper disable InconsistentNaming
 
 #endregion
 
@@ -34,7 +36,7 @@ namespace Xerath
         private static Obj_AI_Hero Player;
 
         private static Vector2 PingLocation;
-        private static int LastPingT = 0;
+        private static int LastPingT;
         private static bool AttacksEnabled
         {
             get
@@ -54,14 +56,14 @@ namespace Xerath
 
         public static bool IsPassiveUp
         {
-            get { return ObjectManager.Player.HasBuff("xerathascended2onhit", true); }
+            get { return ObjectManager.Player.HasBuff("xerathascended2onhit"); }
         }
 
         public static bool IsCastingR
         {
             get
             {
-                return ObjectManager.Player.HasBuff("XerathLocusOfPower2", true) ||
+                return ObjectManager.Player.HasBuff("XerathLocusOfPower2") ||
                        (ObjectManager.Player.LastCastedSpellName() == "XerathLocusOfPower2" &&
                         Utils.TickCount - ObjectManager.Player.LastCastedSpellT() < 500);
             }
@@ -75,6 +77,7 @@ namespace Xerath
             public static bool TapKeyPressed;
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -131,11 +134,11 @@ namespace Xerath
             //Misc
             Config.AddSubMenu(new Menu("R", "R"));
             Config.SubMenu("R").AddItem(new MenuItem("EnableRUsage", "Auto use charges").SetValue(true));
-            Config.SubMenu("R").AddItem(new MenuItem("rMode", "Mode").SetValue(new StringList(new[] { "Normal", "Custom delays", "OnTap"})));
+            Config.SubMenu("R").AddItem(new MenuItem("rMode", "Mode").SetValue(new StringList(new[] { "Normal", "Custom delays", "OnTap" })));
             Config.SubMenu("R").AddItem(new MenuItem("rModeKey", "OnTap key").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
             Config.SubMenu("R").AddSubMenu(new Menu("Custom delays", "Custom delays"));
             for (int i = 1; i <= 3; i++)
-                Config.SubMenu("R").SubMenu("Custom delays").AddItem(new MenuItem("Delay"+i, "Delay"+i).SetValue(new Slider(0, 1500, 0)));
+                Config.SubMenu("R").SubMenu("Custom delays").AddItem(new MenuItem("Delay" + i, "Delay" + i).SetValue(new Slider(0, 1500, 0)));
             Config.SubMenu("R").AddItem(new MenuItem("PingRKillable", "Ping on killable targets (only local)").SetValue(true));
             Config.SubMenu("R").AddItem(new MenuItem("BlockMovement", "Block right click while casting R").SetValue(false));
             Config.SubMenu("R").AddItem(new MenuItem("OnlyNearMouse", "Focus only targets near mouse").SetValue(false));
@@ -192,7 +195,7 @@ namespace Xerath
             var dmgAfterComboItem = new MenuItem("DamageAfterR", "Draw damage after 3xR").SetValue(true);
             Utility.HpBarDamageIndicator.DamageToUnit += hero => (float)Player.GetSpellDamage(hero, SpellSlot.R) * 3;
             Utility.HpBarDamageIndicator.Enabled = dmgAfterComboItem.GetValue<bool>();
-            dmgAfterComboItem.ValueChanged += delegate(object sender, OnValueChangeEventArgs eventArgs)
+            dmgAfterComboItem.ValueChanged += delegate (object sender, OnValueChangeEventArgs eventArgs)
             {
                 Utility.HpBarDamageIndicator.Enabled = eventArgs.GetNewValue<bool>();
             };
@@ -235,7 +238,7 @@ namespace Xerath
         static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
         {
             if (!Config.Item("InterruptSpells").GetValue<bool>()) return;
-                  
+
             if (Player.Distance(sender) < E.Range)
             {
                 E.Cast(sender);
@@ -273,22 +276,21 @@ namespace Xerath
 
         static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (sender.IsMe)
+            if (!sender.IsMe) return;
+            switch (args.SData.Name)
             {
-                if (args.SData.Name == "XerathLocusOfPower2")
-                {
+                case "XerathLocusOfPower2":
                     RCharge.CastT = 0;
                     RCharge.Index = 0;
                     RCharge.Position = new Vector3();
                     RCharge.TapKeyPressed = false;
-                }
-                else if (args.SData.Name == "xerathlocuspulse")
-                {
+                    break;
+                case "xerathlocuspulse":
                     RCharge.CastT = Utils.TickCount;
                     RCharge.Index++;
                     RCharge.Position = args.End;
                     RCharge.TapKeyPressed = false;
-                }
+                    break;
             }
         }
 
@@ -325,7 +327,7 @@ namespace Xerath
             {
                 if (Q.IsCharging)
                 {
-                    Q.Cast(qTarget, false, false);
+                    Q.Cast(qTarget);
                 }
                 else if (!useW || !W.IsReady() || Player.Distance(qTarget) > W.Range)
                 {
@@ -342,7 +344,7 @@ namespace Xerath
             Obj_AI_Hero bestTarget = null;
             var bestRatio = 0f;
 
-            if (TargetSelector.SelectedTarget.IsValidTarget() && !TargetSelector.IsInvulnerable(TargetSelector.SelectedTarget, TargetSelector.DamageType.Magical, true) &&
+            if (TargetSelector.SelectedTarget.IsValidTarget() && !TargetSelector.IsInvulnerable(TargetSelector.SelectedTarget, TargetSelector.DamageType.Magical) &&
                 (Game.CursorPos.Distance(TargetSelector.SelectedTarget.ServerPosition) < distance && ObjectManager.Player.Distance(TargetSelector.SelectedTarget) < R.Range))
             {
                 return TargetSelector.SelectedTarget;
@@ -350,7 +352,7 @@ namespace Xerath
 
             foreach (var hero in ObjectManager.Get<Obj_AI_Hero>())
             {
-                if (!hero.IsValidTarget(R.Range) || TargetSelector.IsInvulnerable(hero, TargetSelector.DamageType.Magical, true) || Game.CursorPos.Distance(hero.ServerPosition) > distance)
+                if (!hero.IsValidTarget(R.Range) || TargetSelector.IsInvulnerable(hero, TargetSelector.DamageType.Magical) || Game.CursorPos.Distance(hero.ServerPosition) > distance)
                 {
                     continue;
                 }
@@ -358,11 +360,9 @@ namespace Xerath
                 var damage = (float)ObjectManager.Player.CalcDamage(hero, Damage.DamageType.Magical, 100);
                 var ratio = damage / (1 + hero.Health) * TargetSelector.GetPriority(hero);
 
-                if (ratio > bestRatio)
-                {
-                    bestRatio = ratio;
-                    bestTarget = hero;
-                }
+                if (!(ratio > bestRatio)) continue;
+                bestRatio = ratio;
+                bestTarget = hero;
             }
 
             return bestTarget;
@@ -375,39 +375,36 @@ namespace Xerath
 
             var rTarget = Config.Item("OnlyNearMouse").GetValue<bool>() ? GetTargetNearMouse(Config.Item("MRadius").GetValue<Slider>().Value) : TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Magical);
 
-            if (rTarget != null)
+            if (rTarget == null) return;
+            //Wait at least 0.6f if the target is going to die or if the target is to far away
+            if (rTarget.Health - R.GetDamage(rTarget) < 0)
+                if (Utils.TickCount - RCharge.CastT <= 700) return;
+
+            if ((RCharge.Index != 0 && rTarget.Distance(RCharge.Position) > 1000))
+                if (Utils.TickCount - RCharge.CastT <= Math.Min(2500, rTarget.Distance(RCharge.Position) - 1000)) return;
+
+            switch (rMode)
             {
-                //Wait at least 0.6f if the target is going to die or if the target is to far away
-                if(rTarget.Health - R.GetDamage(rTarget) < 0)
-                    if (Utils.TickCount - RCharge.CastT <= 700) return;
+                case 0://Normal
+                    R.Cast(rTarget, true);
+                    break;
 
-                if ((RCharge.Index != 0 && rTarget.Distance(RCharge.Position) > 1000))
-                    if (Utils.TickCount - RCharge.CastT <= Math.Min(2500, rTarget.Distance(RCharge.Position) - 1000)) return;
-
-                switch (rMode)
-                {
-                    case 0://Normal
+                case 1://Selected delays.
+                    var delay = Config.Item("Delay" + (RCharge.Index + 1)).GetValue<Slider>().Value;
+                    if (Utils.TickCount - RCharge.CastT > delay)
                         R.Cast(rTarget, true);
-                        break;
+                    break;
 
-                    case 1://Selected delays.
-                        var delay = Config.Item("Delay" + (RCharge.Index + 1)).GetValue<Slider>().Value;
-                        if (Utils.TickCount - RCharge.CastT > delay)
-                            R.Cast(rTarget, true);
-                        break;
-
-                    case 2://On tap
-                        if (RCharge.TapKeyPressed)
-                            R.Cast(rTarget, true);
-                        break;
-                }
+                case 2://On tap
+                    if (RCharge.TapKeyPressed)
+                        R.Cast(rTarget, true);
+                    break;
             }
         }
 
         private static void Farm(bool laneClear)
         {
-            var allMinionsQ = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.ChargedMaxRange,
-                MinionTypes.All);
+            var allMinionsQ = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.ChargedMaxRange);
             var rangedMinionsW = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, W.Range + W.Width + 30,
                 MinionTypes.Ranged);
 
@@ -426,29 +423,23 @@ namespace Xerath
                     W.Cast(locW.Position);
                     return;
                 }
-                else
+                var locW2 = W.GetCircularFarmLocation(allMinionsQ, W.Width * 0.75f);
+                if (locW2.MinionsHit >= 1 && W.IsInRange(locW.Position.To3D()))
                 {
-                    var locW2 = W.GetCircularFarmLocation(allMinionsQ, W.Width * 0.75f);
-                    if (locW2.MinionsHit >= 1 && W.IsInRange(locW.Position.To3D()))
-                    {
-                        W.Cast(locW.Position);
-                        return;
-                    }
-                        
+                    W.Cast(locW.Position);
+                    return;
                 }
             }
 
-            if (useQ && Q.IsReady())
+            if (!useQ || !Q.IsReady()) return;
+            if (Q.IsCharging)
             {
-                if (Q.IsCharging)
-                {
-                    var locQ = Q.GetLineFarmLocation(allMinionsQ);
-                    if (allMinionsQ.Count == allMinionsQ.Count(m => Player.Distance(m) < Q.Range) && locQ.MinionsHit > 0 && locQ.Position.IsValid())
-                        Q.Cast(locQ.Position);
-                }
-                else if (allMinionsQ.Count > 0)
-                    Q.StartCharging();
+                var locQ = Q.GetLineFarmLocation(allMinionsQ);
+                if (allMinionsQ.Count == allMinionsQ.Count(m => Player.Distance(m) < Q.Range) && locQ.MinionsHit > 0 && locQ.Position.IsValid())
+                    Q.Cast(locQ.Position);
             }
+            else if (allMinionsQ.Count > 0)
+                Q.StartCharging();
         }
 
         private static void JungleFarm()
@@ -458,20 +449,18 @@ namespace Xerath
             var mobs = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, W.Range, MinionTypes.All,
                 MinionTeam.Neutral, MinionOrderTypes.MaxHealth);
 
-            if (mobs.Count > 0)
+            if (mobs.Count <= 0) return;
+            var mob = mobs[0];
+            if (useW && W.IsReady())
             {
-                var mob = mobs[0];
-                if (useW && W.IsReady())
-                {
-                    W.Cast(mob);
-                }
-                else if (useQ && Q.IsReady())
-                {
-                    if (!Q.IsCharging)
-                        Q.StartCharging();
-                    else
-                        Q.Cast(mob);
-                }
+                W.Cast(mob);
+            }
+            else if (useQ && Q.IsReady())
+            {
+                if (!Q.IsCharging)
+                    Q.StartCharging();
+                else
+                    Q.Cast(mob);
             }
         }
 
@@ -491,7 +480,7 @@ namespace Xerath
         {
             //Packet.S2C.Ping.Encoded(new Packet.S2C.Ping.Struct(PingLocation.X, PingLocation.Y, 0, 0, Packet.PingType.Fallback)).Process();
         }
-
+        
         private static void Game_OnGameUpdate(EventArgs args)
         {
             if (Player.IsDead) return;
