@@ -695,6 +695,7 @@ namespace Evade
                     IsDangerous = false,
                     MissileSpellName = "DariusCleave",
                     FollowCaster = true,
+                    DisabledByDefault = true,
                 });
 
             Spells.Add(
