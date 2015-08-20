@@ -166,6 +166,7 @@ namespace Orianna
 
             #region Farming
             //Farming menu:
+            Config.SubMenu("Farm").AddItem(new MenuItem("EnabledFarm", "Enable! (On/Off: Mouse Scroll)").SetValue(true));
             Config.SubMenu("Farm")
                 .AddItem(
                     new MenuItem("UseQFarm", "Use Q").SetValue(
@@ -244,18 +245,47 @@ namespace Orianna
                     };
 
             Config.Item("HarassActiveT").Permashow(Config.Item("HarassActiveTPermashow").GetValue<bool>(), "HarassActive");
+
+            Config.SubMenu("Drawings")
+                .AddItem(
+                    new MenuItem("EnabledFarmPermashow", "Show Farm Permashow").SetValue(true)).ValueChanged +=
+                (s, ar) =>
+                {
+                    if (ar.GetNewValue<bool>())
+                    {
+                        Config.Item("EnabledFarm").Permashow(true, "Enabled Farm");
+                    }
+                    else
+                    {
+                        Config.Item("EnabledFarm").Permashow(false);
+                    }
+                };
+            Config.Item("EnabledFarm").Permashow(Config.Item("EnabledFarmPermashow").GetValue<bool>(), "Enabled Farm");
+            
             #endregion
 
             Config.AddToMainMenu();
 
             Obj_AI_Hero.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
             Game.OnUpdate += Game_OnGameUpdate;
+            Game.OnWndProc += Game_OnWndProc;
             Drawing.OnDraw += Drawing_OnDraw;
             Spellbook.OnCastSpell += Spellbook_OnCastSpell;
             Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
             
             Notifications.AddNotification("Orianna Loaded", 4000);
         }
+        
+        private static void Game_OnWndProc(WndEventArgs args)
+        {
+            if (args.Msg != 0x20a)
+                return;
+
+            Config.SubMenu("Farm")
+                .Item("EnabledFarm")
+                .SetValue(!Config.SubMenu("Farm").Item("EnabledFarm").GetValue<bool>());
+        }
+
 
         static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
         {
@@ -334,6 +364,9 @@ namespace Orianna
 
         private static void Farm(bool laneClear)
         {
+            if (!Config.Item("EnabledFarm").GetValue<bool>())
+                return;
+
             var allMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range + W.Width,
                 MinionTypes.All);
             var rangedMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range + W.Width,
@@ -783,7 +816,15 @@ namespace Orianna
                     return true;
                 }
             }
-
+            
+            if (!target.IsFacing(Player) && target.Path.Count() >= 1) // target is running
+            {
+                var targetBehind = Q.GetPrediction(target).CastPosition +
+                                   Vector3.Normalize(target.ServerPosition - BallManager.BallPosition) * target.MoveSpeed / 2;
+                Q.Cast(targetBehind, true);
+                return true;
+            }
+            
             Q.Cast(qPrediction.CastPosition, true);
             return true;
         }
