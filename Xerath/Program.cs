@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 using System.Collections.Generic;
@@ -477,10 +477,15 @@ namespace Xerath
 
         private static void Ping(Vector2 position)
         {
-            if (Utils.TickCount - LastPingT < 30 * 1000) return;
+            if (Utils.TickCount - LastPingT < 30 * 1000)
+            {
+                return;
+            }
+            
             LastPingT = Utils.TickCount;
             PingLocation = position;
             SimplePing();
+            
             Utility.DelayAction.Add(150, SimplePing);
             Utility.DelayAction.Add(300, SimplePing);
             Utility.DelayAction.Add(400, SimplePing);
@@ -489,7 +494,7 @@ namespace Xerath
 
         private static void SimplePing()
         {
-            //Packet.S2C.Ping.Encoded(new Packet.S2C.Ping.Struct(PingLocation.X, PingLocation.Y, 0, 0, Packet.PingType.Fallback)).Process();
+            Game.ShowPing(PingCategory.Fallback, PingLocation, true);
         }
 
         private static void Game_OnGameUpdate(EventArgs args)
