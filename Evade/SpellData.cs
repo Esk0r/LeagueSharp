@@ -43,6 +43,7 @@ namespace Evade
         public string[] ExtraSpellNames = { };
         public bool FixedRange;
         public bool ForceRemove = false;
+        public bool FollowCaster = false;
         public string FromObject = "";
         public string[] FromObjects = { };
         public int Id = -1;

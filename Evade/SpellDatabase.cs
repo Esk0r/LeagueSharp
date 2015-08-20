@@ -682,10 +682,29 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Darius",
+                    SpellName = "DariusCleave",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotCircle,
+                    Delay = 750,
+                    Range = 0,
+                    Radius = 425,
+                    MissileSpeed = int.MaxValue,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 3,
+                    IsDangerous = false,
+                    MissileSpellName = "DariusCleave",
+                    FollowCaster = true,
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Darius",
                     SpellName = "DariusAxeGrabCone",
                     Slot = SpellSlot.E,
                     Type = SkillShotType.SkillshotCone,
-                    Delay = 300,
+                    Delay = 250,
                     Range = 550,
                     Radius = 80,
                     MissileSpeed = int.MaxValue,
@@ -1844,7 +1863,7 @@ namespace Evade
                     Delay = 0,
                     Range = 600,
                     Radius = 220,
-                    MissileSpeed = 1500,
+                    MissileSpeed = 1450,
                     FixedRange = false,
                     AddHitbox = true,
                     DangerValue = 2,
@@ -1862,7 +1881,7 @@ namespace Evade
                     Delay = 0,
                     Range = 600,
                     Radius = 220,
-                    MissileSpeed = 1500,
+                    MissileSpeed = 1450,
                     FixedRange = false,
                     AddHitbox = true,
                     DangerValue = 2,
@@ -3489,7 +3508,7 @@ namespace Evade
                     Slot = SpellSlot.Q,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 250,
-                    Range = 900,
+                    Range = 1100,
                     Radius = 55,
                     MissileSpeed = 2100,
                     FixedRange = true,

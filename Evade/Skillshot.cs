@@ -280,6 +280,12 @@ namespace Evade
                     StartTick = 0;
                 }
             }
+
+            if (SpellData.FollowCaster)
+            {
+                Circle.Center = Unit.ServerPosition.To2D();
+                UpdatePolygon();
+            }
         }
 
         public void UpdatePolygon()
