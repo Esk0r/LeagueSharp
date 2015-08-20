@@ -70,7 +70,7 @@ namespace Velkoz
 
             //Create the spells
             Q = new Spell(SpellSlot.Q, 1200);
-            QSplit = new Spell(SpellSlot.Q, 900);
+            QSplit = new Spell(SpellSlot.Q, 1100);
             QDummy = new Spell(SpellSlot.Q, (float)Math.Sqrt(Math.Pow(Q.Range, 2) + Math.Pow(QSplit.Range, 2)));
             W = new Spell(SpellSlot.W, 1200);
             E = new Spell(SpellSlot.E, 800);
