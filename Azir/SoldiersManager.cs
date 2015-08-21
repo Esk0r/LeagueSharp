@@ -59,7 +59,7 @@ namespace Azir
 
         private static bool IsSoldier(this Obj_AI_Minion soldier)
         {
-            return soldier.IsAlly && soldier.BaseSkinName == "AzirSoldier";
+            return soldier.IsAlly && String.Equals(soldier.BaseSkinName, "azirsoldier", StringComparison.InvariantCultureIgnoreCase);
         }
 
         static void Obj_AI_Minion_OnCreate(GameObject sender, EventArgs args)
