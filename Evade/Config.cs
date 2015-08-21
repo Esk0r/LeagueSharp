@@ -16,6 +16,7 @@
 
 #region
 
+using System;
 using System.Drawing;
 using System.Linq;
 using LeagueSharp;
@@ -39,7 +40,7 @@ namespace Evade
         public const int CrossingTimeOffset = 250;
 
         public const int EvadingFirstTimeOffset = 250;
-        public const int EvadingSecondTimeOffset = 0;
+        public const int EvadingSecondTimeOffset = 80;
 
         public const int EvadingRouteChangeTimeOffset = 250;
 
@@ -82,7 +83,7 @@ namespace Evade
                 {
                     foreach (var spell in SpellDatabase.Spells)
                     {
-                        if (spell.ChampionName.ToLower() == hero.ChampionName.ToLower())
+                        if (String.Equals(spell.ChampionName, hero.ChampionName, StringComparison.InvariantCultureIgnoreCase))
                         {
                             var subMenu = new Menu(spell.MenuItemName, spell.MenuItemName);
 
@@ -135,8 +136,11 @@ namespace Evade
             Menu.AddSubMenu(drawings);
 
             var misc = new Menu("Misc", "Misc");
+            misc.AddItem(new MenuItem("BlockSpells", "Block spells while evading").SetValue(new StringList(new []{"No", "Only dangerous", "Always"}, 1)));
             misc.AddItem(new MenuItem("DisableFow", "Disable fog of war dodging").SetValue(false));
             misc.AddItem(new MenuItem("ShowEvadeStatus", "Show Evade Status").SetValue(false));
+            
+
             Menu.AddSubMenu(misc);
 
             Menu.AddItem(

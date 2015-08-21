@@ -47,6 +47,9 @@ namespace Evade
         public static int LastWardJumpAttempt = 0;
         public static Vector2 PlayerDestination = new Vector2();
         public static Vector2 PreviousTickPosition = new Vector2();
+        
+        public static string PlayerChampionName;
+
         private static readonly Random RandomN = new Random();
         private static int LastSentMovePacketT = 0;
         private static int LastSentMovePacketT2 = 0;
@@ -91,42 +94,11 @@ namespace Evade
             Game.OnStart += Game_OnGameStart;
         }
 
-        private static bool IsSpellShielded(Obj_AI_Hero unit)
-        {
-            if (ObjectManager.Player.HasBuffOfType(BuffType.SpellShield))
-            {
-                return true;
-            }
-
-            if (ObjectManager.Player.HasBuffOfType(BuffType.SpellImmunity))
-            {
-                return true;
-            }
-
-            //Sivir E
-            if (unit.LastCastedSpellName() == "SivirE" && (Utils.TickCount - unit.LastCastedSpellT()) < 300)
-            {
-                return true;
-            }
-
-            //Morganas E
-            if (unit.LastCastedSpellName() == "BlackShield" && (Utils.TickCount - unit.LastCastedSpellT()) < 300)
-            {
-                return true;
-            }
-
-            //Nocturnes E
-            if (unit.LastCastedSpellName() == "NocturneShit" && (Utils.TickCount - unit.LastCastedSpellT()) < 300)
-            {
-                return true;
-            }
-
-
-            return false;
-        }
-
+        
         private static void Game_OnGameStart(EventArgs args)
         {
+            PlayerChampionName = ObjectManager.Player.ChampionName;
+
             //Add the game events.
             Game.OnUpdate += Game_OnOnGameUpdate;
             Obj_AI_Hero.OnIssueOrder += ObjAiHeroOnOnIssueOrder;
@@ -462,6 +434,12 @@ namespace Evade
             {
                 return;
             }
+                                     
+            if (ObjectManager.Player.IsWindingUp && !Orbwalking.IsAutoAttack(ObjectManager.Player.LastCastedSpellName()))
+            {
+                Evading = false;
+                return;
+            }
 
             /*Avoid evading while stunned or immobile.*/
             if (Utils.ImmobileTime(ObjectManager.Player) - Utils.TickCount > Game.Ping / 2 + 70)
@@ -507,13 +485,13 @@ namespace Evade
 
 
             //Spell Shielded
-            if (IsSpellShielded(ObjectManager.Player))
+            if (ObjectManager.Player.IsSpellShielded())
             {
                 return;
             }
 
             //Don't evade while casting R as sion
-            if (ObjectManager.Player.ChampionName == "Sion" && ObjectManager.Player.HasBuff("SionR"))
+            if (PlayerChampionName == "Sion" && ObjectManager.Player.HasBuff("SionR"))
             {
                 return;
             }
@@ -584,6 +562,38 @@ namespace Evade
                 {
                     EvadeToPoint = new Vector2();
                 }
+
+                if (Evading)
+                {
+                    var blockLevel = Config.Menu.Item("BlockSpells").GetValue<StringList>().SelectedIndex;
+
+                    if (blockLevel == 0)
+                    {
+                        return;
+                    }
+
+                    var isDangerous = false;
+                    var myPosition = ObjectManager.Player.ServerPosition.To2D();
+
+                    foreach (var skillshot in DetectedSkillshots)
+                    {
+                        if (skillshot.Evade() && skillshot.IsDanger(myPosition))
+                        {
+                            isDangerous = skillshot.GetValue<bool>("IsDangerous");
+                            if (isDangerous)
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (blockLevel == 1 && !isDangerous)
+                    {
+                        return;
+                    }
+
+                    args.Process = !SpellBlocker.ShouldBlock(args.Slot);
+                }
             }
         }
 
@@ -616,7 +626,7 @@ namespace Evade
             }
 
             //Spell Shielded
-            if (IsSpellShielded(ObjectManager.Player))
+            if (ObjectManager.Player.IsSpellShielded())
             {
                 return;
             }
