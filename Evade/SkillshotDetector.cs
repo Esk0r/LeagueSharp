@@ -45,7 +45,7 @@ namespace Evade
             //GameObject.OnCreate += GameObject_OnCreate; //TODO: Detect lux R and other large skillshots.
             GameObject.OnDelete += GameObject_OnDelete;
 
-            if (false && Config.TestOnAllies && ObjectManager.Get<Obj_AI_Hero>().Count() == 1)
+            if (Config.TestOnAllies && ObjectManager.Get<Obj_AI_Hero>().Count() == 1)
             {
                 Game.OnWndProc += Game_OnWndProc;
             }
@@ -57,7 +57,7 @@ namespace Evade
             {
                 TriggerOnDetectSkillshot(
                     DetectionType.ProcessSpell, SpellDatabase.GetByName("TestSkillShot"), Utils.TickCount,
-                    ObjectManager.Player.ServerPosition.To2D(), Game.CursorPos.To2D(), ObjectManager.Player);
+                    Program.PlayerPosition, Game.CursorPos.To2D(), ObjectManager.Player);
             }
         }
 

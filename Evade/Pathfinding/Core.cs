@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using ClipperLib;
@@ -48,11 +49,10 @@ namespace Evade.Pathfinding
                     start = Evader.GetClosestOutsidePoint(start, outerPolygons);
                 }
 
-                if (Utils.CanReach(start, end, innerPolygons))
+                if (Utils.CanReach(start, end, innerPolygons, true))
                 {
                     return new List<Vector2> { start, end };
                 }
-
 
                 outerPolygons.Add(new Geometry.Polygon { Points = new List<Vector2> { start, end } });
 
@@ -75,7 +75,7 @@ namespace Evade.Pathfinding
                             {
                                 foreach (var point in polygon.Points)
                                 {
-                                    if (Utils.CanReach(pol.Points[i], point, innerPolygons))
+                                    if (Utils.CanReach(pol.Points[i], point, innerPolygons, true))
                                     {
                                         var nodeToAdd = nodes.FirstOrDefault(node1 => node1.Point == point);
                                         if (nodeToAdd == null)
@@ -122,10 +122,10 @@ namespace Evade.Pathfinding
         }
 
         public static Path<Node> FindPath(
-    Node start,
-    Node destination,
-    Func<Node, Node, double> distance,
-    Func<Node, double> estimate)
+            Node start,
+            Node destination,
+            Func<Node, Node, double> distance,
+            Func<Node, double> estimate)
         {
             var closed = new HashSet<Vector2>();
             var queue = new PriorityQueue<double, Path<Node>>();

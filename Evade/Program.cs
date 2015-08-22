@@ -42,7 +42,7 @@ namespace Evade
         public static bool NoSolutionFound = false;
 
         public static Vector2 EvadeToPoint = new Vector2();
-        public static Vector2 EvadeToPoint2 = new Vector2();
+
         private static bool _followPath = false;
 
         public static bool FollowPath

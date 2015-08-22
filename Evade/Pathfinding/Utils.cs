@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LeagueSharp.Common;
 using SharpDX;
 
 namespace Evade.Pathfinding
@@ -23,12 +24,29 @@ namespace Evade.Pathfinding
             return cross < 0;
         }
 
-        public static bool CanReach(Vector2 start, Vector2 end, List<Geometry.Polygon> polygons)
+        public static bool CanReach(Vector2 start, Vector2 end, List<Geometry.Polygon> polygons, bool checkWalls = false)
         {
             if (start == end)
             {
                 return false;
             }
+
+            if (checkWalls)
+            {
+                var nPoints = 2;
+                var step = start.Distance(end) / nPoints;
+
+                var direction = (end - start).Normalized();
+                for (int i = 0; i <= nPoints; i++)
+                {
+                    var p = start + i * step * direction;
+                    if (p.IsWall())
+                    {
+                        return false;
+                    }
+                }
+            }
+            
 
             foreach (var polygon in polygons)
             {
