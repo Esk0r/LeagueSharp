@@ -28,14 +28,14 @@ namespace Evade
 {
     internal static class Config
     {
-        public const bool PrintSpellData = false;
-        public const bool TestOnAllies = false;
+        public const bool PrintSpellData = true;
+        public const bool TestOnAllies = true;
         public const int SkillShotsExtraRadius = 9;
         public const int SkillShotsExtraRange = 20;
         public const int GridSize = 10;
         public const int ExtraEvadeDistance = 15;
-        public const int PathFindingDistance = 50;
-        public const int PathFindingDistance2 = 25;
+        public const int PathFindingDistance = 60;
+        public const int PathFindingDistance2 = 35;
 
         public const int DiagonalEvadePointsCount = 7;
         public const int DiagonalEvadePointsStep = 20;
