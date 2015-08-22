@@ -275,7 +275,7 @@ namespace Evade
                 var result = new Polygon();
 
                 var innerRadius = -0.1562f * Distance + 687.31f;
-                var outerRadius = 0.35256f * Distance + 133f + 15f;
+                var outerRadius = 0.35256f * Distance + 133f;
 
                 outerRadius = outerRadius / (float)Math.Cos(2 * Math.PI / CircleLineSegmentN);
 
@@ -296,7 +296,7 @@ namespace Evade
                 for (int i = 0; i < CircleLineSegmentN; i++)
                 {
                     var angle = step * i;
-                    var point = outerCenter + (outerRadius + offset) * direction.Rotated(angle);
+                    var point = outerCenter + (outerRadius + 15 + offset) * direction.Rotated(angle);
                     result.Add(point);
                 }
 
