@@ -67,6 +67,7 @@ namespace Evade
                     ObjectManager.Player.SendMovePacket(EvadePoint);
                 }
 
+                Global.IsEvading = value;
                 _evading = value;
             }
         }
@@ -418,7 +419,7 @@ namespace Evade
             }
 
             //Evading disabled
-            if (!Config.Menu.Item("Enabled").GetValue<KeyBind>().Active)
+            if (!Global.Evade)
             {
                 return;
             }
@@ -615,7 +616,7 @@ namespace Evade
             }
 
             //Evading disabled
-            if (!Config.Menu.Item("Enabled").GetValue<KeyBind>().Active)
+            if (!Global.Evade)
             {
                 return;
             }
@@ -1332,7 +1333,7 @@ namespace Evade
             foreach (var skillshot in DetectedSkillshots)
             {
                 skillshot.Draw(
-                    (skillshot.Evade() && Config.Menu.Item("Enabled").GetValue<KeyBind>().Active)
+                    (skillshot.Evade() && Global.Evade)
                         ? Config.Menu.Item("EnabledColor").GetValue<Color>()
                         : Config.Menu.Item("DisabledColor").GetValue<Color>(), missileColor, Border);
             }
