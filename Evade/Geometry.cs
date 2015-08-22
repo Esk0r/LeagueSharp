@@ -125,9 +125,11 @@ namespace Evade
                     ? overrideWidth
                     : (offset + Radius) / (float) Math.Cos(2 * Math.PI / CircleLineSegmentN));
 
-                for (var i = 1; i <= CircleLineSegmentN; i++)
+                var step = 2 * Math.PI / CircleLineSegmentN;
+                var angle = (double) Radius;
+                for (var i = 0; i <= CircleLineSegmentN; i++)
                 {
-                    var angle = i * 2 * Math.PI / CircleLineSegmentN;
+                    angle += step;
                     var point = new Vector2(
                         Center.X + outRadius * (float) Math.Cos(angle), Center.Y + outRadius * (float) Math.Sin(angle));
                     result.Add(point);
@@ -162,6 +164,11 @@ namespace Evade
             {
                 var p = new IntPoint(point.X, point.Y);
                 return Clipper.PointInPolygon(p, ToClipperPath()) != 1;
+            }
+            public int PointInPolygon(Vector2 point)
+            {
+                var p = new IntPoint(point.X, point.Y);
+                return Clipper.PointInPolygon(p, ToClipperPath());
             }
 
             public void Draw(Color color, int width = 1)
@@ -207,7 +214,6 @@ namespace Evade
                 return result;
             }
         }
-
 
         public class Ring
         {

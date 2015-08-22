@@ -51,7 +51,7 @@ namespace Evade
             {
                 if (skillshot.Evade())
                 {
-                    if (skillshot.SpellData.TakeClosestPath && skillshot.IsDanger(ObjectManager.Player.ServerPosition.To2D()))
+                    if (skillshot.SpellData.TakeClosestPath && skillshot.IsDanger(Program.PlayerPosition))
                     {
                         takeClosestPath = true;
                     }
@@ -62,7 +62,7 @@ namespace Evade
 
             //Create the danger polygon:
             var dangerPolygons = Geometry.ClipPolygons(polygonList).ToPolygons();
-            var myPosition = ObjectManager.Player.ServerPosition.To2D();
+            var myPosition = Program.PlayerPosition;
 
             //Scan the sides of each polygon to find the safe point.
             foreach (var poly in dangerPolygons)
@@ -144,6 +144,22 @@ namespace Evade
             return (goodCandidates.Count > 0) ? goodCandidates : (onlyGood ? new List<Vector2>() : badCandidates);
         }
 
+        public static Vector2 GetClosestOutsidePoint(Vector2 from, List<Geometry.Polygon> polygons)
+        {
+            var result = new List<Vector2>();
+
+            foreach (var poly in polygons)
+            {
+                for (var i = 0; i <= poly.Points.Count - 1; i++)
+                {
+                    var sideStart = poly.Points[i];
+                    var sideEnd = poly.Points[(i == poly.Points.Count - 1) ? 0 : i + 1];
+
+                    result.Add(from.ProjectOn(sideStart, sideEnd).SegmentPoint);
+                }
+            }
+            return result.MinOrDefault(vector2 => vector2.Distance(from));
+        }
 
         /// <summary>
         /// Returns the safe targets to cast escape spells.
@@ -244,7 +260,7 @@ namespace Evade
                     else
                     {
                         var pathToTarget = new List<Vector2>();
-                        pathToTarget.Add(ObjectManager.Player.ServerPosition.To2D());
+                        pathToTarget.Add(Program.PlayerPosition);
                         pathToTarget.Add(target.ServerPosition.To2D());
 
                         if (Utils.TickCount - Program.LastWardJumpAttempt < 250 ||

@@ -69,6 +69,30 @@ namespace Evade
             return result;
         }
 
+        public static bool LineSegmentsCross(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
+        {
+            var denominator = ((b.X - a.X) * (d.Y - c.Y)) - ((b.Y - a.Y) * (d.X - c.X));
+
+            if (denominator == 0)
+            {
+                return false;
+            }
+
+            var numerator1 = ((a.Y - c.Y) * (d.X - c.X)) - ((a.X - c.X) * (d.Y - c.Y));
+
+            var numerator2 = ((a.Y - c.Y) * (b.X - a.X)) - ((a.X - c.X) * (b.Y - a.Y));
+
+            if (numerator1 == 0 || numerator2 == 0)
+            {
+                return false;
+            }
+
+            var r = numerator1 / denominator;
+            var s = numerator2 / denominator;
+
+            return (r > 0 && r < 1) && (s > 0 && s < 1);
+        }
+
         /// <summary>
         /// Returns when the unit will be able to move again
         /// </summary>

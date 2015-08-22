@@ -179,6 +179,9 @@ namespace Evade
         }
 
         public Geometry.Polygon EvadePolygon { get; set; }
+        public Geometry.Polygon PathFindingPolygon { get; set; }
+        public Geometry.Polygon PathFindingInnerPolygon { get; set; }
+
         public Obj_AI_Base Unit { get; set; }
 
         /// <summary>
@@ -301,6 +304,8 @@ namespace Evade
                 case SkillShotType.SkillshotCircle:
                     Polygon = Circle.ToPolygon();
                     EvadePolygon = Circle.ToPolygon(Config.ExtraEvadeDistance);
+                    PathFindingPolygon = Circle.ToPolygon(Config.PathFindingDistance);
+                    PathFindingInnerPolygon = Circle.ToPolygon(Config.PathFindingDistance2);
                     DrawingPolygon = Circle.ToPolygon(
                         0,
                         !SpellData.AddHitbox
@@ -315,6 +320,8 @@ namespace Evade
                             ? SpellData.Radius
                             : (SpellData.Radius - ObjectManager.Player.BoundingRadius));
                     EvadePolygon = Rectangle.ToPolygon(Config.ExtraEvadeDistance);
+                    PathFindingPolygon = Rectangle.ToPolygon(Config.PathFindingDistance);
+                    PathFindingInnerPolygon = Rectangle.ToPolygon(Config.PathFindingDistance2);
                     break;
                 case SkillShotType.SkillshotMissileLine:
                     Polygon = Rectangle.ToPolygon();
@@ -324,21 +331,29 @@ namespace Evade
                             ? SpellData.Radius
                             : (SpellData.Radius - ObjectManager.Player.BoundingRadius));
                     EvadePolygon = Rectangle.ToPolygon(Config.ExtraEvadeDistance);
+                    PathFindingPolygon = Rectangle.ToPolygon(Config.PathFindingDistance);
+                    PathFindingInnerPolygon = Rectangle.ToPolygon(Config.PathFindingDistance2);
                     break;
                 case SkillShotType.SkillshotCone:
                     Polygon = Sector.ToPolygon();
                     DrawingPolygon = Polygon;
                     EvadePolygon = Sector.ToPolygon(Config.ExtraEvadeDistance);
+                    PathFindingPolygon = Sector.ToPolygon(Config.PathFindingDistance);
+                    PathFindingInnerPolygon = Sector.ToPolygon(Config.PathFindingDistance2);
                     break;
                 case SkillShotType.SkillshotRing:
                     Polygon = Ring.ToPolygon();
                     DrawingPolygon = Polygon;
                     EvadePolygon = Ring.ToPolygon(Config.ExtraEvadeDistance);
+                    PathFindingPolygon = Ring.ToPolygon(Config.PathFindingDistance);
+                    PathFindingInnerPolygon = Ring.ToPolygon(Config.PathFindingDistance2);
                     break;
                 case SkillShotType.SkillshotArc:
                     Polygon = Arc.ToPolygon();
                     DrawingPolygon = Polygon;
                     EvadePolygon = Arc.ToPolygon(Config.ExtraEvadeDistance);
+                    PathFindingPolygon = Arc.ToPolygon(Config.PathFindingDistance);
+                    PathFindingInnerPolygon = Arc.ToPolygon(Config.PathFindingDistance2);
                     break;
             }
         }
@@ -405,7 +420,7 @@ namespace Evade
         {
             timeOffset /= 2;
 
-            if (IsSafe(ObjectManager.Player.ServerPosition.To2D()))
+            if (IsSafe(Program.PlayerPosition))
             {
                 return true;
             }
@@ -414,7 +429,7 @@ namespace Evade
             if (SpellData.Type == SkillShotType.SkillshotMissileLine)
             {
                 var missilePositionAfterBlink = GetMissilePosition(delay + timeOffset);
-                var myPositionProjection = ObjectManager.Player.ServerPosition.To2D().ProjectOn(Start, End);
+                var myPositionProjection = Program.PlayerPosition.ProjectOn(Start, End);
 
                 if (missilePositionAfterBlink.Distance(End) < myPositionProjection.SegmentPoint.Distance(End))
                 {
@@ -487,7 +502,7 @@ namespace Evade
                 SpellData.Type == SkillShotType.SkillshotArc)
             {
                 //Outside the skillshot
-                if (IsSafe(ObjectManager.Player.ServerPosition.To2D()))
+                if (IsSafe(Program.PlayerPosition))
                 {
                     //No intersections -> Safe
                     if (allIntersections.Count == 0)
@@ -557,7 +572,7 @@ namespace Evade
             }
 
 
-            if (IsSafe(ObjectManager.Player.ServerPosition.To2D()))
+            if (IsSafe(Program.PlayerPosition))
             {
                 if (allIntersections.Count == 0)
                 {

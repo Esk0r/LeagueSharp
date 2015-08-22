@@ -63,6 +63,12 @@
     <Compile Include="EvadeSpellDatabase.cs" />
     <Compile Include="Geometry.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="Pathfinding\Core.cs" />
+    <Compile Include="Pathfinding\Node.cs" />
+    <Compile Include="Pathfinding\Path.cs" />
+    <Compile Include="Pathfinding\PathFollower.cs" />
+    <Compile Include="Pathfinding\PriorityQueue.cs" />
+    <Compile Include="Pathfinding\Utils.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Skillshot.cs" />

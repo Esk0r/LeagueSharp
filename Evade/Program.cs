@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Evade.Pathfinding;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
@@ -42,12 +43,32 @@ namespace Evade
 
         public static Vector2 EvadeToPoint = new Vector2();
         public static Vector2 EvadeToPoint2 = new Vector2();
+        private static bool _followPath = false;
 
+        public static bool FollowPath
+        {
+            get
+            {
+                return _followPath;
+            }
+
+            set
+            {
+                _followPath = value;
+                if (!_followPath)
+                {
+                    PathFollower.Stop();
+                }
+            }
+        }
+
+        public static bool Keepfollowing { get; set; }
 
         public static int LastWardJumpAttempt = 0;
-        public static Vector2 PlayerDestination = new Vector2();
+
         public static Vector2 PreviousTickPosition = new Vector2();
-        
+        public static Vector2 PlayerPosition = new Vector2();
+
         public static string PlayerChampionName;
 
         private static readonly Random RandomN = new Random();
@@ -65,6 +86,12 @@ namespace Evade
                 {
                     LastSentMovePacketT = 0;
                     ObjectManager.Player.SendMovePacket(EvadePoint);
+                }
+
+                if (value == false)
+                {
+                    FollowPath = true;
+                    Keepfollowing = true;
                 }
 
                 _evading = value;
@@ -190,7 +217,7 @@ namespace Evade
             }
 
             //Check if the skillshot is too far away.
-            if (skillshot.Start.Distance(ObjectManager.Player.ServerPosition.To2D()) >
+            if (skillshot.Start.Distance(PlayerPosition) >
                 (skillshot.SpellData.Range + skillshot.SpellData.Radius + 1000) * 1.5)
             {
                 return;
@@ -408,14 +435,17 @@ namespace Evade
 
         private static void Game_OnOnGameUpdate(EventArgs args)
         {
+            PlayerPosition = ObjectManager.Player.ServerPosition.To2D();
+
             //Set evading to false after blinking
             if (PreviousTickPosition.IsValid() &&
-                ObjectManager.Player.ServerPosition.To2D().Distance(PreviousTickPosition) > 200)
+                PlayerPosition.Distance(PreviousTickPosition) > 200)
             {
                 Evading = false;
             }
 
-            PreviousTickPosition = ObjectManager.Player.ServerPosition.To2D();
+            PreviousTickPosition = PlayerPosition;
+            
 
             //Remove the detected skillshots that have expired.
             DetectedSkillshots.RemoveAll(skillshot => !skillshot.IsActive());
@@ -505,22 +535,27 @@ namespace Evade
                 return;
             }
 
-            /**/
-            if (EvadeToPoint.IsValid() && DetectedSkillshots.Count > 0)
+            /*FOLLOWPATH*/
+            if (FollowPath && !NoSolutionFound && (Keepfollowing || !Evading) && EvadeToPoint.IsValid())
             {
-                if (Utils.TickCount - LastSentMovePacketT2 > 1000 / 10)
+                if (Utils.TickCount - LastSentMovePacketT2 > 300)
                 {
-                    ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, EvadeToPoint.To3D());
+                    var candidate = Pathfinding.Pathfinding.PathFind(PlayerPosition, EvadeToPoint);
+                    PathFollower.Follow(candidate);
                     LastSentMovePacketT2 = Utils.TickCount;
                 }
+            }
+            else
+            {
+                FollowPath = false;
             }
 
             NoSolutionFound = false;
 
             var currentPath = ObjectManager.Player.GetWaypoints();
-            var safeResult = IsSafe(ObjectManager.Player.ServerPosition.To2D());
+            var safeResult = IsSafe(PlayerPosition);
             var safePath = IsSafePath(currentPath, 100);
-
+            
             //Continue evading
             if (Evading && IsSafe(EvadePoint).IsSafe)
             {
@@ -557,6 +592,7 @@ namespace Evade
                     //Outside the danger polygon.
                 else
                 {
+                    FollowPath = true;
                     //Stop at the edge of the skillshot.
                     ObjectManager.Player.SendMovePacket(safePath.Intersection.Point);
                 }
@@ -582,11 +618,9 @@ namespace Evade
                     }
 
                     var isDangerous = false;
-                    var myPosition = ObjectManager.Player.ServerPosition.To2D();
-
                     foreach (var skillshot in DetectedSkillshots)
                     {
-                        if (skillshot.Evade() && skillshot.IsDanger(myPosition))
+                        if (skillshot.Evade() && skillshot.IsDanger(PlayerPosition))
                         {
                             isDangerous = skillshot.GetValue<bool>("IsDangerous");
                             if (isDangerous)
@@ -644,17 +678,19 @@ namespace Evade
             {
                 EvadeToPoint.X = args.TargetPosition.X;
                 EvadeToPoint.Y = args.TargetPosition.Y;
+                Keepfollowing = false;
+                FollowPath = false;
             }
             else
             {
                 EvadeToPoint.X = 0;
                 EvadeToPoint.Y = 0;
             }
-            
+
             var myPath =
                 ObjectManager.Player.GetPath(
                     new Vector3(args.TargetPosition.X, args.TargetPosition.Y, ObjectManager.Player.ServerPosition.Z)).To2DList();
-            var safeResult = IsSafe(ObjectManager.Player.ServerPosition.To2D());
+            var safeResult = IsSafe(PlayerPosition);
 
 
             //If we are evading:
@@ -702,40 +738,13 @@ namespace Evade
                     {
                         ObjectManager.Player.SendMovePacket(safePath.Intersection.Point);
                     }
-                    else
-                    {
-                        if (/*DetectedSkillshots.Count == 1 &&*/ Utils.TickCount - LastSMovePacketT > 400)
-                        {
-                            LastSMovePacketT = Utils.TickCount;
-
-                            var perpendicular =
-                                (ObjectManager.Player.ServerPosition.To2D() - safePath.Intersection.Point)
-                                    .Normalized();
-                            var direction = perpendicular.Perpendicular();
-
-                            var p = ObjectManager.Player.ServerPosition.To2D() + 1 * perpendicular + 150 * direction;
-                            var p2 = ObjectManager.Player.ServerPosition.To2D() + 1 * perpendicular - 150 * direction;
-
-                            if (!IsSafePath(ObjectManager.Player.GetPath(p.To3D()).To2DList(), 100).IsSafe)
-                            {
-                                p = new Vector2();
-                            }
-
-                            if (!IsSafePath(ObjectManager.Player.GetPath(p2.To3D()).To2DList(), 100).IsSafe)
-                            {
-                                p2 = new Vector2();
-                            }
-
-                            EvadeToPoint2 = (p.IsValid() && (p.Distance(EvadeToPoint) < p2.Distance(EvadeToPoint))) ? p : p2;
-
-                            if (EvadeToPoint2.IsValid())
-                            {
-                                ObjectManager.Player.SendMovePacket(EvadeToPoint2);
-                            }
-                        }
-                    }
                 }
+                FollowPath = true;
                 args.Process = false;
+            }
+            else if(safePath.IsSafe && args.Order != GameObjectOrder.AttackUnit)
+            {
+                FollowPath = false;
             }
 
             //AutoAttacks.
@@ -745,7 +754,7 @@ namespace Evade
                 if (target != null && target.IsValid<Obj_AI_Base>() && target.IsVisible)
                 {
                     //Out of attack range.
-                    if (ObjectManager.Player.ServerPosition.To2D().Distance(((Obj_AI_Base)target).ServerPosition) >
+                    if (PlayerPosition.Distance(((Obj_AI_Base)target).ServerPosition) >
                         ObjectManager.Player.AttackRange + ObjectManager.Player.BoundingRadius +
                         target.BoundingRadius)
                     {
@@ -903,7 +912,7 @@ namespace Evade
                         if (points.Count > 0)
                         {
                             EvadePoint = to.Closest(points);
-                            var nEvadePoint = EvadePoint.Extend(ObjectManager.Player.ServerPosition.To2D(), -100);
+                            var nEvadePoint = EvadePoint.Extend(PlayerPosition, -100);
                             if (
                                 Program.IsSafePath(
                                     ObjectManager.Player.GetPath(nEvadePoint.To3D()).To2DList(),
@@ -997,12 +1006,12 @@ namespace Evade
                                                 var k =
                                                     (int)
                                                         (600 -
-                                                         ObjectManager.Player.ServerPosition.To2D().Distance(points[i]));
+                                                         PlayerPosition.Distance(points[i]));
 
                                                 k = k - new Random(Utils.TickCount).Next(k);
                                                 var extended = points[i] +
                                                                k *
-                                                               (points[i] - ObjectManager.Player.ServerPosition.To2D())
+                                                               (points[i] - PlayerPosition)
                                                                    .Normalized();
                                                 if (IsSafe(extended).IsSafe)
                                                 {
@@ -1034,7 +1043,7 @@ namespace Evade
                                 {
                                     for (var i = 0; i < points.Count; i++)
                                     {
-                                        points[i] = ObjectManager.Player.ServerPosition.To2D()
+                                        points[i] = PlayerPosition
                                             .Extend(points[i], evadeSpell.MaxRange);
                                     }
 
@@ -1053,11 +1062,11 @@ namespace Evade
                                         var k =
                                             (int)
                                                 (evadeSpell.MaxRange -
-                                                 ObjectManager.Player.ServerPosition.To2D().Distance(points[i]));
+                                                 PlayerPosition.Distance(points[i]));
                                         k -= Math.Max(RandomN.Next(k) - 100, 0);
                                         var extended = points[i] +
                                                        k *
-                                                       (points[i] - ObjectManager.Player.ServerPosition.To2D())
+                                                       (points[i] - PlayerPosition)
                                                            .Normalized();
                                         if (IsSafe(extended).IsSafe)
                                         {
@@ -1092,8 +1101,8 @@ namespace Evade
                                     }
                                     else
                                     {
-                                        var castPoint = ObjectManager.Player.ServerPosition.To2D() -
-                                                        (EvadePoint - ObjectManager.Player.ServerPosition.To2D());
+                                        var castPoint = PlayerPosition -
+                                                        (EvadePoint - PlayerPosition);
                                         ObjectManager.Player.Spellbook.CastSpell(evadeSpell.Slot, castPoint.To3D());
                                     }
 
@@ -1163,12 +1172,12 @@ namespace Evade
                                                 var k =
                                                     (int)
                                                         (600 -
-                                                         ObjectManager.Player.ServerPosition.To2D().Distance(points[i]));
+                                                         PlayerPosition.Distance(points[i]));
 
                                                 k = k - new Random(Utils.TickCount).Next(k);
                                                 var extended = points[i] +
                                                                k *
-                                                               (points[i] - ObjectManager.Player.ServerPosition.To2D())
+                                                               (points[i] - PlayerPosition)
                                                                    .Normalized();
                                                 if (IsSafe(extended).IsSafe)
                                                 {
@@ -1203,12 +1212,12 @@ namespace Evade
                                     var k =
                                         (int)
                                             (evadeSpell.MaxRange -
-                                             ObjectManager.Player.ServerPosition.To2D().Distance(points[i]));
+                                             PlayerPosition.Distance(points[i]));
 
                                     k = k - new Random(Utils.TickCount).Next(k);
                                     var extended = points[i] +
                                                    k *
-                                                   (points[i] - ObjectManager.Player.ServerPosition.To2D()).Normalized();
+                                                   (points[i] - PlayerPosition).Normalized();
                                     if (IsSafe(extended).IsSafe)
                                     {
                                         points[i] = extended;
