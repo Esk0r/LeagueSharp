@@ -61,11 +61,12 @@ namespace Evade
         public int RingRadius;
         public SpellSlot Slot;
         public string SpellName;
+        public bool TakeClosestPath = false;
         public string ToggleParticleName = "";
         public SkillShotType Type;
         private int _radius;
         private int _range;
-
+        
         public SpellData() { }
 
         public SpellData(string championName,

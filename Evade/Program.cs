@@ -295,6 +295,15 @@ namespace Evade
                         return;
                     }
 
+                    if (skillshot.SpellData.SpellName == "DianaArc")
+                    {
+                        var skillshotToAdd = new Skillshot(
+                        skillshot.DetectionType, SpellDatabase.GetByName("DianaArcArc"), skillshot.StartTick, skillshot.Start, skillshot.End,
+                        skillshot.Unit);
+
+                        DetectedSkillshots.Add(skillshotToAdd);
+                    }
+
                     if (skillshot.SpellData.SpellName == "ZiggsQ")
                     {
                         var d1 = skillshot.Start.Distance(skillshot.End);
@@ -405,7 +414,7 @@ namespace Evade
             {
                 Evading = false;
             }
-            
+
             PreviousTickPosition = ObjectManager.Player.ServerPosition.To2D();
 
             //Remove the detected skillshots that have expired.
@@ -448,6 +457,12 @@ namespace Evade
                 return;
             }
 
+            //Don't evade while casting R as sion
+            if (PlayerChampionName == "Sion" && ObjectManager.Player.HasBuff("SionR"))
+            {
+                return;
+            }
+
             //Shield allies.
             foreach (var ally in ObjectManager.Get<Obj_AI_Hero>())
             {
@@ -486,12 +501,6 @@ namespace Evade
 
             //Spell Shielded
             if (ObjectManager.Player.IsSpellShielded())
-            {
-                return;
-            }
-
-            //Don't evade while casting R as sion
-            if (PlayerChampionName == "Sion" && ObjectManager.Player.HasBuff("SionR"))
             {
                 return;
             }
@@ -816,12 +825,11 @@ namespace Evade
             //Return the first intersection
             if (!IsSafe)
             {
-                var sortedList = intersections.OrderBy(o => o.Distance).ToList();
-
-                return new SafePathResult(false, sortedList.Count > 0 ? sortedList[0] : intersection);
+                var intersetion = intersections.MinOrDefault(o => o.Distance);
+                return new SafePathResult(false, intersetion.Valid ? intersetion : intersection);
             }
 
-            return new SafePathResult(IsSafe, intersection);
+            return new SafePathResult(true, intersection);
         }
 
         /// <summary>
@@ -1317,6 +1325,7 @@ namespace Evade
             {
                 return;
             }
+
             if (Config.Menu.Item("ShowEvadeStatus").GetValue<bool>())
             {
                 var heropos = Drawing.WorldToScreen(ObjectManager.Player.Position);
@@ -1325,6 +1334,7 @@ namespace Evade
                     Drawing.DrawText(heropos.X, heropos.Y, Color.Red, "Evade: ON");
                 }
             }
+
             var Border = Config.Menu.Item("Border").GetValue<Slider>().Value;
             var missileColor = Config.Menu.Item("MissileColor").GetValue<Color>();
             
@@ -1336,7 +1346,6 @@ namespace Evade
                         ? Config.Menu.Item("EnabledColor").GetValue<Color>()
                         : Config.Menu.Item("DisabledColor").GetValue<Color>(), missileColor, Border);
             }
-
 
             if (Config.TestOnAllies)
             {
@@ -1353,7 +1362,6 @@ namespace Evade
 
                 Drawing.DrawCircle(EvadePoint.To3D(), 300, Color.White);
             }
-
         }
 
         public struct IsSafeResult

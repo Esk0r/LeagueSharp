@@ -37,6 +37,7 @@ namespace Evade
         SkillshotCone,
         SkillshotMissileCone,
         SkillshotRing,
+        SkillshotArc,
     }
 
     public enum DetectionType
@@ -90,6 +91,7 @@ namespace Evade
         public Geometry.Polygon Polygon;
         public Geometry.Rectangle Rectangle;
         public Geometry.Ring Ring;
+        public Geometry.Arc Arc;
         public Geometry.Sector Sector;
 
         public SpellData SpellData;
@@ -137,6 +139,9 @@ namespace Evade
                     break;
                 case SkillShotType.SkillshotRing:
                     Ring = new Geometry.Ring(CollisionEnd, spellData.Radius, spellData.RingRadius);
+                    break;
+                case SkillShotType.SkillshotArc:
+                    Arc = new Geometry.Arc(start, end, Config.SkillShotsExtraRadius + (int)ObjectManager.Player.BoundingRadius);
                     break;
             }
 
@@ -205,6 +210,7 @@ namespace Evade
             {
                 return false;
             }
+
             if (Utils.TickCount - _cachedValueTick < 100)
             {
                 return _cachedValue;
@@ -328,6 +334,11 @@ namespace Evade
                     Polygon = Ring.ToPolygon();
                     DrawingPolygon = Polygon;
                     EvadePolygon = Ring.ToPolygon(Config.ExtraEvadeDistance);
+                    break;
+                case SkillShotType.SkillshotArc:
+                    Polygon = Arc.ToPolygon();
+                    DrawingPolygon = Polygon;
+                    EvadePolygon = Arc.ToPolygon(Config.ExtraEvadeDistance);
                     break;
             }
         }
@@ -472,7 +483,8 @@ namespace Evade
 
             //Skillshot with missile.
             if (SpellData.Type == SkillShotType.SkillshotMissileLine ||
-                SpellData.Type == SkillShotType.SkillshotMissileCone)
+                SpellData.Type == SkillShotType.SkillshotMissileCone ||
+                SpellData.Type == SkillShotType.SkillshotArc)
             {
                 //Outside the skillshot
                 if (IsSafe(ObjectManager.Player.ServerPosition.To2D()))
@@ -481,6 +493,11 @@ namespace Evade
                     if (allIntersections.Count == 0)
                     {
                         return new SafePathResult(true, new FoundIntersection());
+                    }
+
+                    if (SpellData.DontCross)
+                    {
+                        return new SafePathResult(false, allIntersections[0]);
                     }
 
                     for (var i = 0; i <= allIntersections.Count - 1; i = i + 2)
@@ -518,6 +535,7 @@ namespace Evade
 
                     return new SafePathResult(true, allIntersections[0]);
                 }
+
                 //Inside the skillshot.
                 if (allIntersections.Count == 0)
                 {
@@ -562,7 +580,6 @@ namespace Evade
             var timeToExplode = (SpellData.DontAddExtraDuration ? 0 : SpellData.ExtraDuration) + SpellData.Delay +
                                 (int) (1000 * Start.Distance(End) / SpellData.MissileSpeed) -
                                 (Utils.TickCount - StartTick);
-
 
             var myPositionWhenExplodes = path.PositionAfter(timeToExplode, speed, delay);
 

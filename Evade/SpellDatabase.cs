@@ -730,13 +730,33 @@ namespace Evade
                     Delay = 250,
                     Range = 895,
                     Radius = 195,
-                    MissileSpeed = 1600,
-                    FixedRange = true,
+                    MissileSpeed = 1400,
+                    FixedRange = false,
                     AddHitbox = true,
                     DangerValue = 3,
                     IsDangerous = true,
-                    MissileSpellName = "DianaArc",
-                    FromObjects = new[] { "Diana_Q_Trail.troy" },
+                    MissileSpellName = "DianaArcArc",
+                    CollisionObjects = new[] { CollisionObjectTypes.YasuoWall }
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Diana",
+                    SpellName = "DianaArcArc",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotArc,
+                    Delay = 250,
+                    Range = 895,
+                    Radius = 195,
+                    DontCross = true,
+                    MissileSpeed = 1400,
+                    FixedRange = false,
+                    AddHitbox = true,
+                    DangerValue = 3,
+                    IsDangerous = true,
+                    MissileSpellName = "DianaArcArc",
+                    TakeClosestPath = true,
                     CollisionObjects = new[] { CollisionObjectTypes.YasuoWall }
                 });
 

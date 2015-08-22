@@ -45,10 +45,17 @@ namespace Evade
 
             var polygonList = new List<Geometry.Polygon>();
 
+            var takeClosestPath = false;
+
             foreach (var skillshot in Program.DetectedSkillshots)
             {
                 if (skillshot.Evade())
                 {
+                    if (skillshot.SpellData.TakeClosestPath && skillshot.IsDanger(ObjectManager.Player.ServerPosition.To2D()))
+                    {
+                        takeClosestPath = true;
+                    }
+
                     polygonList.Add(skillshot.EvadePolygon);
                 }
             }
@@ -112,6 +119,25 @@ namespace Evade
                             }
                         }
                     }
+                }
+            }
+
+            if (takeClosestPath)
+            {
+                if (goodCandidates.Count > 0)
+                {
+                    goodCandidates = new List<Vector2>
+                    {
+                        goodCandidates.MinOrDefault(vector2 => ObjectManager.Player.Distance(vector2, true))
+                    };
+                }
+
+                if (badCandidates.Count > 0)
+                {
+                    badCandidates = new List<Vector2>
+                    {
+                        badCandidates.MinOrDefault(vector2 => ObjectManager.Player.Distance(vector2, true))
+                    };
                 }
             }
 

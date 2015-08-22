@@ -251,6 +251,71 @@ namespace Evade
             }
         }
 
+        /// <summary>
+        /// Probably only valid for diana
+        /// </summary>
+        public class Arc
+        {
+            public Vector2 Start { get; private set; }
+            public Vector2 End { get; private set; }
+
+            public int HitBox { get; private set; }
+            private float Distance { get; set; }
+            public Arc(Vector2 start, Vector2 end, int hitbox)
+            {
+                Start = start;
+                End = end;
+                HitBox = hitbox;
+                Distance = Start.Distance(End);
+            }
+
+            public Polygon ToPolygon(int offset = 0)
+            {
+                offset += HitBox;
+                var result = new Polygon();
+
+                var innerRadius = -0.1562f * Distance + 687.31f;
+                var outerRadius = 0.35256f * Distance + 133f + 15f;
+
+                outerRadius = outerRadius / (float)Math.Cos(2 * Math.PI / CircleLineSegmentN);
+
+                var innerCenters = LeagueSharp.Common.Geometry.CircleCircleIntersection(Start, End, innerRadius, innerRadius);
+                var outerCenters = LeagueSharp.Common.Geometry.CircleCircleIntersection(Start, End, outerRadius, outerRadius);
+
+                var innerCenter = innerCenters[0];
+                var outerCenter = outerCenters[0];
+
+                Render.Circle.DrawCircle(innerCenter.To3D(), 100, Color.White);
+
+                var direction = (End - outerCenter).Normalized();
+                var end = (Start - outerCenter).Normalized();
+                var maxAngle = (float)(direction.AngleBetween(end) * Math.PI / 180);
+                
+                var step = -maxAngle / CircleLineSegmentN;
+                //outercircle
+                for (int i = 0; i < CircleLineSegmentN; i++)
+                {
+                    var angle = step * i;
+                    var point = outerCenter + (outerRadius + offset) * direction.Rotated(angle);
+                    result.Add(point);
+                }
+
+                direction = (Start - innerCenter).Normalized();
+                end = (End - innerCenter).Normalized();
+                maxAngle = (float)(direction.AngleBetween(end) * Math.PI / 180);
+                step = maxAngle / CircleLineSegmentN;
+                //outercircle
+                for (int i = 0; i < CircleLineSegmentN; i++)
+                {
+                    var angle = step * i;
+                    var point = innerCenter + Math.Max(0, innerRadius - offset - 100) * direction.Rotated(angle);
+                    result.Add(point);
+                }
+
+                return result;
+            }
+        }
+
         public class Sector
         {
             public float Angle;
