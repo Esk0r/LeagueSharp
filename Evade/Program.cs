@@ -541,11 +541,14 @@ namespace Evade
             /*FOLLOWPATH*/
             if (FollowPath && !NoSolutionFound && (Keepfollowing || !Evading) && EvadeToPoint.IsValid())
             {
-                if (Utils.TickCount - LastSentMovePacketT2 > 300)
+                if (EvadeSpellDatabase.Spells.Any(evadeSpell => evadeSpell.Name == "Walking" && evadeSpell.Enabled))
                 {
-                    var candidate = Pathfinding.Pathfinding.PathFind(PlayerPosition, EvadeToPoint);
-                    PathFollower.Follow(candidate);
-                    LastSentMovePacketT2 = Utils.TickCount;
+                    if (Utils.TickCount - LastSentMovePacketT2 > 300)
+                    {
+                        var candidate = Pathfinding.Pathfinding.PathFind(PlayerPosition, EvadeToPoint);
+                        PathFollower.Follow(candidate);
+                        LastSentMovePacketT2 = Utils.TickCount;
+                    }
                 }
             }
             else
@@ -677,7 +680,7 @@ namespace Evade
                 return;
             }
 
-            if (args.Order == GameObjectOrder.MoveTo)
+            if (args.Order == GameObjectOrder.MoveTo || args.Order == GameObjectOrder.AttackTo)
             {
                 EvadeToPoint.X = args.TargetPosition.X;
                 EvadeToPoint.Y = args.TargetPosition.Y;
