@@ -1999,6 +1999,7 @@ namespace Evade
                     AddHitbox = true,
                     DangerValue = 3,
                     IsDangerous = true,
+                    TakeClosestPath = true,
                     MissileSpellName = "LeonaZenithBladeMissile",
                     CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
                 });
