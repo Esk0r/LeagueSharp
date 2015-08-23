@@ -72,7 +72,7 @@ namespace Evade
                     break;
 
                 case "cassiopeia":
-                    Whitelisted_SpellSlots = new List<SpellSlot> { SpellSlot.E, SpellSlot.R };
+                    Whitelisted_SpellSlots = new List<SpellSlot> { };
                     break;
 
                 case "chogath":
