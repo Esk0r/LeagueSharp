@@ -459,18 +459,21 @@ namespace Evade
             //Evading disabled
             if (!Config.Menu.Item("Enabled").GetValue<KeyBind>().Active)
             {
+                EvadeToPoint = Vector2.Zero;
                 return;
             }
 
             //Avoid sending move/cast packets while dead.
             if (ObjectManager.Player.IsDead)
             {
+                EvadeToPoint = Vector2.Zero;
                 return;
             }
 
             //Avoid sending move/cast packets while channeling interruptable spells that cause hero not being able to move.
             if (ObjectManager.Player.IsCastingInterruptableSpell(true))
             {
+                EvadeToPoint = Vector2.Zero;
                 return;
             }
                                      
