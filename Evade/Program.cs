@@ -600,7 +600,10 @@ namespace Evade
                 {
                     FollowPath = true;
                     //Stop at the edge of the skillshot.
-                    ObjectManager.Player.SendMovePacket(safePath.Intersection.Point);
+                    if (EvadeSpellDatabase.Spells.Any(evadeSpell => evadeSpell.Name == "Walking" && evadeSpell.Enabled))
+                    {
+                        ObjectManager.Player.SendMovePacket(safePath.Intersection.Point);
+                    }
                 }
             }
         }
