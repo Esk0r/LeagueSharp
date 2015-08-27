@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LeagueSharp;
 using LeagueSharp.Common;
 
 namespace Lulu
 {
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     class Program
     {
-        private static string ChampionName = "Lulu";
+        private const string ChampionName = "Lulu";
         private static Obj_AI_Hero Player;
         public static Menu Config;
         public static Orbwalking.Orbwalker Orbwalker;
@@ -22,10 +21,10 @@ namespace Lulu
 
         public static SpellSlot IgniteSlot;
 
-        public static int nextJungleScan = 0;
-        public static string[] jungleMobNames = new[] { "sru_blue", "sru_dragon", "sru_baron" };
+        public static int nextJungleScan;
+        public static string[] jungleMobNames = { "sru_blue", "sru_dragon", "sru_baron" };
 
-        static void Main(string[] args)
+        static void Main()
         {
             if (Game.Mode == GameMode.Running)
             {
@@ -103,27 +102,20 @@ namespace Lulu
                 }
             }
 
-            if (Config.SubMenu("R").Item("InterruptSpellsR").GetValue<bool>() && args.DangerLevel > Interrupter2.DangerLevel.Medium)
+            if (Config.SubMenu("R").Item("InterruptSpellsR").GetValue<bool>() && args.DangerLevel > Interrupter2.DangerLevel.Medium && R.IsReady())
             {
-                if (R.IsReady())
+                foreach (
+                    var ally in
+                        HeroManager.Allies.Where(ally => ally.IsValidTarget(R.Range, false))
+                            .Where(ally => ally.Distance(sender, true) < 300*300))
                 {
-                    foreach (var ally in HeroManager.Allies)
-                    {
-                        if (ally.IsValidTarget(R.Range, false))
-                        {
-                            if (ally.Distance(sender, true) < 300 * 300)
-                            {
-                                R.Cast(ally);
-                            }
-                        }
-                    }
-
-                    if (Player.Distance(sender, true) < 300 * 300)
-                    {
-                        R.Cast(Player);
-                    }
+                    R.Cast(ally);
                 }
-                return;
+
+                if (Player.Distance(sender, true) < 300*300)
+                {
+                    R.Cast(Player);
+                }
             }
         }
 
@@ -166,16 +158,9 @@ namespace Lulu
 
             if (Config.SubMenu("R").Item("AutoR").GetValue<bool>())
             {
-                foreach (var ally in HeroManager.Allies)
+                foreach (var ally in from ally in HeroManager.Allies where ally.IsValidTarget(R.Range, false) let c = ally.CountEnemiesInRange(300) where c >= 1 + 1 + 1 || ally.HealthPercent <= 15 && c >= 1 select ally)
                 {
-                    if (ally.IsValidTarget(R.Range, false))
-                    {
-                        var c = ally.CountEnemiesInRange(300);
-                        if (c >= 1 + 1 + 1 || ally.HealthPercent <= 15 && c >= 1)
-                        {
-                            R.Cast(ally);
-                        }
-                    }
+                    R.Cast(ally);
                 }
 
                 var ec = Player.CountEnemiesInRange(300);
@@ -208,7 +193,7 @@ namespace Lulu
 
             var target = pixTargetEffectiveHealth * 1.2f > luluTargetEffectiveHealth ? luluTarget : pixTarget;
             var flag = false;
-            Spell.CastStates qCastState = Spell.CastStates.OutOfRange;
+            var qCastState = Spell.CastStates.OutOfRange;
             if (target != null)
             {
                 var distanceToTargetFromPlayer = Player.Distance(target, true);
@@ -276,8 +261,7 @@ namespace Lulu
             var useQ = Config.Item("UseQFarm").GetValue<bool>();
             var useE = Config.Item("UseEFarm").GetValue<bool>();
 
-            var allMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range,
-                MinionTypes.All);
+            var allMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range);
 
             if (useQ)
             {
@@ -335,7 +319,7 @@ namespace Lulu
                     .Where(m => m.Team == GameObjectTeam.Neutral && m.IsValidTarget(E.Range))
                     .MaxOrDefault(m => m.MaxHealth);
 
-            if (mob != null && jungleMobNames.Contains(mob.BaseSkinName.ToLowerInvariant()) && E.IsKillable(mob))
+            if (mob != null && jungleMobNames.Contains(mob.CharData.BaseSkinName.ToLowerInvariant()) && E.IsKillable(mob))
             {
                 E.Cast(mob);
             }

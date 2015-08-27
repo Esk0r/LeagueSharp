@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SharpDX;
 using LeagueSharp;
 using LeagueSharp.Common;
 
 namespace Azir
 {
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     internal static class Jumper
     {
-        private static int CastQT = 0;
-        private static Vector2 CastQLocation = new Vector2();
+        private static int CastQT;
+        private static Vector2 CastQLocation;
 
-        private static int CastET = 0;
-        private static Vector2 CastELocation = new Vector2();
+        private static int CastET;
+        private static Vector2 CastELocation;
 
         static Jumper()
         {
@@ -24,7 +22,7 @@ namespace Azir
 
         static void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if(sender.IsMe)
+            if (sender.IsMe)
             {
                 if(args.SData.Name == "AzirE" && Utils.TickCount - CastQT < 500)
                 {
@@ -42,7 +40,7 @@ namespace Azir
 
         public static void Jump()
         {
-            if(Program.E.IsReady())
+            if (Program.E.IsReady())
             {
                 var extended = ObjectManager.Player.ServerPosition.To2D().Extend(Game.CursorPos.To2D(), Program.Q.Range - 25);
 
@@ -53,7 +51,7 @@ namespace Azir
                     if(Program.Q.Instance.State != SpellState.Cooldown)
                     {
                         var extended2 = ObjectManager.Player.ServerPosition.To2D().Extend(Game.CursorPos.To2D(), Program.W.Range);
-                        if(Utility.IsWall(extended2))
+                        if (extended2.IsWall())
                         {
                             Utility.DelayAction.Add(250, () => Program.Q.Cast(extended, true));
                             CastET = Utils.TickCount + 250;

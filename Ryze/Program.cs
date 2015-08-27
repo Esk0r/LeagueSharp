@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using LeagueSharp;
@@ -11,6 +12,7 @@ using LeagueSharp.Common;
 
 namespace Ryze
 {
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     internal class Program
     {
         public const string ChampionName = "Ryze";
@@ -30,7 +32,7 @@ namespace Ryze
 
         private static Obj_AI_Hero Player;
 
-        private static void Main(string[] args)
+        private static void Main()
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
         }
@@ -38,7 +40,10 @@ namespace Ryze
         private static void Game_OnGameLoad(EventArgs args)
         {
             Player = ObjectManager.Player;
-            if (Player.BaseSkinName != ChampionName) return;
+            if (Player.CharData.BaseSkinName != ChampionName)
+            {
+                return;
+            }
 
             //Create the spells
             Q = new Spell(SpellSlot.Q, 900);
@@ -210,42 +215,33 @@ namespace Ryze
 
             if (useQ && Q.IsReady())
             {
-                foreach (var minion in allMinions)
+                foreach (var minion in allMinions.Where(minion => minion.IsValidTarget() &&
+                                                                  HealthPrediction.GetHealthPrediction(minion,
+                                                                      (int)(Player.Distance(minion) * 1000 / 1700)) <
+                                                                  Player.GetSpellDamage(minion, SpellSlot.Q)))
                 {
-                    if (minion.IsValidTarget() &&
-                        HealthPrediction.GetHealthPrediction(minion,
-                            (int)(Player.Distance(minion) * 1000 / 1700)) <
-                         Player.GetSpellDamage(minion, SpellSlot.Q))
-                    {
-                        Q.Cast(minion);
-                        return;
-                    }
+                    Q.Cast(minion);
+                    return;
                 }
             }
             else if (useW && W.IsReady())
             {
-                foreach (var minion in allMinions)
+                foreach (var minion in allMinions.Where(minion => minion.IsValidTarget(W.Range) &&
+                                                                  minion.Health < Player.GetSpellDamage(minion, SpellSlot.Q)))
                 {
-                    if (minion.IsValidTarget(W.Range) &&
-                        minion.Health < Player.GetSpellDamage(minion, SpellSlot.Q))
-                    {
-                        W.CastOnUnit(minion);
-                        return;
-                    }
+                    W.CastOnUnit(minion);
+                    return;
                 }
             }
             else if (useE && E.IsReady())
             {
-                foreach (var minion in allMinions)
+                foreach (var minion in allMinions.Where(minion => minion.IsValidTarget(E.Range) &&
+                                                                  HealthPrediction.GetHealthPrediction(minion,
+                                                                      (int)(Player.Distance(minion) * 1000 / 1000)) <
+                                                                  Player.GetSpellDamage(minion, SpellSlot.Q) - 10))
                 {
-                    if (minion.IsValidTarget(E.Range) &&
-                        HealthPrediction.GetHealthPrediction(minion,
-                            (int)(Player.Distance(minion) * 1000 / 1000)) <
-                        Player.GetSpellDamage(minion, SpellSlot.Q) - 10)
-                    {
-                        E.CastOnUnit(minion);
-                        return;
-                    }
+                    E.CastOnUnit(minion);
+                    return;
                 }
             }
 

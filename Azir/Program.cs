@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
-using System.Drawing;
 using Color = System.Drawing.Color;
 
 namespace Azir
@@ -25,8 +22,8 @@ namespace Azir
 
         public static SpellSlot IgniteSlot;
 
-        private static int _allinT = 0;
-        static void Main(string[] args)
+        private static int _allinT;
+        static void Main()
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
         }
@@ -37,6 +34,7 @@ namespace Azir
             if (Player.ChampionName != "Azir") return;
 
             #region Spells
+
             Q = new Spell(SpellSlot.Q, 825);
             Qline = new Spell(SpellSlot.Q, 825);
 
@@ -50,9 +48,11 @@ namespace Azir
             R.SetSkillshot(0.5f, 0, 1400, false, SkillshotType.SkillshotLine);
 
             IgniteSlot = Player.GetSpellSlot("SummonerDot");
+
             #endregion
 
             #region Menu
+
             Menu = new Menu("Azir", "Azir", true);
 
             TargetSelector.AddToMenu(Menu.SubMenu("Target Selector"));
@@ -66,7 +66,7 @@ namespace Azir
             Menu.SubMenu("Combo").AddItem(new MenuItem("AllInKEK", "All-in (tap)!").SetValue(new KeyBind('G', KeyBindType.Press)));
             Menu.SubMenu("Combo").AddItem(new MenuItem("ComboActive", "Combo!").SetValue(new KeyBind(32, KeyBindType.Press)));
 
-            Menu.SubMenu("Harass").AddItem(new MenuItem("HarassMinMana", "Min mana %").SetValue(new Slider(20, 0, 100)));
+            Menu.SubMenu("Harass").AddItem(new MenuItem("HarassMinMana", "Min mana %").SetValue(new Slider(20)));
             Menu.SubMenu("Harass").AddItem(new MenuItem("HarassActive", "Harass!").SetValue(new KeyBind('C', KeyBindType.Press)));
 
             Menu.SubMenu("LaneClear").AddItem(new MenuItem("UseQLC", "Use Q").SetValue(true));
@@ -81,7 +81,7 @@ namespace Azir
             Menu.SubMenu("R").AddItem(new MenuItem("AutoRInterrupt", "Interrupt targets with R").SetValue(true));
 
             var dmgAfterComboItem = new MenuItem("DamageAfterR", "Draw damage after combo").SetValue(true);
-            Utility.HpBarDamageIndicator.DamageToUnit += hero => GetComboDamage(hero);
+            Utility.HpBarDamageIndicator.DamageToUnit += GetComboDamage;
             Utility.HpBarDamageIndicator.Enabled = dmgAfterComboItem.GetValue<bool>();
             dmgAfterComboItem.ValueChanged += delegate(object sender, OnValueChangeEventArgs eventArgs)
             {
@@ -94,7 +94,9 @@ namespace Azir
             Menu.SubMenu("Drawings").AddItem(dmgAfterComboItem);
 
             Menu.AddToMainMenu();
+
             #endregion
+
             Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
             Game.OnUpdate += Game_OnGameUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
@@ -117,13 +119,10 @@ namespace Azir
 
             if(Menu.SubMenu("Misc").Item("AutoEInterrupt").GetValue<bool>() && E.IsReady())
             {
-                foreach (var soldier in SoldiersManager.AllSoldiers.Where(s => Player.Distance(s, true) < E.RangeSqr))
+                foreach (var soldier in SoldiersManager.AllSoldiers.Where(s => Player.Distance(s, true) < E.RangeSqr).Where(soldier => E.WillHit(sender, soldier.ServerPosition)))
                 {
-                    if (E.WillHit(sender, soldier.ServerPosition))
-                    {
-                        E.Cast(soldier.ServerPosition);
-                        return;
-                    }
+                    E.Cast(soldier.ServerPosition);
+                    return;
                 }
                 return;
             }
@@ -220,7 +219,6 @@ namespace Azir
                         Qline.Cast(positions.MaxOrDefault(k => k.Value).Key);
                     }
                 }
-                return;
             }
         }
 
@@ -242,7 +240,7 @@ namespace Azir
                 return;
             }
 
-            if(Q.IsReady())
+            if (Q.IsReady())
             {
                 var qTarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Magical);
                 if(qTarget != null)
@@ -286,13 +284,10 @@ namespace Azir
 
             if (useE && ((Utils.TickCount - _allinT) < 4000 || (HeroManager.Enemies.Count(e => e.IsValidTarget(1000)) <= 2 && GetComboDamage(qTarget) > qTarget.Health)) && E.IsReady())
             {
-                foreach (var soldier in SoldiersManager.AllSoldiers2.Where(s => Player.Distance(s, true) < E.RangeSqr))
+                foreach (var soldier in SoldiersManager.AllSoldiers2.Where(s => Player.Distance(s, true) < E.RangeSqr).Where(soldier => E.WillHit(qTarget, soldier.ServerPosition)))
                 {
-                    if(E.WillHit(qTarget, soldier.ServerPosition))
-                    {
-                        E.Cast(soldier.ServerPosition);
-                        return;
-                    }
+                    E.Cast(soldier.ServerPosition);
+                    return;
                 }
             }
 
@@ -325,7 +320,7 @@ namespace Azir
                 _allinT = Utils.TickCount;
             }
 
-            if (Menu.SubMenu("Harass").Item("HarassActive").GetValue<KeyBind>().Active && Player.ManaPercentage() > Menu.SubMenu("Harass").Item("HarassMinMana").GetValue<Slider>().Value)
+            if (Menu.SubMenu("Harass").Item("HarassActive").GetValue<KeyBind>().Active && Player.ManaPercent > Menu.SubMenu("Harass").Item("HarassMinMana").GetValue<Slider>().Value)
             {
                 Harass();
                 return;

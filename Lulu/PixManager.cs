@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
@@ -12,7 +9,7 @@ namespace Lulu
 {
     public static class PixManager
     {
-        private static Obj_AI_Base _pix = null;
+        private static Obj_AI_Base _pix;
 
         public static bool DrawPix { get; set; }
 

@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using LeagueSharp;
@@ -11,6 +12,7 @@ using LeagueSharp.Common;
 
 namespace Karma
 {
+    [SuppressMessage("ReSharper", "ConvertPropertyToExpressionBody")] // Enable when L# supports .NET 4.6
     internal class Program
     {
         private const string ChampionName = "Karma";
@@ -31,7 +33,7 @@ namespace Karma
             get { return ObjectManager.Player.HasBuff("KarmaMantra"); }
         }
 
-        private static void Main(string[] args)
+        private static void Main()
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
         }
@@ -135,15 +137,12 @@ namespace Karma
             var menuItem = _config.Item("WRootRange").GetValue<Circle>();
             if (menuItem.Active)
             {
-                foreach (var enemy in
-                    ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsValidTarget() && h.HasBuff("KarmaSpiritBind")))
+                foreach (var distance in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsValidTarget() && h.HasBuff("KarmaSpiritBind")).Select(enemy => (1 - Math.Min(Math.Max(850 - ObjectManager.Player.Distance(enemy), 0), 450) / 450)))
                 {
-                    var distance = (1 - Math.Min(Math.Max(850 - ObjectManager.Player.Distance(enemy), 0), 450) / 450);
-                
                     Render.Circle.DrawCircle(
                         ObjectManager.Player.Position, 850, Color.FromArgb((int)(50 * distance), menuItem.Color), -420,
                         true);
-                        Render.Circle.DrawCircle(
+                    Render.Circle.DrawCircle(
                         ObjectManager.Player.Position, 850, Color.FromArgb((int)(255 * distance), menuItem.Color), 10);
                 
                     break;
