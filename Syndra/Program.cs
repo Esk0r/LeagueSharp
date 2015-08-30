@@ -113,6 +113,7 @@ namespace Syndra
 
             //Farming menu:
             Config.AddSubMenu(new Menu("Farm", "Farm"));
+            Config.SubMenu("Farm").AddItem(new MenuItem("EnabledFarm", "Enable! (On/Off: Mouse Scroll)").SetValue(true));
             Config.SubMenu("Farm")
                 .AddItem(
                     new MenuItem("UseQFarm", "Use Q").SetValue(
@@ -197,10 +198,27 @@ namespace Syndra
 
             Config.Item("HarassActiveT").Permashow(Config.Item("HarassActiveTPermashow").GetValue<bool>(), "HarassActive");
 
+            Config.SubMenu("Drawings")
+                .AddItem(
+                    new MenuItem("EnabledFarmPermashow", "Show Farm Permashow").SetValue(true)).ValueChanged +=
+                (s, ar) =>
+                {
+                    if (ar.GetNewValue<bool>())
+                    {
+                        Config.Item("EnabledFarm").Permashow(true, "Enabled Farm");
+                    }
+                    else
+                    {
+                        Config.Item("EnabledFarm").Permashow(false);
+                    }
+                };
+            Config.Item("EnabledFarm").Permashow(Config.Item("EnabledFarmPermashow").GetValue<bool>(), "Enabled Farm");
+
             Config.AddToMainMenu();
 
             //Add the events we are going to use:
             Game.OnUpdate += Game_OnGameUpdate;
+            Game.OnWndProc += Game_OnWndProc;            
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
             Drawing.OnDraw += Drawing_OnDraw;
             Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
@@ -208,6 +226,16 @@ namespace Syndra
             Game.PrintChat(ChampionName + " Loaded!");
         }
 
+        private static void Game_OnWndProc(WndEventArgs args)
+        {
+            if (args.Msg != 0x20a)
+                return;
+
+            Config.SubMenu("Farm")
+                .Item("EnabledFarm")
+                .SetValue(!Config.SubMenu("Farm").Item("EnabledFarm").GetValue<bool>());
+        }
+        
         static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
         {
             if (!Config.Item("InterruptSpells").GetValue<bool>()) return;
@@ -423,6 +451,9 @@ namespace Syndra
 
         private static void Farm(bool laneClear)
         {
+            if (!Config.Item("EnabledFarm").GetValue<bool>())
+                return;
+
             if (!Orbwalking.CanMove(40)) return;
 
             var rangedMinionsQ = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range + Q.Width + 30,
