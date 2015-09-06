@@ -387,7 +387,7 @@ namespace Syndra
                 useR = (Config.Item("DontUlt" + rTarget.BaseSkinName) != null &&
                         Config.Item("DontUlt" + rTarget.BaseSkinName).GetValue<bool>() == false) && useR;
 
-            if (rTarget != null && useR && comboDamage > rTarget.Health)
+            if (rTarget != null && useR && comboDamage > rTarget.Health && !rTarget.IsZombie)
             {
                 if (R.IsReady())
                 {
@@ -398,7 +398,7 @@ namespace Syndra
             //R
             if (rTarget != null && useR && R.IsReady() && !Q.IsReady())
             {
-                if (comboDamage > rTarget.Health)
+                if (comboDamage > rTarget.Health && !rTarget.IsZombie)
                 {
                     R.Cast(rTarget);
                 }
