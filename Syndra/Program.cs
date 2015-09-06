@@ -231,6 +231,9 @@ namespace Syndra
             if (args.Msg != 0x20a)
                 return;
 
+            if (ObjectManager.Player.InShop() || ObjectManager.Player.InFountain())
+                return;
+
             Config.SubMenu("Farm")
                 .Item("EnabledFarm")
                 .SetValue(!Config.SubMenu("Farm").Item("EnabledFarm").GetValue<bool>());
