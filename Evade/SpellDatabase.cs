@@ -3797,7 +3797,7 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Zed",
-                    SpellName = "ZedShuriken",
+                    SpellName = "ZedQ", //"ZedShuriken",
                     Slot = SpellSlot.Q,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 250,
