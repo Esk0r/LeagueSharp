@@ -3809,7 +3809,8 @@ namespace Evade
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "zedshurikenmisone",
-                    FromObjects = new[] { "Zed_Clone_idle.troy", "Zed_Clone_Idle.troy" },
+                    //FromObjects = new[] { "Zed_Clone_idle.troy", "Zed_Clone_Idle.troy" },
+                    FromObjects = new[] { "Zed_Base_W_tar.troy", "Zed_Base_W_cloneswap_buf.troy" },
                     ExtraMissileNames = new[] { "zedshurikenmistwo", "zedshurikenmisthree" },
                     CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
                 });
