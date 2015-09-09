@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LeagueSharp;
 using LeagueSharp.Common;
+using Color = System.Drawing.Color;
 
 namespace Azir
 {
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     internal static class SoldiersManager
     {
-        private static List<Obj_AI_Minion> _soldiers = new List<Obj_AI_Minion>();
-        private static Dictionary<int, string> Animations = new Dictionary<int, string>();
+        private static readonly List<Obj_AI_Minion> _soldiers = new List<Obj_AI_Minion>();
+        private static readonly Dictionary<int, string> Animations = new Dictionary<int, string>();
         private const bool DrawSoldiers = true;
 
         public static List<Obj_AI_Minion> ActiveSoldiers
@@ -35,7 +36,7 @@ namespace Azir
             Obj_AI_Minion.OnDelete += Obj_AI_Minion_OnDelete;
             Obj_AI_Minion.OnPlayAnimation += Obj_AI_Minion_OnPlayAnimation;
 
-            if(DrawSoldiers)
+            if (DrawSoldiers)
             {
                 Drawing.OnDraw += Drawing_OnDraw;
             }
@@ -53,13 +54,13 @@ namespace Azir
         {
             foreach (var soldier in ActiveSoldiers)
             {
-                Render.Circle.DrawCircle(soldier.Position, 320, System.Drawing.Color.FromArgb(150, System.Drawing.Color.Yellow));
+                Render.Circle.DrawCircle(soldier.Position, 320, Color.FromArgb(150, Color.Yellow));
             }
         }
 
         private static bool IsSoldier(this Obj_AI_Minion soldier)
         {
-            return soldier.IsAlly && String.Equals(soldier.BaseSkinName, "azirsoldier", StringComparison.InvariantCultureIgnoreCase);
+            return soldier.IsAlly && string.Equals(soldier.CharData.BaseSkinName, "azirsoldier", StringComparison.InvariantCultureIgnoreCase);
         }
 
         static void Obj_AI_Minion_OnCreate(GameObject sender, EventArgs args)

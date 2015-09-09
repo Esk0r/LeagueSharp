@@ -1,31 +1,32 @@
 #region
+
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
+
 #endregion
 
 namespace TwistedFate
 {
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     internal class Program
     {
         private static Menu Config;
 
         private static Spell Q;
-        private static readonly float Qangle = 28*(float) Math.PI/180;
+        private const float Qangle = 28*(float) Math.PI/180;
         private static Orbwalking.Orbwalker SOW;
         private static Vector2 PingLocation;
-        private static int LastPingT = 0;
+        private static int LastPingT;
         private static Obj_AI_Hero Player;
         private static int CastQTick;
 
-        private static void Main(string[] args)
+        private static void Main()
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
         }
@@ -54,7 +55,10 @@ namespace TwistedFate
 
         private static void Game_OnGameLoad(EventArgs args)
         {
-            if (ObjectManager.Player.BaseSkinName != "TwistedFate") return;
+            if (ObjectManager.Player.CharData.BaseSkinName != "TwistedFate")
+            {
+                return;
+            }
             Player = ObjectManager.Player;
             Q = new Spell(SpellSlot.Q, 1450);
             Q.SetSkillshot(0.25f, 40f, 1000f, false, SkillshotType.SkillshotLine);
@@ -170,7 +174,7 @@ namespace TwistedFate
             var rCircle2 = Config.Item("Rcircle2").GetValue<Circle>();
             if (rCircle2.Active)
             {
-                Utility.DrawCircle(ObjectManager.Player.Position, 5500, rCircle2.Color, 1, 23, true);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, 5500, rCircle2.Color, 1, true);
             }
         }
 
@@ -299,6 +303,7 @@ namespace TwistedFate
             return (float) dmg;
         }
 
+        // ReSharper disable once FunctionComplexityOverflow
         private static void Game_OnGameUpdate(EventArgs args)
         {
             if (Config.Item("PingLH").GetValue<bool>())

@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LeagueSharp;
 using LeagueSharp.Common;
 
 namespace Azir
 {
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     class AzirWalker : Orbwalking.Orbwalker
     {
         private const int _soldierAARange = 250;
@@ -48,48 +47,23 @@ namespace Azir
 
             var soldierAArange = _soldierAARange + 65 + target.BoundingRadius;
             soldierAArange *= soldierAArange;
-            foreach (var soldier in SoldiersManager.ActiveSoldiers)
-            {
-                if (soldier.Distance(target, true) <= soldierAArange)
-                {
-                    return 2;
-                }
-            }
-
-            return 0;
+            return SoldiersManager.ActiveSoldiers.Any(soldier => soldier.Distance(target, true) <= soldierAArange) ? 2 : 0;
         }
 
         public override AttackableUnit GetTarget()
         {
-            AttackableUnit result;
             if (ActiveMode == Orbwalking.OrbwalkingMode.LaneClear || ActiveMode == Orbwalking.OrbwalkingMode.Mixed ||
                 ActiveMode == Orbwalking.OrbwalkingMode.LastHit)
             {
-                foreach (var minion in
-                    ObjectManager.Get<Obj_AI_Minion>()
-                        .Where(
-                            minion =>
-                                minion.IsValidTarget() &&
-                                minion.Health <
-                                3 *
-                                (ObjectManager.Player.BaseAttackDamage + ObjectManager.Player.FlatPhysicalDamageMod))
-                    )
+                foreach (var minion in from minion in ObjectManager.Get<Obj_AI_Minion>()
+                    .Where(
+                        minion =>
+                            minion.IsValidTarget() &&
+                            minion.Health <
+                            3 *
+                            (ObjectManager.Player.BaseAttackDamage + ObjectManager.Player.FlatPhysicalDamageMod)) let r = CustomInAutoattackRange(minion) where r != 0 let t = (int)(Program.Player.AttackCastDelay * 1000) - 100 + Game.Ping / 2 let predHealth = HealthPrediction.GetHealthPrediction(minion, t, 0) let damage = (r == 1) ? Program.Player.GetAutoAttackDamage(minion, true) : Program.Player.GetSpellDamage(minion, SpellSlot.W) where minion.Team != GameObjectTeam.Neutral && MinionManager.IsMinion(minion, true) where predHealth > 0 && predHealth <= damage select minion)
                 {
-                    var r = CustomInAutoattackRange(minion);
-                    if(r != 0)
-                    {
-                        var t = (int)(Program.Player.AttackCastDelay * 1000) - 100 + Game.Ping / 2;
-                        var predHealth = HealthPrediction.GetHealthPrediction(minion, t, 0);
-
-                        var damage = (r == 1) ? Program.Player.GetAutoAttackDamage(minion, true) : Program.Player.GetSpellDamage(minion, SpellSlot.W);
-                        if (minion.Team != GameObjectTeam.Neutral && MinionManager.IsMinion(minion, true))
-                        {
-                            if (predHealth > 0 && predHealth <= damage)
-                            {
-                                return minion;
-                            }
-                        }
-                    }
+                    return minion;
                 }
             }
 
@@ -102,19 +76,15 @@ namespace Azir
                     posibleTargets.Add(autoAttackTarget, GetDamageValue(autoAttackTarget, false));
                 }
 
-                foreach (var soldier in SoldiersManager.ActiveSoldiers)
+                foreach (var soldierTarget in SoldiersManager.ActiveSoldiers.Select(soldier => TargetSelector.GetTarget(_soldierAARange + 65 + 65, TargetSelector.DamageType.Magical, true, null, soldier.ServerPosition)).Where(soldierTarget => soldierTarget.IsValidTarget()))
                 {
-                    var soldierTarget = TargetSelector.GetTarget(_soldierAARange + 65 + 65, TargetSelector.DamageType.Magical, true, null, soldier.ServerPosition);
-                    if (soldierTarget.IsValidTarget())
+                    if(posibleTargets.ContainsKey(soldierTarget))
                     {
-                        if(posibleTargets.ContainsKey(soldierTarget))
-                        {
-                            posibleTargets[soldierTarget] *= 1.25f;
-                        }
-                        else
-                        {
-                            posibleTargets.Add(soldierTarget, GetDamageValue(soldierTarget, true));
-                        }
+                        posibleTargets[soldierTarget] *= 1.25f;
+                    }
+                    else
+                    {
+                        posibleTargets.Add(soldierTarget, GetDamageValue(soldierTarget, true));
                     }
                 }
 
@@ -135,16 +105,13 @@ namespace Azir
                         {
                             var soldierAArange = _soldierAARange + 65 + minion.BoundingRadius;
                             soldierAArange *= soldierAArange;
-                            if(soldier.Distance(minion, true) < soldierAArange)
+                            if (soldier.Distance(minion, true) < soldierAArange)
                             {
                                 var p1 = minion.Position.To2D();
                                 var p2 = soldier.Position.To2D().Extend(minion.Position.To2D(), 375);
-                                foreach (var enemyPosition in validEnemiesPosition)
+                                if (validEnemiesPosition.Any(enemyPosition => enemyPosition.Distance(p1, p2, true, true) < AAWidthSqr))
                                 {
-                                    if (enemyPosition.Distance(p1, p2, true, true) < AAWidthSqr)
-                                    {
-                                        return minion;
-                                    }
+                                    return minion;
                                 }
                             }
                         }
@@ -180,24 +147,18 @@ namespace Azir
             /*Jungle minions*/
             if (ActiveMode == Orbwalking.OrbwalkingMode.LaneClear || ActiveMode == Orbwalking.OrbwalkingMode.Mixed)
             {
-                result =
-                    ObjectManager.Get<Obj_AI_Minion>()
-                        .Where(
-                            mob =>
-                                mob.IsValidTarget() && Orbwalking.InAutoAttackRange(mob) && mob.Team == GameObjectTeam.Neutral)
-                        .MaxOrDefault(mob => mob.MaxHealth);
+                AttackableUnit result = ObjectManager.Get<Obj_AI_Minion>()
+                    .Where(
+                        mob =>
+                            mob.IsValidTarget() && Orbwalking.InAutoAttackRange(mob) && mob.Team == GameObjectTeam.Neutral)
+                    .MaxOrDefault(mob => mob.MaxHealth);
                 if (result != null)
                 {
                     return result;
                 }
             }
 
-            if (ActiveMode == Orbwalking.OrbwalkingMode.LaneClear)
-            {
-                return (ObjectManager.Get<Obj_AI_Minion>().Where(minion => minion.IsValidTarget() && InAutoAttackRange(minion))).MaxOrDefault(m => CustomInAutoattackRange(m) * m.Health);
-            }
-
-            return null;
+            return ActiveMode == Orbwalking.OrbwalkingMode.LaneClear ? (ObjectManager.Get<Obj_AI_Minion>().Where(minion => minion.IsValidTarget() && InAutoAttackRange(minion))).MaxOrDefault(m => CustomInAutoattackRange(m) * m.Health) : null;
         }
     }
 }

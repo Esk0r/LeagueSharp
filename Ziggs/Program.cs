@@ -2,8 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Windows.Input;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
@@ -13,6 +13,7 @@ using Color = System.Drawing.Color;
 
 namespace Ziggs
 {
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     internal class Program
     {
         public static string ChampionName = "Ziggs";
@@ -26,10 +27,10 @@ namespace Ziggs
         public static Spell R;
         public static Menu Config;
 
-        public static int LastWToMouseT = 0;
-        public static int UseSecondWT = 0;
+        public static int LastWToMouseT;
+        public static int UseSecondWT;
 
-        private static void Main(string[] args)
+        private static void Main()
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
         }
@@ -203,10 +204,11 @@ namespace Ziggs
             var rValueM = Config.Item("DrawRRangeM").GetValue<Circle>();
             if (rValueM.Active)
             {
-                Utility.DrawCircle(ObjectManager.Player.Position, R.Range, rValueM.Color, 2, 30, true);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, rValueM.Color, 2, true);
             }
         }
 
+        // ReSharper disable once FunctionComplexityOverflow
         private static void Game_OnGameUpdate(EventArgs args)
         {
             //Combo & Harass
@@ -273,16 +275,12 @@ namespace Ziggs
                     {
                         var alliesarround = 0;
                         var n = 0;
-                        foreach (var ally in ObjectManager.Get<Obj_AI_Hero>())
+                        foreach (var ally in ObjectManager.Get<Obj_AI_Hero>().Where(ally => ally.IsAlly && !ally.IsMe && ally.IsValidTarget(float.MaxValue, false) && ally.Distance(target) < 700))
                         {
-                            if (ally.IsAlly && !ally.IsMe && ally.IsValidTarget(float.MaxValue, false) &&
-                                ally.Distance(target) < 700)
+                            alliesarround++;
+                            if (Utils.TickCount - ally.LastCastedSpellT() < 1500)
                             {
-                                alliesarround++;
-                                if (Utils.TickCount - ally.LastCastedSpellT() < 1500)
-                                {
-                                    n++;
-                                }
+                                n++;
                             }
                         }
 
@@ -453,17 +451,10 @@ namespace Ziggs
             if (thirdBouncePosition.Distance(targetPosition.To2D()) < Q1.Width + target.BoundingRadius)
             {
                 //Check the second one.
-                foreach (var minion in ObjectManager.Get<Obj_AI_Minion>())
+                if ((from minion in ObjectManager.Get<Obj_AI_Minion>() where minion.IsValidTarget(3000) let predictedPos = Q2.GetPrediction(minion) where predictedPos.UnitPosition.To2D().Distance(secondBouncePosition) <
+                                                                                                                                                          Q2.Width + minion.BoundingRadius select minion).Any())
                 {
-                    if (minion.IsValidTarget(3000))
-                    {
-                        var predictedPos = Q2.GetPrediction(minion);
-                        if (predictedPos.UnitPosition.To2D().Distance(secondBouncePosition) <
-                            Q2.Width + minion.BoundingRadius)
-                        {
-                            return true;
-                        }
-                    }
+                    return true;
                 }
             }
 
@@ -471,20 +462,7 @@ namespace Ziggs
                 thirdBouncePosition.Distance(targetPosition.To2D()) < Q1.Width + target.BoundingRadius)
             {
                 //Check the first one
-                foreach (var minion in ObjectManager.Get<Obj_AI_Minion>())
-                {
-                    if (minion.IsValidTarget(3000))
-                    {
-                        var predictedPos = Q1.GetPrediction(minion);
-                        if (predictedPos.UnitPosition.To2D().Distance(firstBouncePosition) <
-                            Q1.Width + minion.BoundingRadius)
-                        {
-                            return true;
-                        }
-                    }
-                }
-
-                return false;
+                return (from minion in ObjectManager.Get<Obj_AI_Minion>() where minion.IsValidTarget(3000) let predictedPos = Q1.GetPrediction(minion) where predictedPos.UnitPosition.To2D().Distance(firstBouncePosition) < Q1.Width + minion.BoundingRadius select minion).Any();
             }
 
             return true;
@@ -543,17 +521,9 @@ namespace Ziggs
             {
                 if (useQ && Q1.IsReady())
                 {
-                    foreach (var minion in allMinions)
+                    foreach (var minion in from minion in allMinions where !Orbwalking.InAutoAttackRange(minion) let Qdamage = ObjectManager.Player.GetSpellDamage(minion, SpellSlot.Q) * 0.75 where Qdamage > Q1.GetHealthPrediction(minion) select minion)
                     {
-                        if (!Orbwalking.InAutoAttackRange(minion))
-                        {
-                            var Qdamage = ObjectManager.Player.GetSpellDamage(minion, SpellSlot.Q) * 0.75;
-
-                            if (Qdamage > Q1.GetHealthPrediction(minion))
-                            {
-                                Q2.Cast(minion);
-                            }
-                        }
+                        Q2.Cast(minion);
                     }
                 }
 

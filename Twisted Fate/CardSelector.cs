@@ -28,7 +28,7 @@ namespace TwistedFate
     public static class CardSelector
     {
         public static Cards Select;
-        public static int LastWSent = 0;
+        public static int LastWSent;
         public static int LastSendWSent = 0;
 
 
