@@ -3797,7 +3797,7 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Zed",
-                    SpellName = "ZedQ", //"ZedShuriken",
+                    SpellName = "ZedQ",
                     Slot = SpellSlot.Q,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 250,
@@ -3808,10 +3808,9 @@ namespace Evade
                     AddHitbox = true,
                     DangerValue = 2,
                     IsDangerous = false,
-                    MissileSpellName = "zedshurikenmisone",
+                    MissileSpellName = "ZedQMissile",
                     //FromObjects = new[] { "Zed_Clone_idle.troy", "Zed_Clone_Idle.troy" },
                     FromObjects = new[] { "Zed_Base_W_tar.troy", "Zed_Base_W_cloneswap_buf.troy" },
-                    ExtraMissileNames = new[] { "zedshurikenmistwo", "zedshurikenmisthree" },
                     CollisionObjects = new[] { CollisionObjectTypes.YasuoWall },
                 });
 
