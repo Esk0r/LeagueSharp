@@ -42,15 +42,18 @@ namespace Orianna
             {"headbutt", "Alistar"},
             {"bandagetoss", "Amumu"},
             {"dianateleport", "Diana"},
+            {"ekkoe", "ekko"},
             {"elisespidereinitial", "Elise"},
             {"crowstorm", "FiddleSticks"},
             {"fioraq", "Fiora"},
+            {"gnare", "Gnar"},
+            {"gnarbige", "Gnar"},
             {"gragase", "Gragas"},
             {"hecarimult", "Hecarim"},
             {"ireliagatotsu", "Irelia"},
             {"jarvanivdragonstrike", "JarvanIV"},
             {"jaxleapstrike", "Jax"},
-            {"riftwalk", "Kassadin"}, // prob outdated
+            {"riftwalk", "Kassadin"},
             {"katarinae", "Katarina"},
             {"kennenlightningrush", "Kennen"},
             {"khazixe", "KhaZix"},
@@ -119,6 +122,7 @@ namespace Orianna
             Config.SubMenu("Combo").AddItem(new MenuItem("UseECombo", "Use E").SetValue(true));
             Config.SubMenu("Combo").AddItem(new MenuItem("UseRCombo", "Use R").SetValue(true));
             Config.SubMenu("Combo").AddItem(new MenuItem("UseRNCombo", "Use R on at least").SetValue(new StringList(new string[]{"1 target", "2 target", "3 target", "4 target", "5 target"}, 0)));
+            Config.SubMenu("Combo").AddItem(new MenuItem("UseRImportant", "-> Or if hero priority >=")).SetValue(new Slider(5, 1, 5)); // 5 for e.g adc's
             Config.SubMenu("Combo")
                 .AddItem(
                     new MenuItem("ComboActive", "Combo!").SetValue(
@@ -248,7 +252,7 @@ namespace Orianna
 
             Config.SubMenu("Drawings")
                 .AddItem(
-                    new MenuItem("EnabledFarmPermashow", "Show Farm Permashow").SetValue(true)).ValueChanged +=
+                    new MenuItem("EnabledFarmPermashow", "Show farm permashow").SetValue(true)).ValueChanged +=
                 (s, ar) =>
                 {
                     if (ar.GetNewValue<bool>())
@@ -556,7 +560,7 @@ namespace Orianna
             {
                 if(useR && GetComboDamage(target) > target.Health && RIsReady)
                 {
-                    CastR(minRTargets);
+                    CastR(minRTargets, true);
                 }
 
                 if(useQ && QIsReady)
@@ -613,9 +617,10 @@ namespace Orianna
                             }
                         }
                     }
+
                     else if (GetComboDamage(target) > target.Health)
                     {
-                        CastR(minRTargets);
+                        CastR(minRTargets, true);
                     }
                 }
 
@@ -850,13 +855,18 @@ namespace Orianna
             return false;
         }
 
-        public static bool CastR(int minTargets)
+        public static bool CastR(int minTargets, bool prioriy = false)
         {
-            if (GetHits(R).Item1 >= minTargets)
+            if (GetHits(R).Item1 >= minTargets || prioriy && GetHits(R)
+                    .Item2.Any(
+                        hero =>
+                            Config.Item("TargetSelector" + hero.ChampionName + "Priority").GetValue<Slider>().Value >=
+                            Config.Item("UseRImportant").GetValue<Slider>().Value))
             {
                 R.Cast(Player.ServerPosition, true);
                 return true;
             }
+
             return false;
         }
 
