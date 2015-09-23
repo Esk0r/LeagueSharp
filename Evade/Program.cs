@@ -490,6 +490,13 @@ namespace Evade
                 return;
             }
 
+            /*Avoid evading while dashing.*/
+            if (ObjectManager.Player.IsDashing())
+            {
+                Evading = false;
+                return;
+            }
+
             //Don't evade while casting R as sion
             if (PlayerChampionName == "Sion" && ObjectManager.Player.HasBuff("SionR"))
             {
@@ -788,7 +795,7 @@ namespace Evade
                         args.EndPos.Distance(args.StartPos));
                 }
 
-                Utility.DelayAction.Add(args.Duration, delegate { Evading = false; });
+                //Utility.DelayAction.Add(args.Duration, delegate { Evading = false; });
             }
         }
 
