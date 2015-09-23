@@ -42,7 +42,7 @@ namespace Azir
 
         public static void Jump()
         {
-            if(Program.E.IsReady())
+            if(Math.Abs(Program.E.Cooldown) < 0.00001)
             {
                 var extended = ObjectManager.Player.ServerPosition.To2D().Extend(Game.CursorPos.To2D(), Program.Q.Range - 25);
 

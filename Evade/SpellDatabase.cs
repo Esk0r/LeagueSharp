@@ -1019,7 +1019,7 @@ namespace Evade
                     SpellName = "FioraW",
                     Slot = SpellSlot.W,
                     Type = SkillShotType.SkillshotMissileLine,
-                    Delay = 700,
+                    Delay = 500,
                     Range = 800,
                     Radius = 70,
                     MissileSpeed = 3200,
