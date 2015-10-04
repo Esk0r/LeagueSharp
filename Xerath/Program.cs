@@ -518,7 +518,7 @@ namespace Xerath
             Orbwalker.SetMovement(true);
 
             //Update the R range
-            R.Range = 1850 + R.Level * 1050;
+            R.Range = 1200 * R.Level + 2000;
 
             if (IsCastingR)
             {
