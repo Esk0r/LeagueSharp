@@ -463,8 +463,7 @@ namespace Evade
                 return;
             }
             
-            if (Config.Menu.Item("DisableEvadeForOlafR").GetValue<bool>()
-                && ObjectManager.Player.CharData.BaseSkinName == "Olaf" && ObjectManager.Player.HasBuff("OlafRagnarok"))
+            if (ObjectManager.Player.CharData.BaseSkinName == "Olaf" && Config.Menu.Item("DisableEvadeForOlafR").GetValue<bool>() && ObjectManager.Player.HasBuff("OlafRagnarok"))
             {
                 EvadeToPoint = Vector2.Zero;
                 return;
