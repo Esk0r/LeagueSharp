@@ -462,6 +462,13 @@ namespace Evade
                 EvadeToPoint = Vector2.Zero;
                 return;
             }
+            
+            if (Config.Menu.Item("DisableEvadeForOlafR").GetValue<bool>()
+                && ObjectManager.Player.CharData.BaseSkinName == "Olaf" && ObjectManager.Player.HasBuff("OlafRagnarok"))
+            {
+                EvadeToPoint = Vector2.Zero;
+                return;
+            }
 
             //Avoid sending move/cast packets while dead.
             if (ObjectManager.Player.IsDead)
