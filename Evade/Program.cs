@@ -462,8 +462,8 @@ namespace Evade
                 PathFollower.Stop();
                 return;
             }
-            
-            if (ObjectManager.Player.CharData.BaseSkinName == "Olaf" && Config.Menu.Item("DisableEvadeForOlafR").GetValue<bool>() && ObjectManager.Player.HasBuff("OlafRagnarok"))
+
+            if (PlayerChampionName == "Olaf" && Config.Menu.Item("DisableEvadeForOlafR").GetValue<bool>() && ObjectManager.Player.HasBuff("OlafRagnarok"))
             {
                 EvadeToPoint = Vector2.Zero;
                 PathFollower.Stop();
@@ -705,7 +705,7 @@ namespace Evade
                 return;
             }
 
-            if (ObjectManager.Player.CharData.BaseSkinName == "Olaf" && Config.Menu.Item("DisableEvadeForOlafR").GetValue<bool>() && ObjectManager.Player.HasBuff("OlafRagnarok"))
+            if (PlayerChampionName == "Olaf" && Config.Menu.Item("DisableEvadeForOlafR").GetValue<bool>() && ObjectManager.Player.HasBuff("OlafRagnarok"))
             {
                 return;
             }
