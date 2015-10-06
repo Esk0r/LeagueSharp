@@ -518,7 +518,7 @@ namespace Xerath
             Orbwalker.SetMovement(true);
 
             //Update the R range
-            R.Range = 1850 + R.Level * 1050;
+            R.Range = 1200 * R.Level + 2000;
 
             if (IsCastingR)
             {
@@ -559,7 +559,7 @@ namespace Xerath
             if (R.Level == 0) return;
             var menuItem = Config.Item(R.Slot + "RangeM").GetValue<Circle>();
             if (menuItem.Active)
-                Render.Circle.DrawCircle(Player.Position, R.Range, menuItem.Color, 1, true);
+                Utility.DrawCircle(Player.Position, R.Range, menuItem.Color, 1, 23, true);
         }
 
         private static void Drawing_OnDraw(EventArgs args)

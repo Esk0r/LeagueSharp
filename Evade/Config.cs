@@ -142,7 +142,13 @@ namespace Evade
             misc.AddItem(new MenuItem("BlockSpells", "Block spells while evading").SetValue(new StringList(new []{"No", "Only dangerous", "Always"}, 1)));
             misc.AddItem(new MenuItem("DisableFow", "Disable fog of war dodging").SetValue(false));
             misc.AddItem(new MenuItem("ShowEvadeStatus", "Show Evade Status").SetValue(false));
-            
+            if (ObjectManager.Player.CharData.BaseSkinName == "Olaf")
+            {
+                misc.AddItem(
+                    new MenuItem("DisableEvadeForOlafR", "Automatic disable Evade when Olaf's ulti is active!")
+                        .SetValue(true));
+            }
+
 
             Menu.AddSubMenu(misc);
 

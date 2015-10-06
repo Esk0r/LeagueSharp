@@ -56,6 +56,7 @@ namespace Evade
         public int MissileMinSpeed;
         public int MissileSpeed;
         public string MissileSpellName = "";
+        public EarlyObjects[] EarlyEvade;
         public float MultipleAngle;
         public int MultipleNumber = -1;
         public int RingRadius;
