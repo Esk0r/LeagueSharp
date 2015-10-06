@@ -446,7 +446,6 @@ namespace Evade
 
             PreviousTickPosition = PlayerPosition;
             
-
             //Remove the detected skillshots that have expired.
             DetectedSkillshots.RemoveAll(skillshot => !skillshot.IsActive());
 
@@ -460,6 +459,7 @@ namespace Evade
             if (!Config.Menu.Item("Enabled").GetValue<KeyBind>().Active)
             {
                 EvadeToPoint = Vector2.Zero;
+                PathFollower.Stop();
                 return;
             }
 
@@ -467,6 +467,7 @@ namespace Evade
             if (ObjectManager.Player.IsDead)
             {
                 EvadeToPoint = Vector2.Zero;
+                PathFollower.Stop();
                 return;
             }
 
@@ -474,6 +475,7 @@ namespace Evade
             if (ObjectManager.Player.IsCastingInterruptableSpell(true))
             {
                 EvadeToPoint = Vector2.Zero;
+                PathFollower.Stop();
                 return;
             }
                                      
@@ -500,6 +502,7 @@ namespace Evade
             //Don't evade while casting R as sion
             if (PlayerChampionName == "Sion" && ObjectManager.Player.HasBuff("SionR"))
             {
+                PathFollower.Stop();
                 return;
             }
 
@@ -538,13 +541,18 @@ namespace Evade
                 }
             }
 
-
             //Spell Shielded
             if (ObjectManager.Player.IsSpellShielded())
             {
+                PathFollower.Stop();
                 return;
             }
 
+            if (NoSolutionFound)
+            {
+                PathFollower.Stop();
+            }
+            
             /*FOLLOWPATH*/
             if (FollowPath && !NoSolutionFound && (Keepfollowing || !Evading) && EvadeToPoint.IsValid())
             {
@@ -915,7 +923,6 @@ namespace Evade
                         {
                             ObjectManager.Player.Spellbook.CastSpell(evadeSpell.Slot, ObjectManager.Player);
                         }
-
                         //Let the user move freely inside the skillshot.
                         NoSolutionFound = true;
                         return;
