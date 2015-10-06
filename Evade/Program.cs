@@ -466,6 +466,7 @@ namespace Evade
             if (ObjectManager.Player.CharData.BaseSkinName == "Olaf" && Config.Menu.Item("DisableEvadeForOlafR").GetValue<bool>() && ObjectManager.Player.HasBuff("OlafRagnarok"))
             {
                 EvadeToPoint = Vector2.Zero;
+                PathFollower.Stop();
                 return;
             }
 
@@ -700,6 +701,11 @@ namespace Evade
 
             //Spell Shielded
             if (ObjectManager.Player.IsSpellShielded())
+            {
+                return;
+            }
+
+            if (ObjectManager.Player.CharData.BaseSkinName == "Olaf" && Config.Menu.Item("DisableEvadeForOlafR").GetValue<bool>() && ObjectManager.Player.HasBuff("OlafRagnarok"))
             {
                 return;
             }
