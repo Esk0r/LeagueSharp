@@ -559,9 +559,13 @@ namespace Evade
             {
                 PathFollower.Stop();
             }
-            
+
+            var currentPath = ObjectManager.Player.GetWaypoints();
+            var safeResult = IsSafe(PlayerPosition);
+            var safePath = IsSafePath(currentPath, 100);
+
             /*FOLLOWPATH*/
-            if (FollowPath && !NoSolutionFound && (Keepfollowing || !Evading) && EvadeToPoint.IsValid())
+            if (FollowPath && !NoSolutionFound && (Keepfollowing || !Evading) && EvadeToPoint.IsValid() && safeResult.IsSafe)
             {
                 if (EvadeSpellDatabase.Spells.Any(evadeSpell => evadeSpell.Name == "Walking" && evadeSpell.Enabled))
                 {
@@ -579,10 +583,6 @@ namespace Evade
             }
 
             NoSolutionFound = false;
-
-            var currentPath = ObjectManager.Player.GetWaypoints();
-            var safeResult = IsSafe(PlayerPosition);
-            var safePath = IsSafePath(currentPath, 100);
             
             //Continue evading
             if (Evading && IsSafe(EvadePoint).IsSafe)
@@ -955,6 +955,7 @@ namespace Evade
                             {
                                 EvadePoint = nEvadePoint;
                             }
+
                             Evading = true;
                             return;
                         }

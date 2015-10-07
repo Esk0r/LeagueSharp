@@ -23,23 +23,22 @@ namespace Evade
             }
 
             //Sivir E
-            if (unit.LastCastedSpellName() == "SivirE" && (Utils.TickCount - unit.LastCastedSpellT()) < 300)
+            if (unit.LastCastedSpellName() == "SivirE" && (LeagueSharp.Common.Utils.TickCount - unit.LastCastedSpellT()) < 300)
             {
                 return true;
             }
 
             //Morganas E
-            if (unit.LastCastedSpellName() == "BlackShield" && (Utils.TickCount - unit.LastCastedSpellT()) < 300)
+            if (unit.LastCastedSpellName() == "BlackShield" && (LeagueSharp.Common.Utils.TickCount - unit.LastCastedSpellT()) < 300)
             {
                 return true;
             }
 
             //Nocturnes E
-            if (unit.LastCastedSpellName() == "NocturneShit" && (Utils.TickCount - unit.LastCastedSpellT()) < 300)
+            if (unit.LastCastedSpellName() == "NocturneShit" && (LeagueSharp.Common.Utils.TickCount - unit.LastCastedSpellT()) < 300)
             {
                 return true;
             }
-
 
             return false;
         }
