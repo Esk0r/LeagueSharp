@@ -458,6 +458,7 @@ namespace Evade
             //Evading disabled
             if (!Config.Menu.Item("Enabled").GetValue<KeyBind>().Active)
             {
+                Evading = false;
                 EvadeToPoint = Vector2.Zero;
                 PathFollower.Stop();
                 return;
@@ -465,6 +466,7 @@ namespace Evade
 
             if (PlayerChampionName == "Olaf" && Config.Menu.Item("DisableEvadeForOlafR").GetValue<bool>() && ObjectManager.Player.HasBuff("OlafRagnarok"))
             {
+                Evading = false;
                 EvadeToPoint = Vector2.Zero;
                 PathFollower.Stop();
                 return;
@@ -473,6 +475,7 @@ namespace Evade
             //Avoid sending move/cast packets while dead.
             if (ObjectManager.Player.IsDead)
             {
+                Evading = false;
                 EvadeToPoint = Vector2.Zero;
                 PathFollower.Stop();
                 return;
@@ -481,6 +484,7 @@ namespace Evade
             //Avoid sending move/cast packets while channeling interruptable spells that cause hero not being able to move.
             if (ObjectManager.Player.IsCastingInterruptableSpell(true))
             {
+                Evading = false;
                 EvadeToPoint = Vector2.Zero;
                 PathFollower.Stop();
                 return;
