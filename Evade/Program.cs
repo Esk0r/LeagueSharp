@@ -148,9 +148,8 @@ namespace Evade
             //Initialze the collision
             Collision.Init();
 
-            Notifications.AddNotification("Evade Loaded", 4000);
-
-
+            Game.PrintChat("Evade Loaded");
+            
             if (Config.PrintSpellData)
             {
                 foreach (var hero in ObjectManager.Get<Obj_AI_Hero>())
