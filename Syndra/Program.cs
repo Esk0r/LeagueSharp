@@ -136,7 +136,7 @@ namespace Syndra
                 menuFarm.AddItem(new MenuItem("UseWFarm", "Use W").SetValue(new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 1)));
                 menuFarm.AddItem(new MenuItem("UseEFarm", "Use E").SetValue(new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 3)));
                 menuFarm.AddItem(new MenuItem("FreezeActive", "Freeze!").SetValue(new KeyBind(Config.Item("Farm").GetValue<KeyBind>().Key, KeyBindType.Press)));
-                menuFarm.AddItem(new MenuItem("Lane.MinMana", "Don't harass if mana < %").SetValue(new Slider(0, 0, 100)));
+                menuFarm.AddItem(new MenuItem("Lane.Mana", "Don't harass if mana < %").SetValue(new Slider(0, 0, 100)));
                 Config.AddSubMenu(menuFarm);
             }
 
