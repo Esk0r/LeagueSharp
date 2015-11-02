@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,10 @@ using Color = System.Drawing.Color;
 
 namespace Syndra
 {
+    using System.Drawing;
+
+    using Color = SharpDX.Color;
+
     internal class Program
     {
         public const string ChampionName = "Syndra";
@@ -32,8 +36,8 @@ namespace Syndra
 
         //Menu
         public static Menu Config;
-        private static int QEComboT;
-        private static int WEComboT;
+        private static int qeComboT;
+        private static int weComboT;
 
         private static Obj_AI_Hero Player;
 
@@ -46,7 +50,7 @@ namespace Syndra
         {
             Player = ObjectManager.Player;
 
-            if (Player.BaseSkinName != ChampionName) return;
+            if (Player.CharData.BaseSkinName != ChampionName) return;
 
             //Create the spells
             Q = new Spell(SpellSlot.Q, 790);
@@ -56,8 +60,6 @@ namespace Syndra
             EQ = new Spell(SpellSlot.Q, Q.Range + 500);
 
             IgniteSlot = Player.GetSpellSlot("SummonerDot");
-
-//            DFG = Utility.Map.GetMap().Type == Utility.Map.MapType.TwistedTreeline ? new Items.Item(3188, 750) : new Items.Item(3128, 750);
 
             Q.SetSkillshot(0.6f, 125f, float.MaxValue, false, SkillshotType.SkillshotCircle);
             W.SetSkillshot(0.25f, 140f, 1600f, false, SkillshotType.SkillshotCircle);
@@ -70,159 +72,139 @@ namespace Syndra
             SpellList.Add(R);
 
             //Create the menu
-            Config = new Menu(ChampionName, ChampionName, true);
+            Config = new Menu(ChampionName, ChampionName, true).SetFontStyle(FontStyle.Regular, Color.GreenYellow);
 
             //Orbwalker submenu
             Config.AddSubMenu(new Menu("Orbwalking", "Orbwalking"));
 
-            //Add the target selector to the menu as submenu.
-            var targetSelectorMenu = new Menu("Target Selector", "Target Selector");
-            TargetSelector.AddToMenu(targetSelectorMenu);
-            Config.AddSubMenu(targetSelectorMenu);
-
             //Load the orbwalker and add it to the menu as submenu.
             Orbwalker = new Orbwalking.Orbwalker(Config.SubMenu("Orbwalking"));
-            
-            //Combo menu:
-            Config.AddSubMenu(new Menu("Combo", "Combo"));
-            Config.SubMenu("Combo").AddItem(new MenuItem("UseQCombo", "Use Q").SetValue(true));
-            Config.SubMenu("Combo").AddItem(new MenuItem("UseWCombo", "Use W").SetValue(true));
-            Config.SubMenu("Combo").AddItem(new MenuItem("UseECombo", "Use E").SetValue(true));
-            Config.SubMenu("Combo").AddItem(new MenuItem("UseQECombo", "Use QE").SetValue(true));
-            Config.SubMenu("Combo").AddItem(new MenuItem("UseRCombo", "Use R").SetValue(true));
-            Config.SubMenu("Combo").AddItem(new MenuItem("UseIgniteCombo", "Use Ignite").SetValue(true));
-            Config.SubMenu("Combo")
-                .AddItem(
-                    new MenuItem("ComboActive", "Combo!").SetValue(
-                        new KeyBind(Config.Item("Orbwalk").GetValue<KeyBind>().Key, KeyBindType.Press)));
 
-            //Harass menu:
-            Config.AddSubMenu(new Menu("Harass", "Harass"));
-            Config.SubMenu("Harass").AddItem(new MenuItem("UseQHarass", "Use Q").SetValue(true));
-            Config.SubMenu("Harass").AddItem(new MenuItem("UseWHarass", "Use W").SetValue(false));
-            Config.SubMenu("Harass").AddItem(new MenuItem("UseEHarass", "Use E").SetValue(false));
-            Config.SubMenu("Harass").AddItem(new MenuItem("UseQEHarass", "Use QE").SetValue(false));
-            Config.SubMenu("Harass")
-                .AddItem(
-                    new MenuItem("HarassActive", "Harass!").SetValue(
-                        new KeyBind(Config.Item("Farm").GetValue<KeyBind>().Key, KeyBindType.Press)));
-            Config.SubMenu("Harass")
-                .AddItem(
-                    new MenuItem("HarassActiveT", "Harass (toggle)!").SetValue(new KeyBind("Y".ToCharArray()[0],
-                        KeyBindType.Toggle)));
-
-            //Farming menu:
-            Config.AddSubMenu(new Menu("Farm", "Farm"));
-            Config.SubMenu("Farm").AddItem(new MenuItem("EnabledFarm", "Enable! (On/Off: Mouse Scroll)").SetValue(true));
-            Config.SubMenu("Farm")
-                .AddItem(
-                    new MenuItem("UseQFarm", "Use Q").SetValue(
-                        new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 2)));
-            Config.SubMenu("Farm")
-                .AddItem(
-                    new MenuItem("UseWFarm", "Use W").SetValue(
-                        new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 1)));
-            Config.SubMenu("Farm")
-                .AddItem(
-                    new MenuItem("UseEFarm", "Use E").SetValue(
-                        new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 3)));
-            Config.SubMenu("Farm")
-                .AddItem(
-                    new MenuItem("FreezeActive", "Freeze!").SetValue(
-                        new KeyBind(Config.Item("Farm").GetValue<KeyBind>().Key, KeyBindType.Press)));
-            Config.SubMenu("Farm")
-                .AddItem(
-                    new MenuItem("LaneClearActive", "LaneClear!").SetValue(
-                        new KeyBind(Config.Item("LaneClear").GetValue<KeyBind>().Key, KeyBindType.Press)));
-
-            //JungleFarm menu:
-            Config.AddSubMenu(new Menu("JungleFarm", "JungleFarm"));
-            Config.SubMenu("JungleFarm").AddItem(new MenuItem("UseQJFarm", "Use Q").SetValue(true));
-            Config.SubMenu("JungleFarm").AddItem(new MenuItem("UseWJFarm", "Use W").SetValue(true));
-            Config.SubMenu("JungleFarm").AddItem(new MenuItem("UseEJFarm", "Use E").SetValue(true));
-            Config.SubMenu("JungleFarm")
-                .AddItem(
-                    new MenuItem("JungleFarmActive", "JungleFarm!").SetValue(
-                        new KeyBind(Config.Item("LaneClear").GetValue<KeyBind>().Key, KeyBindType.Press)));
-
-            //Misc
-            Config.AddSubMenu(new Menu("Misc", "Misc"));
-            Config.SubMenu("Misc").AddItem(new MenuItem("InterruptSpells", "Interrupt spells").SetValue(true));
-            Config.SubMenu("Misc")
-                .AddItem(
-                    new MenuItem("CastQE", "QE closest to cursor").SetValue(new KeyBind("T".ToCharArray()[0],
-                        KeyBindType.Press)));
-            Config.SubMenu("Misc").AddSubMenu(new Menu("Dont use R on", "DontUlt"));
-
-            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != Player.Team))
-                Config.SubMenu("Misc")
-                    .SubMenu("DontUlt")
-                    .AddItem(new MenuItem("DontUlt" + enemy.BaseSkinName, enemy.BaseSkinName).SetValue(false));
-            
-            //Damage after combo:
-            var dmgAfterComboItem =  new MenuItem("DamageAfterCombo", "Draw damage after combo").SetValue(true);
-            Utility.HpBarDamageIndicator.DamageToUnit = GetComboDamage;
-            Utility.HpBarDamageIndicator.Enabled = dmgAfterComboItem.GetValue<bool>();
-            dmgAfterComboItem.ValueChanged += delegate(object sender, OnValueChangeEventArgs eventArgs)
+            var menuKeys = new Menu("Keys", "Keys").SetFontStyle(FontStyle.Regular, Color.Aqua);
             {
-                Utility.HpBarDamageIndicator.Enabled = eventArgs.GetNewValue<bool>();
-            };
+                menuKeys.AddItem(
+                    new MenuItem("Key.Combo", "Combo!").SetValue(
+                        new KeyBind(Config.Item("Orbwalk").GetValue<KeyBind>().Key, KeyBindType.Press)))
+                    .SetFontStyle(FontStyle.Regular, Color.GreenYellow);
+                menuKeys.AddItem(
+                    new MenuItem("Key.Harass", "Harass!").SetValue(
+                        new KeyBind(Config.Item("Farm").GetValue<KeyBind>().Key, KeyBindType.Press))).SetFontStyle(FontStyle.Regular, Color.Coral);
+                menuKeys.AddItem(
+                    new MenuItem("Key.HarassT", "Harass (toggle)!").SetValue(
+                        new KeyBind("Y".ToCharArray()[0], KeyBindType.Toggle)))
+                    .SetFontStyle(FontStyle.Regular, Color.Coral)
+                    .Permashow(true, "Syndra | Toggle Harass", Color.Aqua);
+                menuKeys.AddItem(
+                    new MenuItem("Key.Lane", "Lane Clear!").SetValue(
+                        new KeyBind(Config.Item("LaneClear").GetValue<KeyBind>().Key, KeyBindType.Press))).SetFontStyle(FontStyle.Regular, Color.DarkKhaki);;
+                menuKeys.AddItem(
+                    new MenuItem("Key.Jungle", "Jungle Farm!").SetValue(
+                        new KeyBind(Config.Item("LaneClear").GetValue<KeyBind>().Key, KeyBindType.Press))).SetFontStyle(FontStyle.Regular, Color.DarkKhaki);;;
+                menuKeys.AddItem(
+                    new MenuItem("Key.InstantQE", "Instant Q-E to Enemy").SetValue(
+                        new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
+                Config.AddSubMenu(menuKeys);
+            }
 
-            //Drawings menu:
-            Config.AddSubMenu(new Menu("Drawings", "Drawings"));
-            Config.SubMenu("Drawings")
-                .AddItem(new MenuItem("QRange", "Q range").SetValue(new Circle(false, Color.FromArgb(100, 255, 0, 255))));
-            Config.SubMenu("Drawings")
-                .AddItem(new MenuItem("WRange", "W range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
-            Config.SubMenu("Drawings")
-                .AddItem(new MenuItem("ERange", "E range").SetValue(new Circle(false, Color.FromArgb(100, 255, 0, 255))));
-            Config.SubMenu("Drawings")
-                .AddItem(new MenuItem("RRange", "R range").SetValue(new Circle(false, Color.FromArgb(100, 255, 0, 255))));
-            Config.SubMenu("Drawings")
-                .AddItem(new MenuItem("QERange", "QE range").SetValue(new Circle(true, Color.FromArgb(100, 255, 0, 255))));
-            Config.SubMenu("Drawings")
-                .AddItem(dmgAfterComboItem);
-            Config.SubMenu("Drawings")
-                .AddItem(
-                    new MenuItem("HarassActiveTPermashow", "Show harass permashow").SetValue(true)).ValueChanged += (s, ar) =>
-                    {
-                        if (ar.GetNewValue<bool>())
-                        {
-                            Config.Item("HarassActiveT").Permashow(true, "HarassActive");
-                        }
-                        else
-                        {
-                            Config.Item("HarassActiveT").Permashow(false);
-                        }
-                    };
+            var menuCombo = new Menu("Combo", "Combo");
+            {
+                menuCombo.AddItem(new MenuItem("UseQCombo", "Use Q").SetValue(true));
+                menuCombo.AddItem(new MenuItem("UseWCombo", "Use W").SetValue(true));
+                menuCombo.AddItem(new MenuItem("UseECombo", "Use E").SetValue(true));
+                menuCombo.AddItem(new MenuItem("UseQECombo", "Use QE").SetValue(true));
+                menuCombo.AddItem(new MenuItem("UseRCombo", "Use R").SetValue(true));
+                menuCombo.AddItem(new MenuItem("UseIgniteCombo", "Use Ignite").SetValue(true));
+                Config.AddSubMenu(menuCombo);
+            }
 
-            Config.Item("HarassActiveT").Permashow(Config.Item("HarassActiveTPermashow").GetValue<bool>(), "HarassActive");
+            
+            var menuHarass = new Menu("Harass", "Harass");
+            {
+                menuHarass.AddItem(new MenuItem("UseQHarass", "Use Q").SetValue(true));
 
-            Config.SubMenu("Drawings")
-                .AddItem(
-                    new MenuItem("EnabledFarmPermashow", "Show Farm Permashow").SetValue(true)).ValueChanged +=
-                (s, ar) =>
+                menuHarass.AddItem(new MenuItem("UseWHarass", "Use W").SetValue(false));
+                menuHarass.AddItem(new MenuItem("UseEHarass", "Use E").SetValue(false));
+                menuHarass.AddItem(new MenuItem("UseQEHarass", "Use QE").SetValue(false));
+                menuHarass.AddItem(new MenuItem("Harass.Mana", "Don't harass if mana < %").SetValue(new Slider(0, 0, 100)));
+                Config.AddSubMenu(menuHarass);
+            }
+
+            var menuFarm = new Menu("Lane Farm" , "Farm");
+            {
+                menuFarm.AddItem(new MenuItem("EnabledFarm", "Enable! (On/Off: Mouse Scroll)").SetValue(true)).Permashow(true, "Syndra | Farm Mode Active", Color.Aqua);
+                menuFarm.AddItem(new MenuItem("UseQFarm", "Use Q").SetValue(new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 2)));
+                menuFarm.AddItem(new MenuItem("UseWFarm", "Use W").SetValue(new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 1)));
+                menuFarm.AddItem(new MenuItem("UseEFarm", "Use E").SetValue(new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 3)));
+                menuFarm.AddItem(new MenuItem("FreezeActive", "Freeze!").SetValue(new KeyBind(Config.Item("Farm").GetValue<KeyBind>().Key, KeyBindType.Press)));
+                menuFarm.AddItem(new MenuItem("Lane.MinMana", "Don't harass if mana < %").SetValue(new Slider(0, 0, 100)));
+                Config.AddSubMenu(menuFarm);
+            }
+
+            var menuJungle = new Menu("Jungle Farm", "JungleFarm");
+            {
+                menuJungle.AddItem(new MenuItem("UseQJFarm", "Use Q").SetValue(true));
+                menuJungle.AddItem(new MenuItem("UseWJFarm", "Use W").SetValue(true));
+                menuJungle.AddItem(new MenuItem("UseEJFarm", "Use E").SetValue(true));
+                Config.AddSubMenu(menuJungle);
+            }
+            
+            var menuMisc = new Menu("Misc", "Misc");
+            {
+                menuMisc.AddItem(new MenuItem("InterruptSpells", "Interrupt spells").SetValue(true));
+                menuMisc.AddItem(
+                    new MenuItem("CastQE", "QE closest to cursor").SetValue(
+                        new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
+
+                menuMisc.AddSubMenu(new Menu("Dont use R on", "DontUlt"));
+                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != Player.Team))
+                    menuMisc.SubMenu("DontUlt")
+                        .AddItem(
+                            new MenuItem("DontUlt" + enemy.CharData.BaseSkinName, enemy.CharData.BaseSkinName).SetValue(
+                                false));
+                Config.AddSubMenu(menuMisc);
+            }
+
+            
+            var menuDrawings = new Menu("Drawings", "Drawings");
+            {
+                menuDrawings.AddItem(
+                    new MenuItem("QRange", "Q range").SetValue(
+                        new Circle(false, System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                menuDrawings.AddItem(
+                    new MenuItem("WRange", "W range").SetValue(
+                        new Circle(true, System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                menuDrawings.AddItem(
+                    new MenuItem("ERange", "E range").SetValue(
+                        new Circle(false, System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                menuDrawings.AddItem(
+                    new MenuItem("RRange", "R range").SetValue(
+                        new Circle(false, System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+                menuDrawings.AddItem(
+                    new MenuItem("QERange", "QE range").SetValue(
+                        new Circle(true, System.Drawing.Color.FromArgb(100, 255, 0, 255))));
+
+                var dmgAfterComboItem = new MenuItem("DamageAfterCombo", "Draw damage after combo").SetValue(true);
+                Utility.HpBarDamageIndicator.DamageToUnit = GetComboDamage;
+                Utility.HpBarDamageIndicator.Enabled = dmgAfterComboItem.GetValue<bool>();
+                dmgAfterComboItem.ValueChanged += delegate(object sender, OnValueChangeEventArgs eventArgs)
                 {
-                    if (ar.GetNewValue<bool>())
-                    {
-                        Config.Item("EnabledFarm").Permashow(true, "Enabled Farm");
-                    }
-                    else
-                    {
-                        Config.Item("EnabledFarm").Permashow(false);
-                    }
+                    Utility.HpBarDamageIndicator.Enabled = eventArgs.GetNewValue<bool>();
                 };
-            Config.Item("EnabledFarm").Permashow(Config.Item("EnabledFarmPermashow").GetValue<bool>(), "Enabled Farm");
 
+                menuDrawings.AddItem(dmgAfterComboItem);
+                Config.AddSubMenu(menuDrawings);
+            }
             Config.AddToMainMenu();
 
             //Add the events we are going to use:
             Game.OnUpdate += Game_OnGameUpdate;
-            Game.OnWndProc += Game_OnWndProc;            
-            Obj_AI_Base.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
-            Drawing.OnDraw += Drawing_OnDraw;
-            Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
+            Game.OnWndProc += Game_OnWndProc;
             Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
+
+            Obj_AI_Base.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
+            Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
+            
+            Drawing.OnDraw += Drawing_OnDraw;
             Game.PrintChat(ChampionName + " Loaded!");
         }
 
@@ -238,7 +220,7 @@ namespace Syndra
                 .Item("EnabledFarm")
                 .SetValue(!Config.SubMenu("Farm").Item("EnabledFarm").GetValue<bool>());
         }
-        
+
         static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
         {
             if (!Config.Item("InterruptSpells").GetValue<bool>()) return;
@@ -256,11 +238,19 @@ namespace Syndra
 
         static void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
         {
-            if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
+            if (Config.Item("Key.Combo").GetValue<KeyBind>().Active)
                 args.Process = !(Q.IsReady() || W.IsReady());
         }
 
-
+        private static void InstantQE2Enemy()
+        {
+            ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
+            var t = TargetSelector.GetTarget(EQ.Range, TargetSelector.DamageType.Magical);
+            if (t.IsValidTarget() && E.IsReady() && Q.IsReady())
+            {
+                UseQE(t);
+            }
+        }
 
         private static void Combo()
         {
@@ -271,6 +261,11 @@ namespace Syndra
 
         private static void Harass()
         {
+            if (Player.ManaPercent < Config.Item("Harass.Mana").GetValue<Slider>().Value)
+            {
+                return;
+            }
+
             UseSpells(Config.Item("UseQHarass").GetValue<bool>(), Config.Item("UseWHarass").GetValue<bool>(),
                 Config.Item("UseEHarass").GetValue<bool>(), false, Config.Item("UseQEHarass").GetValue<bool>(), false, true);
         }
@@ -306,7 +301,7 @@ namespace Syndra
             if (prediction.Hitchance >= HitChance.High)
             {
                 Q.Cast(Player.ServerPosition.To2D().Extend(prediction.CastPosition.To2D(), Q.Range - 100));
-                QEComboT = Utils.TickCount;
+                qeComboT = Utils.TickCount;
                 W.LastCastAttemptT = Utils.TickCount;
             }
         }
@@ -387,10 +382,10 @@ namespace Syndra
                 }
 
             if (rTarget != null)
-                useR = (Config.Item("DontUlt" + rTarget.BaseSkinName) != null &&
-                        Config.Item("DontUlt" + rTarget.BaseSkinName).GetValue<bool>() == false) && useR;
+                useR = (Config.Item("DontUlt" + rTarget.CharData.BaseSkinName) != null &&
+                        Config.Item("DontUlt" + rTarget.CharData.BaseSkinName).GetValue<bool>() == false) && useR;
 
-            if (rTarget != null && useR && comboDamage > rTarget.Health && !rTarget.IsZombie)
+            if (rTarget != null && useR && comboDamage > rTarget.Health && !rTarget.IsZombie && !Q.IsReady())
             {
                 if (R.IsReady())
                 {
@@ -430,21 +425,21 @@ namespace Syndra
                 if (prediction.Hitchance >= HitChance.High)
                 {
                     W.Cast(Player.ServerPosition.To2D().Extend(prediction.CastPosition.To2D(), Q.Range - 100));
-                    WEComboT = Utils.TickCount;
+                    weComboT = Utils.TickCount;
                 }
             }
         }
 
         private static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (sender.IsMe && Utils.TickCount - QEComboT < 500 &&
+            if (sender.IsMe && Utils.TickCount - qeComboT < 500 &&
                 (args.SData.Name == "SyndraQ"))
             {
                 W.LastCastAttemptT = Utils.TickCount + 400;
                 E.Cast(args.End, true);
             }
 
-            if (sender.IsMe && Utils.TickCount - WEComboT < 500 &&
+            if (sender.IsMe && Utils.TickCount - weComboT < 500 &&
                 (args.SData.Name == "SyndraW" || args.SData.Name == "syndrawcast"))
             {
                 W.LastCastAttemptT = Utils.TickCount + 400;
@@ -454,9 +449,16 @@ namespace Syndra
 
         private static void Farm(bool laneClear)
         {
-            if (!Config.Item("EnabledFarm").GetValue<bool>())
-                return;
 
+            if (!Config.Item("EnabledFarm").GetValue<bool>())
+            {
+                return;
+            }
+
+            if (Player.ManaPercent < Config.Item("Lane.Mana").GetValue<Slider>().Value)
+            {
+                return;
+            }
             if (!Orbwalking.CanMove(40)) return;
 
             var rangedMinionsQ = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range + Q.Width + 30,
@@ -559,36 +561,40 @@ namespace Syndra
                 }
             }
         }
-
-
+        
         private static void Game_OnGameUpdate(EventArgs args)
         {
             if (Player.IsDead) return;
 
             //Update the R range
             R.Range = R.Level == 3 ? 750 : 675;
-           
+
             if (Config.Item("CastQE").GetValue<KeyBind>().Active && E.IsReady() && Q.IsReady())
                 foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
                     if (enemy.IsValidTarget(EQ.Range) && Game.CursorPos.Distance(enemy.ServerPosition) < 300)
                         UseQE(enemy);
 
-            if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
+            if (Config.Item("Key.Combo").GetValue<KeyBind>().Active)
             {
                 Combo();
             }
             else
             {
-                if (Config.Item("HarassActive").GetValue<KeyBind>().Active ||
-                    Config.Item("HarassActiveT").GetValue<KeyBind>().Active)
+                if (Config.Item("Key.Harass").GetValue<KeyBind>().Active ||
+                    Config.Item("Key.HarassT").GetValue<KeyBind>().Active)
                     Harass();
 
-                var lc = Config.Item("LaneClearActive").GetValue<KeyBind>().Active;
+                var lc = Config.Item("Key.Lane").GetValue<KeyBind>().Active;
                 if (lc || Config.Item("FreezeActive").GetValue<KeyBind>().Active)
                     Farm(lc);
 
-                if (Config.Item("JungleFarmActive").GetValue<KeyBind>().Active)
+                if (Config.Item("Key.Jungle").GetValue<KeyBind>().Active)
                     JungleFarm();
+            }
+
+            if (Config.Item("Key.InstantQE").GetValue<KeyBind>().Active)
+            {
+                InstantQE2Enemy();
             }
         }
 
@@ -605,7 +611,7 @@ namespace Syndra
                     Render.Circle.DrawCircle(Player.Position, spell.Range, menuItem.Color);
             }
             //if (OrbManager.WObject(false) != null)
-                //Render.Circle.DrawCircle(OrbManager.WObject(false).Position, 100, Color.White);
+            //Render.Circle.DrawCircle(OrbManager.WObject(false).Position, 100, Color.White);
         }
     }
 }
