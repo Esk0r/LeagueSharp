@@ -80,8 +80,8 @@ namespace Syndra
 
                     if (manaBarItem.GetValue<bool>())
                     {
-                        var totalCostMana = qMana[Program.Q.Level] + wMana[Program.W.Level] + eMana[Program.W.Level]
-                                            + rMana[Program.W.Level];
+                        var totalCostMana = qMana[Program.Q.Level] + wMana[Program.W.Level] + eMana[Program.E.Level]
+                                            + rMana[Program.R.Level];
                         DrawManaPercent(
                             totalCostMana,
                             totalCostMana > ObjectManager.Player.Mana ? new ColorBGRA(255, 0, 0, 255) : new ColorBGRA(255, 255, 255, 255));
