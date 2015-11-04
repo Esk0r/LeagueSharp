@@ -190,8 +190,8 @@ namespace Syndra
                 {
                     Utility.HpBarDamageIndicator.Enabled = eventArgs.GetNewValue<bool>();
                 };
-
                 menuDrawings.AddItem(dmgAfterComboItem);
+                ManaBarIndicator.Initialize();
                 Config.AddSubMenu(menuDrawings);
             }
             Config.AddToMainMenu();
