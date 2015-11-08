@@ -60,6 +60,7 @@ namespace Evade
         public float MultipleAngle;
         public int MultipleNumber = -1;
         public int RingRadius;
+        public string SourceObjectName = "";
         public SpellSlot Slot;
         public string SpellName;
         public bool TakeClosestPath = false;

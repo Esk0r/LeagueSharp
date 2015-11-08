@@ -2552,7 +2552,7 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Orianna",
-                    SpellName = "OrianaDissonanceCommand",
+                    SpellName = "OrianaDissonanceCommand-",
                     Slot = SpellSlot.W,
                     Type = SkillShotType.SkillshotCircle,
                     Delay = 250,
@@ -2563,8 +2563,9 @@ namespace Evade
                     AddHitbox = true,
                     DangerValue = 2,
                     IsDangerous = false,
-                    MissileSpellName = "OrianaDissonanceCommand",
+                    MissileSpellName = "OrianaDissonanceCommand-",
                     FromObject = "yomu_ring_",
+                    SourceObjectName = "w_dissonance_" //Orianna_Base_W_Dissonance_ball_green.troy & Orianna_Base_W_Dissonance_cas_green.troy
                 });
 
             Spells.Add(
@@ -2590,7 +2591,7 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Orianna",
-                    SpellName = "OrianaDetonateCommand",
+                    SpellName = "OrianaDetonateCommand-",
                     Slot = SpellSlot.R,
                     Type = SkillShotType.SkillshotCircle,
                     Delay = 700,
@@ -2601,8 +2602,9 @@ namespace Evade
                     AddHitbox = true,
                     DangerValue = 5,
                     IsDangerous = true,
-                    MissileSpellName = "OrianaDetonateCommand",
+                    MissileSpellName = "OrianaDetonateCommand-",
                     FromObject = "yomu_ring_",
+                    SourceObjectName = "r_vacuumindicator", //Orianna_Base_R_VacuumIndicator.troy
                 });
 
             #endregion Orianna
@@ -4096,6 +4098,25 @@ namespace Evade
             #endregion Zyra
 
             //Console.WriteLine("Added " + Spells.Count + " spells.");
+        }
+
+        public static SpellData GetBySourceObjectName(string objectName)
+        {
+            objectName = objectName.ToLowerInvariant();
+            foreach (var spellData in Spells)
+            {
+                if (spellData.SourceObjectName.Length == 0)
+                {
+                    continue;
+                }
+
+                if (objectName.Contains(spellData.SourceObjectName))
+                {
+                    return spellData;
+                }
+            }
+
+            return null;
         }
 
         public static SpellData GetByName(string spellName)
