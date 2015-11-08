@@ -2565,7 +2565,7 @@ namespace Evade
                     IsDangerous = false,
                     MissileSpellName = "OrianaDissonanceCommand-",
                     FromObject = "yomu_ring_",
-                    SourceObjectName = "w_dissonance_" //Orianna_Base_W_Dissonance_ball_green.troy & Orianna_Base_W_Dissonance_cas_green.troy
+                    SourceObjectName = "w_dissonance_ball" //Orianna_Base_W_Dissonance_ball_green.troy & Orianna_Base_W_Dissonance_cas_green.troy
                 });
 
             Spells.Add(
