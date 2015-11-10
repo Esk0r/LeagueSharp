@@ -376,7 +376,7 @@ namespace Evade
 
             #endregion
 
-            #region Blatzcrink
+            #region Blatzcrank
 
             Spells.Add(
                 new SpellData
