@@ -334,7 +334,7 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "Corki")
             {
-                spell = new DashData("Corki W", SpellSlot.W, 790, false, 250, 1044, 3);
+                spell = new DashData("Corki W", SpellSlot.W, 600, false, 250, 1044, 3);
                 Spells.Add(spell);
             }
 

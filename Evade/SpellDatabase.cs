@@ -1858,7 +1858,7 @@ namespace Evade
                     AddHitbox = true,
                     DangerValue = 2,
                     IsDangerous = false,
-                    MissileSpellName = "KogMawQMis",
+                    MissileSpellName = "KogMawQ",
                     EarlyEvade = new[] {EarlyObjects.Allies, EarlyObjects.Minions, EarlyObjects.AllyObjects},
                     CanBeRemoved = true,
                     CollisionObjects =
@@ -1894,7 +1894,7 @@ namespace Evade
                     Type = SkillShotType.SkillshotCircle,
                     Delay = 1200,
                     Range = 1800,
-                    Radius = 150,
+                    Radius = 225,
                     MissileSpeed = int.MaxValue,
                     FixedRange = false,
                     AddHitbox = true,
