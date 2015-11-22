@@ -3007,7 +3007,7 @@ namespace Evade
                     FixedRange = true,
                     AddHitbox = true,
                     DangerValue = 3,
-                    IsDangerous = true,
+                    IsDangerous = false,
                     MissileSpellName = "ShyvanaFireballDragonFxMissile",
                     ExtraRange = 200,
                     MultipleNumber = 5,
