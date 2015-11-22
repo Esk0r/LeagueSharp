@@ -376,7 +376,7 @@ namespace Evade
 
             #endregion
 
-            #region Blatzcrink
+            #region Blatzcrank
 
             Spells.Add(
                 new SpellData
@@ -523,7 +523,7 @@ namespace Evade
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 625,
                     Range = 1300,
-                    Radius = 90,
+                    Radius = 60,
                     MissileSpeed = 2200,
                     FixedRange = true,
                     AddHitbox = true,
@@ -542,8 +542,8 @@ namespace Evade
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 125,
                     Range = 1000,
-                    Radius = 80,
-                    MissileSpeed = 2000,
+                    Radius = 70,
+                    MissileSpeed = 1600,
                     FixedRange = true,
                     AddHitbox = true,
                     DangerValue = 1,
@@ -2620,7 +2620,7 @@ namespace Evade
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 250,
                     Range = 1050,
-                    Radius = 80,
+                    Radius = 60,
                     MissileSpeed = 1550,
                     FixedRange = true,
                     AddHitbox = true,
