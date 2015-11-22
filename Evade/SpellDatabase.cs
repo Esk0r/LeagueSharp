@@ -523,7 +523,7 @@ namespace Evade
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 625,
                     Range = 1300,
-                    Radius = 60,
+                    Radius = 90,
                     MissileSpeed = 2200,
                     FixedRange = true,
                     AddHitbox = true,
@@ -1354,21 +1354,19 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Graves",
-                    SpellName = "GravesClusterShot",
+                    SpellName = "GravesQLineSpell",
                     Slot = SpellSlot.Q,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 250,
-                    Range = 1000,
-                    Radius = 50,
-                    MissileSpeed = 2000,
+                    Range = 808,
+                    Radius = 40,
+                    MissileSpeed = 3000,
                     FixedRange = true,
                     AddHitbox = true,
                     DangerValue = 2,
                     IsDangerous = false,
-                    MissileSpellName = "GravesClusterShotAttack",
+                    MissileSpellName = "GravesQLineMis",
                     CollisionObjects = new[] {CollisionObjectTypes.YasuoWall},
-                    MultipleNumber = 3,
-                    MultipleAngle = 15*(float) Math.PI/180,
                 });
 
             Spells.Add(
@@ -2618,7 +2616,7 @@ namespace Evade
                     SpellName = "QuinnQ",
                     Slot = SpellSlot.Q,
                     Type = SkillShotType.SkillshotMissileLine,
-                    Delay = 250,
+                    Delay = 313,
                     Range = 1050,
                     Radius = 60,
                     MissileSpeed = 1550,
@@ -2626,7 +2624,7 @@ namespace Evade
                     AddHitbox = true,
                     DangerValue = 2,
                     IsDangerous = false,
-                    MissileSpellName = "QuinnQMissile",
+                    MissileSpellName = "QuinnQ",
                     EarlyEvade = new[] {EarlyObjects.Allies, EarlyObjects.Minions, EarlyObjects.AllyObjects},
                     CanBeRemoved = true,
                     CollisionObjects =
@@ -2993,6 +2991,27 @@ namespace Evade
                     IsDangerous = true,
                     MissileSpellName = "ShyvanaTransformCast",
                     ExtraRange = 200,
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Shyvana",
+                    SpellName = "shyvanafireballdragon2",
+                    Slot = SpellSlot.R,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 250,
+                    Range = 850,
+                    Radius = 70,
+                    MissileSpeed = 2000,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 3,
+                    IsDangerous = true,
+                    MissileSpellName = "ShyvanaFireballDragonFxMissile",
+                    ExtraRange = 200,
+                    MultipleNumber = 5,
+                    MultipleAngle = 10 * (float)Math.PI / 180
                 });
 
             #endregion Shyvana

@@ -323,7 +323,7 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "Caitlyn")
             {
-                spell = new DashData("Caitlyn E", SpellSlot.E, 490, true, 250, 1000, 3);
+                spell = new DashData("Caitlyn E", SpellSlot.E, 390, true, 250, 1000, 3);
                 spell.Invert = true;
                 Spells.Add(spell);
             }
