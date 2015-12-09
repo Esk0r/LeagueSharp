@@ -2694,6 +2694,50 @@ namespace Evade
 
             #endregion Quinn
 
+            #region Poppy
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Poppy",
+                    SpellName = "PoppyQ",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotLine,
+                    Delay = 500,
+                    Range = 430,
+                    Radius = 100,
+                    MissileSpeed = int.MaxValue,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "PoppyQ",
+                    EarlyEvade = new[] { EarlyObjects.Allies, EarlyObjects.Minions, EarlyObjects.AllyObjects },
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Poppy",
+                    SpellName = "PoppyRSpell",
+                    Slot = SpellSlot.R,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 300,
+                    Range = 1200,
+                    Radius = 100,
+                    MissileSpeed = 1600,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 3,
+                    IsDangerous = true,
+                    MissileSpellName = "PoppyRMissile",
+                    CanBeRemoved = true,
+                    CollisionObjects =
+                        new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.Minion, CollisionObjectTypes.YasuoWall },
+                });
+
+            #endregion Poppy
+
             #region Rengar
 
             Spells.Add(
