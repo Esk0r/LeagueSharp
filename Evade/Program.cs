@@ -154,11 +154,17 @@ namespace Evade
             {
                 foreach (var hero in ObjectManager.Get<Obj_AI_Hero>())
                 {
-                    foreach (var spell in hero.Spellbook.Spells)
+                    foreach (var spell in hero.Spellbook.Spells.Where(s => s.SData.Name != "BaseSpell"))
                     {
-                 /*       Console.WriteLine(
-                             "Slot  " + spell.Slot + " " + spell.SData.Name + " w:" + spell.SData.LineWidth + " s:" + spell.SData.MissileSpeed + " r: " +
-                            spell.SData.CastRangeArray[0]);*/
+                        Console.WriteLine("\n\n");
+                        Console.WriteLine("SpellSlot: {0} Spell: {1}", spell.Slot, spell.SData.Name);
+                        Console.WriteLine("=================================================================");
+                        foreach (var prop in spell.SData.GetType().GetProperties())
+                        {
+                            if(prop.Name != "Entries")
+                            Console.WriteLine("\t{0} => '{1}'", prop.Name, prop.GetValue(spell.SData, null));
+                        }
+
                     }
                 }
                 Console.WriteLine(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name);
@@ -288,21 +294,40 @@ namespace Evade
                                 -angle / 2 * (float) Math.PI / 180);
                         var edge2 = edge1.Rotated(angle * (float) Math.PI / 180);
 
+                        var positions = new List<Vector2>();
+
+                        var explodingQ = DetectedSkillshots.FirstOrDefault(s => s.SpellData.SpellName == "SyndraQ");
+
+                        if (explodingQ != null)
+                        {
+                            positions.Add(explodingQ.End);
+                        }
+
                         foreach (var minion in ObjectManager.Get<Obj_AI_Minion>())
                         {
-                            var v = minion.ServerPosition.To2D() - skillshot.Unit.ServerPosition.To2D();
-                            if (minion.Name == "Seed" && edge1.CrossProduct(v) > 0 && v.CrossProduct(edge2) > 0 &&
-                                minion.Distance(skillshot.Unit) < 800 &&
-                                (minion.Team != ObjectManager.Player.Team || Config.TestOnAllies))
+                            if (minion.Name == "Seed" && !minion.IsDead && (minion.Team != ObjectManager.Player.Team || Config.TestOnAllies))
                             {
-                                var start = minion.ServerPosition.To2D();
+                                positions.Add(minion.ServerPosition.To2D());
+                            }
+                        }
+                        Console.WriteLine(positions.Count + " positions to check");
+                        foreach (var position in positions)
+                        {
+                            var v = position - skillshot.Unit.ServerPosition.To2D();
+                            if (edge1.CrossProduct(v) > 0 && v.CrossProduct(edge2) > 0 &&
+                                position.Distance(skillshot.Unit) < 800 )
+                            {
+                                var start = position;
                                 var end = skillshot.Unit.ServerPosition.To2D()
                                     .Extend(
-                                        minion.ServerPosition.To2D(),
-                                        skillshot.Unit.Distance(minion) > 200 ? 1300 : 1000);
+                                        position,
+                                        skillshot.Unit.Distance(position) > 200 ? 1300 : 1000);
 
+                                var startTime = skillshot.StartTick;
+
+                                startTime += (int)(150 + skillshot.Unit.Distance(position) / 2.5f);
                                 var skillshotToAdd = new Skillshot(
-                                    skillshot.DetectionType, skillshot.SpellData, skillshot.StartTick, start, end,
+                                    skillshot.DetectionType, skillshot.SpellData, startTime, start, end,
                                     skillshot.Unit);
                                 DetectedSkillshots.Add(skillshotToAdd);
                             }
