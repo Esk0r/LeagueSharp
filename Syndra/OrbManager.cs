@@ -79,7 +79,7 @@ namespace Syndra
             foreach (
                 var obj in
                     ObjectManager.Get<Obj_AI_Minion>()
-                        .Where(obj => obj.IsValid && obj.Team == ObjectManager.Player.Team && obj.Name == "Seed"))
+                        .Where(obj => obj.IsValid && obj.Team == ObjectManager.Player.Team && !obj.IsDead && obj.Name == "Seed"))
             {
                 
                 var valid = false;
