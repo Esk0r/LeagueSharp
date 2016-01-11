@@ -650,8 +650,8 @@ namespace Evade
 
             #region Champion Shields
 
-            #region Akali
-
+            #region Tahm
+            // add tahm eating here
             #endregion
 
             #region Annie
