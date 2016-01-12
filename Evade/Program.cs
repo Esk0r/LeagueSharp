@@ -126,6 +126,9 @@ namespace Evade
         {
             PlayerChampionName = ObjectManager.Player.ChampionName;
 
+            //Create the menu to allow the user to change the config.
+            Config.CreateMenu();
+            
             //Add the game events.
             Game.OnUpdate += Game_OnOnGameUpdate;
             Obj_AI_Hero.OnIssueOrder += ObjAiHeroOnOnIssueOrder;
@@ -141,9 +144,6 @@ namespace Evade
             CustomEvents.Unit.OnDash += UnitOnOnDash;
 
             DetectedSkillshots.OnAdd += DetectedSkillshots_OnAdd;
-
-            //Create the menu to allow the user to change the config.
-            Config.CreateMenu();
 
             //Initialze the collision
             Collision.Init();
