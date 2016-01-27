@@ -3081,7 +3081,7 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Shen",
-                    SpellName = "ShenE",
+                    SpellName = "ShenShadowDash",
                     Slot = SpellSlot.E,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 0,
@@ -3092,7 +3092,7 @@ namespace Evade
                     AddHitbox = true,
                     DangerValue = 3,
                     IsDangerous = true,
-                    MissileSpellName = "ShenE",
+                    MissileSpellName = "ShenShadowDash",
                     ExtraRange = 200,
                     CollisionObjects =
                         new[]
