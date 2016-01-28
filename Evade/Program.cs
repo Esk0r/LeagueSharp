@@ -148,8 +148,6 @@ namespace Evade
             //Initialze the collision
             Collision.Init();
 
-            Game.PrintChat("If you like Evade upvote it in the Database!");
-            
             if (Config.PrintSpellData)
             {
                 foreach (var hero in ObjectManager.Get<Obj_AI_Hero>())
