@@ -148,7 +148,7 @@ namespace Evade
             //Initialze the collision
             Collision.Init();
 
-            Game.PrintChat("Evade Loaded");
+            Game.PrintChat("If you like Evade upvote it in the Database!");
             
             if (Config.PrintSpellData)
             {
