@@ -1663,7 +1663,7 @@ namespace Evade
                     AddHitbox = true,
                     DangerValue = 3,
                     IsDangerous = true,
-                    MissileSpellName = "JinxWMissile",
+                    MissileSpellName = "JhinWMissile",
                     EarlyEvade = new[] { EarlyObjects.Allies, EarlyObjects.Minions, EarlyObjects.AllyObjects },
                     CanBeRemoved = true,
                     CollisionObjects =
