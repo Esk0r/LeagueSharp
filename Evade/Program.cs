@@ -457,6 +457,7 @@ namespace Evade
 
         private static void Game_OnOnGameUpdate(EventArgs args)
         {
+            Config.Menu.Item("Dodging").SetValue(_evading);
             PlayerPosition = ObjectManager.Player.ServerPosition.To2D();
 
             //Set evading to false after blinking
