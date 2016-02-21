@@ -43,7 +43,7 @@ namespace Karma
                 return;
             }
 
-            _q = new Spell(SpellSlot.Q, 1050f);
+            _q = new Spell(SpellSlot.Q, 950f);
             _w = new Spell(SpellSlot.W, 700f);
             _e = new Spell(SpellSlot.E, 800f);
             _r = new Spell(SpellSlot.R);
