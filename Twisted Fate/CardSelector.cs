@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 using LeagueSharp;
@@ -83,17 +83,17 @@ namespace TwistedFate
                 Status = SelectStatus.Selected;
             }
 
-            if (Select == Cards.Blue && wName == "bluecardlock")
+            if (Select == Cards.Blue && wName == "BlueCardLock")
             {
                 SendWPacket();
             }
             else
-            if (Select == Cards.Yellow && wName == "goldcardlock")
+            if (Select == Cards.Yellow && wName == "GoldCardLock")
             {
                 SendWPacket();
             }
             else
-            if (Select == Cards.Red && wName == "redcardlock")
+            if (Select == Cards.Red && wName == "RedCardLock")
             {
                 SendWPacket();
             }
@@ -106,13 +106,15 @@ namespace TwistedFate
                 return;
             }
 
+            Console.WriteLine(args.SData.Name);
+
             if (args.SData.Name == "PickACard")
             {
                 Status = SelectStatus.Selecting;
             }
 
-            if (args.SData.Name == "goldcardlock" || args.SData.Name == "bluecardlock" ||
-                args.SData.Name == "redcardlock")
+            if (args.SData.Name == "GoldCardLock" || args.SData.Name == "BlueCardLock" ||
+                args.SData.Name == "RedCardLock")
             {
                 Status = SelectStatus.Selected;
             }
