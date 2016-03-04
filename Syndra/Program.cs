@@ -476,8 +476,6 @@ namespace Syndra
                 return;
             }
 
-            Console.WriteLine(args.SData.Name);
-
             if (Utils.TickCount - qeComboT < 500 && args.SData.Name.Equals("SyndraQ", StringComparison.InvariantCultureIgnoreCase))
             {
                 W.LastCastAttemptT = Utils.TickCount + 400;
