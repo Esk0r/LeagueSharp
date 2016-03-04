@@ -195,11 +195,12 @@ namespace Velkoz
             if (!(sender is MissileClient)) return;
             var missile = (MissileClient)sender;
             if (missile.SpellCaster != null && missile.SpellCaster.IsValid && missile.SpellCaster.IsMe &&
-                missile.SData.Name == "VelkozQMissile")
+                missile.SData.Name.Equals("VelkozQMissile", StringComparison.InvariantCultureIgnoreCase))
             {
                 QMissile = missile;
             }
         }
+
         static void Spellbook_OnUpdateChargedSpell(Spellbook sender, SpellbookUpdateChargedSpellEventArgs args)
         {
             if (sender.Owner.IsMe)
@@ -267,13 +268,14 @@ namespace Velkoz
                 E.Cast(eTarget);
                 return;
             }
-            if (useQ && qTarget != null && Q.IsReady() && Q.Instance.Name == "VelkozQ")
+
+            if (useQ && qTarget != null && Q.IsReady() && Q.Instance.ToggleState == 0)
             {
                 if (Q.Cast(qTarget) == Spell.CastStates.SuccessfullyCasted)
                     return;
             }
 
-            if (qDummyTarget != null && useQ && Q.IsReady() && Q.Instance.Name == "VelkozQ")
+            if (qDummyTarget != null && useQ && Q.IsReady() && Q.Instance.ToggleState == 0)
             {
                 if (qTarget != null) qDummyTarget = qTarget;
                 QDummy.Delay = Q.Delay + Q.Range / Q.Speed * 1000 + QSplit.Range / QSplit.Speed * 1000;
@@ -330,7 +332,7 @@ namespace Velkoz
             var useE = Config.Item("UseEFarm").GetValue<bool>();
 
 
-            if (useQ && allMinionsW.Count > 0 && Q.Instance.Name == "VelkozQ" && Q.IsReady())
+            if (useQ && allMinionsW.Count > 0 && Q.Instance.ToggleState == 0 && Q.IsReady())
             {
                 Q.Cast(allMinionsW[0]);
             }
@@ -362,7 +364,7 @@ namespace Velkoz
             if (mobs.Count > 0)
             {
                 var mob = mobs[0];
-                if (useQ && Q.Instance.Name == "VelkozQ" && Q.IsReady())
+                if (useQ && Q.Instance.ToggleState == 0 && Q.IsReady())
                     Q.Cast(mob);
 
                 if (useW && W.IsReady())
@@ -414,7 +416,7 @@ namespace Velkoz
             }
 
 
-            if (QMissile != null && QMissile.IsValid && Q.Instance.Name == "velkozqsplitactivate" &&
+            if (QMissile != null && QMissile.IsValid && Q.Instance.ToggleState == 2 &&
                 Utils.TickCount - Q.LastCastAttemptT < 2000)
             {
                 var qMissilePosition = QMissile.Position.To2D();
