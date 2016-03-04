@@ -54,15 +54,15 @@ namespace Xerath
 
         public static bool IsPassiveUp
         {
-            get { return ObjectManager.Player.HasBuff("xerathascended2onhit", true); }
+            get { return ObjectManager.Player.HasBuff("xerathascended2onhit"); }
         }
 
         public static bool IsCastingR
         {
             get
             {
-                return ObjectManager.Player.HasBuff("XerathLocusOfPower2", true) ||
-                       (ObjectManager.Player.LastCastedSpellName() == "XerathLocusOfPower2" &&
+                return ObjectManager.Player.HasBuff("XerathLocusOfPower2") ||
+                       (ObjectManager.Player.LastCastedSpellName().Equals("XerathLocusOfPower2", StringComparison.InvariantCultureIgnoreCase) &&
                         Utils.TickCount - ObjectManager.Player.LastCastedSpellT() < 500);
             }
         }
@@ -227,7 +227,6 @@ namespace Xerath
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Obj_AI_Hero.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
             Game.OnWndProc += Game_OnWndProc;
-            Game.PrintChat(ChampionName + " Loaded!");
             Orbwalking.BeforeAttack += OrbwalkingOnBeforeAttack;
             Obj_AI_Hero.OnIssueOrder += Obj_AI_Hero_OnIssueOrder;
         }
@@ -273,28 +272,29 @@ namespace Xerath
 
         static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (sender.IsMe)
+            if (!sender.IsMe)
             {
-                if (args.SData.Name == "XerathLocusOfPower2")
-                {
-                    RCharge.CastT = 0;
-                    RCharge.Index = 0;
-                    RCharge.Position = new Vector3();
-                    RCharge.TapKeyPressed = false;
-                }
-                else if (args.SData.Name == "xerathlocuspulse")
-                {
-                    RCharge.CastT = Utils.TickCount;
-                    RCharge.Index++;
-                    RCharge.Position = args.End;
-                    RCharge.TapKeyPressed = false;
-                }
+                return;
+            }
+
+            if (args.SData.Name.Equals("XerathLocusOfPower2", StringComparison.InvariantCultureIgnoreCase))
+            {
+                RCharge.CastT = 0;
+                RCharge.Index = 0;
+                RCharge.Position = new Vector3();
+                RCharge.TapKeyPressed = false;
+            }
+            else if (args.SData.Name.Equals("XerathLocusPulse", StringComparison.InvariantCultureIgnoreCase))
+            {
+                RCharge.CastT = Utils.TickCount;
+                RCharge.Index++;
+                RCharge.Position = args.End;
+                RCharge.TapKeyPressed = false;
             }
         }
 
         private static void Combo()
         {
-
             UseSpells(Config.Item("UseQCombo").GetValue<bool>(), Config.Item("UseWCombo").GetValue<bool>(),
                 Config.Item("UseECombo").GetValue<bool>());
         }
