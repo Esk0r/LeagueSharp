@@ -82,8 +82,7 @@ namespace TwistedFate
             {
                 Status = SelectStatus.Selected;
             }
-
-
+            
             if (Select == Cards.Blue && wName.Equals("BlueCardLock", StringComparison.InvariantCultureIgnoreCase))
             {
                 SendWPacket();

@@ -54,7 +54,7 @@ namespace TwistedFate
 
         private static void Game_OnGameLoad(EventArgs args)
         {
-            if (ObjectManager.Player.BaseSkinName != "TwistedFate") return;
+            if (ObjectManager.Player.ChampionName != "TwistedFate") return;
             Player = ObjectManager.Player;
             Q = new Spell(SpellSlot.Q, 1450);
             Q.SetSkillshot(0.25f, 40f, 1000f, false, SkillshotType.SkillshotLine);
@@ -159,7 +159,12 @@ namespace TwistedFate
 
         private static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (sender.IsMe && args.SData.Name == "gate" && Config.Item("AutoY").GetValue<bool>())
+            if (!sender.IsMe)
+            {
+                return;
+            }
+
+            if (args.SData.Name.Equals("Gate", StringComparison.InvariantCultureIgnoreCase) && Config.Item("AutoY").GetValue<bool>())
             {
                 CardSelector.StartSelecting(Cards.Yellow);
             }
