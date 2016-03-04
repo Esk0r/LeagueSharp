@@ -52,13 +52,13 @@ namespace Syndra
 
         private static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (sender.IsMe && args.SData.Name == "SyndraQ")
+            if (sender.IsMe && args.SData.Name.Equals("SyndraQ", StringComparison.InvariantCultureIgnoreCase))
             {
                 tmpQOrbT = Utils.TickCount;
                 tmpQOrbPos = args.End;
             }
 
-            if (sender.IsMe && WObject(true) != null && (args.SData.Name == "SyndraW" || args.SData.Name == "syndraw2"))
+            if (sender.IsMe && WObject(true) != null && (args.SData.Name.Equals("SyndraW", StringComparison.InvariantCultureIgnoreCase) || args.SData.Name.Equals("syndraw2", StringComparison.InvariantCultureIgnoreCase)))
             {
                 tmpWOrbT = Utils.TickCount + 250;
                 tmpWOrbPos = args.End;
@@ -91,7 +91,7 @@ namespace Syndra
                                     b.IsValid && b.Name.Contains("_Q_") && b.Name.Contains("Syndra_") &&
                                     b.Name.Contains("idle") && obj.Position.Distance(b.Position) < 50))
                         valid = true;
-
+               
                 if (valid && (!toGrab || !obj.IsMoving))
                     result.Add(obj.ServerPosition);
             }

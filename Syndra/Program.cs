@@ -471,14 +471,21 @@ namespace Syndra
 
         private static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (sender.IsMe && Utils.TickCount - qeComboT < 500 && (args.SData.Name == "SyndraQ"))
+            if (!sender.IsMe)
+            {
+                return;
+            }
+
+            Console.WriteLine(args.SData.Name);
+
+            if (Utils.TickCount - qeComboT < 500 && args.SData.Name.Equals("SyndraQ", StringComparison.InvariantCultureIgnoreCase))
             {
                 W.LastCastAttemptT = Utils.TickCount + 400;
                 E.Cast(args.End, true);
             }
 
-            if (sender.IsMe && Utils.TickCount - weComboT < 500
-                && (args.SData.Name == "SyndraW" || args.SData.Name == "syndrawcast"))
+            if (Utils.TickCount - weComboT < 500
+                && (args.SData.Name.Equals("SyndraW", StringComparison.InvariantCultureIgnoreCase) || args.SData.Name.Equals("SyndraWCast", StringComparison.InvariantCultureIgnoreCase)))
             {
                 W.LastCastAttemptT = Utils.TickCount + 400;
                 E.Cast(args.End, true);
@@ -665,8 +672,9 @@ namespace Syndra
                     Render.Circle.DrawCircle(Player.Position, spell.Range, menuItem.Color);
                 }
             }
+
             //if (OrbManager.WObject(false) != null)
-            //Render.Circle.DrawCircle(OrbManager.WObject(false).Position, 100, Color.White);
+            //Render.Circle.DrawCircle(OrbManager.WObject(false).Position, 100, System.Drawing.Color.White);
         }
     }
 }
