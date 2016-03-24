@@ -333,6 +333,52 @@ namespace Evade
 
             #endregion Ashe
 
+            #region Aurelion Sol
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "AurelionSol",
+                    SpellName = "AurelionSolQ",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 250,
+                    Range = 1500,
+                    Radius = 180,
+                    MissileSpeed = 850,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "AurelionSolQMissile",
+                    CanBeRemoved = true,
+                    CollisionObjects =
+                        new[] { CollisionObjectTypes.YasuoWall}
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "AurelionSol",
+                    SpellName = "AurelionSolR",
+                    Slot = SpellSlot.R,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 300,
+                    Range = 1420,
+                    Radius = 120,
+                    MissileSpeed = 4500,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 3,
+                    IsDangerous = true,
+                    MissileSpellName = "AurelionSolRBeamMissile",
+                    CanBeRemoved = true,
+                    CollisionObjects =
+                        new[] { CollisionObjectTypes.YasuoWall}
+                });
+
+            #endregion Aurelion Sol
+
             #region Bard
 
             Spells.Add(
