@@ -152,10 +152,13 @@ namespace Karma
 
             foreach (var spell in SpellList)
             {
-                menuItem = _config.Item(spell.Slot + "Range").GetValue<Circle>();
-                if (menuItem.Active)
-                {
-                    Render.Circle.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
+                var item = _config.Item(spell.Slot + "Range");
+                if(item != null) {
+                    menuItem = item.GetValue<Circle>();
+                    if (menuItem.Active)
+                    {
+                        Render.Circle.DrawCircle(ObjectManager.Player.Position, spell.Range, menuItem.Color);
+                    }
                 }
             }
         }
