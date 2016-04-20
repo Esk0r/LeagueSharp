@@ -284,6 +284,24 @@ namespace Evade
                         return;
                     }
 
+                    if (skillshot.SpellData.SpellName == "TaricE" && (skillshot.Unit as Obj_AI_Hero).ChampionName == "Taric")
+                    {
+                        var target = HeroManager.AllHeroes.FirstOrDefault(h => h.Team == skillshot.Unit.Team && h.HasBuff("taricwleashactive"));
+                        if (target != null)
+                        {
+                            var start = target.ServerPosition.To2D();
+                            var direction = (skillshot.OriginalEnd - start).Normalized();
+                            var end = start + direction * skillshot.SpellData.Range;
+                            var skillshotToAdd = new Skillshot(
+                                    skillshot.DetectionType, skillshot.SpellData, skillshot.StartTick,
+                                    start, end, target)
+                            {
+                              OriginalEnd = skillshot.OriginalEnd
+                            };
+                            DetectedSkillshots.Add(skillshotToAdd);
+                        }
+                    }
+
                     if (skillshot.SpellData.SpellName == "SyndraE" || skillshot.SpellData.SpellName == "syndrae5")
                     {
                         var angle = 60;

@@ -84,6 +84,7 @@ namespace Evade
         public Vector2 Direction;
         public Geometry.Polygon DrawingPolygon;
 
+        public Vector2 OriginalEnd;
         public Vector2 End;
 
         public bool ForceDisabled;
@@ -259,6 +260,14 @@ namespace Evade
                     Direction = (End - Start).Normalized();
                     UpdatePolygon();
                 }
+            }
+
+            if (SpellData.SpellName == "TaricE")
+            {
+                Start = Unit.ServerPosition.To2D();
+                End = Start + Direction * this.SpellData.Range;
+                Rectangle = new Geometry.Rectangle(Start, End, SpellData.Radius);
+                UpdatePolygon();
             }
 
             if (SpellData.SpellName == "SionR")
