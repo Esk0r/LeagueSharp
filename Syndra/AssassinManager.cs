@@ -119,8 +119,25 @@ namespace Syndra
 
             Game.OnWndProc += this.Game_OnWndProc;
             Drawing.OnDraw += this.Drawing_OnDraw;
+            Drawing.OnPreReset += this.Drawing_OnPreReset;
+            Drawing.OnPostReset += this.Drawing_OnPostReset;
+            AppDomain.CurrentDomain.DomainUnload += this.CurrentDomain_DomainUnload;
+        }
 
-            this.RefreshMenuItemsStatus();
+        void CurrentDomain_DomainUnload(object sender, EventArgs e)
+        {
+            Text.OnLostDevice();
+            Text.Dispose();
+        }
+
+        void Drawing_OnPostReset(EventArgs args)
+        {
+            Text.OnResetDevice();
+        }
+
+        void Drawing_OnPreReset(EventArgs args)
+        {
+            Text.OnLostDevice();
         }
 
         private void RefreshMenuItemsStatus()

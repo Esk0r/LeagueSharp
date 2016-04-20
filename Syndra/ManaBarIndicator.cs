@@ -110,6 +110,7 @@ namespace Syndra
 
         private static void CurrentDomainOnDomainUnload(object sender, EventArgs eventArgs)
         {
+            DxLine.OnLostDevice();
             DxLine.Dispose();
         }
 
