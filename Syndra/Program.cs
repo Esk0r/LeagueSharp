@@ -671,8 +671,8 @@ namespace Syndra
                 }
             }
 
-            //if (OrbManager.WObject(false) != null)
-            //Render.Circle.DrawCircle(OrbManager.WObject(false).Position, 100, System.Drawing.Color.White);
+            if (OrbManager.WObject(false) != null)
+            Render.Circle.DrawCircle(OrbManager.WObject(false).Position, 100, System.Drawing.Color.White);
         }
     }
 }

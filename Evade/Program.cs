@@ -286,7 +286,7 @@ namespace Evade
 
                     if (skillshot.SpellData.SpellName == "TaricE" && (skillshot.Unit as Obj_AI_Hero).ChampionName == "Taric")
                     {
-                        var target = HeroManager.AllHeroes.FirstOrDefault(h => h.Team == skillshot.Unit.Team && h.HasBuff("taricwleashactive"));
+                        var target = HeroManager.AllHeroes.FirstOrDefault(h => h.Team == skillshot.Unit.Team && h.IsVisible && h.HasBuff("taricwleashactive"));
                         if (target != null)
                         {
                             var start = target.ServerPosition.To2D();
@@ -351,7 +351,7 @@ namespace Evade
                         return;
                     }
 
-                    if (skillshot.SpellData.SpellName == "AlZaharCalloftheVoid")
+                    if (skillshot.SpellData.SpellName == "MalzaharQ")
                     {
                         var start = skillshot.End - skillshot.Direction.Perpendicular() * 400;
                         var end = skillshot.End + skillshot.Direction.Perpendicular() * 400;

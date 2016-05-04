@@ -182,6 +182,13 @@ namespace Velkoz
             GameObject.OnCreate += Obj_SpellMissile_OnCreate;
             Spellbook.OnUpdateChargedSpell += Spellbook_OnUpdateChargedSpell;
             Game.PrintChat(ChampionName + " Loaded!");
+
+            Obj_AI_Base.OnBuffAdd += Obj_AI_Base_OnBuffAdd;
+        }
+
+        static void Obj_AI_Base_OnBuffAdd(Obj_AI_Base sender, Obj_AI_BaseBuffAddEventArgs args)
+        {
+            Console.WriteLine(sender.BaseSkinName + " " + args.Buff.Name);
         }
 
         static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)

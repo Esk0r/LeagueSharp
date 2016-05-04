@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.AccessControl;
+using System.Threading;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
@@ -40,13 +41,22 @@ namespace Xerath
             get
             {
                 if (IsCastingR)
+                {
                     return false;
+                }
+
 
                 if (Q.IsCharging)
+                {
                     return false;
+                }
+
 
                 if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
+                {
                     return IsPassiveUp || (!Q.IsReady() && !W.IsReady() && !E.IsReady());
+                }
+                    
 
                 return true;
             }
@@ -92,10 +102,10 @@ namespace Xerath
             E = new Spell(SpellSlot.E, 1150);
             R = new Spell(SpellSlot.R, 675);
 
-            Q.SetSkillshot(0.6f, 100f, float.MaxValue, false, SkillshotType.SkillshotLine);
+            Q.SetSkillshot(0.6f, 95f, float.MaxValue, false, SkillshotType.SkillshotLine);
             W.SetSkillshot(0.7f, 125f, float.MaxValue, false, SkillshotType.SkillshotCircle);
             E.SetSkillshot(0.25f, 60f, 1400f, true, SkillshotType.SkillshotLine);
-            R.SetSkillshot(0.7f, 120f, float.MaxValue, false, SkillshotType.SkillshotCircle);
+            R.SetSkillshot(0.7f, 130f, float.MaxValue, false, SkillshotType.SkillshotCircle);
 
             Q.SetCharged("XerathArcanopulseChargeUp", "XerathArcanopulseChargeUp", 750, 1550, 1.5f);
 
@@ -134,7 +144,7 @@ namespace Xerath
             Config.SubMenu("R").AddItem(new MenuItem("rMode", "Mode").SetValue(new StringList(new[] { "Normal", "Custom delays", "OnTap"})));
             Config.SubMenu("R").AddItem(new MenuItem("rModeKey", "OnTap key").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
             Config.SubMenu("R").AddSubMenu(new Menu("Custom delays", "Custom delays"));
-            for (int i = 1; i <= 3; i++)
+            for (int i = 1; i <= 5; i++)
                 Config.SubMenu("R").SubMenu("Custom delays").AddItem(new MenuItem("Delay"+i, "Delay"+i).SetValue(new Slider(0, 1500, 0)));
             Config.SubMenu("R").AddItem(new MenuItem("PingRKillable", "Ping on killable targets (only local)").SetValue(true));
             Config.SubMenu("R").AddItem(new MenuItem("BlockMovement", "Block right click while casting R").SetValue(false));
@@ -189,8 +199,8 @@ namespace Xerath
             Config.SubMenu("Misc").AddItem(new MenuItem("UseVHHC", "Use very high hit chance").SetValue(true));
 
             //Damage after combo:
-            var dmgAfterComboItem = new MenuItem("DamageAfterR", "Draw damage after 3xR").SetValue(true);
-            Utility.HpBarDamageIndicator.DamageToUnit += hero => (float)Player.GetSpellDamage(hero, SpellSlot.R) * 3;
+            var dmgAfterComboItem = new MenuItem("DamageAfterR", "Draw damage after (3 - 5)xR").SetValue(true);
+            Utility.HpBarDamageIndicator.DamageToUnit += hero => (float)Player.GetSpellDamage(hero, SpellSlot.R) * new int[] {0, 3, 4, 5 }[Player.GetSpell(SpellSlot.R).Level];
             Utility.HpBarDamageIndicator.Enabled = dmgAfterComboItem.GetValue<bool>();
             dmgAfterComboItem.ValueChanged += delegate(object sender, OnValueChangeEventArgs eventArgs)
             {
@@ -518,7 +528,7 @@ namespace Xerath
             Orbwalker.SetMovement(true);
 
             //Update the R range
-            R.Range = 1200 * R.Level + 2000;
+            R.Range = 1200 * R.Level + 2000; 
 
             if (IsCastingR)
             {
