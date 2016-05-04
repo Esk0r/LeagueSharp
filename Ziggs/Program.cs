@@ -534,7 +534,7 @@ namespace Ziggs
 
                 if (W.IsReady() && useW)
                 {
-                    var dmgpct = new[] { 25, 27.5, 30, 32.5, 35 }[W.Level];
+                    var dmgpct = new[] { 25, 27.5, 30, 32.5, 35 }[W.Level - 1];
 
                     var killableTurret =
                         ObjectManager.Get<Obj_Turret>()
