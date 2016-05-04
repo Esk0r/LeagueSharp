@@ -537,7 +537,7 @@ namespace Ziggs
                     var dmgpct = new[] { 25, 27.5, 30, 32.5, 35 }[W.Level];
 
                     var killableTurret =
-                        ObjectManager.Get<Obj_Turret>()
+                        ObjectManager.Get<Obj_AI_Turret>()
                             .Find(x => x.IsEnemy && ObjectManager.Player.Distance(x.Position) <= W.Range && x.HealthPercent < dmgpct);
                     if (killableTurret != null)
                     {
