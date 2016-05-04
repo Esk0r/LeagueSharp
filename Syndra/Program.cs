@@ -176,7 +176,7 @@ namespace Syndra
                 menuMisc.AddItem(new MenuItem("InterruptSpells", "Interrupt spells").SetValue(true));
                 menuMisc.AddItem(
                     new MenuItem("CastQE", "QE closest to cursor").SetValue(
-                        new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
+                        new KeyBind('T', KeyBindType.Press)));
 
                 menuMisc.AddSubMenu(new Menu("Dont use R on", "DontUlt"));
                 foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != Player.Team))
@@ -385,24 +385,33 @@ namespace Syndra
             var comboDamage = rTarget != null ? GetComboDamage(rTarget) : 0;
 
             //Q
-            if (qTarget != null && useQ) Q.Cast(qTarget, false, true);
+            if (qTarget != null && useQ)
+            {
+                Q.Cast(qTarget, false, true);
+            }
 
             //E
             if (Utils.TickCount - W.LastCastAttemptT > Game.Ping + 150 && E.IsReady() && useE)
-                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
+            {
+                foreach (var enemy in HeroManager.Enemies)
                 {
-                    if (enemy.IsValidTarget(Eq.Range)) UseE(enemy);
+                    if (enemy.IsValidTarget(Eq.Range))
+                    {
+                        UseE(enemy);
+                    }
                 }
+            }
+                
 
             //W
             if (useW)
+            {
                 if (Player.Spellbook.GetSpell(SpellSlot.W).ToggleState == 1 && W.IsReady() && qeTarget != null)
                 {
-                    //WObject
                     var gObjectPos = GetGrabableObjectPos(wTarget == null);
 
                     if (gObjectPos.To2D().IsValid() && Utils.TickCount - W.LastCastAttemptT > Game.Ping + 300
-                        && Utils.TickCount - E.LastCastAttemptT > Game.Ping + 300)
+                        && Utils.TickCount - E.LastCastAttemptT > Game.Ping + 600)
                     {
                         W.Cast(gObjectPos);
                         W.LastCastAttemptT = Utils.TickCount;
@@ -417,26 +426,19 @@ namespace Syndra
                         W.Cast(wTarget, false, true);
                     }
                 }
-
-            if (rTarget != null)
-                useR = (Config.Item("DontUlt" + rTarget.CharData.BaseSkinName) != null
-                        && Config.Item("DontUlt" + rTarget.CharData.BaseSkinName).GetValue<bool>() == false) && useR;
-
-            if (rTarget != null && useR && comboDamage > rTarget.Health && !rTarget.IsZombie && !Q.IsReady())
-            {
-                if (R.IsReady())
-                {
-                    R.Cast(rTarget);
-                }
             }
 
-            //R
-            if (rTarget != null && useR && R.IsReady() && !Q.IsReady())
+
+            if (rTarget != null && useR)
             {
-                if (comboDamage > rTarget.Health && !rTarget.IsZombie)
-                {
-                    R.Cast(rTarget);
-                }
+                useR = (Config.Item("DontUlt" + rTarget.CharData.BaseSkinName) != null
+                        && Config.Item("DontUlt" + rTarget.CharData.BaseSkinName).GetValue<bool>() == false);
+            }
+                
+
+            if (rTarget != null && useR && R.IsReady() && comboDamage > rTarget.Health && !rTarget.IsZombie && !Q.IsReady())
+            {
+                R.Cast(rTarget);
             }
 
             //Ignite
@@ -621,7 +623,7 @@ namespace Syndra
             {
                 foreach (
                     var enemy in
-                        ObjectManager.Get<Obj_AI_Hero>()
+                        HeroManager.Enemies
                             .Where(
                                 enemy =>
                                 enemy.IsValidTarget(Eq.Range) && Game.CursorPos.Distance(enemy.ServerPosition) < 300))
