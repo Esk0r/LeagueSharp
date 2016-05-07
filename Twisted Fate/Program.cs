@@ -113,6 +113,8 @@ namespace TwistedFate
             var misc = new Menu("Misc", "Misc");
             {
                 misc.AddItem(new MenuItem("PingLH", "Ping low health enemies (Only local)").SetValue(true));
+                misc.AddItem(new MenuItem("DontGoldCardDuringCombo", "Don't select gold card on combo").SetValue(false));
+
                 Config.AddSubMenu(misc);
             }
 
@@ -235,7 +237,7 @@ namespace TwistedFate
             var startPoint = ObjectManager.Player.ServerPosition.To2D();
             var originalDirection = Q.Range*(unitPosition - startPoint).Normalized();
 
-            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
+            foreach (var enemy in HeroManager.Enemies)
             {
                 if (enemy.IsValidTarget() && enemy.NetworkId != unit.NetworkId)
                 {
@@ -309,7 +311,7 @@ namespace TwistedFate
             if (Config.Item("PingLH").GetValue<bool>())
                 foreach (
                     var enemy in
-                        ObjectManager.Get<Obj_AI_Hero>()
+                        HeroManager.Enemies
                             .Where(
                                 h =>
                                     ObjectManager.Player.Spellbook.CanUseSpell(SpellSlot.R) == SpellState.Ready &&
@@ -336,7 +338,7 @@ namespace TwistedFate
 
             //Select cards.
             if (Config.Item("SelectYellow").GetValue<KeyBind>().Active ||
-                combo)
+                combo && !Config.Item("DontGoldCardDuringCombo").GetValue<bool>())
             {
                 CardSelector.StartSelecting(Cards.Yellow);
             }
@@ -350,16 +352,6 @@ namespace TwistedFate
             {
                 CardSelector.StartSelecting(Cards.Red);
             }
-/*
-            if (CardSelector.Status == SelectStatus.Selected && combo)
-            {
-                var target = SOW.GetTarget();
-                if (target.IsValidTarget() && target is Obj_AI_Hero && Items.HasItem("DeathfireGrasp") && ComboDamage((Obj_AI_Hero)target) >= target.Health)
-                {
-                    Items.UseItem("DeathfireGrasp", (Obj_AI_Hero) target);
-                }
-            }
-*/
 
             //Auto Q
             var autoQI = Config.Item("AutoQI").GetValue<bool>();
@@ -367,7 +359,7 @@ namespace TwistedFate
 
 
             if (ObjectManager.Player.Spellbook.CanUseSpell(SpellSlot.Q) == SpellState.Ready && (autoQD || autoQI))
-                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
+                foreach (var enemy in HeroManager.Enemies)
                 {
                     if (enemy.IsValidTarget(Q.Range*2))
                     {
