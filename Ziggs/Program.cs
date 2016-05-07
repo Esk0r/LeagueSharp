@@ -99,6 +99,10 @@ namespace Ziggs
                         new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 2)));
             Config.SubMenu("Farm")
                 .AddItem(
+                    new MenuItem("UseWFarm", "Use W").SetValue(
+                        new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 2)));
+            Config.SubMenu("Farm")
+                .AddItem(
                     new MenuItem("UseEFarm", "Use E").SetValue(
                         new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 1)));
             Config.SubMenu("Farm")
@@ -507,8 +511,10 @@ namespace Ziggs
             var allMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q2.Range);
 
             var useQi = Config.Item("UseQFarm").GetValue<StringList>().SelectedIndex;
+            var useWi = Config.Item("UseWFarm").GetValue<StringList>().SelectedIndex;
             var useEi = Config.Item("UseEFarm").GetValue<StringList>().SelectedIndex;
             var useQ = (laneClear && (useQi == 1 || useQi == 2)) || (!laneClear && (useQi == 0 || useQi == 2));
+            var useW = (laneClear && (useWi == 1 || useWi == 2)) || (!laneClear && (useWi == 0 || useWi == 2));
             var useE = (laneClear && (useEi == 1 || useEi == 2)) || (!laneClear && (useEi == 0 || useEi == 2));
 
             if (laneClear)
@@ -523,6 +529,19 @@ namespace Ziggs
                     if (bLocation.MinionsHit > 0)
                     {
                         Q2.Cast(bLocation.Position.To3D());
+                    }
+                }
+
+                if (W.IsReady() && useW)
+                {
+                    var dmgpct = new[] { 25, 27.5, 30, 32.5, 35 }[W.Level - 1];
+
+                    var killableTurret =
+                        ObjectManager.Get<Obj_AI_Turret>()
+                            .Find(x => x.IsEnemy && ObjectManager.Player.Distance(x.Position) <= W.Range && x.HealthPercent < dmgpct);
+                    if (killableTurret != null)
+                    {
+                        W.Cast(killableTurret.Position);
                     }
                 }
 

@@ -276,8 +276,6 @@ namespace Orianna
             Drawing.OnDraw += Drawing_OnDraw;
             Spellbook.OnCastSpell += Spellbook_OnCastSpell;
             Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
-            
-            Notifications.AddNotification("Orianna Loaded", 4000);
         }
         
         private static void Game_OnWndProc(WndEventArgs args)
@@ -369,7 +367,9 @@ namespace Orianna
         private static void Farm(bool laneClear)
         {
             if (!Config.Item("EnabledFarm").GetValue<bool>())
+            {
                 return;
+            }
 
             var allMinions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range + W.Width,
                 MinionTypes.All);
