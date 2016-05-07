@@ -142,7 +142,7 @@ namespace Xerath
             Config.AddSubMenu(new Menu("R", "R"));
             Config.SubMenu("R").AddItem(new MenuItem("EnableRUsage", "Auto use charges").SetValue(true));
             Config.SubMenu("R").AddItem(new MenuItem("rMode", "Mode").SetValue(new StringList(new[] { "Normal", "Custom delays", "OnTap"})));
-            Config.SubMenu("R").AddItem(new MenuItem("rModeKey", "OnTap key").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
+            Config.SubMenu("R").AddItem(new MenuItem("rModeKey", "OnTap key").SetValue(new KeyBind('T', KeyBindType.Press)));
             Config.SubMenu("R").AddSubMenu(new Menu("Custom delays", "Custom delays"));
             for (int i = 1; i <= 5; i++)
                 Config.SubMenu("R").SubMenu("Custom delays").AddItem(new MenuItem("Delay"+i, "Delay"+i).SetValue(new Slider(0, 1500, 0)));
@@ -161,7 +161,7 @@ namespace Xerath
                         new KeyBind(Config.Item("Farm").GetValue<KeyBind>().Key, KeyBindType.Press)));
             Config.SubMenu("Harass")
                 .AddItem(
-                    new MenuItem("HarassActiveT", "Harass (toggle)!").SetValue(new KeyBind("Y".ToCharArray()[0],
+                    new MenuItem("HarassActiveT", "Harass (toggle)!").SetValue(new KeyBind('Y',
                         KeyBindType.Toggle)));
 
             //Farming menu:
@@ -539,7 +539,7 @@ namespace Xerath
 
             if (R.IsReady() && Config.Item("PingRKillable").GetValue<bool>())
             {
-                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsValidTarget() && (float)Player.GetSpellDamage(h, SpellSlot.R) * 3 > h.Health))
+                foreach (var enemy in HeroManager.Enemies.Where(h => h.IsValidTarget() && (float)Player.GetSpellDamage(h, SpellSlot.R) * new int[] { 0, 3, 4, 5 }[Player.GetSpell(SpellSlot.R).Level] > h.Health))
                 {
                     Ping(enemy.Position.To2D());
                 }
