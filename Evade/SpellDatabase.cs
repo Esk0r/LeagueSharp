@@ -473,7 +473,7 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Brand",
-                    SpellName = "BrandBlaze",
+                    SpellName = "BrandQ",
                     Slot = SpellSlot.Q,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 250,
@@ -484,7 +484,7 @@ namespace Evade
                     AddHitbox = true,
                     DangerValue = 3,
                     IsDangerous = true,
-                    MissileSpellName = "BrandBlazeMissile",
+                    MissileSpellName = "BrandQMissile",
                     EarlyEvade = new[] {EarlyObjects.Allies, EarlyObjects.Minions, EarlyObjects.AllyObjects},
                     CanBeRemoved = true,
                     CollisionObjects =
@@ -496,7 +496,7 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Brand",
-                    SpellName = "BrandFissure",
+                    SpellName = "BrandW",
                     Slot = SpellSlot.W,
                     Type = SkillShotType.SkillshotCircle,
                     Delay = 850,
@@ -4279,25 +4279,25 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Zyra",
-                    SpellName = "ZyraQFissure",
+                    SpellName = "ZyraQ",
                     Slot = SpellSlot.Q,
-                    Type = SkillShotType.SkillshotCircle,
+                    Type = SkillShotType.SkillshotLine,
                     Delay = 850,
                     Range = 800,
-                    Radius = 220,
+                    Radius = 140,
                     MissileSpeed = int.MaxValue,
                     FixedRange = false,
                     AddHitbox = true,
                     DangerValue = 2,
                     IsDangerous = false,
-                    MissileSpellName = "ZyraQFissure",
+                    MissileSpellName = "ZyraQ",
                 });
 
             Spells.Add(
                 new SpellData
                 {
                     ChampionName = "Zyra",
-                    SpellName = "ZyraGraspingRoots",
+                    SpellName = "ZyraE",
                     Slot = SpellSlot.E,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 250,
@@ -4308,7 +4308,7 @@ namespace Evade
                     AddHitbox = true,
                     DangerValue = 3,
                     IsDangerous = true,
-                    MissileSpellName = "ZyraGraspingRoots",
+                    MissileSpellName = "ZyraE",
                     EarlyEvade = new[] {EarlyObjects.Allies, EarlyObjects.Minions, EarlyObjects.AllyObjects},
                     CollisionObjects = new[] {CollisionObjectTypes.YasuoWall},
                 });
