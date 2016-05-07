@@ -46,7 +46,7 @@ namespace Xerath
                 }
 
 
-                if (Q.IsCharging)
+                if (!ObjectManager.Player.CanAttack)
                 {
                     return false;
                 }
