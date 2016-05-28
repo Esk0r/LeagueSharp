@@ -544,6 +544,7 @@ namespace Orianna
             {
                 return;
             }
+
             var useQ = Config.Item("UseQCombo").GetValue<bool>();
             var useW = Config.Item("UseWCombo").GetValue<bool>();
             var useE = Config.Item("UseECombo").GetValue<bool>();
@@ -579,8 +580,6 @@ namespace Orianna
 
                         CastE(ally, 1);
                     }
-
-                    CastE(Player, 1);
                 }
             }
             else
@@ -596,12 +595,13 @@ namespace Orianna
                         {
                             foreach (var hero in rCheck.Item2)
                             {
-                                if ((hero.Health - GetComboDamage(hero)) < 0.4 * hero.MaxHealth || GetComboDamage(hero) >= 0.4 * hero.MaxHealth)
+                                var comboDamage = GetComboDamage(hero);
+                                if ((hero.Health - comboDamage) < 0.4 * hero.MaxHealth || comboDamage >= 0.4 * hero.MaxHealth)
                                 {
                                     pk++;
                                 }
 
-                                if ((hero.Health - GetComboDamage(hero)) < 0)
+                                if ((hero.Health - comboDamage) < 0)
                                 {
                                     k++;
                                 }
@@ -725,14 +725,21 @@ namespace Orianna
             {
                 if (Config.Item("HarassActive").GetValue<KeyBind>().Active ||
                     (Config.Item("HarassActiveT").GetValue<KeyBind>().Active && !Player.HasBuff("Recall")))
+                {
                     Harass();
+                }
+                    
 
                 var lc = Config.Item("LaneClearActive").GetValue<KeyBind>().Active;
                 if (lc || Config.Item("FreezeActive").GetValue<KeyBind>().Active)
+                {
                     Farm(lc && (Player.Mana * 100 / Player.MaxMana >= Config.Item("LaneClearManaCheck").GetValue<Slider>().Value));
-
+                }
+                    
                 if (Config.Item("JungleFarmActive").GetValue<KeyBind>().Active)
+                {
                     JungleFarm();
+                }
             }
         }
 
