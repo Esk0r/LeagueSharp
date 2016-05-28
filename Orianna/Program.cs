@@ -108,7 +108,7 @@ namespace Orianna
 
             Q.SetSkillshot(0f, 130f, 1400f, false, SkillshotType.SkillshotCircle);
             W.SetSkillshot(0.25f, 240f, float.MaxValue, false, SkillshotType.SkillshotCircle);
-            E.SetSkillshot(0.25f, 80f, 1700f, true, SkillshotType.SkillshotLine);
+            E.SetSkillshot(0.25f, 80f, 1700f, false, SkillshotType.SkillshotLine);
             R.SetSkillshot(0.6f, 375f, float.MaxValue, false, SkillshotType.SkillshotCircle);
 
 
