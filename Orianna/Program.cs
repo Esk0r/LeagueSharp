@@ -569,7 +569,7 @@ namespace Orianna
                     CastQ(target);
                 }
 
-                if(useE)
+                if(useE && EIsReady)
                 {
                     foreach (var ally in HeroManager.Allies.Where(h => h.IsValidTarget(E.Range, false)))
                     {
