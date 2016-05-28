@@ -210,12 +210,11 @@ namespace Evade
             }
 
             var spellName = missile.SData.Name;
-
             if (OnDeleteMissile != null)
             {
                 foreach (var skillshot in Program.DetectedSkillshots)
                 {
-                    if (skillshot.SpellData.MissileSpellName == spellName &&
+                    if (skillshot.SpellData.MissileSpellName.Equals(spellName, StringComparison.InvariantCultureIgnoreCase) &&
                         (skillshot.Unit.NetworkId == caster.NetworkId &&
                          (missile.EndPosition.To2D() - missile.StartPosition.To2D()).AngleBetween(skillshot.Direction) <
                          10) && skillshot.SpellData.CanBeRemoved)
@@ -233,8 +232,8 @@ namespace Evade
 
             Program.DetectedSkillshots.RemoveAll(
                 skillshot =>
-                    (skillshot.SpellData.MissileSpellName == spellName ||
-                     skillshot.SpellData.ExtraMissileNames.Contains(spellName)) &&
+                    (skillshot.SpellData.MissileSpellName.Equals(spellName, StringComparison.InvariantCultureIgnoreCase) ||
+                     skillshot.SpellData.ExtraMissileNames.Contains(spellName, StringComparer.InvariantCultureIgnoreCase)) &&
                     (skillshot.Unit.NetworkId == caster.NetworkId &&
                      ((missile.EndPosition.To2D() - missile.StartPosition.To2D()).AngleBetween(skillshot.Direction) < 10) &&
                      skillshot.SpellData.CanBeRemoved || skillshot.SpellData.ForceRemove)); // 
