@@ -867,7 +867,7 @@ namespace Orianna
             if (GetHits(R).Item1 >= minTargets || prioriy && GetHits(R)
                     .Item2.Any(
                         hero =>
-                            Config.Item("TargetSelector" + hero.ChampionName + "Priority").GetValue<Slider>().Value >=
+                            Config.Item("TargetSelector" + hero.ChampionName + "Priority") != null && Config.Item("TargetSelector" + hero.ChampionName + "Priority").GetValue<Slider>().Value >=
                             Config.Item("UseRImportant").GetValue<Slider>().Value))
             {
                 R.Cast(Player.ServerPosition, true);
