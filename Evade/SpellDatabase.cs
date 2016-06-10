@@ -3403,6 +3403,47 @@ namespace Evade
 
             #endregion Syndra
 
+            #region Taliyah
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Taliyah",
+                    SpellName = "TaliyahQ",
+                    Slot = SpellSlot.Q,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 250,
+                    Range = 950,
+                    Radius = 100,
+                    MissileSpeed = 3600,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "TaliyahQMis",
+                    CollisionObjects = new[] { CollisionObjectTypes.YasuoWall, CollisionObjectTypes.Minion, CollisionObjectTypes.Champions },
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Taliyah",
+                    SpellName = "TaliyahW",
+                    Slot = SpellSlot.W,
+                    Type = SkillShotType.SkillshotCircle,
+                    Delay = 700,
+                    Range = 900,
+                    Radius = 200,
+                    MissileSpeed = int.MaxValue,
+                    FixedRange = false,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = true,
+                    MissileSpellName = "TaliyahW",
+                });
+
+            #endregion Taliyah
+
             #region Talon
 
             Spells.Add(
