@@ -125,7 +125,7 @@ namespace Evade
             collision.AddItem(new MenuItem("MinionCollision", "Minion collision").SetValue(false));
             collision.AddItem(new MenuItem("HeroCollision", "Hero collision").SetValue(false));
             collision.AddItem(new MenuItem("YasuoCollision", "Yasuo wall collision").SetValue(true));
-            collision.AddItem(new MenuItem("EnableCollision", "Enabled").SetValue(true));
+            collision.AddItem(new MenuItem("EnableCollision", "Enabled").SetValue(false));
             //TODO add mode.
             Menu.AddSubMenu(collision);
 
