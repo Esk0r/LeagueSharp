@@ -41,18 +41,36 @@ namespace Evade
                     new SpellData
                     {
                         ChampionName = ObjectManager.Player.ChampionName,
-                        SpellName = "TestSkillShot",
+                        SpellName = "TestCircleSkillShot",
                         Slot = SpellSlot.R,
                         Type = SkillShotType.SkillshotCircle,
                         Delay = 600,
                         Range = 650,
-                        Radius = 350,
+                        Radius = 50,
                         MissileSpeed = int.MaxValue,
                         FixedRange = false,
                         AddHitbox = true,
                         DangerValue = 5,
                         IsDangerous = true,
                         MissileSpellName = "TestSkillShot",
+                    });
+
+                Spells.Add(
+                    new SpellData
+                    {
+                        ChampionName = ObjectManager.Player.ChampionName,
+                        SpellName = "TestLineSkillShot",
+                        Slot = SpellSlot.R,
+                        Type = SkillShotType.SkillshotMissileLine,
+                        Delay = 250,
+                        Range = 1200,
+                        Radius = 100,
+                        MissileSpeed = 1200,
+                        FixedRange = true,
+                        AddHitbox = true,
+                        DangerValue = 5,
+                        IsDangerous = true,
+                        MissileSpellName = "TestLineSkillShot",
                     });
             }
 

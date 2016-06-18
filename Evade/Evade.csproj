@@ -36,16 +36,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="clipper_library">
-      <HintPath>C:\Program Files (x86)\LeagueSharp\System\clipper_library.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\PlaySharp\System\clipper_library.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp">
-      <HintPath>C:\Program Files (x86)\LeagueSharp\System\LeagueSharp.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\PlaySharp\System\LeagueSharp.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Common">
-      <HintPath>C:\Program Files (x86)\LeagueSharp\System\LeagueSharp.Common.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\PlaySharp\System\LeagueSharp.Common.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>C:\Program Files (x86)\LeagueSharp\System\SharpDX.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\PlaySharp\System\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Benchmarking\Benchmark.cs" />
     <Compile Include="Collision.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="EvadeSpellData.cs" />
