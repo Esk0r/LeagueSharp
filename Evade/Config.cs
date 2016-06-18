@@ -133,7 +133,7 @@ namespace Evade
             drawings.AddItem(new MenuItem("EnabledColor", "Enabled spell color").SetValue(Color.White));
             drawings.AddItem(new MenuItem("DisabledColor", "Disabled spell color").SetValue(Color.Red));
             drawings.AddItem(new MenuItem("MissileColor", "Missile color").SetValue(Color.LimeGreen));
-            drawings.AddItem(new MenuItem("Border", "Border Width").SetValue(new Slider(1, 5, 1)));
+            drawings.AddItem(new MenuItem("Border", "Border Width").SetValue(new Slider(2, 5, 1)));
 
             drawings.AddItem(new MenuItem("EnableDrawings", "Enabled").SetValue(true));
             Menu.AddSubMenu(drawings);

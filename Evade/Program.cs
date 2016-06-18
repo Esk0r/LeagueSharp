@@ -469,8 +469,7 @@ namespace Evade
                 PlayerPosition.Distance(PreviousTickPosition) > 200)
             {
                 Evading = false;
-                EvadeToPoint.X = 0;
-                EvadeToPoint.Y = 0;
+                EvadeToPoint = Vector2.Zero;
             }
 
             PreviousTickPosition = PlayerPosition;
