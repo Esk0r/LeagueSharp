@@ -644,13 +644,25 @@ namespace Evade
                             return;
                         }
 
+                        var path2 = ObjectManager.Player.GetPath(EvadeToPoint.To3D()).To2DList();
+                        var safePath2 = IsSafePath(path2, 100);
+
+                        if (safePath2.IsSafe)
+                        {
+                            if (ObjectManager.Player.Distance(EvadeToPoint) > 75)
+                            {
+                                ObjectManager.Player.SendMovePacket(EvadeToPoint);
+                            }
+                            return;
+                        }
+
                         var candidate = Pathfinding.Pathfinding.PathFind(PlayerPosition, EvadeToPoint);
+                        
                         if (candidate.Count == 0)
                         {
                             if (!safePath.Intersection.Valid && currentPath.Count <= 1)
                             {
-                                var path = ObjectManager.Player.GetPath(EvadeToPoint.To3D()).To2DList();
-                                safePath = IsSafePath(path, 100);
+                                safePath = IsSafePath(path2, 100);
                             }
 
                             if (safePath.Intersection.Valid)
