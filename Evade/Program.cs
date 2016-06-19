@@ -633,9 +633,26 @@ namespace Evade
 
                     if (Utils.TickCount - LastSentMovePacketT2 > 1000 / 15 || !PathFollower.IsFollowing)
                     {
+                        LastSentMovePacketT2 = Utils.TickCount;
+                        
+                        if (DetectedSkillshots.Count == 0)
+                        {
+                            if (ObjectManager.Player.Distance(EvadeToPoint) > 75)
+                            {
+                                ObjectManager.Player.SendMovePacket(EvadeToPoint);
+                            }
+                            return;
+                        }
+
                         var candidate = Pathfinding.Pathfinding.PathFind(PlayerPosition, EvadeToPoint);
                         if (candidate.Count == 0)
                         {
+                            if (!safePath.Intersection.Valid && currentPath.Count <= 1)
+                            {
+                                var path = ObjectManager.Player.GetPath(EvadeToPoint.To3D()).To2DList();
+                                safePath = IsSafePath(path, 100);
+                            }
+
                             if (safePath.Intersection.Valid)
                             {
                                 if (ObjectManager.Player.Distance(safePath.Intersection.Point) > 75)
@@ -649,7 +666,7 @@ namespace Evade
                         PathFollower.Follow(candidate);
 
                         PathFollower.KeepFollowingPath(new EventArgs());
-                        LastSentMovePacketT2 = Utils.TickCount;
+                        
                     }
                 }
             }
@@ -1451,6 +1468,9 @@ namespace Evade
                     var SB = Drawing.WorldToScreen(B.To3D());
                     Drawing.DrawLine(SA.X, SA.Y, SB.X, SB.Y, 1, Color.Red);
                 }
+
+
+
                 Drawing.DrawCircle(EvadePoint.To3D(), 300, Color.White);
                 Drawing.DrawCircle(EvadeToPoint.To3D(), 300, Color.Red);
             }
