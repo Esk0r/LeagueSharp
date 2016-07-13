@@ -2987,37 +2987,14 @@ namespace Evade
                     Slot = SpellSlot.Q,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 250,
-                    Range = 900,
-                    Radius = 50,
+                    Range = 1000,
+                    Radius = 55,
                     MissileSpeed = 1700,
                     FixedRange = true,
                     AddHitbox = true,
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "RyzeQ",
-                    EarlyEvade = new[] {EarlyObjects.Allies, EarlyObjects.Minions, EarlyObjects.AllyObjects},
-                    CanBeRemoved = true,
-                    CollisionObjects =
-                        new[]
-                        {CollisionObjectTypes.Champions, CollisionObjectTypes.Minion, CollisionObjectTypes.YasuoWall},
-                });
-
-            Spells.Add(
-                new SpellData
-                {
-                    ChampionName = "Ryze",
-                    SpellName = "ryzerq",
-                    Slot = SpellSlot.Q,
-                    Type = SkillShotType.SkillshotMissileLine,
-                    Delay = 250,
-                    Range = 900,
-                    Radius = 50,
-                    MissileSpeed = 1700,
-                    FixedRange = true,
-                    AddHitbox = true,
-                    DangerValue = 2,
-                    IsDangerous = false,
-                    MissileSpellName = "ryzerq",
                     EarlyEvade = new[] {EarlyObjects.Allies, EarlyObjects.Minions, EarlyObjects.AllyObjects},
                     CanBeRemoved = true,
                     CollisionObjects =
