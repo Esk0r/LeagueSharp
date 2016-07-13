@@ -38,14 +38,22 @@ namespace Ryze
         private static void Game_OnGameLoad(EventArgs args)
         {
             Player = ObjectManager.Player;
-            if (Player.BaseSkinName != ChampionName) return;
+            if (Player.ChampionName != ChampionName)
+            {
+                return;
+            }
 
             //Create the spells
-            Q = new Spell(SpellSlot.Q, 900);
-            Q.SetSkillshot(0.25f, 50f, 1700, true, SkillshotType.SkillshotLine);
+            Q = new Spell(SpellSlot.Q, 1000);
+            Q.SetSkillshot(0.25f, 55f, 1700, true, SkillshotType.SkillshotLine);
 
-            W = new Spell(SpellSlot.W, 600);
-            E = new Spell(SpellSlot.E, 600);
+            W = new Spell(SpellSlot.W, 550);
+            W.AddEnemyHitboxToRange = true;
+            W.AddSelfHitboxToRange = true;
+
+            E = new Spell(SpellSlot.E, 550);
+            E.AddEnemyHitboxToRange = true;
+            E.AddSelfHitboxToRange = true;
 
             SpellList.Add(Q);
             SpellList.Add(W);
@@ -72,7 +80,7 @@ namespace Ryze
             Config.SubMenu("Harass").AddItem(new MenuItem("UseQHarass", "Use Q").SetValue(true));
             Config.SubMenu("Harass")
                 .AddItem(
-                    new MenuItem("HarassActive", "Harass!").SetValue(new KeyBind("C".ToCharArray()[0], KeyBindType.Press)));
+                    new MenuItem("HarassActive", "Harass!").SetValue(new KeyBind('C', KeyBindType.Press)));
 
             Config.AddSubMenu(new Menu("Farm", "Farm"));
             Config.SubMenu("Farm")
@@ -89,10 +97,10 @@ namespace Ryze
                         new StringList(new[] { "Freeze", "LaneClear", "Both", "No" }, 1)));
             Config.SubMenu("Farm")
                 .AddItem(
-                    new MenuItem("FreezeActive", "Freeze!").SetValue(new KeyBind("C".ToCharArray()[0], KeyBindType.Press)));
+                    new MenuItem("FreezeActive", "Freeze!").SetValue(new KeyBind('C', KeyBindType.Press)));
             Config.SubMenu("Farm")
                 .AddItem(
-                    new MenuItem("LaneClearActive", "LaneClear!").SetValue(new KeyBind("V".ToCharArray()[0],
+                    new MenuItem("LaneClearActive", "LaneClear!").SetValue(new KeyBind('V',
                         KeyBindType.Press)));
 
             Config.AddSubMenu(new Menu("JungleFarm", "JungleFarm"));
@@ -101,7 +109,7 @@ namespace Ryze
             Config.SubMenu("JungleFarm").AddItem(new MenuItem("UseEJFarm", "Use E").SetValue(true));
             Config.SubMenu("JungleFarm")
                 .AddItem(
-                    new MenuItem("JungleFarmActive", "JungleFarm!").SetValue(new KeyBind("V".ToCharArray()[0],
+                    new MenuItem("JungleFarmActive", "JungleFarm!").SetValue(new KeyBind('V',
                         KeyBindType.Press)));
 
             //Damage after combo:
@@ -134,7 +142,9 @@ namespace Ryze
         private static void OrbwalkingOnBeforeAttack(Orbwalking.BeforeAttackEventArgs args)
         {
             if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
-                args.Process = !(Q.IsReady() || W.IsReady() || E.IsReady() || Player.Distance(args.Target) >= 600);
+            {
+                args.Process = !(Q.IsReady() || W.IsReady() || E.IsReady() || !W.IsInRange(args.Target));
+            }
         }
 
         private static void Drawing_OnDraw(EventArgs args)
@@ -145,7 +155,7 @@ namespace Ryze
                 var menuItem = Config.Item(spell.Slot + "Range").GetValue<Circle>();
                 if (menuItem.Active)
                 {
-                    Render.Circle.DrawCircle(Player.Position, spell.Range, menuItem.Color);
+                    Render.Circle.DrawCircle(Player.Position, spell.GetRange(ObjectManager.Player), menuItem.Color);
                 }
             }
         }
@@ -159,20 +169,30 @@ namespace Ryze
             else
             {
                 if (Config.Item("HarassActive").GetValue<KeyBind>().Active)
+                {
                     Harass();
+                }
+                    
 
                 var lc = Config.Item("LaneClearActive").GetValue<KeyBind>().Active;
                 if (lc || Config.Item("FreezeActive").GetValue<KeyBind>().Active)
+                {
                     Farm(lc);
+                }
+
 
                 if (Config.Item("JungleFarmActive").GetValue<KeyBind>().Active)
+                {
                     JungleFarm();
+                }
+                    
             }
         }
 
         private static void Combo()
         {
-            var target = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Magical);
+            //since W range is the same as auto attack range (550) -1 can be used :^)
+            var target = TargetSelector.GetTarget(-1, TargetSelector.DamageType.Magical);
             var qTarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Magical);
 
             if (target != null)
@@ -226,8 +246,8 @@ namespace Ryze
             {
                 foreach (var minion in allMinions)
                 {
-                    if (minion.IsValidTarget(W.Range) &&
-                        minion.Health < Player.GetSpellDamage(minion, SpellSlot.Q))
+                    if (minion.IsValidTarget(W.GetRange(minion)) &&
+                        minion.Health < Player.GetSpellDamage(minion, SpellSlot.W))
                     {
                         W.CastOnUnit(minion);
                         return;
@@ -238,10 +258,10 @@ namespace Ryze
             {
                 foreach (var minion in allMinions)
                 {
-                    if (minion.IsValidTarget(E.Range) &&
+                    if (minion.IsValidTarget(E.GetRange(minion)) &&
                         HealthPrediction.GetHealthPrediction(minion,
                             (int)(Player.Distance(minion) * 1000 / 1000)) <
-                        Player.GetSpellDamage(minion, SpellSlot.Q) - 10)
+                        Player.GetSpellDamage(minion, SpellSlot.E) - 10)
                     {
                         E.CastOnUnit(minion);
                         return;
