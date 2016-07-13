@@ -197,7 +197,7 @@ namespace Ryze
             var target = TargetSelector.GetTarget(-1, TargetSelector.DamageType.Magical);
             var qTarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Magical);
 
-            var castQ = coinChargeAmount == 0 || coinChargeAmount == 2 || target == null;
+            var castQ = coinChargeAmount == 0 || coinChargeAmount == 2 || !W.IsReady() && !E.IsReady() || qTarget != null && Q.IsKillable(qTarget) || target == null;
             if (castQ && Q.IsReady() && qTarget != null)
             {
                 if (Q.Cast(qTarget) == Spell.CastStates.SuccessfullyCasted)
@@ -208,9 +208,12 @@ namespace Ryze
 
             if (target != null)
             {
-                if (E.Cast(target) == Spell.CastStates.SuccessfullyCasted)
+                if (!(W.IsReady() && W.GetRange(target) - 50 < Player.Distance(target)))
                 {
-                    return;
+                    if (E.Cast(target) == Spell.CastStates.SuccessfullyCasted)
+                    {
+                        return;
+                    }
                 }
 
                 if (W.Cast(target) == Spell.CastStates.SuccessfullyCasted)
