@@ -143,7 +143,7 @@ namespace Ryze
         {
             if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
             {
-                args.Process = !(Q.IsReady() || W.IsReady() || E.IsReady() || !W.IsInRange(args.Target));
+                args.Process = !(W.IsReady() || E.IsReady() || !W.IsInRange(args.Target));
             }
         }
 
@@ -191,19 +191,32 @@ namespace Ryze
 
         private static void Combo()
         {
+            var coinChargeAmount = ObjectManager.Player.HasBuff("ryzeqiconnocharge") ? 0 : ObjectManager.Player.HasBuff("ryzeqiconhalfcharge") ? 1 : 2;
+
             //since W range is the same as auto attack range (550) -1 can be used :^)
             var target = TargetSelector.GetTarget(-1, TargetSelector.DamageType.Magical);
             var qTarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Magical);
 
-            if (target != null)
+            var castQ = coinChargeAmount == 0 || coinChargeAmount == 2 || target == null;
+            if (castQ && Q.IsReady() && qTarget != null)
             {
-                W.CastOnUnit(target);
-                E.CastOnUnit(target);
+                if (Q.Cast(qTarget) == Spell.CastStates.SuccessfullyCasted)
+                {
+                    return;
+                }
             }
 
-            if (qTarget != null)
+            if (target != null)
             {
-                Q.Cast(qTarget);
+                if (E.Cast(target) == Spell.CastStates.SuccessfullyCasted)
+                {
+                    return;
+                }
+
+                if (W.Cast(target) == Spell.CastStates.SuccessfullyCasted)
+                {
+                    return;
+                }
             }
         }
 
