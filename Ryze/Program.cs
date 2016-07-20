@@ -46,6 +46,7 @@ namespace Ryze
             //Create the spells
             Q = new Spell(SpellSlot.Q, 1000);
             Q.SetSkillshot(0.25f, 55f, 1700, true, SkillshotType.SkillshotLine);
+            Q.MinHitChance = HitChance.Medium;
 
             W = new Spell(SpellSlot.W, 550);
             W.AddEnemyHitboxToRange = true;
