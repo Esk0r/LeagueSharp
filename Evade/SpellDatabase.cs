@@ -1752,11 +1752,13 @@ namespace Evade
                     DangerValue = 3,
                     IsDangerous = true,
                     MissileSpellName = "JhinRShotMis",
+                    ExtraMissileNames = new[] { "JhinRShotMis4" },
                     EarlyEvade = new[] { EarlyObjects.Allies, EarlyObjects.Minions, EarlyObjects.AllyObjects },
                     CanBeRemoved = true,
                     CollisionObjects =
-                        new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.Minion, CollisionObjectTypes.YasuoWall },
+                        new[] { CollisionObjectTypes.Champions, CollisionObjectTypes.YasuoWall },
                 });
+
             #endregion Jhin
 
             #region Jinx
