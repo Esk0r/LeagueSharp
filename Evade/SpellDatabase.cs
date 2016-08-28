@@ -3496,7 +3496,7 @@ namespace Evade
                 new SpellData
                 {
                     ChampionName = "Taliyah",
-                    SpellName = "TaliyahW",
+                    SpellName = "TaliyahWVC",
                     Slot = SpellSlot.W,
                     Type = SkillShotType.SkillshotCircle,
                     Delay = 600,
@@ -3507,7 +3507,7 @@ namespace Evade
                     AddHitbox = true,
                     DangerValue = 2,
                     IsDangerous = true,
-                    MissileSpellName = "TaliyahW",
+                    MissileSpellName = "TaliyahWVC",
                 });
 
             #endregion Taliyah
