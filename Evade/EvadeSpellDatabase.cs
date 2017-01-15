@@ -412,17 +412,17 @@ namespace Evade
 
             if (ObjectManager.Player.ChampionName == "Leblanc")
             {
-                spell = new DashData("LeBlanc W1", SpellSlot.W, 600, false, 100, 1621, 3);
-                spell.CheckSpellName = "LeblancSlide";
+                spell = new DashData("LeBlanc W", SpellSlot.W, 600, false, 100, 1600, 3);
+                spell.CheckSpellName = "LeblancW";
                 Spells.Add(spell);
             }
 
-            if (ObjectManager.Player.ChampionName == "Leblanc")
+            /*if (ObjectManager.Player.ChampionName == "Leblanc")
             {
-                spell = new DashData("LeBlanc RW", SpellSlot.R, 600, false, 100, 1621, 3);
+                spell = new DashData("LeBlanc RW", SpellSlot.R, 600, false, 100, 1600, 3);
                 spell.CheckSpellName = "LeblancSlideM";
                 Spells.Add(spell);
-            }
+            }*/
 
             #endregion
 
