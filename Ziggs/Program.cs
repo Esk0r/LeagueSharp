@@ -175,7 +175,7 @@ namespace Ziggs
 
         private static void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
         {
-            W.Cast(gapcloser.Sender);
+            W.Cast(gapcloser.End);
         }
 
         private static void Drawing_OnDraw(EventArgs args)
