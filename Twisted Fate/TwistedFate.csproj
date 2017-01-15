@@ -33,14 +33,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="clipper_library">
+      <HintPath>C:\Program Files (x86)\Play Sharp\References\clipper_library.dll</HintPath>
+    </Reference>
     <Reference Include="LeagueSharp">
-      <HintPath>C:\Program Files (x86)\LeagueSharp\Assemblies\System\LeagueSharp.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Play Sharp\References\LeagueSharp.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Common">
-      <HintPath>C:\Program Files (x86)\LeagueSharp\Assemblies\System\LeagueSharp.Common.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Play Sharp\References\LeagueSharp.Common.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>C:\Program Files (x86)\LeagueSharp\Assemblies\System\SharpDX.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Play Sharp\References\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D9">
+      <HintPath>C:\Program Files (x86)\Play Sharp\References\SharpDX.Direct3D9.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -53,6 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CardSelector.cs" />
+    <Compile Include="Common\CommonAutoLevel.cs" />
+    <Compile Include="Common\CommonBuffManager.cs" />
+    <Compile Include="Common\CommonGeometry.cs" />
+    <Compile Include="Common\CommonSkins.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
