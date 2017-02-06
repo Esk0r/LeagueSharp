@@ -2237,6 +2237,76 @@ namespace Evade
                     SpellName = "LeblancSoulShackleM",
                     Slot = SpellSlot.R,
                     Type = SkillShotType.SkillshotMissileLine,
+Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Leblanc",
+                    SpellName = "LeblancW",
+                    Slot = SpellSlot.W,
+                    Type = SkillShotType.SkillshotCircle,
+                    Delay = 0,
+                    Range = 600,
+                    Radius = 220,
+                    MissileSpeed = 1600,
+                    FixedRange = false,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "LeblancSlide",
+                    ExtraMissileNames = new []{"LeblancW", "LeblancWMissile"},
+                });
+
+            /*Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Leblanc",
+                    SpellName = "LeblancSlideM",
+                    Slot = SpellSlot.R,
+                    Type = SkillShotType.SkillshotCircle,
+                    Delay = 0,
+                    Range = 600,
+                    Radius = 220,
+                    MissileSpeed = 1450,
+                    FixedRange = false,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "LeblancSlideM",
+                });*/
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Leblanc",
+                    SpellName = "LeblancE",
+                    ExtraSpellNames = new [] { "LeblancSoulShackle" },
+                    Slot = SpellSlot.E,
+                    Type = SkillShotType.SkillshotMissileLine,
+                    Delay = 250,
+                    Range = 950,
+                    Radius = 65,
+                    MissileSpeed = 1750,
+                    FixedRange = true,
+                    AddHitbox = true,
+                    DangerValue = 3,
+                    IsDangerous = true,
+                    MissileSpellName = "LeblancEMissile",
+                    ExtraMissileNames = new []{ "LeblancSoulShackle", "LeblancE" },
+                    FromObjects = new []{"Leblanc_Base_E_mis.troy"},
+                    EarlyEvade = new[] {EarlyObjects.Allies, EarlyObjects.Minions, EarlyObjects.AllyObjects},
+                    CanBeRemoved = true,
+                    CollisionObjects =
+                        new[]
+                        {CollisionObjectTypes.Champions, CollisionObjectTypes.Minion, CollisionObjectTypes.YasuoWall},
+                });
+
+            /*Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Leblanc",
+                    SpellName = "LeblancSoulShackleM",
+                    Slot = SpellSlot.R,
+                    Type = SkillShotType.SkillshotMissileLine,
                     Delay = 250,
                     Range = 950,
                     Radius = 55,
@@ -2250,7 +2320,7 @@ namespace Evade
                     CollisionObjects =
                         new[]
                         {CollisionObjectTypes.Champions, CollisionObjectTypes.Minion, CollisionObjectTypes.YasuoWall},
-                });
+                });*/
 
             #endregion Leblanc
 
